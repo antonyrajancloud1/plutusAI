@@ -1,0 +1,113 @@
+/home/antony-7244/PycharmProjects/plutous/plutusAI/server/AngelOneApp.py changed, reloading.
+2024-05-18 11:51:48,274 - INFO - /home/antony-7244/PycharmProjects/plutous/plutusAI/server/AngelOneApp.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"POST /stop_ws HTTP/1.1" 200 52
+2024-05-18 11:59:50,251 - INFO - "POST /stop_ws HTTP/1.1" 200 52
+"POST /stop_ws HTTP/1.1" 200 52
+2024-05-18 11:59:51,041 - INFO - "POST /stop_ws HTTP/1.1" 200 52
+"POST /start_ws HTTP/1.1" 200 46
+2024-05-18 11:59:58,196 - INFO - "POST /start_ws HTTP/1.1" 200 46
+2024-05-18 11:59:58,197 - INFO - Task plutusAI.server.base.updateExpiryDetails[26962258-9e8c-4985-a199-9cf851ca571f] received
+2024-05-18 11:59:58,198 - INFO - Task plutusAI.server.AngelOneApp.createHttpData[7fcaa950-0d5d-41d1-be00-f631d080daa3] received
+2024-05-18 11:59:58,217 - ERROR - list index out of range
+2024-05-18 11:59:58,217 - ERROR - 'AngelOneBroker' object has no attribute 'df'
+2024-05-18 11:59:58,217 - ERROR - 'AngelOneBroker' object has no attribute 'df'
+2024-05-18 11:59:58,217 - ERROR - 'AngelOneBroker' object has no attribute 'df'
+2024-05-18 11:59:58,217 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 11:59:58,218 - INFO - Error in db update
+2024-05-18 11:59:59,219 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 11:59:59,220 - INFO - Error in db update
+2024-05-18 12:00:00,070 - INFO - {'current_expiry': '23-MAY-2024', 'next_expiry': '30-MAY-2024'}
+2024-05-18 12:00:00,072 - INFO - Error in db update
+2024-05-18 12:00:00,221 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 12:00:00,223 - INFO - Error in db update
+2024-05-18 12:00:01,224 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 12:00:01,225 - INFO - Error in db update
+2024-05-18 12:00:01,688 - INFO - {'current_expiry': '22-MAY-2024', 'next_expiry': '29-MAY-2024'}
+2024-05-18 12:00:01,689 - INFO - Error in db update
+2024-05-18 12:00:02,226 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 12:00:02,228 - INFO - Error in db update
+2024-05-18 12:00:03,229 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 12:00:03,230 - INFO - Error in db update
+2024-05-18 12:00:03,397 - INFO - {'current_expiry': '21-MAY-2024', 'next_expiry': '28-MAY-2024'}
+2024-05-18 12:00:03,398 - INFO - Error in db update
+2024-05-18 12:00:03,398 - INFO - Expiry Updated
+2024-05-18 12:00:03,398 - INFO - Task plutusAI.server.base.updateExpiryDetails[26962258-9e8c-4985-a199-9cf851ca571f] succeeded in 5.199903546999849s: None
+2024-05-18 12:00:04,231 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 12:00:04,233 - INFO - Error in db update
+2024-05-18 12:00:05,235 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 12:00:05,237 - INFO - Error in db update
+2024-05-18 12:00:06,238 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 12:00:06,239 - INFO - Error in db update
+2024-05-18 12:00:07,239 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 12:00:07,240 - INFO - Error in db update
+2024-05-18 12:00:08,241 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 12:00:08,243 - INFO - Error in db update
+2024-05-18 12:00:09,244 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 12:00:09,245 - INFO - Error in db update
+2024-05-18 12:00:10,246 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 12:00:10,247 - INFO - Error in db update
+2024-05-18 12:00:11,248 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 12:00:11,250 - INFO - Error in db update
+2024-05-18 12:00:12,252 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 12:00:12,253 - INFO - Error in db update
+2024-05-18 12:00:13,254 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 12:00:13,256 - INFO - Error in db update
+2024-05-18 12:00:14,258 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 12:00:14,260 - INFO - Error in db update
+2024-05-18 12:00:15,261 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 12:00:15,263 - INFO - Error in db update
+2024-05-18 12:00:16,265 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 12:00:16,266 - INFO - Error in db update
+2024-05-18 12:00:17,268 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 12:00:17,270 - INFO - Error in db update
+2024-05-18 12:00:18,271 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 12:00:18,273 - INFO - Error in db update
+2024-05-18 12:00:19,275 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 12:00:19,277 - INFO - Error in db update
+2024-05-18 12:00:20,278 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 12:00:20,280 - INFO - Error in db update
+2024-05-18 12:00:21,282 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 12:00:21,284 - INFO - Error in db update
+2024-05-18 12:00:22,285 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 12:00:22,287 - INFO - Error in db update
+2024-05-18 12:00:23,289 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 12:00:23,290 - INFO - Error in db update
+2024-05-18 12:00:24,290 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 12:00:24,291 - INFO - Error in db update
+2024-05-18 12:00:25,292 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 12:00:25,295 - INFO - Error in db update
+2024-05-18 12:00:26,296 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 12:00:26,298 - INFO - Error in db update
+2024-05-18 12:00:27,299 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 12:00:27,301 - INFO - Error in db update
+2024-05-18 12:00:28,302 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 12:00:28,303 - INFO - Error in db update
+2024-05-18 12:00:29,304 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 12:00:29,306 - INFO - Error in db update
+2024-05-18 12:00:30,306 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 12:00:30,308 - INFO - Error in db update
+2024-05-18 12:00:31,310 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 12:00:31,312 - INFO - Error in db update
+2024-05-18 12:00:32,313 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 12:00:32,315 - INFO - Error in db update
+2024-05-18 12:00:33,316 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
+2024-05-18 12:00:33,318 - INFO - Error in db update
+2024-05-18 12:00:34,051 - INFO - Terminating 7fcaa950-0d5d-41d1-be00-f631d080daa3 (Signals.SIGTERM)
+"POST /stop_ws HTTP/1.1" 200 49
+2024-05-18 12:00:34,074 - INFO - "POST /stop_ws HTTP/1.1" 200 49
+/home/antony-7244/PycharmProjects/plutous/plutusAI/server/priceAction/priceActionScalper.py changed, reloading.
+2024-05-18 12:04:01,185 - INFO - /home/antony-7244/PycharmProjects/plutous/plutusAI/server/priceAction/priceActionScalper.py changed, reloading.
+Watching for file changes with StatReloader
+/home/antony-7244/PycharmProjects/plutous/plutusAI/server/broker/AngelOneBroker.py changed, reloading.
+2024-05-18 12:04:47,489 - INFO - /home/antony-7244/PycharmProjects/plutous/plutusAI/server/broker/AngelOneBroker.py changed, reloading.
+Watching for file changes with StatReloader
+/home/antony-7244/PycharmProjects/plutous/plutusAI/server/base.py changed, reloading.
+2024-05-18 12:05:42,007 - INFO - /home/antony-7244/PycharmProjects/plutous/plutusAI/server/base.py changed, reloading.
+Watching for file changes with StatReloader
+/home/antony-7244/PycharmProjects/plutous/plutusAI/server/base.py changed, reloading.
+2024-05-18 12:06:25,319 - INFO - /home/antony-7244/PycharmProjects/plutous/plutusAI/server/base.py changed, reloading.
+Watching for file changes with StatReloader

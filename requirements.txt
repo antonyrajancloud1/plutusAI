@@ -1,0 +1,16 @@
+celery
+Django
+django-cors-headers
+flower
+logzero
+pandas
+PyMySQL
+pyotp
+python-dateutil
+pytz
+redis
+requests
+smartapi-python
+websocket-client
+whitenoise
+mysqlclient

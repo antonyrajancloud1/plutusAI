@@ -1,0 +1,73 @@
+:root {
+    /* Color Variables */
+    --theme-clr         : #011C3A  ;
+    --header-bg         : #011C3A  ;
+    --body-bg           : #011C3A  ;
+    --lhs-bg            : #011C3A  ;
+    --rhs-bg            : #011C3A  ;
+    --footer-bg         : #011C3A  ;
+    --border-clr        : #38516E  ;
+    --hover-bg          : #38516E  ;
+    --color-placeholder : #ABABAB  ;
+    --success-bg        : #0F8928  ;  
+    --error-bg          : #730707  ;  
+}   
+
+body { font-family: Lato, sans-serif !important;margin: 0;box-sizing: border-box;width: 100%;height: 100%; }
+
+/**** Header Styles Starts ****/
+.header-container { height:60px;border-bottom: 2px solid var(--border-clr); }
+.home-bg-container:before { content: '';position: absolute;left: 0;top: 0;height: 100%;width: 100%;background-repeat: no-repeat;opacity: 0.2;background-image: url(images/home-bg.png);background-blend-mode: overlay;background-size: 100% 100%;z-index: -1; }
+.home-bg-container { background-color: #011C3A;position: relative;z-index: 0; }
+.logout-button { padding: 10px 15px;height: 20px;;border:1px solid var(--border-clr); }
+.logout-button:hover { background-color: var(--hover-bg); }
+/**** Header Styles Ends ****/
+
+/**** LHS Styles Starts****/
+.lhs-container { border-right:2px solid var(--border-clr); }
+.lhs-module { padding: 10px 15px;height: 35px;border-bottom:1px solid var(--border-clr);border-left: 5px solid transparent; }
+.lhs-module:hover { background-color: var(--hover-bg); }
+.lhs-module.selected { border-left: 5px solid var(--border-clr);background-color: var(--lhs-bg);color: cadetblue;pointer-events: none; }
+/**** LHS Styles Ends****/
+
+/**** RHS Styles Starts****/
+.start-index-button, .stop-index-button, .edit-config-button { border: 1px solid; }
+.start-index-button:hover { background-color: rgb(80 174 66 / 15%); }
+.stop-index-button:hover { background-color: rgb(240 109 102 / 15%); }
+.edit-config-button:hover { background-color: rgb(38 149 246 / 15%); }
+.actions-table-cell { width: 120px; }
+/**** RHS Styles Ends****/
+
+/**** Footer Styles Starts ****/
+/**** Footer Styles Ends ****/
+
+/**** Login Page Styles Starts ****/
+.login-bg-image:before { background-image: url(images/login-bg.jpeg);height: 100%;width: 100%;content: "";position: absolute;left: 0;top: 0;background-repeat: no-repeat;background-blend-mode: overlay;background-size: 100% 100%;z-index: -1; }
+.login-wrapper { width: 50%;height: 50%;box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.4); }
+.login-input-element { width: 300px;height: 30px;border: 1px solid var(--border-clr);border-radius: 5px;padding: 5px 10px 5px 10px; }
+.login-inputs-container { width: 320px; }
+.login-submit-button { width: 100%;height: 40px;background-color: #0B2943;border-radius: 20px; }
+/**** Login Page Styles Ends ****/
+
+/**** Edit Configuration Form Styles Starts ****/
+.index-edit-configuration-form { z-index: 1;position: fixed;transform: translate(-50%,-50%);left: 50%;top: 50%;box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.4); }
+.index-edit-configuration-form.mask-bg:before { width: 5000em;content: "";height: 5000em;left: -2500em;top: -2500em;position: fixed;opacity: 0.8;z-index: 1;background-color: #000; }
+.form-main-container { background-color: var(--theme-clr);position: relative;border-radius: 10px;height: 100%;width: 100%;overflow: hidden;z-index: 2;padding: 20px;font-size: 18px; }
+.form-header { border-bottom: 1px solid var(--border-clr); }
+.submit-button { padding: 10px 15px;height: 20px;border:1px solid var(--border-clr); }
+.submit-button:hover { background-color: var(--hover-bg); }
+.label-container { width: 350px; }
+.edit-config-input-elements { height: 20px;border: 1px solid var(--border-clr);border-radius: 5px;padding: 10px;font-size: 14px; }
+.form-input-elements { max-height: 500px;overflow-y: auto; }
+.close-icon { padding: 10px;background-color: var(--border-clr);border-radius: 100%; }
+input[type="checkbox"] { position: relative;appearance: none;width: 60px;height: 30px;background: #CCC;border-radius: 50px;box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);cursor: pointer;border: 1px solid var(--border-clr);transition: 0.4s; }
+input:checked[type="checkbox"] { background: #7DA6FF; }
+input[type="checkbox"]::after { position: absolute;content: "";width: 28px;height: 28px;top: 0;left: 0;background: #FFF;border-radius: 50%;box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);transform: scale(1.1);transition: 0.4s; }
+input:checked[type="checkbox"]::after { left: 50%; }
+/**** Edit Configuration Form Styles Ends ****/
+
+/**** Custom Scroll Bar Styles Starts ****/
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-thumb { background: #BDB3B3;border-radius: 10px; }
+::-webkit-scrollbar-track { box-shadow: inset 0 0 5px grey;border-radius: 5px; }
+/**** Custom Scroll Bar Styles Ends ****/
