@@ -24,6 +24,7 @@ VOLUME /var/lib/mysql
 RUN pip3 install --upgrade pip
 
 # Clone repository and install requirements
+RUN git clone https://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@github.com/antonyrajancloud1/madaraUI.git /app_source
 WORKDIR /app_source
 RUN pip3 install -r requirements.txt
 
