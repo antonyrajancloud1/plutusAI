@@ -1,7 +1,17 @@
-sudo docker build -t madara_test_env .
-sudo docker ps -a
-sudo docker run -it madara_test_env
+######### list dockers #####
+docker ps -a
+
+########## Create docker ####
+docker build -t madara_image .
+
+docker run -it --name madara_container -p 8000:8000 madara_image /bin/bash
+
+###### start Docker container #########
+docker start madara_container
+
+######### Connect to Docker container ######
+docker exec -it madara_container /bin/bash
 
 
-To delete 
-  sudo docker rm 3885120897f1
+######### To delete #########
+docker rm 3885120897f1

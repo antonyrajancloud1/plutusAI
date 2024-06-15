@@ -315,7 +315,7 @@ class NSEPriceAction():
             self.optionDetails=self.BrokerObject.getCurrentPremiumDetails(NFO,self.currentPremiumPlaced)
             # print(self.optionDetails)
             self.optionBuyPrice=self.BrokerObject.getLtpForPremium(self.optionDetails)
-            data={USER_ID:self.user_email,SCRIPT_NAME:self.currentPremiumPlaced,QTY:self.qty,ENTRY_PRICE:self.optionBuyPrice,STATUS:ORDER_PLACED}
+            data={USER_ID:self.user_email,SCRIPT_NAME:self.currentPremiumPlaced,QTY:self.qty,ENTRY_PRICE:self.optionBuyPrice,STATUS:ORDER_PLACED,STRATEGY:STRATEGY_HUNTER}
             addLogDetails(INFO,"data fine")
             addOrderBookDetails(data,True)
             if orderType=="CE":
@@ -364,7 +364,7 @@ class NSEPriceAction():
                     order_details=self.BrokerObject.getOrderDetails(uniqueorderid)
                     addLogDetails(INFO,"Index Name: "+self.index_name+" User :"+self.user_email+ " " +str(order_details))
                     self.optionBuyPrice=order_details["averageprice"]
-                    data={USER_ID:self.user_email,SCRIPT_NAME:self.currentPremiumPlaced,QTY:self.qty,ENTRY_PRICE:self.optionBuyPrice,STATUS:ORDER_PLACED}
+                    data={USER_ID:self.user_email,SCRIPT_NAME:self.currentPremiumPlaced,QTY:self.qty,ENTRY_PRICE:self.optionBuyPrice,STATUS:ORDER_PLACED,STRATEGY:STRATEGY_HUNTER}
                     addOrderBookDetails(data,True)
                     
                     price=int(self.optionBuyPrice) - 10
@@ -403,7 +403,7 @@ class NSEPriceAction():
                     uniqueorderid=order_response["data"]["uniqueorderid"]
                     self.optionBuyPrice=self.BrokerObject.getOrderDetails(uniqueorderid)["averageprice"]
                     self.isCEOrderPlaced = True
-                    data={USER_ID:self.user_email,SCRIPT_NAME:self.currentPremiumPlaced,QTY:self.qty,ENTRY_PRICE:self.optionBuyPrice,STATUS:ORDER_PLACED}
+                    data={USER_ID:self.user_email,SCRIPT_NAME:self.currentPremiumPlaced,QTY:self.qty,ENTRY_PRICE:self.optionBuyPrice,STATUS:ORDER_PLACED,STRATEGY:STRATEGY_HUNTER}
                     addOrderBookDetails(data,True)
                     price=int(self.optionBuyPrice) - 10
                     trigger_price = int(self.optionBuyPrice) - 10

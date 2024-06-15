@@ -2,6 +2,9 @@
 ADMIN_USER_ID='madara@plutus.com'
 SOCKET_JOB="socket_job"
 SOCKET_JOB_TYPE='3'
+### strategy ###
+STRATEGY_HUNTER='hunter'
+STRATEGY_SCALPER='scalper'
 ### index details 
 NIFTY_50='Nifty 50'
 NIFTY_BANK='Nifty Bank'
@@ -102,6 +105,7 @@ BROKER_DETAILS_UPDATED= "broker_details_updated"
 
 ORDER_BOOK_DETAILS = "order_book_details"
 PLAN_DETAILS = "plan_details"
+STRATEGY='strategy'
 #### INDEX DEFAULT VALUES ####
 NIFTY_DEFAULT_VALUES = {
     "index_name": "nifty",

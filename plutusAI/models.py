@@ -36,6 +36,7 @@ class OrderBook(models.Model):
     exit_price = models.CharField(max_length=250, default=None, blank=True, null=True)
     status = models.CharField(max_length=250, default=None)
     total = models.CharField(max_length=250, default=None, blank=True, null=True)
+    strategy = models.CharField(max_length=250, default=None,blank=True, null=True)
 
     def __str__(self):
         return "{" + f"user_id:{self.user_id}, script_name:{self.script_name}, entry_time:{self.entry_time}, exit_time:{self.exit_time},total:{self.total}" + "}"

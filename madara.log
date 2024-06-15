@@ -1,113 +1,379 @@
-/home/antony-7244/PycharmProjects/plutous/plutusAI/server/AngelOneApp.py changed, reloading.
-2024-05-18 11:51:48,274 - INFO - /home/antony-7244/PycharmProjects/plutous/plutusAI/server/AngelOneApp.py changed, reloading.
-Watching for file changes with StatReloader
-Watching for file changes with StatReloader
-Watching for file changes with StatReloader
-Watching for file changes with StatReloader
-"POST /stop_ws HTTP/1.1" 200 52
-2024-05-18 11:59:50,251 - INFO - "POST /stop_ws HTTP/1.1" 200 52
-"POST /stop_ws HTTP/1.1" 200 52
-2024-05-18 11:59:51,041 - INFO - "POST /stop_ws HTTP/1.1" 200 52
+"POST /add_broker_details HTTP/1.1" 200 56
+2024-06-15 15:51:37,600 - INFO - "POST /add_broker_details HTTP/1.1" 200 56
+"GET /get_order_book_details HTTP/1.1" 200 26
+2024-06-15 15:51:44,038 - INFO - "GET /get_order_book_details HTTP/1.1" 200 26
+"GET /get_broker_details HTTP/1.1" 200 22
+2024-06-15 15:51:48,447 - INFO - "GET /get_broker_details HTTP/1.1" 200 22
+"POST /add_broker_details HTTP/1.1" 200 56
+2024-06-15 15:52:05,818 - INFO - "POST /add_broker_details HTTP/1.1" 200 56
+"GET /get_order_book_details HTTP/1.1" 200 26
+2024-06-15 15:52:16,249 - INFO - "GET /get_order_book_details HTTP/1.1" 200 26
+"GET /get_broker_details HTTP/1.1" 200 303
+2024-06-15 15:52:18,453 - INFO - "GET /get_broker_details HTTP/1.1" 200 303
+"GET /get_order_book_details HTTP/1.1" 200 26
+2024-06-15 15:52:24,105 - INFO - "GET /get_order_book_details HTTP/1.1" 200 26
+"GET /get_broker_details HTTP/1.1" 200 303
+2024-06-15 15:52:24,538 - INFO - "GET /get_broker_details HTTP/1.1" 200 303
+2024-06-15 15:52:39,795 - WARNING - /home/sahayaraj/.local/lib/python3.11/site-packages/celery/worker/consumer/consumer.py:507: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
+whether broker connection retries are made during startup in Celery 6.0 and above.
+If you wish to retain the existing behavior for retrying connections on startup,
+you should set broker_connection_retry_on_startup to True.
+  warnings.warn(
+
+2024-06-15 15:52:39,817 - INFO - Connected to redis://localhost:6379//
+2024-06-15 15:52:39,818 - WARNING - /home/sahayaraj/.local/lib/python3.11/site-packages/celery/worker/consumer/consumer.py:507: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
+whether broker connection retries are made during startup in Celery 6.0 and above.
+If you wish to retain the existing behavior for retrying connections on startup,
+you should set broker_connection_retry_on_startup to True.
+  warnings.warn(
+
+2024-06-15 15:52:39,823 - INFO - mingle: searching for neighbors
+2024-06-15 15:52:40,833 - INFO - mingle: all alone
+2024-06-15 15:52:40,855 - INFO - celery@sahayaraj ready.
+2024-06-15 15:52:57,993 - INFO - Task plutusAI.server.base.updateExpiryDetails[ddb1b02c-ede3-44b2-8208-70ad897b2fa6] received
 "POST /start_ws HTTP/1.1" 200 46
-2024-05-18 11:59:58,196 - INFO - "POST /start_ws HTTP/1.1" 200 46
-2024-05-18 11:59:58,197 - INFO - Task plutusAI.server.base.updateExpiryDetails[26962258-9e8c-4985-a199-9cf851ca571f] received
-2024-05-18 11:59:58,198 - INFO - Task plutusAI.server.AngelOneApp.createHttpData[7fcaa950-0d5d-41d1-be00-f631d080daa3] received
-2024-05-18 11:59:58,217 - ERROR - list index out of range
-2024-05-18 11:59:58,217 - ERROR - 'AngelOneBroker' object has no attribute 'df'
-2024-05-18 11:59:58,217 - ERROR - 'AngelOneBroker' object has no attribute 'df'
-2024-05-18 11:59:58,217 - ERROR - 'AngelOneBroker' object has no attribute 'df'
-2024-05-18 11:59:58,217 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 11:59:58,218 - INFO - Error in db update
-2024-05-18 11:59:59,219 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 11:59:59,220 - INFO - Error in db update
-2024-05-18 12:00:00,070 - INFO - {'current_expiry': '23-MAY-2024', 'next_expiry': '30-MAY-2024'}
-2024-05-18 12:00:00,072 - INFO - Error in db update
-2024-05-18 12:00:00,221 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 12:00:00,223 - INFO - Error in db update
-2024-05-18 12:00:01,224 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 12:00:01,225 - INFO - Error in db update
-2024-05-18 12:00:01,688 - INFO - {'current_expiry': '22-MAY-2024', 'next_expiry': '29-MAY-2024'}
-2024-05-18 12:00:01,689 - INFO - Error in db update
-2024-05-18 12:00:02,226 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 12:00:02,228 - INFO - Error in db update
-2024-05-18 12:00:03,229 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 12:00:03,230 - INFO - Error in db update
-2024-05-18 12:00:03,397 - INFO - {'current_expiry': '21-MAY-2024', 'next_expiry': '28-MAY-2024'}
-2024-05-18 12:00:03,398 - INFO - Error in db update
-2024-05-18 12:00:03,398 - INFO - Expiry Updated
-2024-05-18 12:00:03,398 - INFO - Task plutusAI.server.base.updateExpiryDetails[26962258-9e8c-4985-a199-9cf851ca571f] succeeded in 5.199903546999849s: None
-2024-05-18 12:00:04,231 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 12:00:04,233 - INFO - Error in db update
-2024-05-18 12:00:05,235 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 12:00:05,237 - INFO - Error in db update
-2024-05-18 12:00:06,238 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 12:00:06,239 - INFO - Error in db update
-2024-05-18 12:00:07,239 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 12:00:07,240 - INFO - Error in db update
-2024-05-18 12:00:08,241 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 12:00:08,243 - INFO - Error in db update
-2024-05-18 12:00:09,244 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 12:00:09,245 - INFO - Error in db update
-2024-05-18 12:00:10,246 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 12:00:10,247 - INFO - Error in db update
-2024-05-18 12:00:11,248 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 12:00:11,250 - INFO - Error in db update
-2024-05-18 12:00:12,252 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 12:00:12,253 - INFO - Error in db update
-2024-05-18 12:00:13,254 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 12:00:13,256 - INFO - Error in db update
-2024-05-18 12:00:14,258 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 12:00:14,260 - INFO - Error in db update
-2024-05-18 12:00:15,261 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 12:00:15,263 - INFO - Error in db update
-2024-05-18 12:00:16,265 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 12:00:16,266 - INFO - Error in db update
-2024-05-18 12:00:17,268 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 12:00:17,270 - INFO - Error in db update
-2024-05-18 12:00:18,271 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 12:00:18,273 - INFO - Error in db update
-2024-05-18 12:00:19,275 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 12:00:19,277 - INFO - Error in db update
-2024-05-18 12:00:20,278 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 12:00:20,280 - INFO - Error in db update
-2024-05-18 12:00:21,282 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 12:00:21,284 - INFO - Error in db update
-2024-05-18 12:00:22,285 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 12:00:22,287 - INFO - Error in db update
-2024-05-18 12:00:23,289 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 12:00:23,290 - INFO - Error in db update
-2024-05-18 12:00:24,290 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 12:00:24,291 - INFO - Error in db update
-2024-05-18 12:00:25,292 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 12:00:25,295 - INFO - Error in db update
-2024-05-18 12:00:26,296 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 12:00:26,298 - INFO - Error in db update
-2024-05-18 12:00:27,299 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 12:00:27,301 - INFO - Error in db update
-2024-05-18 12:00:28,302 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 12:00:28,303 - INFO - Error in db update
-2024-05-18 12:00:29,304 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 12:00:29,306 - INFO - Error in db update
-2024-05-18 12:00:30,306 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 12:00:30,308 - INFO - Error in db update
-2024-05-18 12:00:31,310 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 12:00:31,312 - INFO - Error in db update
-2024-05-18 12:00:32,313 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 12:00:32,315 - INFO - Error in db update
-2024-05-18 12:00:33,316 - ERROR - exception in getltpForPremium 'AngelOneBroker' object has no attribute 'smartApi'
-2024-05-18 12:00:33,318 - INFO - Error in db update
-2024-05-18 12:00:34,051 - INFO - Terminating 7fcaa950-0d5d-41d1-be00-f631d080daa3 (Signals.SIGTERM)
+2024-06-15 15:52:57,994 - INFO - "POST /start_ws HTTP/1.1" 200 46
+2024-06-15 15:52:57,995 - INFO - Task plutusAI.server.AngelOneApp.createHttpData[276ae039-74d4-4276-9d8c-4cc2fe5ccaca] received
+2024-06-15 15:53:03,139 - INFO - {'current_expiry': '20-JUN-2024', 'next_expiry': '27-JUN-2024'}
+2024-06-15 15:53:07,709 - INFO - initisuccess for angleone
+2024-06-15 15:53:11,075 - INFO - {'current_expiry': '19-JUN-2024', 'next_expiry': '26-JUN-2024'}
+2024-06-15 15:53:16,050 - INFO - {'current_expiry': '18-JUN-2024', 'next_expiry': '25-JUN-2024'}
+2024-06-15 15:53:16,051 - INFO - Expiry Updated
+2024-06-15 15:53:16,055 - INFO - Task plutusAI.server.base.updateExpiryDetails[ddb1b02c-ede3-44b2-8208-70ad897b2fa6] succeeded in 18.05832152700168s: None
+2024-06-15 15:53:33,205 - INFO - Terminating 276ae039-74d4-4276-9d8c-4cc2fe5ccaca (15)
 "POST /stop_ws HTTP/1.1" 200 49
-2024-05-18 12:00:34,074 - INFO - "POST /stop_ws HTTP/1.1" 200 49
-/home/antony-7244/PycharmProjects/plutous/plutusAI/server/priceAction/priceActionScalper.py changed, reloading.
-2024-05-18 12:04:01,185 - INFO - /home/antony-7244/PycharmProjects/plutous/plutusAI/server/priceAction/priceActionScalper.py changed, reloading.
-Watching for file changes with StatReloader
-/home/antony-7244/PycharmProjects/plutous/plutusAI/server/broker/AngelOneBroker.py changed, reloading.
-2024-05-18 12:04:47,489 - INFO - /home/antony-7244/PycharmProjects/plutous/plutusAI/server/broker/AngelOneBroker.py changed, reloading.
-Watching for file changes with StatReloader
-/home/antony-7244/PycharmProjects/plutous/plutusAI/server/base.py changed, reloading.
-2024-05-18 12:05:42,007 - INFO - /home/antony-7244/PycharmProjects/plutous/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-/home/antony-7244/PycharmProjects/plutous/plutusAI/server/base.py changed, reloading.
-2024-05-18 12:06:25,319 - INFO - /home/antony-7244/PycharmProjects/plutous/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
+2024-06-15 15:53:33,372 - INFO - "POST /stop_ws HTTP/1.1" 200 49
+"GET /get_config_values HTTP/1.1" 200 877
+2024-06-15 15:53:53,554 - INFO - "GET /get_config_values HTTP/1.1" 200 877
+"POST /stop_index HTTP/1.1" 200 52
+2024-06-15 15:53:56,244 - INFO - "POST /stop_index HTTP/1.1" 200 52
+2024-06-15 15:53:57,284 - INFO - Task plutusAI.server.base.updateExpiryDetails[f95e1790-f090-48b1-b90b-40e6e06d0793] received
+2024-06-15 15:53:57,291 - INFO - Task plutusAI.server.AngelOneApp.createHttpData[51db2b64-7607-4c54-aacb-c4a8472e3d67] received
+2024-06-15 15:53:57,295 - INFO - Index started for user: user1@gmail.com for index :Nifty
+"POST /start_index HTTP/1.1" 200 49
+2024-06-15 15:53:57,310 - INFO - "POST /start_index HTTP/1.1" 200 49
+2024-06-15 15:53:57,310 - INFO - Task plutusAI.server.priceAction.priceActionScalper.start_index_job[47b13499-06e0-4fcd-ae07-8f43e35f0f16] received
+2024-06-15 15:54:03,321 - INFO - {'current_expiry': '20-JUN-2024', 'next_expiry': '27-JUN-2024'}
+2024-06-15 15:54:10,221 - INFO - initisuccess for angleone
+2024-06-15 15:54:11,751 - INFO - initisuccess for angleone
+2024-06-15 15:54:11,891 - INFO - Job started for User :user1@gmail.com Index Name: nifty	nearestSupport == 22500	nearestResistance == 23500
+2024-06-15 15:54:11,892 - INFO - 23465.6
+2024-06-15 15:54:12,895 - INFO - 23465.6
+2024-06-15 15:54:13,896 - INFO - 23465.6
+2024-06-15 15:54:14,782 - INFO - {'current_expiry': '19-JUN-2024', 'next_expiry': '26-JUN-2024'}
+2024-06-15 15:54:14,898 - INFO - 23465.6
+2024-06-15 15:54:15,901 - INFO - 23465.6
+2024-06-15 15:54:16,904 - INFO - 23465.6
+2024-06-15 15:54:17,906 - INFO - 23465.6
+2024-06-15 15:54:18,908 - INFO - 23465.6
+2024-06-15 15:54:19,910 - INFO - 23465.6
+2024-06-15 15:54:20,403 - INFO - {'current_expiry': '18-JUN-2024', 'next_expiry': '25-JUN-2024'}
+2024-06-15 15:54:20,405 - INFO - Expiry Updated
+2024-06-15 15:54:20,416 - INFO - Task plutusAI.server.base.updateExpiryDetails[f95e1790-f090-48b1-b90b-40e6e06d0793] succeeded in 23.12424737800029s: None
+2024-06-15 15:54:20,912 - INFO - 23465.6
+2024-06-15 15:54:21,914 - INFO - 23465.6
+2024-06-15 15:54:22,916 - INFO - 23465.6
+2024-06-15 15:54:23,918 - INFO - 23465.6
+2024-06-15 15:54:24,920 - INFO - 23465.6
+2024-06-15 15:54:25,923 - INFO - 23465.6
+2024-06-15 15:54:26,924 - INFO - 23465.6
+2024-06-15 15:54:27,927 - INFO - 23465.6
+2024-06-15 15:54:28,929 - INFO - 23465.6
+2024-06-15 15:54:29,931 - INFO - 23465.6
+2024-06-15 15:54:30,934 - INFO - 23465.6
+2024-06-15 15:54:31,935 - INFO - 23465.6
+2024-06-15 15:54:32,939 - INFO - 23465.6
+2024-06-15 15:54:33,940 - INFO - 23465.6
+2024-06-15 15:54:34,943 - INFO - 23465.6
+2024-06-15 15:54:35,945 - INFO - 23465.6
+2024-06-15 15:54:36,947 - INFO - 23465.6
+2024-06-15 15:54:37,948 - INFO - 23465.6
+2024-06-15 15:54:38,950 - INFO - 23465.6
+2024-06-15 15:54:39,952 - INFO - 23465.6
+2024-06-15 15:54:40,955 - INFO - 23465.6
+2024-06-15 15:54:41,957 - INFO - 23465.6
+2024-06-15 15:54:42,959 - INFO - 23465.6
+2024-06-15 15:54:43,960 - INFO - 23465.6
+2024-06-15 15:54:44,962 - INFO - 23465.6
+2024-06-15 15:54:45,964 - INFO - 23465.6
+2024-06-15 15:54:46,967 - INFO - 23465.6
+2024-06-15 15:54:47,970 - INFO - 23465.6
+2024-06-15 15:54:48,973 - INFO - 23465.6
+2024-06-15 15:54:49,974 - INFO - 23465.6
+2024-06-15 15:54:50,976 - INFO - 23465.6
+2024-06-15 15:54:51,978 - INFO - 23465.6
+2024-06-15 15:54:52,981 - INFO - 23465.6
+2024-06-15 15:54:53,983 - INFO - 23465.6
+2024-06-15 15:55:12,322 - WARNING - /home/sahayaraj/.local/lib/python3.11/site-packages/celery/worker/consumer/consumer.py:507: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
+whether broker connection retries are made during startup in Celery 6.0 and above.
+If you wish to retain the existing behavior for retrying connections on startup,
+you should set broker_connection_retry_on_startup to True.
+  warnings.warn(
+
+2024-06-15 15:55:12,332 - INFO - Connected to redis://localhost:6379//
+2024-06-15 15:55:12,334 - WARNING - /home/sahayaraj/.local/lib/python3.11/site-packages/celery/worker/consumer/consumer.py:507: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
+whether broker connection retries are made during startup in Celery 6.0 and above.
+If you wish to retain the existing behavior for retrying connections on startup,
+you should set broker_connection_retry_on_startup to True.
+  warnings.warn(
+
+2024-06-15 15:55:12,337 - INFO - mingle: searching for neighbors
+2024-06-15 15:55:13,349 - INFO - mingle: all alone
+2024-06-15 15:55:13,367 - INFO - celery@sahayaraj ready.
+"POST /stop_index HTTP/1.1" 200 49
+2024-06-15 15:55:39,414 - INFO - "POST /stop_index HTTP/1.1" 200 49
+2024-06-15 15:55:42,140 - INFO - Index started for user: user1@gmail.com for index :Nifty
+"POST /start_index HTTP/1.1" 200 49
+2024-06-15 15:55:42,148 - INFO - "POST /start_index HTTP/1.1" 200 49
+2024-06-15 15:55:42,148 - INFO - Task plutusAI.server.priceAction.priceActionScalper.start_index_job[8ee50261-8075-49c4-940b-3ee51be37a66] received
+2024-06-15 15:55:48,850 - INFO - initisuccess for angleone
+2024-06-15 15:55:49,069 - INFO - Job started for User :user1@gmail.com Index Name: nifty	nearestSupport == 22500	nearestResistance == 23500
+2024-06-15 15:55:49,070 - INFO - 23465.6
+2024-06-15 15:55:50,073 - INFO - 23465.6
+2024-06-15 15:55:51,075 - INFO - 23465.6
+2024-06-15 15:55:52,077 - INFO - 23465.6
+2024-06-15 15:55:53,080 - INFO - 23465.6
+2024-06-15 15:55:54,082 - INFO - 23465.6
+2024-06-15 15:55:55,084 - INFO - 23465.6
+2024-06-15 15:55:56,086 - INFO - 23465.6
+2024-06-15 15:55:57,093 - INFO - 23465.6
+2024-06-15 15:55:58,097 - INFO - 23465.6
+2024-06-15 15:55:59,099 - INFO - 23465.6
+2024-06-15 15:56:00,101 - INFO - 23465.6
+2024-06-15 15:56:01,105 - INFO - 23465.6
+2024-06-15 15:56:02,106 - INFO - 23465.6
+2024-06-15 15:56:03,108 - INFO - 23465.6
+2024-06-15 15:56:04,111 - INFO - 23465.6
+2024-06-15 15:56:05,112 - INFO - 23465.6
+2024-06-15 15:56:06,114 - INFO - 23465.6
+2024-06-15 15:56:07,116 - INFO - 23465.6
+2024-06-15 15:56:08,118 - INFO - 23465.6
+2024-06-15 15:56:09,121 - INFO - 23465.6
+2024-06-15 15:56:10,123 - INFO - 23465.6
+2024-06-15 15:56:11,125 - INFO - 23465.6
+2024-06-15 15:56:12,127 - INFO - 23465.6
+2024-06-15 15:56:13,129 - INFO - 23465.6
+2024-06-15 15:56:14,131 - INFO - 23465.6
+2024-06-15 15:56:15,134 - INFO - 23465.6
+2024-06-15 15:56:16,136 - INFO - 23465.6
+2024-06-15 15:56:17,138 - INFO - 23465.6
+2024-06-15 15:56:18,140 - INFO - 23465.6
+2024-06-15 15:56:19,142 - INFO - 23465.6
+2024-06-15 15:56:20,144 - INFO - 23465.6
+2024-06-15 15:56:21,145 - INFO - 23465.6
+2024-06-15 15:56:22,147 - INFO - 23465.6
+2024-06-15 15:56:23,150 - INFO - 23465.6
+2024-06-15 15:56:24,151 - INFO - 23465.6
+2024-06-15 15:56:25,154 - INFO - 23465.6
+2024-06-15 15:56:26,156 - INFO - 23465.6
+2024-06-15 15:56:27,158 - INFO - 23465.6
+2024-06-15 15:56:28,160 - INFO - 23465.6
+2024-06-15 15:56:29,162 - INFO - 23465.6
+2024-06-15 15:56:30,164 - INFO - 23465.6
+2024-06-15 15:56:31,166 - INFO - 23465.6
+2024-06-15 15:56:32,167 - INFO - 23465.6
+2024-06-15 15:56:33,169 - INFO - 23465.6
+2024-06-15 15:56:34,171 - INFO - 23465.6
+2024-06-15 15:56:35,173 - INFO - 23465.6
+2024-06-15 15:56:36,176 - INFO - 23465.6
+2024-06-15 15:56:37,180 - INFO - 23465.6
+2024-06-15 15:56:38,185 - INFO - 23465.6
+2024-06-15 15:56:39,187 - INFO - 23465.6
+2024-06-15 15:56:40,189 - INFO - 23465.6
+2024-06-15 15:56:41,192 - INFO - 23465.6
+2024-06-15 15:56:42,194 - INFO - 22500.0
+2024-06-15 15:56:42,345 - INFO - Index Name: nifty pivot Decided, User:user1@gmail.com
+2024-06-15 15:56:42,347 - INFO - 22500.0
+2024-06-15 15:56:43,348 - INFO - 22500.0
+2024-06-15 15:56:44,351 - INFO - 22500.0
+2024-06-15 15:56:45,353 - INFO - 22500.0
+2024-06-15 15:56:46,355 - INFO - 22500.0
+2024-06-15 15:56:47,357 - INFO - 22500.0
+2024-06-15 15:56:48,360 - INFO - 22500.0
+2024-06-15 15:56:49,362 - INFO - 22500.0
+2024-06-15 15:56:50,364 - INFO - 22500.0
+2024-06-15 15:56:51,366 - INFO - 22500.0
+2024-06-15 15:56:52,368 - INFO - 22500.0
+2024-06-15 15:56:53,370 - INFO - 22500.0
+2024-06-15 15:56:54,372 - INFO - 22500.0
+2024-06-15 15:56:55,374 - INFO - 22520.0
+2024-06-15 15:56:55,465 - INFO - Index Name: nifty CESetTargetAndStopLoss
+2024-06-15 15:56:55,466 - INFO - Index Name: nifty SL >>22490.0
+2024-06-15 15:56:55,466 - INFO - Index Name: nifty Target >>23495
+2024-06-15 15:56:55,468 - INFO - 22520.0
+2024-06-15 15:56:55,645 - INFO - Index Name: nifty User :user1@gmail.com Current premium  = NIFTY20JUN2423350CE
+2024-06-15 15:56:55,674 - INFO - Index Name: nifty User :user1@gmail.com {'variety': 'NORMAL', 'exchange': 'NFO', 'tradingsymbol': 'NIFTY20JUN2423350CE', 'symboltoken': '44397', 'transactiontype': 'BUY', 'ordertype': 'MARKET', 'producttype': 'INTRADAY', 'duration': 'DAY', 'quantity': 500}
+2024-06-15 15:56:55,869 - INFO - Index Name: nifty User :user1@gmail.com {'status': True, 'message': 'SUCCESS', 'errorcode': '', 'data': {'script': 'NIFTY20JUN2423350CE', 'orderid': '240615000001737', 'uniqueorderid': '197302ae-6450-46bb-8317-e7245bf36df5'}}
+2024-06-15 15:56:56,138 - INFO - Index Name: nifty User :user1@gmail.com {'variety': 'NORMAL', 'ordertype': 'MARKET', 'producttype': 'INTRADAY', 'duration': 'DAY', 'price': 0.0, 'triggerprice': 0.0, 'quantity': '500', 'disclosedquantity': '0', 'squareoff': 0.0, 'stoploss': 0.0, 'trailingstoploss': 0.0, 'tradingsymbol': 'NIFTY20JUN2423350CE', 'transactiontype': 'BUY', 'exchange': 'NFO', 'symboltoken': '44397', 'instrumenttype': 'OPTIDX', 'strikeprice': 23350.0, 'optiontype': 'CE', 'expirydate': '20JUN2024', 'lotsize': '25', 'cancelsize': '0', 'averageprice': 0.0, 'filledshares': '0', 'unfilledshares': '500', 'orderid': '240615000001737', 'text': 'Fresh intraday orders are not allowed in the closing minutes. You can place an order with a different product type', 'status': 'rejected', 'orderstatus': 'rejected', 'updatetime': '15-Jun-2024 21:26:55', 'exchtime': '', 'exchorderupdatetime': '', 'fillid': '', 'filltime': '', 'parentorderid': '', 'ordertag': '', 'uniqueorderid': '197302ae-6450-46bb-8317-e7245bf36df5'}
+2024-06-15 15:56:56,138 - INFO - addOrderBookDetails
+2024-06-15 15:56:56,261 - INFO - addOrderBookDetails : {'user_id': 'user1@gmail.com', 'script_name': 'NIFTY20JUN2423350CE', 'qty': 50, 'entry_price': 0.0, 'status': 'order_placed', 'strategy': 'hunter', 'entry_time': 1718467016}
+2024-06-15 15:56:56,301 - INFO - Index Name: nifty User :user1@gmail.com {'variety': 'STOPLOSS', 'exchange': 'NFO', 'tradingsymbol': 'NIFTY20JUN2423350CE', 'symboltoken': '44397', 'transactiontype': 'SELL', 'ordertype': 'STOPLOSS_LIMIT', 'price': -10, 'triggerprice': -10, 'producttype': 'INTRADAY', 'duration': 'DAY', 'quantity': 500}
+2024-06-15 15:56:56,502 - INFO - Index Name: nifty User :user1@gmail.com None
+2024-06-15 15:56:56,503 - ERROR - User :user1@gmail.com exception in placeCallOption ---- 'NoneType' object is not subscriptable
+2024-06-15 15:56:56,503 - INFO - Index Name: nifty User :user1@gmail.comExitConditions == [22490.0]
+2024-06-15 15:56:56,503 - ERROR - User :user1@gmail.comniftyexception in placeStopLoss  -----  'NSEPriceAction' object has no attribute 'optionDetails'
+2024-06-15 15:56:57,505 - INFO - 22520.0
+2024-06-15 15:56:57,695 - INFO - Index Name: nifty User :user1@gmail.com Current premium  = NIFTY20JUN2423350CE
+2024-06-15 15:56:57,709 - INFO - Index Name: nifty User :user1@gmail.com {'variety': 'NORMAL', 'exchange': 'NFO', 'tradingsymbol': 'NIFTY20JUN2423350CE', 'symboltoken': '44397', 'transactiontype': 'BUY', 'ordertype': 'MARKET', 'producttype': 'INTRADAY', 'duration': 'DAY', 'quantity': 500}
+2024-06-15 15:56:57,899 - INFO - Index Name: nifty User :user1@gmail.com {'status': True, 'message': 'SUCCESS', 'errorcode': '', 'data': {'script': 'NIFTY20JUN2423350CE', 'orderid': '240615000001738', 'uniqueorderid': 'b98ee53a-1c71-44ff-af93-806f72c6a4cd'}}
+2024-06-15 15:56:58,089 - INFO - Index Name: nifty User :user1@gmail.com {'variety': 'NORMAL', 'ordertype': 'MARKET', 'producttype': 'INTRADAY', 'duration': 'DAY', 'price': 0.0, 'triggerprice': 0.0, 'quantity': '500', 'disclosedquantity': '0', 'squareoff': 0.0, 'stoploss': 0.0, 'trailingstoploss': 0.0, 'tradingsymbol': 'NIFTY20JUN2423350CE', 'transactiontype': 'BUY', 'exchange': 'NFO', 'symboltoken': '44397', 'instrumenttype': 'OPTIDX', 'strikeprice': 23350.0, 'optiontype': 'CE', 'expirydate': '20JUN2024', 'lotsize': '25', 'cancelsize': '0', 'averageprice': 0.0, 'filledshares': '0', 'unfilledshares': '500', 'orderid': '240615000001738', 'text': 'Fresh intraday orders are not allowed in the closing minutes. You can place an order with a different product type', 'status': 'rejected', 'orderstatus': 'rejected', 'updatetime': '15-Jun-2024 21:26:57', 'exchtime': '', 'exchorderupdatetime': '', 'fillid': '', 'filltime': '', 'parentorderid': '', 'ordertag': '', 'uniqueorderid': 'b98ee53a-1c71-44ff-af93-806f72c6a4cd'}
+2024-06-15 15:56:58,089 - INFO - addOrderBookDetails
+2024-06-15 15:56:58,202 - INFO - addOrderBookDetails : {'user_id': 'user1@gmail.com', 'script_name': 'NIFTY20JUN2423350CE', 'qty': 50, 'entry_price': 0.0, 'status': 'order_placed', 'strategy': 'hunter', 'entry_time': 1718467018}
+2024-06-15 15:56:58,224 - INFO - Index Name: nifty User :user1@gmail.com {'variety': 'STOPLOSS', 'exchange': 'NFO', 'tradingsymbol': 'NIFTY20JUN2423350CE', 'symboltoken': '44397', 'transactiontype': 'SELL', 'ordertype': 'STOPLOSS_LIMIT', 'price': -10, 'triggerprice': -10, 'producttype': 'INTRADAY', 'duration': 'DAY', 'quantity': 500}
+2024-06-15 15:56:58,423 - INFO - Index Name: nifty User :user1@gmail.com None
+2024-06-15 15:56:58,424 - ERROR - User :user1@gmail.com exception in placeCallOption ---- 'NoneType' object is not subscriptable
+2024-06-15 15:56:58,424 - INFO - Index Name: nifty User :user1@gmail.comExitConditions == [22490.0]
+2024-06-15 15:56:58,424 - ERROR - User :user1@gmail.comniftyexception in placeStopLoss  -----  'NSEPriceAction' object has no attribute 'optionDetails'
+2024-06-15 15:56:59,427 - INFO - 22520.0
+2024-06-15 15:56:59,646 - INFO - Index Name: nifty User :user1@gmail.com Current premium  = NIFTY20JUN2423350CE
+2024-06-15 15:56:59,672 - INFO - Index Name: nifty User :user1@gmail.com {'variety': 'NORMAL', 'exchange': 'NFO', 'tradingsymbol': 'NIFTY20JUN2423350CE', 'symboltoken': '44397', 'transactiontype': 'BUY', 'ordertype': 'MARKET', 'producttype': 'INTRADAY', 'duration': 'DAY', 'quantity': 500}
+2024-06-15 15:56:59,933 - INFO - Index Name: nifty User :user1@gmail.com {'status': True, 'message': 'SUCCESS', 'errorcode': '', 'data': {'script': 'NIFTY20JUN2423350CE', 'orderid': '240615000001739', 'uniqueorderid': 'fd35b72c-aefc-4588-a31f-782c765c26b9'}}
+2024-06-15 15:57:00,127 - INFO - Index Name: nifty User :user1@gmail.com {'variety': 'NORMAL', 'ordertype': 'MARKET', 'producttype': 'INTRADAY', 'duration': 'DAY', 'price': 0.0, 'triggerprice': 0.0, 'quantity': '500', 'disclosedquantity': '0', 'squareoff': 0.0, 'stoploss': 0.0, 'trailingstoploss': 0.0, 'tradingsymbol': 'NIFTY20JUN2423350CE', 'transactiontype': 'BUY', 'exchange': 'NFO', 'symboltoken': '44397', 'instrumenttype': 'OPTIDX', 'strikeprice': 23350.0, 'optiontype': 'CE', 'expirydate': '20JUN2024', 'lotsize': '25', 'cancelsize': '0', 'averageprice': 0.0, 'filledshares': '0', 'unfilledshares': '500', 'orderid': '240615000001739', 'text': 'Fresh intraday orders are not allowed in the closing minutes. You can place an order with a different product type', 'status': 'rejected', 'orderstatus': 'rejected', 'updatetime': '15-Jun-2024 21:26:59', 'exchtime': '', 'exchorderupdatetime': '', 'fillid': '', 'filltime': '', 'parentorderid': '', 'ordertag': '', 'uniqueorderid': 'fd35b72c-aefc-4588-a31f-782c765c26b9'}
+2024-06-15 15:57:00,127 - INFO - addOrderBookDetails
+2024-06-15 15:57:00,232 - INFO - addOrderBookDetails : {'user_id': 'user1@gmail.com', 'script_name': 'NIFTY20JUN2423350CE', 'qty': 50, 'entry_price': 0.0, 'status': 'order_placed', 'strategy': 'hunter', 'entry_time': 1718467020}
+2024-06-15 15:57:00,296 - INFO - Index Name: nifty User :user1@gmail.com {'variety': 'STOPLOSS', 'exchange': 'NFO', 'tradingsymbol': 'NIFTY20JUN2423350CE', 'symboltoken': '44397', 'transactiontype': 'SELL', 'ordertype': 'STOPLOSS_LIMIT', 'price': -10, 'triggerprice': -10, 'producttype': 'INTRADAY', 'duration': 'DAY', 'quantity': 500}
+2024-06-15 15:57:00,494 - INFO - Index Name: nifty User :user1@gmail.com None
+2024-06-15 15:57:00,494 - ERROR - User :user1@gmail.com exception in placeCallOption ---- 'NoneType' object is not subscriptable
+2024-06-15 15:57:00,494 - INFO - Index Name: nifty User :user1@gmail.comExitConditions == [22490.0]
+2024-06-15 15:57:00,495 - ERROR - User :user1@gmail.comniftyexception in placeStopLoss  -----  'NSEPriceAction' object has no attribute 'optionDetails'
+2024-06-15 15:57:01,497 - INFO - 22520.0
+2024-06-15 15:57:01,712 - INFO - Index Name: nifty User :user1@gmail.com Current premium  = NIFTY20JUN2423350CE
+2024-06-15 15:57:01,740 - INFO - Index Name: nifty User :user1@gmail.com {'variety': 'NORMAL', 'exchange': 'NFO', 'tradingsymbol': 'NIFTY20JUN2423350CE', 'symboltoken': '44397', 'transactiontype': 'BUY', 'ordertype': 'MARKET', 'producttype': 'INTRADAY', 'duration': 'DAY', 'quantity': 500}
+2024-06-15 15:57:01,934 - INFO - Index Name: nifty User :user1@gmail.com {'status': True, 'message': 'SUCCESS', 'errorcode': '', 'data': {'script': 'NIFTY20JUN2423350CE', 'orderid': '240615000001740', 'uniqueorderid': '665dae09-fd1c-49fd-90bf-a84363caec99'}}
+2024-06-15 15:57:02,123 - INFO - Index Name: nifty User :user1@gmail.com {'variety': 'NORMAL', 'ordertype': 'MARKET', 'producttype': 'INTRADAY', 'duration': 'DAY', 'price': 0.0, 'triggerprice': 0.0, 'quantity': '500', 'disclosedquantity': '0', 'squareoff': 0.0, 'stoploss': 0.0, 'trailingstoploss': 0.0, 'tradingsymbol': 'NIFTY20JUN2423350CE', 'transactiontype': 'BUY', 'exchange': 'NFO', 'symboltoken': '44397', 'instrumenttype': 'OPTIDX', 'strikeprice': 23350.0, 'optiontype': 'CE', 'expirydate': '20JUN2024', 'lotsize': '25', 'cancelsize': '0', 'averageprice': 0.0, 'filledshares': '0', 'unfilledshares': '500', 'orderid': '240615000001740', 'text': 'Fresh intraday orders are not allowed in the closing minutes. You can place an order with a different product type', 'status': 'rejected', 'orderstatus': 'rejected', 'updatetime': '15-Jun-2024 21:27:01', 'exchtime': '', 'exchorderupdatetime': '', 'fillid': '', 'filltime': '', 'parentorderid': '', 'ordertag': '', 'uniqueorderid': '665dae09-fd1c-49fd-90bf-a84363caec99'}
+2024-06-15 15:57:02,124 - INFO - addOrderBookDetails
+2024-06-15 15:57:02,268 - INFO - addOrderBookDetails : {'user_id': 'user1@gmail.com', 'script_name': 'NIFTY20JUN2423350CE', 'qty': 50, 'entry_price': 0.0, 'status': 'order_placed', 'strategy': 'hunter', 'entry_time': 1718467022}
+2024-06-15 15:57:02,304 - INFO - Index Name: nifty User :user1@gmail.com {'variety': 'STOPLOSS', 'exchange': 'NFO', 'tradingsymbol': 'NIFTY20JUN2423350CE', 'symboltoken': '44397', 'transactiontype': 'SELL', 'ordertype': 'STOPLOSS_LIMIT', 'price': -10, 'triggerprice': -10, 'producttype': 'INTRADAY', 'duration': 'DAY', 'quantity': 500}
+2024-06-15 15:57:02,506 - INFO - Index Name: nifty User :user1@gmail.com None
+2024-06-15 15:57:02,507 - ERROR - User :user1@gmail.com exception in placeCallOption ---- 'NoneType' object is not subscriptable
+2024-06-15 15:57:02,507 - INFO - Index Name: nifty User :user1@gmail.comExitConditions == [22490.0]
+2024-06-15 15:57:02,507 - ERROR - User :user1@gmail.comniftyexception in placeStopLoss  -----  'NSEPriceAction' object has no attribute 'optionDetails'
+2024-06-15 15:57:03,510 - INFO - 22520.0
+2024-06-15 15:57:03,867 - INFO - Index Name: nifty User :user1@gmail.com Current premium  = NIFTY20JUN2423350CE
+2024-06-15 15:57:03,919 - INFO - Index Name: nifty User :user1@gmail.com {'variety': 'NORMAL', 'exchange': 'NFO', 'tradingsymbol': 'NIFTY20JUN2423350CE', 'symboltoken': '44397', 'transactiontype': 'BUY', 'ordertype': 'MARKET', 'producttype': 'INTRADAY', 'duration': 'DAY', 'quantity': 500}
+2024-06-15 15:57:04,133 - INFO - Index Name: nifty User :user1@gmail.com {'status': True, 'message': 'SUCCESS', 'errorcode': '', 'data': {'script': 'NIFTY20JUN2423350CE', 'orderid': '240615000001741', 'uniqueorderid': '7ff64195-772d-4080-b79f-0ec8477abf2f'}}
+2024-06-15 15:57:04,309 - INFO - Index Name: nifty User :user1@gmail.com {'variety': 'NORMAL', 'ordertype': 'MARKET', 'producttype': 'INTRADAY', 'duration': 'DAY', 'price': 0.0, 'triggerprice': 0.0, 'quantity': '500', 'disclosedquantity': '0', 'squareoff': 0.0, 'stoploss': 0.0, 'trailingstoploss': 0.0, 'tradingsymbol': 'NIFTY20JUN2423350CE', 'transactiontype': 'BUY', 'exchange': 'NFO', 'symboltoken': '44397', 'instrumenttype': 'OPTIDX', 'strikeprice': 23350.0, 'optiontype': 'CE', 'expirydate': '20JUN2024', 'lotsize': '25', 'cancelsize': '0', 'averageprice': 0.0, 'filledshares': '0', 'unfilledshares': '500', 'orderid': '240615000001741', 'text': 'Fresh intraday orders are not allowed in the closing minutes. You can place an order with a different product type', 'status': 'rejected', 'orderstatus': 'rejected', 'updatetime': '15-Jun-2024 21:27:04', 'exchtime': '', 'exchorderupdatetime': '', 'fillid': '', 'filltime': '', 'parentorderid': '', 'ordertag': '', 'uniqueorderid': '7ff64195-772d-4080-b79f-0ec8477abf2f'}
+2024-06-15 15:57:04,309 - INFO - addOrderBookDetails
+2024-06-15 15:57:04,527 - INFO - addOrderBookDetails : {'user_id': 'user1@gmail.com', 'script_name': 'NIFTY20JUN2423350CE', 'qty': 50, 'entry_price': 0.0, 'status': 'order_placed', 'strategy': 'hunter', 'entry_time': 1718467024}
+2024-06-15 15:57:04,564 - INFO - Index Name: nifty User :user1@gmail.com {'variety': 'STOPLOSS', 'exchange': 'NFO', 'tradingsymbol': 'NIFTY20JUN2423350CE', 'symboltoken': '44397', 'transactiontype': 'SELL', 'ordertype': 'STOPLOSS_LIMIT', 'price': -10, 'triggerprice': -10, 'producttype': 'INTRADAY', 'duration': 'DAY', 'quantity': 500}
+2024-06-15 15:57:04,789 - INFO - Index Name: nifty User :user1@gmail.com None
+2024-06-15 15:57:04,790 - ERROR - User :user1@gmail.com exception in placeCallOption ---- 'NoneType' object is not subscriptable
+2024-06-15 15:57:04,790 - INFO - Index Name: nifty User :user1@gmail.comExitConditions == [22490.0]
+2024-06-15 15:57:04,790 - ERROR - User :user1@gmail.comniftyexception in placeStopLoss  -----  'NSEPriceAction' object has no attribute 'optionDetails'
+2024-06-15 15:57:05,792 - INFO - 22520.0
+2024-06-15 15:57:06,010 - INFO - Index Name: nifty User :user1@gmail.com Current premium  = NIFTY20JUN2423350CE
+2024-06-15 15:57:06,042 - INFO - Index Name: nifty User :user1@gmail.com {'variety': 'NORMAL', 'exchange': 'NFO', 'tradingsymbol': 'NIFTY20JUN2423350CE', 'symboltoken': '44397', 'transactiontype': 'BUY', 'ordertype': 'MARKET', 'producttype': 'INTRADAY', 'duration': 'DAY', 'quantity': 500}
+2024-06-15 15:57:06,344 - INFO - Index Name: nifty User :user1@gmail.com {'status': True, 'message': 'SUCCESS', 'errorcode': '', 'data': {'script': 'NIFTY20JUN2423350CE', 'orderid': '240615000001742', 'uniqueorderid': '00354056-e5d5-40bc-828c-f94a02034aad'}}
+2024-06-15 15:57:06,576 - INFO - Index Name: nifty User :user1@gmail.com {'variety': 'NORMAL', 'ordertype': 'MARKET', 'producttype': 'INTRADAY', 'duration': 'DAY', 'price': 0.0, 'triggerprice': 0.0, 'quantity': '500', 'disclosedquantity': '0', 'squareoff': 0.0, 'stoploss': 0.0, 'trailingstoploss': 0.0, 'tradingsymbol': 'NIFTY20JUN2423350CE', 'transactiontype': 'BUY', 'exchange': 'NFO', 'symboltoken': '44397', 'instrumenttype': 'OPTIDX', 'strikeprice': 23350.0, 'optiontype': 'CE', 'expirydate': '20JUN2024', 'lotsize': '25', 'cancelsize': '0', 'averageprice': 0.0, 'filledshares': '0', 'unfilledshares': '500', 'orderid': '240615000001742', 'text': 'Fresh intraday orders are not allowed in the closing minutes. You can place an order with a different product type', 'status': 'rejected', 'orderstatus': 'rejected', 'updatetime': '15-Jun-2024 21:27:06', 'exchtime': '', 'exchorderupdatetime': '', 'fillid': '', 'filltime': '', 'parentorderid': '', 'ordertag': '', 'uniqueorderid': '00354056-e5d5-40bc-828c-f94a02034aad'}
+2024-06-15 15:57:06,577 - INFO - addOrderBookDetails
+2024-06-15 15:57:06,713 - INFO - addOrderBookDetails : {'user_id': 'user1@gmail.com', 'script_name': 'NIFTY20JUN2423350CE', 'qty': 50, 'entry_price': 0.0, 'status': 'order_placed', 'strategy': 'hunter', 'entry_time': 1718467026}
+2024-06-15 15:57:06,741 - INFO - Index Name: nifty User :user1@gmail.com {'variety': 'STOPLOSS', 'exchange': 'NFO', 'tradingsymbol': 'NIFTY20JUN2423350CE', 'symboltoken': '44397', 'transactiontype': 'SELL', 'ordertype': 'STOPLOSS_LIMIT', 'price': -10, 'triggerprice': -10, 'producttype': 'INTRADAY', 'duration': 'DAY', 'quantity': 500}
+2024-06-15 15:57:06,923 - INFO - Index Name: nifty User :user1@gmail.com None
+2024-06-15 15:57:06,924 - ERROR - User :user1@gmail.com exception in placeCallOption ---- 'NoneType' object is not subscriptable
+2024-06-15 15:57:06,925 - INFO - Index Name: nifty User :user1@gmail.comExitConditions == [22490.0]
+2024-06-15 15:57:06,925 - ERROR - User :user1@gmail.comniftyexception in placeStopLoss  -----  'NSEPriceAction' object has no attribute 'optionDetails'
+2024-06-15 15:57:07,927 - INFO - 22520.0
+2024-06-15 15:57:08,165 - INFO - Index Name: nifty User :user1@gmail.com Current premium  = NIFTY20JUN2423350CE
+2024-06-15 15:57:08,198 - INFO - Index Name: nifty User :user1@gmail.com {'variety': 'NORMAL', 'exchange': 'NFO', 'tradingsymbol': 'NIFTY20JUN2423350CE', 'symboltoken': '44397', 'transactiontype': 'BUY', 'ordertype': 'MARKET', 'producttype': 'INTRADAY', 'duration': 'DAY', 'quantity': 500}
+2024-06-15 15:57:08,440 - INFO - Index Name: nifty User :user1@gmail.com {'status': True, 'message': 'SUCCESS', 'errorcode': '', 'data': {'script': 'NIFTY20JUN2423350CE', 'orderid': '240615000001743', 'uniqueorderid': '0f1760c2-1c64-47bd-a3c7-85427ea1fef9'}}
+2024-06-15 15:57:08,633 - INFO - Index Name: nifty User :user1@gmail.com {'variety': 'NORMAL', 'ordertype': 'MARKET', 'producttype': 'INTRADAY', 'duration': 'DAY', 'price': 0.0, 'triggerprice': 0.0, 'quantity': '500', 'disclosedquantity': '0', 'squareoff': 0.0, 'stoploss': 0.0, 'trailingstoploss': 0.0, 'tradingsymbol': 'NIFTY20JUN2423350CE', 'transactiontype': 'BUY', 'exchange': 'NFO', 'symboltoken': '44397', 'instrumenttype': 'OPTIDX', 'strikeprice': 23350.0, 'optiontype': 'CE', 'expirydate': '20JUN2024', 'lotsize': '25', 'cancelsize': '0', 'averageprice': 0.0, 'filledshares': '0', 'unfilledshares': '500', 'orderid': '240615000001743', 'text': 'Fresh intraday orders are not allowed in the closing minutes. You can place an order with a different product type', 'status': 'rejected', 'orderstatus': 'rejected', 'updatetime': '15-Jun-2024 21:27:08', 'exchtime': '', 'exchorderupdatetime': '', 'fillid': '', 'filltime': '', 'parentorderid': '', 'ordertag': '', 'uniqueorderid': '0f1760c2-1c64-47bd-a3c7-85427ea1fef9'}
+2024-06-15 15:57:08,633 - INFO - addOrderBookDetails
+2024-06-15 15:57:08,842 - INFO - addOrderBookDetails : {'user_id': 'user1@gmail.com', 'script_name': 'NIFTY20JUN2423350CE', 'qty': 50, 'entry_price': 0.0, 'status': 'order_placed', 'strategy': 'hunter', 'entry_time': 1718467028}
+2024-06-15 15:57:08,878 - INFO - Index Name: nifty User :user1@gmail.com {'variety': 'STOPLOSS', 'exchange': 'NFO', 'tradingsymbol': 'NIFTY20JUN2423350CE', 'symboltoken': '44397', 'transactiontype': 'SELL', 'ordertype': 'STOPLOSS_LIMIT', 'price': -10, 'triggerprice': -10, 'producttype': 'INTRADAY', 'duration': 'DAY', 'quantity': 500}
+2024-06-15 15:57:09,079 - INFO - Index Name: nifty User :user1@gmail.com None
+2024-06-15 15:57:09,079 - ERROR - User :user1@gmail.com exception in placeCallOption ---- 'NoneType' object is not subscriptable
+2024-06-15 15:57:09,080 - INFO - Index Name: nifty User :user1@gmail.comExitConditions == [22490.0]
+2024-06-15 15:57:09,080 - ERROR - User :user1@gmail.comniftyexception in placeStopLoss  -----  'NSEPriceAction' object has no attribute 'optionDetails'
+"GET /get_broker_details HTTP/1.1" 200 317
+2024-06-15 15:57:58,602 - INFO - "GET /get_broker_details HTTP/1.1" 200 317
+"GET /get_broker_details?broker_name=angel_one HTTP/1.1" 200 315
+2024-06-15 15:57:59,766 - INFO - "GET /get_broker_details?broker_name=angel_one HTTP/1.1" 200 315
+"PUT /edit_broker_details HTTP/1.1" 200 58
+2024-06-15 15:58:01,849 - INFO - "PUT /edit_broker_details HTTP/1.1" 200 58
+"GET /get_broker_details HTTP/1.1" 200 316
+2024-06-15 15:58:02,023 - INFO - "GET /get_broker_details HTTP/1.1" 200 316
+"GET /get_config_values HTTP/1.1" 200 885
+2024-06-15 15:58:03,641 - INFO - "GET /get_config_values HTTP/1.1" 200 885
+"POST /stop_index HTTP/1.1" 200 49
+2024-06-15 15:58:04,887 - INFO - "POST /stop_index HTTP/1.1" 200 49
+"POST /stop_index HTTP/1.1" 200 52
+2024-06-15 15:58:06,822 - INFO - "POST /stop_index HTTP/1.1" 200 52
+2024-06-15 15:58:15,585 - WARNING - /home/sahayaraj/.local/lib/python3.11/site-packages/celery/worker/consumer/consumer.py:507: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
+whether broker connection retries are made during startup in Celery 6.0 and above.
+If you wish to retain the existing behavior for retrying connections on startup,
+you should set broker_connection_retry_on_startup to True.
+  warnings.warn(
+
+2024-06-15 15:58:15,605 - INFO - Connected to redis://localhost:6379//
+2024-06-15 15:58:15,629 - WARNING - /home/sahayaraj/.local/lib/python3.11/site-packages/celery/worker/consumer/consumer.py:507: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
+whether broker connection retries are made during startup in Celery 6.0 and above.
+If you wish to retain the existing behavior for retrying connections on startup,
+you should set broker_connection_retry_on_startup to True.
+  warnings.warn(
+
+2024-06-15 15:58:15,637 - INFO - mingle: searching for neighbors
+2024-06-15 15:58:16,657 - INFO - mingle: all alone
+2024-06-15 15:58:16,676 - INFO - celery@sahayaraj ready.
+2024-06-15 15:58:59,320 - INFO - Index started for user: user1@gmail.com for index :Nifty
+"POST /start_index HTTP/1.1" 200 49
+2024-06-15 15:58:59,329 - INFO - "POST /start_index HTTP/1.1" 200 49
+2024-06-15 15:58:59,331 - INFO - Task plutusAI.server.priceAction.priceActionScalper.start_index_job[6c527ae2-910b-41cc-b762-47b90301a935] received
+2024-06-15 15:59:06,050 - INFO - initisuccess for angleone
+2024-06-15 15:59:06,206 - INFO - Job started for User :user1@gmail.com Index Name: nifty	nearestSupport == 22500	nearestResistance == 23500
+2024-06-15 15:59:06,207 - INFO - 23450.0
+2024-06-15 15:59:07,209 - INFO - 23450.0
+2024-06-15 15:59:08,212 - INFO - 23450.0
+2024-06-15 15:59:09,214 - INFO - 23450.0
+2024-06-15 15:59:10,216 - INFO - 23450.0
+2024-06-15 15:59:11,218 - INFO - 23450.0
+2024-06-15 15:59:12,219 - INFO - 23450.0
+2024-06-15 15:59:13,223 - INFO - 23450.0
+2024-06-15 15:59:14,225 - INFO - 22500.0
+2024-06-15 15:59:15,080 - INFO - Index Name: nifty pivot Decided, User:user1@gmail.com
+2024-06-15 15:59:15,082 - INFO - 22500.0
+2024-06-15 15:59:16,084 - INFO - 22500.0
+2024-06-15 15:59:17,087 - INFO - 22500.0
+2024-06-15 15:59:18,090 - INFO - 22500.0
+2024-06-15 15:59:19,092 - INFO - 22500.0
+2024-06-15 15:59:20,094 - INFO - 22520.0
+2024-06-15 15:59:20,182 - INFO - Index Name: nifty CESetTargetAndStopLoss
+2024-06-15 15:59:20,183 - INFO - Index Name: nifty SL >>22490.0
+2024-06-15 15:59:20,183 - INFO - Index Name: nifty Target >>23495
+2024-06-15 15:59:20,185 - INFO - 22520.0
+2024-06-15 15:59:20,451 - INFO - Index Name: nifty User :user1@gmail.com Current premium  = NIFTY20JUN2423350CE
+2024-06-15 15:59:20,494 - INFO - Index Name: nifty User :user1@gmail.com {'variety': 'NORMAL', 'exchange': 'NFO', 'tradingsymbol': 'NIFTY20JUN2423350CE', 'symboltoken': '44397', 'transactiontype': 'BUY', 'ordertype': 'MARKET', 'producttype': 'INTRADAY', 'duration': 'DAY', 'quantity': 500}
+2024-06-15 15:59:20,497 - INFO - Index Name: nifty User :user1@gmail.com placeDummyOrder
+2024-06-15 15:59:20,739 - INFO - data fine
+2024-06-15 15:59:20,740 - INFO - addOrderBookDetails
+2024-06-15 15:59:20,889 - INFO - addOrderBookDetails : {'user_id': 'user1@gmail.com', 'script_name': 'NIFTY20JUN2423350CE', 'qty': 50, 'entry_price': '176.25', 'status': 'order_placed', 'strategy': 'hunter', 'entry_time': 1718467160}
+2024-06-15 15:59:20,889 - INFO - Index Name: nifty User :user1@gmail.com {'message': 'SUCCESS', 'data': {'orderid': 'dummy_id'}}
+2024-06-15 15:59:20,889 - INFO - Index Name: nifty User :user1@gmail.comExitConditions == [22490.0]
+2024-06-15 15:59:22,182 - INFO - 22520.0
+2024-06-15 15:59:23,429 - INFO - 22520.0
+2024-06-15 15:59:24,685 - INFO - 22520.0
+2024-06-15 15:59:25,866 - INFO - 22520.0
+2024-06-15 15:59:27,127 - INFO - 22520.0
+"GET /get_order_book_details HTTP/1.1" 200 1859
+2024-06-15 15:59:27,253 - INFO - "GET /get_order_book_details HTTP/1.1" 200 1859
+2024-06-15 15:59:28,375 - INFO - 22520.0
+2024-06-15 15:59:29,601 - INFO - 22520.0
+2024-06-15 15:59:30,945 - INFO - 22520.0
+2024-06-15 15:59:32,234 - INFO - 22520.0
+"GET /get_order_book_details HTTP/1.1" 200 1859
+2024-06-15 15:59:32,364 - INFO - "GET /get_order_book_details HTTP/1.1" 200 1859
+Not Found: /favicon.ico
+2024-06-15 15:59:32,655 - WARNING - Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 190
+2024-06-15 15:59:32,656 - WARNING - "GET /favicon.ico HTTP/1.1" 404 190
+2024-06-15 15:59:33,527 - INFO - 22520.0
+2024-06-15 15:59:34,862 - INFO - 22520.0
+2024-06-15 15:59:36,057 - INFO - 22520.0
+2024-06-15 15:59:37,256 - INFO - 22520.0
+2024-06-15 15:59:38,534 - INFO - 22520.0
+2024-06-15 15:59:39,810 - INFO - 22520.0
+2024-06-15 15:59:41,094 - INFO - 22520.0
+2024-06-15 15:59:42,320 - INFO - 22520.0
+2024-06-15 15:59:43,620 - INFO - 22520.0
+2024-06-15 15:59:44,847 - INFO - 22520.0
+2024-06-15 15:59:46,058 - INFO - 22520.0
+2024-06-15 15:59:47,278 - INFO - 22520.0
