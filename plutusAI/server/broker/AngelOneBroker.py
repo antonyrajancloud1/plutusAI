@@ -126,3 +126,23 @@ class AngelOneBroker:
     def getPrice(self, uniq_order_id):
         price_details = self.getOrderDetails(uniq_order_id)
         return str(price_details['averageprice'])
+
+    def getCandleData(self,exchange,symbol,from_time,to_time):
+        try:
+            column=['timestamp',"open","high","low","close","volume"]
+            dataParam={
+                "exchange":exchange,
+                "symboltoken":symbol,
+                "interval":"ONE_MINUTE",
+                "fromdate":from_time,
+                "todate":to_time
+            }
+            historic_data = self.smartApi.getCandleData(dataParam)
+            candle_data=historic_data["data"]
+            if historic_data["message"]=="SUCCESS":
+                df = pd.DataFrame(candle_data,columns=column)
+                # print(df)
+                return df
+        except Exception as e:
+            addLogDetails(ERROR, "exception in getCandleData" + str(e))
+            return GLOBAL_ERROR

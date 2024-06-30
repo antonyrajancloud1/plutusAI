@@ -11,6 +11,7 @@ from plutusAI.server.base import *
 from plutusAI.server.priceAction.NSEPriceAction import NSEPriceAction
 from plutus import celery
 from plutus.celery import app
+from plutusAI.server.priceAction.Scalper import Scalper
 
 
 @shared_task
@@ -49,3 +50,19 @@ def terminate_task(user_email, index):
     except Exception as e:
         addLogDetails(ERROR, str(e))
         return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
+
+@shared_task
+def start_scalper_task(user_email, index):
+    task_id = current_task.request.id
+    JobDetails.objects.create(
+        user_id=user_email,
+        index_name=index,
+        job_id=task_id,
+        strategy=SCALPER,
+    )
+    index_data = IndexDetails.objects.filter(index_name=index)
+    index_group_name = get_index_group_name(index_data)
+    if index_group_name == INDIAN_INDEX:
+        Scalper(user_email, index, INDIAN_INDEX)
+    elif index_group_name == FOREX_INDEX:
+        addLogDetails(INFO, "Forex market")

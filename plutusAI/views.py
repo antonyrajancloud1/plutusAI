@@ -444,3 +444,31 @@ def checkSocketStatus():
     else:
         start_ws_job(SOCKET_JOB_TYPE)
         return JsonResponse({STATUS: SUCCESS, MESSAGE: "Socket Job started"})
+
+@csrf_exempt
+@require_http_methods([POST])
+def start_scalper(request):
+    print("into start_scalper")
+
+    try:
+        #
+        if check_user_session(request):
+            #         #checkSocketStatus()
+            user_email = get_user_email(request)
+            data = json.loads(request.body)
+            index_name = data.get(INDEX_NAME).replace("_", " ").title().replace(" ", "")
+            addLogDetails(INFO, "scalper started for user: " + str(user_email) + " for index :" + index_name)
+            user_data = JobDetails.objects.filter(
+                user_id=user_email, index_name=data.get(INDEX_NAME), strategy=SCALPER
+            )
+            if user_data.count() > 0:
+                return JsonResponse({STATUS: FAILED, MESSAGE: f"{index_name} scalper running"})
+            else:
+                start_scalper_task.delay(user_email, data.get(INDEX_NAME))
+                index_name = data.get(INDEX_NAME).replace("_", " ").title().replace(" ", "")
+                return JsonResponse({STATUS: SUCCESS, MESSAGE: f"{index_name} scalper started"})
+        else:
+            return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+    except Exception as e:
+        addLogDetails(ERROR, str(e))
+        return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})

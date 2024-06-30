@@ -78,7 +78,7 @@ NEXT_EXPIRY = "next_expiry"
 STRIKE = "strike"
 ORDER_PLACED = "order_placed"
 ORDER_EXITED = "order_exited"
-
+TARGET="target"
 #### MESSSAGE CONSTANTS ####
 
 STATUS = "status"
@@ -106,6 +106,8 @@ BROKER_DETAILS_UPDATED= "broker_details_updated"
 ORDER_BOOK_DETAILS = "order_book_details"
 PLAN_DETAILS = "plan_details"
 STRATEGY='strategy'
+SCALPER='scalper'
+NSE_OPEN_TIME = "09:15"
 #### INDEX DEFAULT VALUES ####
 NIFTY_DEFAULT_VALUES = {
     "index_name": "nifty",

@@ -36,7 +36,7 @@ class OrderBook(models.Model):
     exit_price = models.CharField(max_length=250, default=None, blank=True, null=True)
     status = models.CharField(max_length=250, default=None)
     total = models.CharField(max_length=250, default=None, blank=True, null=True)
-    strategy = models.CharField(max_length=250, default=None,blank=True, null=True)
+    strategy = models.CharField(max_length=250, default=None, blank=True, null=True)
 
     def __str__(self):
         return "{" + f"user_id:{self.user_id}, script_name:{self.script_name}, entry_time:{self.entry_time}, exit_time:{self.exit_time},total:{self.total}" + "}"
@@ -88,6 +88,7 @@ class JobDetails(models.Model):
     user_id = models.CharField(max_length=500, default=None)
     index_name = models.CharField(max_length=50, default=None)
     job_id = models.CharField(max_length=300, default=None)
+    strategy = models.CharField(max_length=300, default=None)
 
     def __str__(self):
         return self.index_name
@@ -102,6 +103,23 @@ class PaymentDetails(models.Model):
     registed_date = models.CharField(max_length=200, default=None)
     renew_date = models.CharField(max_length=200, default=None)
     opted_index = models.CharField(max_length=500, default=None)
+
+    @classmethod
+    def search_by_name(cls, query):
+        return cls.objects.filter(name__icontains=query)
+
+
+class ScalperDetails(models.Model):
+    user_id = models.CharField(max_length=500, default=None)
+    index_name = models.CharField(max_length=50, default=None)
+    strike = models.CharField(max_length=10, default=None)
+    capital = models.CharField(max_length=100, default=None)
+    target = models.CharField(max_length=100, default=None)
+    is_demo_trading_enabled = models.BooleanField(default=True)
+    use_full_capital = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.index_name
 
     @classmethod
     def search_by_name(cls, query):

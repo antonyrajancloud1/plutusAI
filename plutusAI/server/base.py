@@ -160,12 +160,17 @@ def get_index_group_by_broker(all_brokers, user_broker):
     return keys
 
 
+def current_time():
+    current_datetime_utc = timezone.now()
+    ist = pytz.timezone("Asia/Kolkata")
+    current_time = current_datetime_utc.astimezone(ist).strftime("%Y-%m-%d %H:%M:%S")
+    return current_time
+
+
 def update_ltp_to_table(data):
     token = data["token"]
     data.pop("token")
-    current_datetime_utc = timezone.now()
-    ist = pytz.timezone("Asia/Kolkata")
-    current_time_str = current_datetime_utc.astimezone(ist).strftime("%y-%m-%d %H:%M:%S")
+    current_time_str = current_time()
     data["last_updated_time"] = current_time_str
     if str(data[LTP]) != 'None':
         updateIndexDetails(token, data)
@@ -454,3 +459,27 @@ def addLogDetails(log_type, logDetails):
         logging.info(logDetails)
     elif str(log_type).__eq__("error"):
         logging.error(logDetails)
+
+
+def is_time_less_than_current_time(time_string):
+    now = datetime.strptime(time_string, "%H:%M").time()
+    target_time = datetime.strptime("09:15", "%H:%M").time()
+
+    if now < target_time:
+        print("The current time is less than 09:15 AM.")
+        return True
+    else:
+        print("The current time is 09:15 AM or later.")
+        return False
+
+
+def increaseTime(datetime_str, minutes):
+    try:
+        print("into increasetime")
+        # datetime_str = "2024-06-28 09:15"
+        datetime_obj = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M")
+        new_datetime_obj = datetime_obj + timedelta(minutes=minutes)
+        new_datetime_str = new_datetime_obj.strftime("%Y-%m-%d %H:%M")
+        return new_datetime_str
+    except Exception as e:
+        print(e)
