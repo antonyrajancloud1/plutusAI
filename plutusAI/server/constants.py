@@ -108,6 +108,9 @@ PLAN_DETAILS = "plan_details"
 STRATEGY='strategy'
 SCALPER='scalper'
 NSE_OPEN_TIME = "09:15"
+START_SCALPER= "start_scalper"
+STOP_SCALPER="stop_scalper"
+BANKNIFTY_FUTURES='BANKNIFTY31JUL24FUT'
 #### INDEX DEFAULT VALUES ####
 NIFTY_DEFAULT_VALUES = {
     "index_name": "nifty",

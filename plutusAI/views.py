@@ -307,7 +307,7 @@ def stop_index(request):
             user_email = get_user_email(request)
             # user_email='user1@gmail.com'
             data = json.loads(request.body)
-            return terminate_task(user_email, data.get(INDEX_NAME))
+            return terminate_task(user_email, data.get(INDEX_NAME),data.get(STRATEGY))
         else:
             return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
     except Exception as e:
@@ -472,3 +472,5 @@ def start_scalper(request):
     except Exception as e:
         addLogDetails(ERROR, str(e))
         return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
+
+

@@ -30,5 +30,6 @@ urlpatterns = [
     path(STOP_WS, views.stop_ws, name=STOP_WS),
 
     path("terster", testerCheck, name="terster"),
-    path("start_scalper", views.start_scalper, name="start_scalper"),
+    path(START_SCALPER, views.start_scalper, name=START_SCALPER),
+    #path(STOP_SCALPER, views.start_scalper, name=STOP_SCALPER),
 ]

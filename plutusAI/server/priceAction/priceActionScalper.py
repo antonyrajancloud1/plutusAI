@@ -30,26 +30,26 @@ def start_index_job(user_email, index):
         addLogDetails(INFO, "Forex market")
 
 
-@shared_task
-def terminate_task(user_email, index):
-    try:
-        user_data = JobDetails.objects.filter(user_id=user_email, index_name=index)
-        job_details = list(user_data.values())
-        if len(job_details) > 0:
-            task_id = job_details[0]['job_id']
-            result = AsyncResult(str(task_id))
-            result.revoke(terminate=True)
-            if user_data.exists():
-                user_data.delete()
-                updateIndexConfiguration(user_email, index, data=STAGE_STOPPED)
-
-                return JsonResponse({STATUS: SUCCESS, MESSAGE: "Index Stopped"})
-        else:
-            return JsonResponse({STATUS: FAILED, MESSAGE: "Index not running"})
-
-    except Exception as e:
-        addLogDetails(ERROR, str(e))
-        return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
+# @shared_task
+# def terminate_task(user_email, index,strategy):
+#     try:
+#         user_data = JobDetails.objects.filter(user_id=user_email, index_name=index,strategy=strategy)
+#         job_details = list(user_data.values())
+#         if len(job_details) > 0:
+#             task_id = job_details[0]['job_id']
+#             result = AsyncResult(str(task_id))
+#             result.revoke(terminate=True)
+#             if user_data.exists():
+#                 user_data.delete()
+#                 updateIndexConfiguration(user_email, index, data=STAGE_STOPPED)
+#
+#                 return JsonResponse({STATUS: SUCCESS, MESSAGE: "Index Stopped"})
+#         else:
+#             return JsonResponse({STATUS: FAILED, MESSAGE: "Index not running"})
+#
+#     except Exception as e:
+#         addLogDetails(ERROR, str(e))
+#         return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
 
 @shared_task
 def start_scalper_task(user_email, index):
