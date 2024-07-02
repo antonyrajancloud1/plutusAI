@@ -4,6 +4,7 @@ Resource = {
     position            :   "Position",
     orderBook           :   "Order Book",
     brokerInfo          :   "Broker Info",
+    scalper             :    "Scalper",
     plans               :   "Plans", 
     needHelp            :   "Need Help", 
     logout              :   "Logout",

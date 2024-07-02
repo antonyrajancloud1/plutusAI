@@ -474,3 +474,9 @@ def start_scalper(request):
         return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
 
 
+@require_http_methods([GET])
+def html_test(request):
+    if check_user_session(request):
+        return render(request, "testHtml.html")
+    else:
+        return redirect(LOGIN_URL)

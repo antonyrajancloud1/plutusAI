@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BN Scalper</title>
+<style>
+    #responseDiv {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    min-height: 50px;
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: #333;
+}
+</style>
+</head>
+<body>
+    <h1>BN Scalper</h1>
+    <button id="startButton">Start</button>
+    <button id="stopButton">Stop</button>
+    <div id="responseDiv">
+        <!-- Content will be dynamically updated by JavaScript -->
+    </div>
+    <script>
+        const responseDiv = document.getElementById("responseDiv");
+        document.addEventListener("DOMContentLoaded", function() {
+            const startButton = document.getElementById("startButton");
+            const stopButton = document.getElementById("stopButton");
+
+            // Function to make API call
+            function makeAPICall(api_url, payload_data) {
+                const url = api_url;
+                const payload = payload_data;
+                const options = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                };
+
+                // Show loading indicator
+                responseDiv.innerHTML = 'Loading...';
+
+                fetch(url, options)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('API Response:', data);
+                        responseDiv.innerHTML = JSON.stringify(data.message);
+                    })
+                    .catch(error => {
+                        console.error('Error making API call:', error);
+                        responseDiv.innerHTML = 'Error: ' + error.message;
+                    });
+            }
+
+            // Event listeners for buttons
+            startButton.addEventListener("click", function() {
+                makeAPICall('start_scalper', {"index_name": "bank_nifty", "strategy": "scalper"});
+            });
+
+            stopButton.addEventListener("click", function() {
+                makeAPICall('stop_index', {"index_name": "bank_nifty", "strategy": "scalper"});
+            });
+        });
+    </script>
+</body>
+</html>

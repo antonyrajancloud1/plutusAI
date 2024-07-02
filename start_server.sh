@@ -47,5 +47,5 @@ start_process() {
 start_process "python3 manage.py runserver 0.0.0.0:8000" "django.log"
 
 # Start Celery process in the background
-start_process "celery -A madaraUI.celery worker -l info" "celery.log"
+start_process "celery -A plutus.celery worker -l info" "celery.log"
 

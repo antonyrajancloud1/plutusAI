@@ -9,7 +9,7 @@ from plutusAI.server.broker.AngelOneBroker import AngelOneBroker
 class Scalper():
     def __init__(self, user_email, index, index_group):
         self.started_time = None
-        self.exchange = "NSE"
+        self.exchange = NFO
         self.base_value = None
         self.to_time = None
         self.tf = 1
@@ -62,11 +62,12 @@ class Scalper():
             # to_time = "2024-06-28 14:26"
             count = 0
             self.symbol_token = self.BrokerObject.getTokenForSymbol(BANKNIFTY_FUTURES)
-            # self.started_time = "2024-06-28 09:14"
-            self.started_time = current_time()[:-3]
-            self.started_date = datetime.today().strftime("%Y-%m-%d")
-            # self.started_date = "2024-06-28"
+            # self.symbol_token = "35165"
 
+            self.started_time = "2024-07-02 09:14"
+            self.started_date = "2024-07-02"
+            # self.started_time = current_time()[:-3]
+            # self.started_date = datetime.today().strftime("%Y-%m-%d")
             print(self.started_time)
             is_started_early = is_time_less_than_current_time(self.started_time.split(" ")[1])
             if is_started_early:

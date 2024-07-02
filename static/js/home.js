@@ -148,7 +148,7 @@ MadaraConstructor.prototype.API = {
 };
 
 MadaraConstructor.prototype.getLHSModulesList = function() {
-    return [ "configurations", "orderBook", "brokerInfo", "plans", "needHelp" ];
+    return [ "configurations", "orderBook", "brokerInfo", "scalper","plans", "needHelp" ];
 };
 
 MadaraConstructor.prototype.addLoaderForTheRHS = function() {

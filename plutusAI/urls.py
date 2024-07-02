@@ -31,5 +31,5 @@ urlpatterns = [
 
     path("terster", testerCheck, name="terster"),
     path(START_SCALPER, views.start_scalper, name=START_SCALPER),
-    #path(STOP_SCALPER, views.start_scalper, name=STOP_SCALPER),
+    path("scalper", views.html_test, name="scalperHtml"),
 ]
