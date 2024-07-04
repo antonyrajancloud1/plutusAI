@@ -16,6 +16,8 @@ from dateutil.rrule import rrule, WEEKLY, TH, TU, WE, MO
 from celery import shared_task
 from celery.result import AsyncResult
 
+from plutusAI.server.AngelOneApp import *
+
 
 def admin_check(user):
     return user.is_authenticated and user.is_staff
@@ -503,6 +505,30 @@ def terminate_task(user_email, index,strategy):
         else:
             return JsonResponse({STATUS: FAILED, MESSAGE: "Index not running"})
 
+    except Exception as e:
+        addLogDetails(ERROR, str(e))
+        return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
+def checkSocketStatus():
+    user_data = JobDetails.objects.filter(
+        user_id=ADMIN_USER_ID, index_name=SOCKET_JOB
+    )
+    if user_data.count() > 0:
+        return JsonResponse({STATUS: FAILED, MESSAGE: "Socket running"})
+    else:
+        start_ws_job(SOCKET_JOB_TYPE)
+        return JsonResponse({STATUS: SUCCESS, MESSAGE: "Socket Job started"})
+def start_ws_job(ws_type):
+    try:
+        updateExpiryDetails.delay()
+        if ws_type is None or ws_type.__eq__("1"):
+            createV1Socket.delay()
+        elif ws_type.__eq__("2"):
+            createAngleOne.delay()
+        elif ws_type.__eq__("3"):
+            createHttpData.delay()
+        return JsonResponse({STATUS: SUCCESS, MESSAGE: "WS started"})
+    except json.JSONDecodeError as e:
+        return JsonResponse({STATUS: FAILED, MESSAGE: INVALID_JSON})
     except Exception as e:
         addLogDetails(ERROR, str(e))
         return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})

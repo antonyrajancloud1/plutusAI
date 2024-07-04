@@ -2,6 +2,8 @@ import time
 
 from plutusAI.server.base import *
 from plutusAI.server.broker.AngelOneBroker import AngelOneBroker
+
+
 # from plutusAI.views import stop_current_celery_task
 # def stop_current_celery_task(user_email,index_name,strategy):
 #     terminate_task(user_email, index_name, strategy)
@@ -18,12 +20,13 @@ class Scalper():
         self.currentPremiumPlaced = None
         self.total_price = 0
         self.optionBuyPrice = 0
-        self.qty = 1
+        # self.qty = 1
         self.currentPremiumValue = 0
         self.currentOrderID = ""
         self.target_reached =False
 
         try:
+            checkSocketStatus()
             self.user_email = user_email
             self.index_name = index
             self.index_group = index_group
@@ -36,6 +39,9 @@ class Scalper():
             print(self.user_scalper_details)
             self.user_target = self.user_scalper_details[TARGET]
             self.strike = self.user_scalper_details[STRIKE]
+            self.lots = int(self.user_scalper_details[LOTS])
+            self.qty = int(self.index_data[0][QTY])
+            self.user_qty = int(self.qty) * int(self.lots)
             print(self.strike)
             if len(self.user_broker_details) > 0:
                 self.user_broker_details = self.user_broker_details[0]
@@ -64,10 +70,10 @@ class Scalper():
             self.symbol_token = self.BrokerObject.getTokenForSymbol(BANKNIFTY_FUTURES)
             # self.symbol_token = "35165"
 
-            self.started_time = "2024-07-02 09:14"
-            self.started_date = "2024-07-02"
-            # self.started_time = current_time()[:-3]
-            # self.started_date = datetime.today().strftime("%Y-%m-%d")
+            ##self.started_time = "2024-07-02 09:14"
+            ##self.started_date = "2024-07-02"
+            self.started_time = current_time()[:-3]
+            self.started_date = datetime.today().strftime("%Y-%m-%d")
             print(self.started_time)
             is_started_early = is_time_less_than_current_time(self.started_time.split(" ")[1])
             if is_started_early:
@@ -76,6 +82,7 @@ class Scalper():
             self.to_time = increaseTime(self.started_time, self.tf)
             print(self.to_time)
             while self.base_value is None:
+                time.sleep(1)
                 if not is_time_less_than_current_time(current_time()[:-3].split(" ")[1]):
                     print( "waiting for basevalue")
                     candle_data = self.getAllCandleData(self.started_time, self.to_time)
@@ -90,6 +97,7 @@ class Scalper():
                 print(self.user_target)
                 is_target_reached = (int(self.total_price).__ge__(int(self.user_target)) )
                 while not self.target_reached:
+                    time.sleep(1)
                     candle_data = self.getAllCandleData(self.started_time, self.to_time)
                     print(candle_data)
                     if candle_data is not None:
@@ -112,19 +120,21 @@ class Scalper():
                                     print("place put")
 
                             self.to_time = increaseTime(self.to_time, self.tf)
-                        elif is_target_reached:
-                            print("stop scalper")
-                            break
+
                         if self.isCEOrderPlaced or self.isPEOrderPlaced:
                             print("order placed waiting for target")
                             self.currentOptionPrice = self.BrokerObject.getLtpForPremium(self.optionDetails)
-                            if float(self.currentOptionPrice) + float(self.total_price) >= float(
-                                    self.optionBuyPrice) + float(self.user_target):
-                                print(" target reached" + str(float(self.currentOptionPrice) + float(self.total_price)))
-                                self.exitBasedOnCondition(self.currentPremiumValue, "target Reached")
-                                self.target_reached = True
-                                terminate_task(self.user_email, self.index_name, SCALPER)
-                                break
+                            if self.currentOptionPrice is not CONNECTION_ERROR:
+                                if float(self.currentOptionPrice) + float(self.total_price) >= float(
+                                        self.optionBuyPrice) + float(self.user_target):
+                                    print(" target reached" + str(float(self.currentOptionPrice) + float(self.total_price)))
+                                    self.exitBasedOnCondition(self.currentPremiumValue, "target Reached")
+                                    self.target_reached = True
+                                    # break
+                        if is_target_reached:
+                            addLogDetails(INFO,"stop scalper")
+                            terminate_task(self.user_email, self.index_name, SCALPER)
+                            break
 
                     else:
                         print("error in candle data")
@@ -142,6 +152,7 @@ class Scalper():
             #         break
         except Exception as e:
             print(e)
+
     def getBaseValueUsingStartTime(self, data):
         try:
 
@@ -159,7 +170,7 @@ class Scalper():
             # print(to_time)
             # from_time = "2024-06-28 09:15"
             # to_time = "2024-06-28 14:26"
-            time.sleep(0.5)
+            # time.sleep(0.5)
             return self.BrokerObject.getCandleData(self.exchange, self.symbol_token, from_time, to_time)
         except Exception as e:
             print(e)
@@ -170,7 +181,7 @@ class Scalper():
         buy_order_details = {VARIETY: NORMAL, EXCHANGE: NFO, TRADING_SYMBOL: self.currentPremiumPlaced,
                              SYMBOL_TOKEN: self.BrokerObject.getTokenForSymbol(self.currentPremiumPlaced),
                              TRANSACTION_TYPE: BUY, ORDER_TYPE: MARKET, PRODUCT_TYPE: INTRADAY, DURATION: DAY,
-                             QUANTITY: self.qty}
+                             QUANTITY: self.user_qty}
         self.optionDetails = self.BrokerObject.getCurrentPremiumDetails(NFO, self.currentPremiumPlaced)
         print(buy_order_details)
         print(self.optionDetails)
@@ -184,8 +195,9 @@ class Scalper():
                 self.currentOrderID = order_response['data']['uniqueorderid']
                 uniqueorderid = order_response["data"]["uniqueorderid"]
                 order_details = self.BrokerObject.getOrderDetails(uniqueorderid)
+                print(order_details)
                 self.optionBuyPrice = order_details["averageprice"]
-                data = {USER_ID: self.user_email, SCRIPT_NAME: self.currentPremiumPlaced, QTY: self.qty,
+                data = {USER_ID: self.user_email, SCRIPT_NAME: self.currentPremiumPlaced, QTY: self.user_qty,
                         ENTRY_PRICE: self.optionBuyPrice, STATUS: ORDER_PLACED, STRATEGY: STRATEGY_HUNTER}
                 addOrderBookDetails(data, True)
                 self.isCEOrderPlaced = True
@@ -195,7 +207,7 @@ class Scalper():
         buy_order_details = {VARIETY: NORMAL, EXCHANGE: NFO, TRADING_SYMBOL: self.currentPremiumPlaced,
                              SYMBOL_TOKEN: self.BrokerObject.getTokenForSymbol(self.currentPremiumPlaced),
                              TRANSACTION_TYPE: BUY, ORDER_TYPE: MARKET, PRODUCT_TYPE: INTRADAY, DURATION: DAY,
-                             QUANTITY: self.qty}
+                             QUANTITY: self.user_qty}
         self.optionDetails = self.BrokerObject.getCurrentPremiumDetails(NFO, self.currentPremiumPlaced)
         print(buy_order_details)
         print(self.optionDetails)
@@ -209,6 +221,7 @@ class Scalper():
                 self.currentOrderID = order_response['data']['uniqueorderid']
                 uniqueorderid = order_response["data"]["uniqueorderid"]
                 order_details = self.BrokerObject.getOrderDetails(uniqueorderid)
+                print(order_details)
                 self.optionBuyPrice = order_details["averageprice"]
                 data = {USER_ID: self.user_email, SCRIPT_NAME: self.currentPremiumPlaced, QTY: self.qty,
                         ENTRY_PRICE: self.optionBuyPrice, STATUS: ORDER_PLACED, STRATEGY: STRATEGY_HUNTER}
@@ -232,13 +245,13 @@ class Scalper():
                                                   self.currentPremiumPlaced),
                                               TRANSACTION_TYPE: SELL, ORDER_TYPE: MARKET, PRODUCT_TYPE: INTRADAY,
                                               DURATION: DAY,
-                                              QUANTITY: self.qty}
+                                              QUANTITY: self.user_qty}
                         initial_sell_order = self.BrokerObject.placeOrder(sell_order_details)
                         if initial_sell_order[MESSAGE].__eq__('SUCCESS'):
                             sell_uniqueorderid = initial_sell_order["data"]["uniqueorderid"]
                             sell_price = self.BrokerObject.getOrderDetails(sell_uniqueorderid)["averageprice"]
                             self.total_price = float(sell_price) - float(self.optionBuyPrice)
-                            data = {USER_ID: self.user_email, SCRIPT_NAME: self.currentPremiumPlaced, QTY: self.qty,EXIT_PRICE: sell_price,STATUS: ORDER_EXITED}
+                            data = {USER_ID: self.user_email, SCRIPT_NAME: self.currentPremiumPlaced, QTY: self.user_qty,EXIT_PRICE: sell_price,STATUS: ORDER_EXITED}
                             addLogDetails(INFO,"Index Name: " + self.index_name + " User :" + self.user_email + " " + str(data))
                             addOrderBookDetails(data, False)
         except Exception as e:
@@ -250,7 +263,7 @@ class Scalper():
             order_response = {'message': 'SUCCESS', 'data': {'orderid': 'dummy_id'}}
             self.optionDetails = self.BrokerObject.getCurrentPremiumDetails(NFO, self.currentPremiumPlaced)
             self.optionBuyPrice = self.BrokerObject.getLtpForPremium(self.optionDetails)
-            data = {USER_ID: self.user_email, SCRIPT_NAME: self.currentPremiumPlaced, QTY: self.qty,
+            data = {USER_ID: self.user_email, SCRIPT_NAME: self.currentPremiumPlaced, QTY: self.user_qty,
                     ENTRY_PRICE: self.optionBuyPrice, STATUS: ORDER_PLACED, STRATEGY: STRATEGY_SCALPER}
             # addLogDetails(INFO, "data fine")
             addOrderBookDetails(data, True)
@@ -273,7 +286,7 @@ class Scalper():
             addLogDetails(INFO, "Index Name: " + self.index_name + " User :" + self.user_email + " revertDummyOrder")
             order_response = {'message': 'SUCCESS', 'data': {'order_id': 'exit_dummy_id'}}
             self.optionDetails = self.BrokerObject.getCurrentPremiumDetails(NFO, self.currentPremiumPlaced)
-            data = {USER_ID: self.user_email, SCRIPT_NAME: self.currentPremiumPlaced, QTY: self.qty,
+            data = {USER_ID: self.user_email, SCRIPT_NAME: self.currentPremiumPlaced, QTY: self.user_qty,
                     EXIT_PRICE: self.BrokerObject.getLtpForPremium(self.optionDetails), STATUS: ORDER_EXITED}
             addLogDetails(INFO, "Index Name: " + self.index_name + " User :" + self.user_email + " " + str(data))
             addOrderBookDetails(data, False)

@@ -395,21 +395,21 @@ def stop_ws(request):
         return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
 
 
-def start_ws_job(ws_type):
-    try:
-        updateExpiryDetails.delay()
-        if ws_type is None or ws_type.__eq__("1"):
-            createV1Socket.delay()
-        elif ws_type.__eq__("2"):
-            createAngleOne.delay()
-        elif ws_type.__eq__("3"):
-            createHttpData.delay()
-        return JsonResponse({STATUS: SUCCESS, MESSAGE: "WS started"})
-    except json.JSONDecodeError as e:
-        return JsonResponse({STATUS: FAILED, MESSAGE: INVALID_JSON})
-    except Exception as e:
-        addLogDetails(ERROR, str(e))
-        return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
+# def start_ws_job(ws_type):
+#     try:
+#         updateExpiryDetails.delay()
+#         if ws_type is None or ws_type.__eq__("1"):
+#             createV1Socket.delay()
+#         elif ws_type.__eq__("2"):
+#             createAngleOne.delay()
+#         elif ws_type.__eq__("3"):
+#             createHttpData.delay()
+#         return JsonResponse({STATUS: SUCCESS, MESSAGE: "WS started"})
+#     except json.JSONDecodeError as e:
+#         return JsonResponse({STATUS: FAILED, MESSAGE: INVALID_JSON})
+#     except Exception as e:
+#         addLogDetails(ERROR, str(e))
+#         return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
 
     # index_data = IndexDetails.objects.filter(index_token=token)
     # index_data.update(**data)
@@ -435,15 +435,15 @@ def getDashboardDetails(request):
         return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
 
 
-def checkSocketStatus():
-    user_data = JobDetails.objects.filter(
-        user_id=ADMIN_USER_ID, index_name=SOCKET_JOB
-    )
-    if user_data.count() > 0:
-        return JsonResponse({STATUS: FAILED, MESSAGE: "Socket running"})
-    else:
-        start_ws_job(SOCKET_JOB_TYPE)
-        return JsonResponse({STATUS: SUCCESS, MESSAGE: "Socket Job started"})
+# def checkSocketStatus():
+#     user_data = JobDetails.objects.filter(
+#         user_id=ADMIN_USER_ID, index_name=SOCKET_JOB
+#     )
+#     if user_data.count() > 0:
+#         return JsonResponse({STATUS: FAILED, MESSAGE: "Socket running"})
+#     else:
+#         start_ws_job(SOCKET_JOB_TYPE)
+#         return JsonResponse({STATUS: SUCCESS, MESSAGE: "Socket Job started"})
 
 @csrf_exempt
 @require_http_methods([POST])

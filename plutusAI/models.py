@@ -117,6 +117,7 @@ class ScalperDetails(models.Model):
     target = models.CharField(max_length=100, default=None)
     is_demo_trading_enabled = models.BooleanField(default=True)
     use_full_capital = models.BooleanField(default=False)
+    lots = models.CharField(max_length=10, default=None)
 
     def __str__(self):
         return self.index_name
