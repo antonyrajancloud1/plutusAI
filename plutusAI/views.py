@@ -280,10 +280,11 @@ def start_index(request):
             # user_email='user1@gmail.com'
             data = json.loads(request.body)
             index_name = data.get(INDEX_NAME).replace("_", " ").title().replace(" ", "")
-            addLogDetails(INFO, "Index started for user: " + str(user_email) + " for index :" + index_name)
+            strategy = data.get(STRATEGY)
+            addLogDetails(INFO, "Hunter started for user: " + str(user_email) + " for index :" + index_name)
 
             user_data = JobDetails.objects.filter(
-                user_id=user_email, index_name=data.get(INDEX_NAME)
+                user_id=user_email, index_name=data.get(INDEX_NAME),strategy=STRATEGY_HUNTER
             )
             if user_data.count() > 0:
                 return JsonResponse({STATUS: FAILED, MESSAGE: f"{index_name} process running"})
@@ -371,7 +372,7 @@ def start_ws(request):
         data_json = json.loads(request.body)
         ws_type = str(data_json.get("ws_type"))
         user_data = JobDetails.objects.filter(
-            user_id=ADMIN_USER_ID, index_name=SOCKET_JOB
+            user_id=ADMIN_USER_ID, index_name=SOCKET_JOB,strategy=SOCKET_JOB
         )
         if user_data.count() > 0:
             return JsonResponse({STATUS: FAILED, MESSAGE: "Socket running"})

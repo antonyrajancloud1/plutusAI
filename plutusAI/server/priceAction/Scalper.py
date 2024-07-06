@@ -70,8 +70,8 @@ class Scalper():
             self.symbol_token = self.BrokerObject.getTokenForSymbol(BANKNIFTY_FUTURES)
             # self.symbol_token = "35165"
 
-            ##self.started_time = "2024-07-02 09:14"
-            ##self.started_date = "2024-07-02"
+            # self.started_time = "2024-07-05 09:14"
+            # self.started_date = "2024-07-05"
             self.started_time = current_time()[:-3]
             self.started_date = datetime.today().strftime("%Y-%m-%d")
             print(self.started_time)

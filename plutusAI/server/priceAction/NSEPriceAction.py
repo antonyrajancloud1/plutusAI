@@ -10,6 +10,7 @@ class NSEPriceAction():
 
     def __init__(self, user_email, index, index_group):
         try:
+            self.strategy=STRATEGY_HUNTER
             self.user_email = user_email
             self.index_name = index
             self.index_group = index_group

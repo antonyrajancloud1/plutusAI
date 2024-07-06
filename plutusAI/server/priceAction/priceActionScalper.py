@@ -21,6 +21,7 @@ def start_index_job(user_email, index):
         user_id=user_email,
         index_name=index,
         job_id=task_id,
+        strategy=STRATEGY_HUNTER
     )
     index_data = IndexDetails.objects.filter(index_name=index)
     index_group_name = get_index_group_name(index_data)

@@ -113,7 +113,6 @@ class ScalperDetails(models.Model):
     user_id = models.CharField(max_length=500, default=None)
     index_name = models.CharField(max_length=50, default=None)
     strike = models.CharField(max_length=10, default=None)
-    capital = models.CharField(max_length=100, default=None)
     target = models.CharField(max_length=100, default=None)
     is_demo_trading_enabled = models.BooleanField(default=True)
     use_full_capital = models.BooleanField(default=False)

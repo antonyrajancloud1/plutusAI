@@ -93,6 +93,7 @@ def createHttpData():
         user_id=ADMIN_USER_ID,
         index_name=SOCKET_JOB,
         job_id=task_id,
+        strategy=SOCKET_JOB
     )
     user_broker_data = BrokerDetails.objects.filter(user_id=ADMIN_USER_ID, index_group=INDIAN_INDEX)
     BrokerObject = AngelOneBroker(user_broker_data)
@@ -103,7 +104,7 @@ def createHttpData():
     allData.append(niftyData)
     allData.append(BNData)
     allData.append(FNData)
-
+    addLogDetails(INFO,"Expiry Details updated from createHttpData")
     while True:
         for data in allData:
             value = {TOKEN: data[SYMBOL_TOKEN], LTP: str(BrokerObject.getLtpForPremium(data))}
