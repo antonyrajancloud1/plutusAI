@@ -39,6 +39,9 @@ EDIT_PLAN = "edit_plans"
 START_WS = "start_ws"
 STOP_WS = "stop_ws"
 DASHBOARD='dashboard'
+UPDATE_SCALPER = "update_scalper_details"
+GET_SCALPER_VALUES = "get_scalper_details"
+
 #### DATA CONSTANTS ####
 ID = "id"
 USER_NAME = "user_name"
@@ -102,6 +105,7 @@ INDEX_NOT_FOUND = "index_details_not_found"
 BROKER_DETAILS = "broker_details"
 BROKER_DETAILS_ADDED = "broker_details_added"
 BROKER_DETAILS_UPDATED= "broker_details_updated"
+SCALPER_VALUES_UPDATED = "scalper_details_updated"
 
 ORDER_BOOK_DETAILS = "order_book_details"
 PLAN_DETAILS = "plan_details"

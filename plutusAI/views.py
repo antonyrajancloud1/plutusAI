@@ -481,3 +481,61 @@ def html_test(request):
         return render(request, "testHtml.html")
     else:
         return redirect(LOGIN_URL)
+
+@login_required
+@csrf_exempt
+@require_http_methods([PUT])
+def update_scalper_values(request):
+    try:
+        if check_user_session(request):
+            user_email = get_user_email(request)
+            data = json.loads(request.body)
+            data = remove_spaces_from_json(data)
+            index_name = data.get(INDEX_NAME)
+
+            validate_numeric_fields(data)
+            validate_float_field(data)
+            # validate_levels(data)
+            user_data = ScalperDetails.objects.filter(
+                user_id=user_email, index_name=index_name
+            )
+            user_data.update(**data)
+            updated_data = ScalperDetails.objects.filter(
+                user_id=user_email, index_name=index_name
+            )
+            updated_list = remove_data_from_list(list(updated_data.values()))[0]
+
+            return JsonResponse(
+                {STATUS: SUCCESS, MESSAGE: SCALPER_VALUES_UPDATED, "data": updated_list}
+            )
+        else:
+            return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+    except json.JSONDecodeError as e:
+        return JsonResponse({STATUS: FAILED, MESSAGE: INVALID_JSON})
+    except ValueError as e:
+        return JsonResponse({STATUS: FAILED, MESSAGE: str(e)}, status=400)
+    except Exception as e:
+        return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
+
+@csrf_exempt
+@require_http_methods([GET])
+def get_scalper_values(request):
+    # user_email='user1@gmail.com'
+    if check_user_session(request):
+        user_email = get_user_email(request)
+        if "index_name" in request.GET:
+            index = request.GET.get("index_name")
+            user_data = ScalperDetails.objects.filter(user_id=user_email, index_name=index)
+            user_profiles_list = list(user_data.values())
+            user_profiles_list = remove_data_from_list(user_profiles_list)
+            if len(user_profiles_list) > 0:
+                return JsonResponse(user_profiles_list)
+            else:
+                return JsonResponse({STATUS: FAILED, MESSAGE: INDEX_NOT_FOUND})
+        else:
+            user_data = ScalperDetails.objects.filter(user_id=user_email)
+            user_profiles_list = list(user_data.values())
+            remove_data_from_list(user_profiles_list)
+            return JsonResponse({ALL_CONFIG_VALUES: user_profiles_list})
+    else:
+        return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})

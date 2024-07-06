@@ -28,8 +28,11 @@ urlpatterns = [
     path(START_WS, views.start_ws, name=START_WS),
     path(DASHBOARD, views.getDashboardDetails, name=DASHBOARD),
     path(STOP_WS, views.stop_ws, name=STOP_WS),
+    path(START_SCALPER, views.start_scalper, name=START_SCALPER),
+
+    path(UPDATE_SCALPER, views.update_scalper_values, name=UPDATE_SCALPER),
+    path(GET_SCALPER_VALUES, views.get_scalper_values, name=GET_SCALPER_VALUES),
 
     path("terster", testerCheck, name="terster"),
-    path(START_SCALPER, views.start_scalper, name=START_SCALPER),
     path("scalper", views.html_test, name="scalperHtml"),
 ]
