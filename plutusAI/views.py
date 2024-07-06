@@ -529,7 +529,7 @@ def get_scalper_values(request):
             user_profiles_list = list(user_data.values())
             user_profiles_list = remove_data_from_list(user_profiles_list)
             if len(user_profiles_list) > 0:
-                return JsonResponse(user_profiles_list)
+                return JsonResponse(user_profiles_list[0])
             else:
                 return JsonResponse({STATUS: FAILED, MESSAGE: INDEX_NOT_FOUND})
         else:

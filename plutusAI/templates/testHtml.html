@@ -5,37 +5,121 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BN Scalper</title>
 <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f8f8;
+        margin: 0;
+        padding: 20px;
+    }
+    h1 {
+        text-align: center;
+        color: #333;
+    }
     #responseDiv {
-    margin-top: 20px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    min-height: 50px;
-    background-color: #f0f0f0;
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-    color: #333;
-}
+        margin-top: 20px;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        background-color: #eaf6ff;
+        font-size: 14px;
+        color: #333;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    #scalperDetails {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        margin: 20px auto;
+    }
+    label {
+        display: block;
+        margin-bottom: 8px;
+        color: #333;
+        font-weight: bold;
+    }
+    input[type="text"], input[type="number"] {
+        width: calc(100% - 22px);
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+    input[type="checkbox"] {
+        margin-right: 10px;
+    }
+    input[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    input[type="submit"]:hover {
+        background-color: #45a049;
+    }
+    button {
+        padding: 10px 20px;
+        background-color: #008CBA;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        margin: 10px;
+    }
+    button:hover {
+        background-color: #007BB5;
+    }
+    button:disabled {
+        background-color: #ddd;
+        cursor: not-allowed;
+    }
+    .button-container {
+        text-align: center;
+    }
 </style>
 </head>
 <body>
     <h1>BN Scalper</h1>
-    <button id="startButton">Start</button>
-    <button id="stopButton">Stop</button>
+    <div class="button-container">
+        <button id="startButton">Start</button>
+        <button id="stopButton">Stop</button>
+    </div>
     <div id="responseDiv">
         <!-- Content will be dynamically updated by JavaScript -->
     </div>
+    <div id="scalperDetails">
+        <form id="detailsForm">
+            <label for="strike">Strike:</label>
+            <input type="text" id="strike" name="strike" required><br><br>
+            <label for="target">Target:</label>
+            <input type="text" id="target" name="target" required><br><br>
+            <label for="demo">Demo Enabled:</label>
+            <input type="checkbox" id="demo" name="demo"><br><br>
+            <label for="lots">Lots:</label>
+            <input type="text" id="lots" name="lots" required><br><br>
+            <input type="submit" value="Update">
+        </form>
+    </div>
     <script>
-        const responseDiv = document.getElementById("responseDiv");
         document.addEventListener("DOMContentLoaded", function() {
+            const responseDiv = document.getElementById("responseDiv");
             const startButton = document.getElementById("startButton");
             const stopButton = document.getElementById("stopButton");
+            const form = document.getElementById("detailsForm");
 
             // Function to make API call
-            function makeAPICall(api_url, payload_data) {
+            function makeAPICall(method, api_url, payload_data) {
                 const url = api_url;
                 const payload = payload_data;
                 const options = {
-                    method: 'POST',
+                    method: method,
                     headers: {
                         'Content-Type': 'application/json'
                     },
@@ -54,7 +138,7 @@
                     })
                     .then(data => {
                         console.log('API Response:', data);
-                        responseDiv.innerHTML = JSON.stringify(data.message);
+                        responseDiv.innerHTML = data.message;
                     })
                     .catch(error => {
                         console.error('Error making API call:', error);
@@ -64,11 +148,37 @@
 
             // Event listeners for buttons
             startButton.addEventListener("click", function() {
-                makeAPICall('start_scalper', {"index_name": "bank_nifty", "strategy": "scalper"});
+                makeAPICall('POST', 'start_scalper', {"index_name": "bank_nifty", "strategy": "scalper"});
             });
 
             stopButton.addEventListener("click", function() {
-                makeAPICall('stop_index', {"index_name": "bank_nifty", "strategy": "scalper"});
+                makeAPICall('POST', 'stop_index', {"index_name": "bank_nifty", "strategy": "scalper"});
+            });
+
+            // Fetch initial data from API and populate form
+            fetch('get_scalper_details?index_name=bank_nifty')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('strike').value = data.strike;
+                    document.getElementById('target').value = data.target;
+                    document.getElementById('demo').checked = data.is_demo_trading_enabled;
+                    document.getElementById('lots').value = data.lots;
+                })
+                .catch(error => console.error('Error fetching data:', error));
+
+            // Submit form data to update API
+            form.addEventListener('submit', event => {
+                event.preventDefault(); // Prevent the default form submission
+
+                const formData = {
+                    index_name: "bank_nifty",
+                    strike: document.getElementById('strike').value,
+                    target: document.getElementById('target').value,
+                    is_demo_trading_enabled: document.getElementById('demo').checked,
+                    lots: document.getElementById('lots').value,
+                };
+
+                makeAPICall('PUT', 'update_scalper_details', formData);
             });
         });
     </script>
