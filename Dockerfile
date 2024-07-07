@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ubuntu:20.04
 
 RUN apt-get update && \
     apt-get install -y \
@@ -24,7 +24,7 @@ VOLUME /var/lib/mysql
 RUN pip3 install --upgrade pip
 
 # Clone repository and install requirements
-RUN git clone https://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@github.com/antonyrajancloud1/madaraUI.git /app_source
+RUN git clone https://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@github.com/antonyrajancloud1/plutusAI.git /app_source
 WORKDIR /app_source
 RUN pip3 install -r requirements.txt
 

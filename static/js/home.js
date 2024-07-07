@@ -464,7 +464,8 @@ MadaraConstructor.prototype.stopIndex = function() {
     let currentTarget = this.EVENT_AND_DOM_CACHE.currentTarget;
     this.addLoaderInThisButton(currentTarget);
     let data = {
-        index_name  :   currentTarget.attr("index")
+        index_name  :   currentTarget.attr("index"),
+        strategy    :   "hunter"
     };
     let url = this.getWindowLocationOrigin() + this.API.stopIndex;
     let additionalAjaxOptions = {
