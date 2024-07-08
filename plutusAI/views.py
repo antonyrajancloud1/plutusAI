@@ -201,11 +201,11 @@ def update_broker_details(request):
             broker_user_id = data.get(BROKER_USER_ID)
             validate_char_fields(data)
             user_data = BrokerDetails.objects.filter(
-                user_id=user_email, broker_user_id=broker_user_id
+                user_id=user_email
             )
             user_data.update(**data)
             updated_data = BrokerDetails.objects.filter(
-                user_id=user_email, broker_user_id=broker_user_id
+                user_id=user_email
             )
             updated_list = list(updated_data.values())
             for data in updated_list:
@@ -388,7 +388,7 @@ def stop_ws(request):
     try:
         if admin_check(request.user):
             #data_json = json.loads(request.body)
-            return terminate_task(ADMIN_USER_ID, SOCKET_JOB)
+            return terminate_task(ADMIN_USER_ID, SOCKET_JOB,"socket_job")
         else:
             return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
     except Exception as e:

@@ -122,7 +122,7 @@ class Scalper():
                             self.to_time = increaseTime(self.to_time, self.tf)
 
                         if self.isCEOrderPlaced or self.isPEOrderPlaced:
-                            print("order placed waiting for target")
+                            addLogDetails(INFO,"order placed waiting for target")
                             self.currentOptionPrice = self.BrokerObject.getLtpForPremium(self.optionDetails)
                             if self.currentOptionPrice is not CONNECTION_ERROR:
                                 if float(self.currentOptionPrice) + float(self.total_price) >= float(
