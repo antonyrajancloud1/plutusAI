@@ -14,22 +14,25 @@ from celery import current_task
 
 @shared_task
 def createAngleOne():
-    API_KEY = "Q12feFjR"
-    CLIENT_CODE = "S50761409"
-    pwd_pin = "1005"
-    smartApi = SmartConnect(API_KEY)
-    qr_token = "5TXNGVJEVZYMHCLF6HHOQHHTZ4"
-    totp = pyotp.TOTP(qr_token).now()
-    correlation_id = "angle_one_123"
+    # API_KEY = "Q12feFjR"
+    # CLIENT_CODE = "S50761409"
+    # pwd_pin = "1005"
+    # smartApi = SmartConnect(API_KEY)
+    # qr_token = "5TXNGVJEVZYMHCLF6HHOQHHTZ4"
+    # totp = pyotp.TOTP(qr_token).now()
 
-    data = smartApi.generateSession(CLIENT_CODE, pwd_pin, totp)
-    AUTH_TOKEN = data['data']['jwtToken']
-    refreshToken = data['data']['refreshToken']
-    FEED_TOKEN = data['data']['feedToken']
-
-    # fetch the feedtoken
-    feedToken = smartApi.getfeedToken()
-    userProfile = smartApi.getProfile(refreshToken)
+    #
+    # data = smartApi.generateSession(CLIENT_CODE, pwd_pin, totp)
+    # AUTH_TOKEN = data['data']['jwtToken']
+    # refreshToken = data['data']['refreshToken']
+    # FEED_TOKEN = data['data']['feedToken']
+    #
+    # # fetch the feedtoken
+    # feedToken = smartApi.getfeedToken()
+    # userProfile = smartApi.getProfile(refreshToken)
+    user_broker_data = BrokerDetails.objects.filter(user_id=ADMIN_USER_ID, index_group=INDIAN_INDEX)
+    BrokerObject = AngelOneBroker(user_broker_data)
+    correlation_id = "admin_ws"
     mode = None
     token_list = None
 
@@ -45,7 +48,7 @@ def createAngleOne():
                 "tokens": token
             }
         ]
-        swsObj = SmartWebSocketV2(AUTH_TOKEN, API_KEY, CLIENT_CODE, FEED_TOKEN, max_retry_attempt=10)
+        swsObj = SmartWebSocketV2(BrokerObject.AUTH_TOKEN, BrokerObject.API_KEY, BrokerObject.CLIENT_CODE, BrokerObject.feed_token, max_retry_attempt=10)
         return swsObj
 
     sws = None

@@ -41,7 +41,8 @@ STOP_WS = "stop_ws"
 DASHBOARD='dashboard'
 UPDATE_SCALPER = "update_scalper_details"
 GET_SCALPER_VALUES = "get_scalper_details"
-
+ADMIN_CONSOLE="admin_console"
+CHECK_TASK_STATUS="check_task_status"
 #### DATA CONSTANTS ####
 ID = "id"
 USER_NAME = "user_name"

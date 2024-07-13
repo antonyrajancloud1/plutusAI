@@ -32,7 +32,8 @@ urlpatterns = [
 
     path(UPDATE_SCALPER, views.update_scalper_values, name=UPDATE_SCALPER),
     path(GET_SCALPER_VALUES, views.get_scalper_values, name=GET_SCALPER_VALUES),
-
-    path("terster", testerCheck, name="terster"),
+    path(ADMIN_CONSOLE, views.admin_console, name=ADMIN_CONSOLE),
+    path(CHECK_TASK_STATUS, views.check_task_status, name=CHECK_TASK_STATUS),
+    path("test", testerCheck, name="test"),
     path("scalper", views.html_test, name="scalperHtml"),
 ]

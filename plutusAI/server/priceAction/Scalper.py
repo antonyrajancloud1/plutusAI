@@ -26,7 +26,7 @@ class Scalper():
         self.target_reached =False
 
         try:
-            checkSocketStatus()
+            #checkSocketStatus()
             self.user_email = user_email
             self.index_name = index
             self.index_group = index_group
@@ -70,8 +70,8 @@ class Scalper():
             self.symbol_token = self.BrokerObject.getTokenForSymbol(BANKNIFTY_FUTURES)
             # self.symbol_token = "35165"
 
-            # self.started_time = "2024-07-05 09:14"
-            # self.started_date = "2024-07-05"
+            # self.started_time = "2024-07-10 09:14"
+            # self.started_date = "2024-07-10"
             self.started_time = current_time()[:-3]
             self.started_date = datetime.today().strftime("%Y-%m-%d")
             print(self.started_time)
@@ -101,7 +101,7 @@ class Scalper():
                     candle_data = self.getAllCandleData(self.started_time, self.to_time)
                     print(candle_data)
                     if candle_data is not None:
-                        contains_next_candle = candle_data.applymap(
+                        contains_next_candle = candle_data.map(
                             lambda x: self.to_time.replace(" ", "T") in str(x)).any().any()
                         print(contains_next_candle)
                         if contains_next_candle:

@@ -17,6 +17,7 @@ from dateutil.rrule import rrule, WEEKLY, TH, TU, WE, MO
 from celery import shared_task
 from celery.result import AsyncResult
 
+
 # from plutusAI.server.AngelOneApp import *
 
 
@@ -503,7 +504,7 @@ def terminate_task(user_email, index, strategy):
                 user_data.delete()
                 updateIndexConfiguration(user_email, index, data=STAGE_STOPPED)
 
-                return JsonResponse({STATUS: SUCCESS, MESSAGE: "Index Stopped"})
+                return JsonResponse({STATUS: SUCCESS, MESSAGE: "Index Stopped","task_status":False})
         else:
             return JsonResponse({STATUS: FAILED, MESSAGE: "Index not running"})
 
@@ -532,9 +533,12 @@ def start_ws_job(ws_type):
             AngelOneApp.createAngleOne.delay()
         elif ws_type.__eq__("3"):
             AngelOneApp.createHttpData.delay()
-        return JsonResponse({STATUS: SUCCESS, MESSAGE: "WS started"})
+        return JsonResponse({STATUS: SUCCESS, MESSAGE: "WS started","task_status":True})
     except json.JSONDecodeError as e:
         return JsonResponse({STATUS: FAILED, MESSAGE: INVALID_JSON})
     except Exception as e:
         addLogDetails(ERROR, str(e))
         return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
+
+
+

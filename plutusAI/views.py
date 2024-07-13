@@ -284,7 +284,7 @@ def start_index(request):
             addLogDetails(INFO, "Hunter started for user: " + str(user_email) + " for index :" + index_name)
 
             user_data = JobDetails.objects.filter(
-                user_id=user_email, index_name=data.get(INDEX_NAME),strategy=STRATEGY_HUNTER
+                user_id=user_email, index_name=data.get(INDEX_NAME), strategy=STRATEGY_HUNTER
             )
             if user_data.count() > 0:
                 return JsonResponse({STATUS: FAILED, MESSAGE: f"{index_name} process running"})
@@ -308,7 +308,7 @@ def stop_index(request):
             user_email = get_user_email(request)
             # user_email='user1@gmail.com'
             data = json.loads(request.body)
-            return terminate_task(user_email, data.get(INDEX_NAME),data.get(STRATEGY))
+            return terminate_task(user_email, data.get(INDEX_NAME), data.get(STRATEGY))
         else:
             return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
     except Exception as e:
@@ -372,10 +372,10 @@ def start_ws(request):
         data_json = json.loads(request.body)
         ws_type = str(data_json.get("ws_type"))
         user_data = JobDetails.objects.filter(
-            user_id=ADMIN_USER_ID, index_name=SOCKET_JOB,strategy=SOCKET_JOB
+            user_id=ADMIN_USER_ID, index_name=SOCKET_JOB, strategy=SOCKET_JOB
         )
         if user_data.count() > 0:
-            return JsonResponse({STATUS: FAILED, MESSAGE: "Socket running"})
+            return JsonResponse({STATUS: FAILED, MESSAGE: "Socket running","task_status":True})
         else:
             return start_ws_job(ws_type)
     else:
@@ -388,7 +388,7 @@ def stop_ws(request):
     try:
         if admin_check(request.user):
             #data_json = json.loads(request.body)
-            return terminate_task(ADMIN_USER_ID, SOCKET_JOB,"socket_job")
+            return terminate_task(ADMIN_USER_ID, SOCKET_JOB, "socket_job")
         else:
             return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
     except Exception as e:
@@ -412,8 +412,8 @@ def stop_ws(request):
 #         addLogDetails(ERROR, str(e))
 #         return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
 
-    # index_data = IndexDetails.objects.filter(index_token=token)
-    # index_data.update(**data)
+# index_data = IndexDetails.objects.filter(index_token=token)
+# index_data.update(**data)
 
 
 @require_http_methods([GET])
@@ -482,6 +482,7 @@ def html_test(request):
     else:
         return redirect(LOGIN_URL)
 
+
 @login_required
 @csrf_exempt
 @require_http_methods([PUT])
@@ -517,6 +518,7 @@ def update_scalper_values(request):
     except Exception as e:
         return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
 
+
 @csrf_exempt
 @require_http_methods([GET])
 def get_scalper_values(request):
@@ -539,3 +541,36 @@ def get_scalper_values(request):
             return JsonResponse({ALL_CONFIG_VALUES: user_profiles_list})
     else:
         return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+
+
+@require_http_methods([GET])
+def admin_console(request):
+    if check_user_session(request):
+        if admin_check(request.user):
+            return render(request, "admin_console.html")
+        else:
+            return render(request, "unauthorised.html")
+    else:
+        return redirect(LOGIN_URL)
+@csrf_exempt
+@require_http_methods([GET])
+def check_task_status(request):
+    try:
+        if admin_check(request.user):
+            socket_data = JobDetails.objects.filter(
+                user_id=ADMIN_USER_ID, index_name=SOCKET_JOB, strategy=SOCKET_JOB
+            )
+            socket_data = list(socket_data.values())
+            print(socket_data)
+            if len(socket_data) > 0:
+                result = AsyncResult(socket_data[0]["job_id"])
+                status_str = str(result.status)
+                if status_str == 'PENDING':
+                    return JsonResponse({STATUS: SUCCESS, MESSAGE:"Socket running","task_status": True})
+            else:
+                return JsonResponse({STATUS: SUCCESS, MESSAGE:"Socket not running","task_status": False})
+        else:
+            return render(request, "unauthorised.html")
+    except Exception as e:
+        addLogDetails(ERROR, str(e))
+        return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
