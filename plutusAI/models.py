@@ -124,3 +124,20 @@ class ScalperDetails(models.Model):
     @classmethod
     def search_by_name(cls, query):
         return cls.objects.filter(name__icontains=query)
+
+class CandleData(models.Model):
+    index_name = models.CharField(max_length=50, default=None)
+    token = models.CharField(max_length=50, default=None)
+    time = models.CharField(max_length=50, default=None)
+    open = models.CharField(max_length=50, default=None)
+    high = models.CharField(max_length=50, default=None)
+    low = models.CharField(max_length=50, default=None)
+    close = models.CharField(max_length=50, default=None)
+
+
+    def __str__(self):
+        return self.index_name
+
+    @classmethod
+    def search_by_name(cls, query):
+        return cls.objects.filter(name__icontains=query)

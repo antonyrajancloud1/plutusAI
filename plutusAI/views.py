@@ -562,13 +562,18 @@ def check_task_status(request):
             )
             socket_data = list(socket_data.values())
             print(socket_data)
+
             if len(socket_data) > 0:
                 result = AsyncResult(socket_data[0]["job_id"])
+
                 status_str = str(result.status)
+                print(status_str)
                 if status_str == 'PENDING':
                     return JsonResponse({STATUS: SUCCESS, MESSAGE:"Socket running","task_status": True})
+                else:
+                    return JsonResponse({STATUS: FAILED, MESSAGE:"Socket not running","task_status": False})
             else:
-                return JsonResponse({STATUS: SUCCESS, MESSAGE:"Socket not running","task_status": False})
+                return JsonResponse({STATUS: SUCCESS, MESSAGE:"No Socket Job Present","task_status": False})
         else:
             return render(request, "unauthorised.html")
     except Exception as e:

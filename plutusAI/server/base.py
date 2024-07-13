@@ -16,6 +16,8 @@ import pytz
 from dateutil.rrule import rrule, WEEKLY, TH, TU, WE, MO
 from celery import shared_task
 from celery.result import AsyncResult
+import datetime
+
 
 
 # from plutusAI.server.AngelOneApp import *
@@ -526,13 +528,15 @@ def checkSocketStatus():
 
 def start_ws_job(ws_type):
     try:
-        updateExpiryDetails.delay()
+        #updateExpiryDetails.delay()
         if ws_type is None or ws_type.__eq__("1"):
             AngelOneApp.createV1Socket.delay()
         elif ws_type.__eq__("2"):
             AngelOneApp.createAngleOne.delay()
         elif ws_type.__eq__("3"):
             AngelOneApp.createHttpData.delay()
+        elif ws_type.__eq__("4"):
+            AngelOneApp.createAngleOneCandle.delay()
         return JsonResponse({STATUS: SUCCESS, MESSAGE: "WS started","task_status":True})
     except json.JSONDecodeError as e:
         return JsonResponse({STATUS: FAILED, MESSAGE: INVALID_JSON})
@@ -542,3 +546,13 @@ def start_ws_job(ws_type):
 
 
 
+def get_next_minute_start():
+    now = datetime.datetime.now()
+    next_minute_start = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute, 0)
+    if now.second >= 59:  # Adjust based on your requirement
+        next_minute_start += datetime.timedelta(minutes=1)
+    return next_minute_start
+
+# Function to format time in HH:MM:SS
+def format_time(current_time):
+    return current_time.strftime('%H:%M:%S')

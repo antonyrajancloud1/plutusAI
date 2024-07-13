@@ -1,3 +1,4 @@
+import datetime
 import time
 from SmartApi import SmartConnect, SmartWebSocket
 import pyotp
@@ -5,11 +6,14 @@ from SmartApi.smartWebSocketV2 import SmartWebSocketV2
 from celery import shared_task
 from plutusAI.models import BrokerDetails, JobDetails
 # from SmartApi import SmartWebSocket
-from plutusAI.server.base import addLogDetails, update_ltp_to_table
+from plutusAI.server.base import addLogDetails, update_ltp_to_table, get_next_minute_start, format_time
 from plutusAI.server.broker.AngelOneBroker import AngelOneBroker
 from plutusAI.server.constants import *
 # import SmartWebSocket
 from celery import current_task
+import pandas as pd
+
+from plutusAI.server.websocket.WebsocketAngelOne import  OHLCDataProcessor
 
 
 @shared_task
@@ -30,6 +34,13 @@ def createAngleOne():
     # # fetch the feedtoken
     # feedToken = smartApi.getfeedToken()
     # userProfile = smartApi.getProfile(refreshToken)
+    task_id = current_task.request.id
+    JobDetails.objects.create(
+        user_id=ADMIN_USER_ID,
+        index_name=SOCKET_JOB,
+        job_id=task_id,
+        strategy=SOCKET_JOB
+    )
     user_broker_data = BrokerDetails.objects.filter(user_id=ADMIN_USER_ID, index_group=INDIAN_INDEX)
     BrokerObject = AngelOneBroker(user_broker_data)
     correlation_id = "admin_ws"
@@ -48,13 +59,14 @@ def createAngleOne():
                 "tokens": token
             }
         ]
-        swsObj = SmartWebSocketV2(BrokerObject.AUTH_TOKEN, BrokerObject.API_KEY, BrokerObject.CLIENT_CODE, BrokerObject.feed_token, max_retry_attempt=10)
+        swsObj = SmartWebSocketV2(BrokerObject.auth_token, BrokerObject.broker_api_token, BrokerObject.broker_user_id, BrokerObject.feed_token, max_retry_attempt=10)
         return swsObj
 
     sws = None
 
     def on_data(wsapp, message):
         data = {'token': message['token'], 'ltp': str(message['last_traded_price'] / 100)}
+        print(data)
         update_ltp_to_table(data)
         time.sleep(0.5)
 
@@ -149,3 +161,71 @@ def createV1Socket():
 
     ss.connect()
     ss.run()
+
+
+@shared_task
+def createAngleOneCandle():
+    task_id = current_task.request.id
+
+    # Create a job entry in the database
+    JobDetails.objects.create(
+        user_id=ADMIN_USER_ID,
+        index_name=SOCKET_JOB,
+        job_id=task_id,
+        strategy=SOCKET_JOB
+    )
+
+    # Fetch broker details for the admin user
+    user_broker_data = BrokerDetails.objects.filter(user_id=ADMIN_USER_ID, index_group=INDIAN_INDEX)
+    BrokerObject = AngelOneBroker(user_broker_data)
+
+    # Initialize WebSocket parameters
+    correlation_id = "admin_ws"
+    tokens = [99926000,99926009]
+    simulator = OHLCDataProcessor()
+    def createWebSocketObj(token, exchangeType):
+        # Create a SmartWebSocketV2 object with the given token and exchange type
+        mode = 1
+        token_list = [{"exchangeType": exchangeType, "tokens": token}]
+        swsObj = SmartWebSocketV2(BrokerObject.auth_token, BrokerObject.broker_api_token, BrokerObject.broker_user_id, BrokerObject.feed_token, max_retry_attempt=2)
+        return swsObj
+
+    def on_data(wsapp, message):
+        token = message['token']
+        ltp=str(message['last_traded_price'] / 100)
+        # Handle incoming data from the WebSocket
+        data = {'token': token, 'ltp': ltp}
+        print(data)
+
+        simulator.update_data(token,ltp)
+
+        time.sleep(1)
+        update_ltp_to_table(data)
+    def on_open(wsapp):
+        # Handle WebSocket opening
+        addLogDetails(INFO, "WebSocket connection opened")
+        sws.subscribe(correlation_id, 1, [{"exchangeType": 1, "tokens": tokens}])
+
+    def on_error(wsapp, error):
+        # Handle WebSocket errors
+        addLogDetails(ERROR, str(error))
+
+    def on_close(wsapp):
+        # Handle WebSocket closing
+        addLogDetails(INFO, "WebSocket connection closed")
+
+    def close_connection():
+        # Close WebSocket connection
+        sws.close_connection()
+        addLogDetails(INFO, "WebSocket connection closed manually")
+
+    # Create and configure the WebSocket
+    sws = createWebSocketObj(tokens, 1)
+    sws.on_open = on_open
+    sws.on_data = on_data
+    sws.on_error = on_error
+    sws.on_close = on_close
+
+    # Connect to the WebSocket
+    sws.connect()
+
