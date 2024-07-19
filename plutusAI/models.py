@@ -136,8 +136,7 @@ class CandleData(models.Model):
 
 
     def __str__(self):
-        return self.index_name
-
+        return f"{self.index_name} - {self.token} - {self.time} - {self.open} - {self.high} - {self.low} - {self.close}"
     @classmethod
     def search_by_name(cls, query):
         return cls.objects.filter(name__icontains=query)
