@@ -19,7 +19,6 @@ from celery.result import AsyncResult
 import datetime
 
 
-
 # from plutusAI.server.AngelOneApp import *
 
 
@@ -506,7 +505,7 @@ def terminate_task(user_email, index, strategy):
                 user_data.delete()
                 updateIndexConfiguration(user_email, index, data=STAGE_STOPPED)
 
-                return JsonResponse({STATUS: SUCCESS, MESSAGE: "Index Stopped","task_status":False})
+                return JsonResponse({STATUS: SUCCESS, MESSAGE: "Index Stopped", "task_status": False})
         else:
             return JsonResponse({STATUS: FAILED, MESSAGE: "Index not running"})
 
@@ -528,7 +527,7 @@ def checkSocketStatus():
 
 def start_ws_job(ws_type):
     try:
-        #updateExpiryDetails.delay()
+        updateExpiryDetails.delay()
         if ws_type is None or ws_type.__eq__("1"):
             AngelOneApp.createV1Socket.delay()
         elif ws_type.__eq__("2"):
@@ -537,13 +536,15 @@ def start_ws_job(ws_type):
             AngelOneApp.createHttpData.delay()
         elif ws_type.__eq__("4"):
             AngelOneApp.createAngleOneCandle.delay()
-        return JsonResponse({STATUS: SUCCESS, MESSAGE: "WS started","task_status":True})
+        elif ws_type.__eq__("5"):
+            print("into 5")
+            AngelOneApp.createHttpDataCandels.delay()
+        return JsonResponse({STATUS: SUCCESS, MESSAGE: "WS started", "task_status": True})
     except json.JSONDecodeError as e:
         return JsonResponse({STATUS: FAILED, MESSAGE: INVALID_JSON})
     except Exception as e:
         addLogDetails(ERROR, str(e))
         return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
-
 
 
 def get_next_minute_start():
@@ -553,6 +554,38 @@ def get_next_minute_start():
         next_minute_start += datetime.timedelta(minutes=1)
     return next_minute_start
 
+
+
 # Function to format time in HH:MM:SS
 def format_time(current_time):
     return current_time.strftime('%H:%M:%S')
+
+
+def getCurrentIndexClose(index):
+    index_data = IndexDetails.objects.filter(index_name=index)
+    index_data = list(index_data.values())[-1]
+    return float(index_data[CLOSE])
+
+def update_candle_data_to_table(candle_data):
+    # candle_data = {"token": token, "index_name": data[TRADING_SYMBOL], "time": format_time(start_time_dict[token]),
+    #                "open": open_price, "high": high_price, "low": low_price, "close": close_price}
+    print(candle_data)
+
+    token = candle_data["token"]
+    candle_data.pop("token")
+    current_time_str = current_time()
+    candle_data["time"] = current_time_str
+
+    if str(candle_data[CLOSE]) != 'None':
+        CandleData.objects.create(
+            index_name="bank_nifty_fut",
+            token=token,
+            time=candle_data["time"],
+            open=candle_data["open"],
+            high=candle_data["high"],
+            low=candle_data["low"],
+            close=candle_data["close"]
+        )
+    else:
+        addLogDetails(ERROR, CONNECTION_ERROR)
+

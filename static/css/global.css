@@ -9,9 +9,9 @@
     --border-clr        : #38516E  ;
     --hover-bg          : #38516E  ;
     --color-placeholder : #ABABAB  ;
-    --success-bg        : #0F8928  ;  
-    --error-bg          : #730707  ;  
-}   
+    --success-bg        : #0F8928  ;
+    --error-bg          : #730707  ;
+}
 
 body { font-family: Lato, sans-serif !important;margin: 0;box-sizing: border-box;width: 100%;height: 100%; }
 

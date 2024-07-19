@@ -77,6 +77,7 @@ EXIT_TIME = "exit_time"
 TOTAL='total'
 LOTS = "lots"
 LTP = "ltp"
+CLOSE="close"
 CURRENT_EXPIRY = "current_expiry"
 NEXT_EXPIRY = "next_expiry"
 STRIKE = "strike"
