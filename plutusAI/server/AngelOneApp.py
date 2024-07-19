@@ -187,13 +187,10 @@ def createAngleOneCandle():
     correlation_id = "admin_ws"
     tokens = [35165]  # Define your tokens
     global ltp_values_dict
-    global candlestick_data_dict
     global start_time_dict
-    candlestick_data_dict = {}
     ltp_values_dict = {}
     start_time_dict = {}
     for tkn in tokens:
-        candlestick_data_dict[tkn] = pd.DataFrame(columns=['timestamp', 'open', 'high', 'low', 'close'])
         ltp_values_dict[tkn] = []
         start_time_dict[tkn] = get_next_minute_start()
 
@@ -292,101 +289,3 @@ def createAngleOneCandle():
     # Connect to the WebSocket
     sws.connect()
 
-
-@shared_task
-def createHttpDataCandels():
-    task_id = current_task.request.id
-    print(task_id)
-    JobDetails.objects.create(
-        user_id=ADMIN_USER_ID,
-        index_name=SOCKET_JOB,
-        job_id=task_id,
-        strategy=SOCKET_JOB
-    )
-    print("job created")
-    user_broker_data = BrokerDetails.objects.filter(user_id=ADMIN_USER_ID, index_group=INDIAN_INDEX)
-    BrokerObject = AngelOneBroker(user_broker_data)
-    allData = []
-    niftyData = BrokerObject.getCurrentPremiumDetails(NSE, NIFTY_50)  # "Nifty 50"
-    BNData = BrokerObject.getCurrentPremiumDetails(NSE, NIFTY_BANK)
-    FNData = BrokerObject.getCurrentPremiumDetails(NSE, NIFTY_FIN_SERVICE)
-    BN_FUT = BrokerObject.getCurrentPremiumDetails(NFO, BANKNIFTY_FUTURES)
-    allData.append(niftyData)
-    allData.append(BNData)
-    allData.append(FNData)
-    allData.append(BN_FUT)
-    addLogDetails(INFO, "Expiry Details updated from createHttpData")
-
-    def getAllTokens():
-        token = []
-        for data in allData:
-            token.append(data[SYMBOL_TOKEN])
-        return token
-
-    candlestick_data_dict = {}
-    ltp_values_dict = {}
-    start_time_dict = {}
-    tokens = getAllTokens()
-    print(tokens)
-    try:
-        for tkn in tokens:
-            candlestick_data_dict[tkn] = pd.DataFrame(columns=['timestamp', 'open', 'high', 'low', 'close'])
-            ltp_values_dict[tkn] = []
-            start_time_dict[tkn] = get_next_minute_start()
-        while True:
-            time.sleep(1)
-            for data in allData:
-                value = {TOKEN: data[SYMBOL_TOKEN], LTP: str(BrokerObject.getLtpForPremium(data))}
-                token = data[SYMBOL_TOKEN]
-                ltp = value[LTP]
-
-                if value[LTP] is not None:
-                    update_ltp_to_table(value)
-                    print(ltp_values_dict[token])
-
-                    ltp = float(ltp)
-                    ltp_values_dict[token].append(ltp)
-
-                    if datetime.datetime.now() >= start_time_dict[token] + datetime.timedelta(seconds=60):
-                        # Calculate OHLC values
-                        open_price = ltp_values_dict[token][0]
-                        high_price = max(ltp_values_dict[token])
-                        low_price = min(ltp_values_dict[token])
-                        close_price = ltp_values_dict[token][-1]
-
-                        # Print OHLC values and current time
-                        print(
-                            f"{format_time(start_time_dict[token])} - Token: {token}, Open: {open_price}, High: {high_price}, Low: {low_price}, Close: {close_price}")
-                        # data = {"token":token,"index_name":data[TRADING_SYMBOL],"time":format_time(start_time_dict[token]),"open":open_price,"high":high_price,"low":low_price,"close":close_price}
-                        # Create a new row of data
-                        new_data = pd.DataFrame({
-                            'timestamp': [start_time_dict[token]],
-                            'open': [open_price],
-                            'high': [high_price],
-                            'low': [low_price],
-                            'close': [close_price]
-                        })
-                        CandleData.objects.create(
-                            index_name=data[TRADING_SYMBOL],
-                            token=token,
-                            time=format_time(start_time_dict[token]),
-                            open=open_price,
-                            high=high_price,
-                            low=low_price,
-                            close=close_price
-                        )
-                        # Concatenate the new data with the existing candlestick_data for the token
-                        candlestick_data_dict[token] = pd.concat([candlestick_data_dict[token], new_data],
-                                                                 ignore_index=True)
-
-                        # Clear the list for the next 60 seconds
-                        ltp_values_dict[token] = []
-
-                        # Update start time for the next 60-second interval for the specific token
-                        start_time_dict[token] = get_next_minute_start()
-
-                        # Wait for the next iteration
-                    # time.sleep(.5)
-
-    except Exception as e:
-        print(e)

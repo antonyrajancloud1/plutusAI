@@ -1,5 +1,7 @@
 import time
 
+from django.db.models import Q
+
 from plutusAI.server.base import *
 from plutusAI.server.broker.AngelOneBroker import AngelOneBroker
 
@@ -72,6 +74,8 @@ class Scalper():
 
             # self.started_time = "2024-07-10 09:14"
             # self.started_date = "2024-07-10"
+            # self.started_time = "2024-07-19 13:45"
+            # self.started_date = "2024-07-19"
             self.started_time = current_time()[:-3]
             self.started_date = datetime.today().strftime("%Y-%m-%d")
             print(self.started_time)
@@ -102,7 +106,7 @@ class Scalper():
                     print(candle_data)
                     if candle_data is not None:
                         contains_next_candle = candle_data.map(
-                            lambda x: self.to_time.replace(" ", "T") in str(x)).any().any()
+                            lambda x: self.to_time.replace(" ", " ") in str(x)).any().any()
                         print(contains_next_candle)
                         if contains_next_candle:
                             previous_close = self.getBaseValueUsingStartTime(candle_data)
@@ -155,10 +159,12 @@ class Scalper():
 
     def getBaseValueUsingStartTime(self, data):
         try:
-
-            print(data.__len__())
-            base_value = data.iloc[-2]["close"]
-            print("data for base >>>> " + str(base_value))
+            if data is not None:
+                print(data.__len__())
+                base_value = data.iloc[-2]["close"]
+                print("data for base >>>> " + str(base_value))
+            else:
+                print("No Data")
             return base_value
 
         except Exception as e:
@@ -166,12 +172,33 @@ class Scalper():
 
     def getAllCandleData(self, from_time, to_time):
         try:
-            # print(from_time)
-            # print(to_time)
-            # from_time = "2024-06-28 09:15"
-            # to_time = "2024-06-28 14:26"
-            # time.sleep(0.5)
-            return self.BrokerObject.getCandleData(self.exchange, self.symbol_token, from_time, to_time)
+            # from_time = "2024-07-19 13:45"
+            # to_time = "2024-07-19 13:46"
+
+            from_time = convert_datetime_string(from_time)
+            to_time=convert_datetime_string(to_time)
+
+            start_time = datetime(from_time['year'],from_time['month'],from_time['day'],from_time['hour'],from_time['minute'],from_time['second'])
+            end_time = datetime(to_time['year'],to_time['month'],to_time['day'],to_time['hour'],to_time['minute'],to_time['second'])
+            candle_data = CandleData.objects.filter(time__range=(start_time, end_time))
+            # print(candle_data.count())
+            # for d in candle_data:
+            #     print(d)
+            # candle_data = CandleData.objects.filter(time__range=(convert_datetime_string(from_time), convert_datetime_string(to_time)))
+            # for d in candle_data:
+            #     print(d)
+            pd_data = list(candle_data.values('index_name', 'token', 'time', 'open', 'high', 'low', 'close'))
+            # Convert list of dictionaries to DataFrame
+            df = pd.DataFrame(pd_data)
+            # Convert fields to appropriate types (optional, if needed)
+            df['open'] = pd.to_numeric(df['open'], errors='coerce')
+            df['high'] = pd.to_numeric(df['high'], errors='coerce')
+            df['low'] = pd.to_numeric(df['low'], errors='coerce')
+            df['close'] = pd.to_numeric(df['close'], errors='coerce')
+            # print(df)
+            return df
+
+            # return self.BrokerObject.getCandleData(self.exchange, self.symbol_token, from_time, to_time)
         except Exception as e:
             print(e)
 

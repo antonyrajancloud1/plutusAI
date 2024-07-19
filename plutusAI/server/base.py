@@ -16,6 +16,8 @@ import pytz
 from dateutil.rrule import rrule, WEEKLY, TH, TU, WE, MO
 from celery import shared_task
 from celery.result import AsyncResult
+
+
 # import datetime
 
 
@@ -560,16 +562,16 @@ def get_next_minute_start():
     return next_minute_start
 
 
-
 # Function to format time in HH:MM:SS
 def format_time(current_time):
-    return current_time.strftime('%H:%M:%S')
+    return current_time.strftime('%Y-%m-%d %H:%M:%S')
 
 
-def getCurrentIndexClose(index):
+def getCurrentIndexClose(index, start_date, end_date):
     index_data = IndexDetails.objects.filter(index_name=index)
     index_data = list(index_data.values())[-1]
     return float(index_data[CLOSE])
+
 
 def update_candle_data_to_table(candle_data):
     # candle_data = {"token": token, "index_name": data[TRADING_SYMBOL], "time": format_time(start_time_dict[token]),
@@ -594,3 +596,20 @@ def update_candle_data_to_table(candle_data):
     else:
         addLogDetails(ERROR, CONNECTION_ERROR)
 
+
+def convert_datetime_string(datetime_str):
+    from datetime import datetime
+    format_str = '%Y-%m-%d %H:%M'
+    dt = datetime.strptime(datetime_str, format_str)
+
+    # Create a dictionary from the datetime object
+    dt_dict = {
+        'year': dt.year,
+        'month': dt.month,
+        'day': dt.day,
+        'hour': dt.hour,
+        'minute': dt.minute,
+        'second': dt.second
+    }
+
+    return dt_dict
