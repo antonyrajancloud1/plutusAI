@@ -16,7 +16,7 @@ import pytz
 from dateutil.rrule import rrule, WEEKLY, TH, TU, WE, MO
 from celery import shared_task
 from celery.result import AsyncResult
-import datetime
+# import datetime
 
 
 # from plutusAI.server.AngelOneApp import *
@@ -548,10 +548,15 @@ def start_ws_job(ws_type):
 
 
 def get_next_minute_start():
-    now = datetime.datetime.now()
-    next_minute_start = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute, 0)
-    if now.second >= 59:  # Adjust based on your requirement
-        next_minute_start += datetime.timedelta(minutes=1)
+    # now = datetime.datetime.now()
+    # next_minute_start = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute, 0)
+    # if now.second >= 59:  # Adjust based on your requirement
+    #     next_minute_start += datetime.timedelta(minutes=1)
+    # return next_minute_start
+    import datetime
+    kolkata_tz = pytz.timezone('Asia/Kolkata')
+    now_kolkata = datetime.datetime.now(kolkata_tz)
+    next_minute_start = now_kolkata.replace(second=0, microsecond=0) + datetime.timedelta(minutes=0)
     return next_minute_start
 
 
@@ -573,8 +578,8 @@ def update_candle_data_to_table(candle_data):
 
     token = candle_data["token"]
     candle_data.pop("token")
-    current_time_str = current_time()
-    candle_data["time"] = current_time_str
+    # current_time_str = current_time()
+    # candle_data["time"] = current_time_str
 
     if str(candle_data[CLOSE]) != 'None':
         CandleData.objects.create(
