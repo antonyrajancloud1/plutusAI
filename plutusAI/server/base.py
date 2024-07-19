@@ -601,8 +601,6 @@ def convert_datetime_string(datetime_str):
     from datetime import datetime
     format_str = '%Y-%m-%d %H:%M'
     dt = datetime.strptime(datetime_str, format_str)
-
-    # Create a dictionary from the datetime object
     dt_dict = {
         'year': dt.year,
         'month': dt.month,

@@ -146,14 +146,7 @@ class Scalper():
             else:
                 print("base value is not set")
 
-            # while True:
-            #
-            #     self.BrokerObject.getCandleData("NSE",99926009,from_time,to_time)
-            #     count+=1
-            #     print(count)
-            #     time.sleep(0.5)
-            #     if count > 10000:
-            #         break
+           
         except Exception as e:
             print(e)
 

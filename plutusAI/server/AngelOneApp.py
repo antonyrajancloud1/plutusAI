@@ -247,7 +247,6 @@ def createAngleOneCandle():
             update_ltp_to_table(data)
         except Exception as e:
             print(e)
-
     def on_error(wsapp, error):
         addLogDetails(ERROR, str(error))
 
