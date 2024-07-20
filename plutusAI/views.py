@@ -395,6 +395,19 @@ def stop_ws(request):
         addLogDetails(ERROR, str(e))
         return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
 
+@csrf_exempt  # need to remove
+@require_http_methods([POST])
+def start_scalper(request):
+    try:
+        if check_user_session(request):
+            user_email = get_user_email(request)
+            data = json.loads(request.body)
+            return terminate_task(user_email, data.get(INDEX_NAME))
+        else:
+            return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+    except Exception as e:
+        addLogDetails(ERROR, str(e))
+        return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
 
 # def start_ws_job(ws_type):
 #     try:
