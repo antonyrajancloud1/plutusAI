@@ -558,7 +558,9 @@ def get_next_minute_start():
     import datetime
     kolkata_tz = pytz.timezone('Asia/Kolkata')
     now_kolkata = datetime.datetime.now(kolkata_tz)
-    next_minute_start = now_kolkata.replace(second=0, microsecond=0) + datetime.timedelta(minutes=0)
+    next_minute_start = now_kolkata.replace(second=0, microsecond=0) + datetime.timedelta(minutes=1)
+    print("next_minute_start "+str(next_minute_start))
+    addLogDetails(INFO,"next_minute_start "+str(next_minute_start))
     return next_minute_start
 
 

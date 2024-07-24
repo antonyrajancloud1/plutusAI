@@ -25,10 +25,10 @@ class Scalper():
         # self.qty = 1
         self.currentPremiumValue = 0
         self.currentOrderID = ""
-        self.target_reached =False
+        self.target_reached = False
 
         try:
-            #checkSocketStatus()
+            # checkSocketStatus()
             self.user_email = user_email
             self.index_name = index
             self.index_group = index_group
@@ -88,37 +88,36 @@ class Scalper():
             while self.base_value is None:
                 time.sleep(1)
                 if not is_time_less_than_current_time(current_time()[:-3].split(" ")[1]):
-                    print( "waiting for basevalue")
+                    print("waiting for basevalue")
                     candle_data = self.getAllCandleData(self.started_time, self.to_time)
                     self.base_value = self.getBaseValueUsingStartTime(candle_data)
-                    if self.base_value is not None:
-                        self.to_time = increaseTime(self.to_time, self.tf)
-                        print("increased time = "+ str(self.to_time))
+                    # if self.base_value is not None:
+                    #     self.to_time = increaseTime(self.to_time, self.tf)
+                    #     print("increased time = "+ str(self.to_time))
 
                 else:
                     print("wait till market open")
             if self.base_value is not None:
                 print(self.user_target)
-                is_target_reached = (int(self.total_price).__ge__(int(self.user_target)) )
+                is_target_reached = (int(self.total_price).__ge__(int(self.user_target)))
                 while not self.target_reached:
                     time.sleep(1)
                     candle_data = self.getAllCandleData(self.started_time, self.to_time)
                     print(candle_data)
                     if candle_data is not None:
                         contains_next_candle = candle_data.map(
-                            lambda x: self.to_time.replace(" ", " ") in str(x)).any().any()
+                            lambda x: self.to_time in str(x)).any().any()
                         print(contains_next_candle)
+                        print(self.to_time)
                         if contains_next_candle:
                             previous_close = self.getBaseValueUsingStartTime(candle_data)
                             if previous_close > self.base_value:
                                 if not self.isCEOrderPlaced:
-
                                     self.exitBasedOnCondition(self.currentPremiumValue, "place Call")
                                     self.placeCallOption()
                                     print("place call")
                             elif previous_close < self.base_value:
                                 if not self.isPEOrderPlaced:
-
                                     self.exitBasedOnCondition(self.currentPremiumValue, "Place put")
                                     self.placePutOption()
                                     print("place put")
@@ -126,17 +125,18 @@ class Scalper():
                             self.to_time = increaseTime(self.to_time, self.tf)
 
                         if self.isCEOrderPlaced or self.isPEOrderPlaced:
-                            addLogDetails(INFO,"order placed waiting for target")
+                            addLogDetails(INFO, "order placed waiting for target")
                             self.currentOptionPrice = self.BrokerObject.getLtpForPremium(self.optionDetails)
                             if self.currentOptionPrice is not CONNECTION_ERROR:
                                 if float(self.currentOptionPrice) + float(self.total_price) >= float(
                                         self.optionBuyPrice) + float(self.user_target):
-                                    print(" target reached" + str(float(self.currentOptionPrice) + float(self.total_price)))
+                                    print(" target reached" + str(
+                                        float(self.currentOptionPrice) + float(self.total_price)))
                                     self.exitBasedOnCondition(self.currentPremiumValue, "target Reached")
                                     self.target_reached = True
                                     # break
                         if is_target_reached:
-                            addLogDetails(INFO,"stop scalper")
+                            addLogDetails(INFO, "stop scalper")
                             terminate_task(self.user_email, self.index_name, SCALPER)
                             break
 
@@ -146,18 +146,20 @@ class Scalper():
             else:
                 print("base value is not set")
 
-           
+
         except Exception as e:
             print(e)
 
     def getBaseValueUsingStartTime(self, data):
+        global base_value
         try:
             if data is not None:
                 print(data.__len__())
-                base_value = data.iloc[-2]["close"]
+                base_value = data.iloc[-1]["close"]
                 print("data for base >>>> " + str(base_value))
             else:
                 print("No Data")
+                base_value = None
             return base_value
 
         except Exception as e:
@@ -169,10 +171,12 @@ class Scalper():
             # to_time = "2024-07-19 13:46"
 
             from_time = convert_datetime_string(from_time)
-            to_time=convert_datetime_string(to_time)
+            to_time = convert_datetime_string(to_time)
 
-            start_time = datetime(from_time['year'],from_time['month'],from_time['day'],from_time['hour'],from_time['minute'],from_time['second'])
-            end_time = datetime(to_time['year'],to_time['month'],to_time['day'],to_time['hour'],to_time['minute'],to_time['second'])
+            start_time = datetime(from_time['year'], from_time['month'], from_time['day'], from_time['hour'],
+                                  from_time['minute'], from_time['second'])
+            end_time = datetime(to_time['year'], to_time['month'], to_time['day'], to_time['hour'], to_time['minute'],
+                                to_time['second'])
             candle_data = CandleData.objects.filter(time__range=(start_time, end_time))
             # print(candle_data.count())
             # for d in candle_data:
@@ -223,7 +227,8 @@ class Scalper():
                 self.isCEOrderPlaced = True
 
     def placePutOption(self):
-        self.currentPremiumPlaced = getTradingSymbol(self.index_name) + str(self.BrokerObject.getCurrentAtm(self.index_name) + int(self.strike)) + "PE"
+        self.currentPremiumPlaced = getTradingSymbol(self.index_name) + str(
+            self.BrokerObject.getCurrentAtm(self.index_name) + int(self.strike)) + "PE"
         buy_order_details = {VARIETY: NORMAL, EXCHANGE: NFO, TRADING_SYMBOL: self.currentPremiumPlaced,
                              SYMBOL_TOKEN: self.BrokerObject.getTokenForSymbol(self.currentPremiumPlaced),
                              TRANSACTION_TYPE: BUY, ORDER_TYPE: MARKET, PRODUCT_TYPE: INTRADAY, DURATION: DAY,
@@ -271,8 +276,11 @@ class Scalper():
                             sell_uniqueorderid = initial_sell_order["data"]["uniqueorderid"]
                             sell_price = self.BrokerObject.getOrderDetails(sell_uniqueorderid)["averageprice"]
                             self.total_price = float(sell_price) - float(self.optionBuyPrice)
-                            data = {USER_ID: self.user_email, SCRIPT_NAME: self.currentPremiumPlaced, QTY: self.user_qty,EXIT_PRICE: sell_price,STATUS: ORDER_EXITED}
-                            addLogDetails(INFO,"Index Name: " + self.index_name + " User :" + self.user_email + " " + str(data))
+                            data = {USER_ID: self.user_email, SCRIPT_NAME: self.currentPremiumPlaced,
+                                    QTY: self.user_qty, EXIT_PRICE: sell_price, STATUS: ORDER_EXITED}
+                            addLogDetails(INFO,
+                                          "Index Name: " + self.index_name + " User :" + self.user_email + " " + str(
+                                              data))
                             addOrderBookDetails(data, False)
         except Exception as e:
             addLogDetails(ERROR, str(self.index_name) + "exception in exitBasedOnCondition  -----  " + str(e))
@@ -290,11 +298,11 @@ class Scalper():
             if orderType == "CE":
                 self.isCEOrderPlaced = True
                 self.isPEOrderPlaced = False
-                print("dummy order isCEOrderPlaced "+str(self.isCEOrderPlaced))
+                print("dummy order isCEOrderPlaced " + str(self.isCEOrderPlaced))
             elif orderType == "PE":
                 self.isPEOrderPlaced = True
                 self.isCEOrderPlaced = False
-                print("dummy order isPEOrderPlaced "+str(self.isPEOrderPlaced))
+                print("dummy order isPEOrderPlaced " + str(self.isPEOrderPlaced))
             self.currentOrderID = order_response['data']['orderid']
 
             return order_response
@@ -315,4 +323,4 @@ class Scalper():
             self.isCEOrderPlaced = False
             return order_response
         else:
-            addLogDetails(INFO,"No dummy orders present")
+            addLogDetails(INFO, "No dummy orders present")
