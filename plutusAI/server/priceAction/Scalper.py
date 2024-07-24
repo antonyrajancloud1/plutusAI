@@ -91,9 +91,9 @@ class Scalper():
                     print( "waiting for basevalue")
                     candle_data = self.getAllCandleData(self.started_time, self.to_time)
                     self.base_value = self.getBaseValueUsingStartTime(candle_data)
-                    if self.base_value is not None:
-                        self.to_time = increaseTime(self.to_time, self.tf)
-                        print("increased time = "+ str(self.to_time))
+                    # if self.base_value is not None:
+                    #     self.to_time = increaseTime(self.to_time, self.tf)
+                    #     print("increased time = "+ str(self.to_time))
 
                 else:
                     print("wait till market open")
@@ -106,8 +106,9 @@ class Scalper():
                     print(candle_data)
                     if candle_data is not None:
                         contains_next_candle = candle_data.map(
-                            lambda x: self.to_time.replace(" ", " ") in str(x)).any().any()
+                            lambda x: self.to_time in str(x)).any().any()
                         print(contains_next_candle)
+                        print(self.to_time )
                         if contains_next_candle:
                             previous_close = self.getBaseValueUsingStartTime(candle_data)
                             if previous_close > self.base_value:
@@ -151,13 +152,15 @@ class Scalper():
             print(e)
 
     def getBaseValueUsingStartTime(self, data):
+        global base_value
         try:
             if data is not None:
                 print(data.__len__())
-                base_value = data.iloc[-2]["close"]
+                base_value = data.iloc[-1]["close"]
                 print("data for base >>>> " + str(base_value))
             else:
                 print("No Data")
+                base_value=None
             return base_value
 
         except Exception as e:
