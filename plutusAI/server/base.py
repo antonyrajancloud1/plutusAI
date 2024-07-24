@@ -564,6 +564,7 @@ def get_next_minute_start():
     return next_minute_start
 
 
+
 # Function to format time in HH:MM:SS
 def format_time(current_time):
     return current_time.strftime('%Y-%m-%d %H:%M:%S')
