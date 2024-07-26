@@ -531,16 +531,16 @@ def start_ws_job(ws_type):
     try:
         updateExpiryDetails.delay()
         if ws_type is None or ws_type.__eq__("1"):
-            AngelOneApp.createV1Socket.delay()
-        elif ws_type.__eq__("2"):
-            AngelOneApp.createAngleOne.delay()
-        elif ws_type.__eq__("3"):
-            AngelOneApp.createHttpData.delay()
-        elif ws_type.__eq__("4"):
+            # AngelOneApp.createV1Socket.delay()
             AngelOneApp.createAngleOneCandle.delay()
-        elif ws_type.__eq__("5"):
-            print("into 5")
-            AngelOneApp.createHttpDataCandels.delay()
+        elif ws_type.__eq__("2"):
+            # AngelOneApp.createAngleOne.delay()
+            AngelOneApp.createHttpData.delay()
+        # elif ws_type.__eq__("3"):
+        #     AngelOneApp.createHttpData.delay()
+        # elif ws_type.__eq__("4"):
+        #     AngelOneApp.createAngleOneCandle.delay()
+
         return JsonResponse({STATUS: SUCCESS, MESSAGE: "WS started", "task_status": True})
     except json.JSONDecodeError as e:
         return JsonResponse({STATUS: FAILED, MESSAGE: INVALID_JSON})

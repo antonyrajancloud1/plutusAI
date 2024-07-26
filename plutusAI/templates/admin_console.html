@@ -185,7 +185,7 @@
         });
 
         stopWSButton.addEventListener("click", function() {
-            makeAPICall('POST', 'stop_ws', null);
+            makeAPICall('POST', 'stop_ws', { ws_type: wsTypeInput.value });
         });
     </script>
 </body>

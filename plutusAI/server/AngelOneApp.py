@@ -110,9 +110,9 @@ def createHttpData():
     task_id = current_task.request.id
     JobDetails.objects.create(
         user_id=ADMIN_USER_ID,
-        index_name=SOCKET_JOB,
+        index_name=HTTP_JOB,
         job_id=task_id,
-        strategy=SOCKET_JOB
+        strategy=HTTP_JOB
     )
     user_broker_data = BrokerDetails.objects.filter(user_id=ADMIN_USER_ID, index_group=INDIAN_INDEX)
     BrokerObject = AngelOneBroker(user_broker_data)

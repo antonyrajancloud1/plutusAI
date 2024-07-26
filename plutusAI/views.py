@@ -371,11 +371,17 @@ def start_ws(request):
     if admin_check(request.user):
         data_json = json.loads(request.body)
         ws_type = str(data_json.get("ws_type"))
-        user_data = JobDetails.objects.filter(
-            user_id=ADMIN_USER_ID, index_name=SOCKET_JOB, strategy=SOCKET_JOB
-        )
+        user_data = None
+        if ws_type == "1":
+            user_data = JobDetails.objects.filter(
+                user_id=ADMIN_USER_ID, index_name=SOCKET_JOB, strategy=SOCKET_JOB
+            )
+        elif ws_type == "2":
+            user_data = JobDetails.objects.filter(
+            user_id = ADMIN_USER_ID, index_name = HTTP_JOB, strategy = HTTP_JOB
+            )
         if user_data.count() > 0:
-            return JsonResponse({STATUS: FAILED, MESSAGE: "Socket running","task_status":True})
+            return JsonResponse({STATUS: FAILED, MESSAGE: "Socket running", "task_status": True})
         else:
             return start_ws_job(ws_type)
     else:
@@ -387,8 +393,12 @@ def start_ws(request):
 def stop_ws(request):
     try:
         if admin_check(request.user):
-            #data_json = json.loads(request.body)
-            return terminate_task(ADMIN_USER_ID, SOCKET_JOB, "socket_job")
+            data_json = json.loads(request.body)
+            ws_type = str(data_json.get("ws_type"))
+            if ws_type == "1":
+                return terminate_task(ADMIN_USER_ID, SOCKET_JOB, SOCKET_JOB)
+            elif ws_type == "2":
+                return terminate_task(ADMIN_USER_ID, HTTP_JOB, HTTP_JOB)
         else:
             return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
     except Exception as e:
@@ -552,6 +562,8 @@ def admin_console(request):
             return render(request, "unauthorised.html")
     else:
         return redirect(LOGIN_URL)
+
+
 @csrf_exempt
 @require_http_methods([GET])
 def check_task_status(request):
@@ -569,11 +581,11 @@ def check_task_status(request):
                 status_str = str(result.status)
                 print(status_str)
                 if status_str == 'PENDING':
-                    return JsonResponse({STATUS: SUCCESS, MESSAGE:"Socket running","task_status": True})
+                    return JsonResponse({STATUS: SUCCESS, MESSAGE: "Socket running", "task_status": True})
                 else:
-                    return JsonResponse({STATUS: FAILED, MESSAGE:"Socket not running","task_status": False})
+                    return JsonResponse({STATUS: FAILED, MESSAGE: "Socket not running", "task_status": False})
             else:
-                return JsonResponse({STATUS: SUCCESS, MESSAGE:"No Socket Job Present","task_status": False})
+                return JsonResponse({STATUS: SUCCESS, MESSAGE: "No Socket Job Present", "task_status": False})
         else:
             return render(request, "unauthorised.html")
     except Exception as e:
