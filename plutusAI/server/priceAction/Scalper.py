@@ -275,7 +275,7 @@ class Scalper():
                         if initial_sell_order[MESSAGE].__eq__('SUCCESS'):
                             sell_uniqueorderid = initial_sell_order["data"]["uniqueorderid"]
                             sell_price = self.BrokerObject.getOrderDetails(sell_uniqueorderid)["averageprice"]
-                            self.total_price = float(sell_price) - float(self.optionBuyPrice)
+                            self.total_price = float(self.total_price) + float(sell_price) - float(self.optionBuyPrice)
                             data = {USER_ID: self.user_email, SCRIPT_NAME: self.currentPremiumPlaced,
                                     QTY: self.user_qty, EXIT_PRICE: sell_price, STATUS: ORDER_EXITED}
                             addLogDetails(INFO,
@@ -318,7 +318,7 @@ class Scalper():
                     EXIT_PRICE: self.BrokerObject.getLtpForPremium(self.optionDetails), STATUS: ORDER_EXITED}
             addLogDetails(INFO, "Index Name: " + self.index_name + " User :" + self.user_email + " " + str(data))
             addOrderBookDetails(data, False)
-            self.total_price = float(data[EXIT_PRICE]) - float(self.optionBuyPrice)
+            self.total_price = float(self.total_price) +( float(data[EXIT_PRICE]) - float(self.optionBuyPrice))
             self.isPEOrderPlaced = False
             self.isCEOrderPlaced = False
             return order_response
