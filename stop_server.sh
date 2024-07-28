@@ -22,4 +22,6 @@ stop_process_if_running() {
 stop_process_if_running "python3 manage.py runserver"
 
 # Stop Celery worker
-stop_process_if_running "celery -A madaraUI.celery worker"
+stop_process_if_running "celery -A plutus.celery worker"
+
+stop_process_if_running "cloudflared tunnel"

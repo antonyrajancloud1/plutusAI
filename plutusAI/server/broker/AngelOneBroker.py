@@ -22,6 +22,9 @@ class AngelOneBroker:
             self.refreshToken = self.data['data']['refreshToken']
             self.auth_token = self.data['data']['jwtToken']
             self.feed_token = self.data['data']['feedToken']
+            print(self.refreshToken)
+            print(self.auth_token)
+            print(self.feed_token)
             self.profileDetails = self.checkProfile()
             # print(self.profileDetails)
             if str(self.profileDetails["message"]).__eq__("SUCCESS"):

@@ -378,7 +378,7 @@ def start_ws(request):
             )
         elif ws_type == "2":
             user_data = JobDetails.objects.filter(
-            user_id = ADMIN_USER_ID, index_name = HTTP_JOB, strategy = HTTP_JOB
+                user_id=ADMIN_USER_ID, index_name=HTTP_JOB, strategy=HTTP_JOB
             )
         if user_data.count() > 0:
             return JsonResponse({STATUS: FAILED, MESSAGE: "Socket running", "task_status": True})
