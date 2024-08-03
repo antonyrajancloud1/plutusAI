@@ -1,6 +1,6 @@
 Resource = {
     userInfo            :   "User Info", 
-    configurations      :   "Configurations", 
+    configurations      :   "Hunter", 
     position            :   "Position",
     orderBook           :   "Order Book",
     brokerInfo          :   "Broker Info",
@@ -67,6 +67,8 @@ Resource = {
     entry_time          :   "Entry Time",
     broker_details_updated  :   "Broker Details Updated",
     config_values_updated   :   "Configuration values are updated",
-    no_data_found       :   "No Data Found!",
-    is_demo_trading_enabled :   "Is Demo trading enabled?"
+    no_data_found           :   "No Data Found!",
+    is_demo_trading_enabled :   "Is Demo trading enabled?",
+    target              :   "Target",
+    use_full_capital    :   "Use Full Capital?"
 }   

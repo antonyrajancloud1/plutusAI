@@ -38,7 +38,7 @@
 .tblHead .tblCel:last-child { border-right: 1px solid var(--border-clr) !important; }
 .tblMain .tblCel:last-child { border-right: 1px solid var(--border-clr); }
 .tblMain .tblCel { border-left: 1px solid var(--border-clr); }
-.tblMain .tblRow .tblCel { background-color: #03254b; }
+/* .tblMain .tblRow .tblCel { background-color: #03254b; } */
 .tblMain .tblRow:last-child .tblCel { border-bottom: 1px solid var(--border-clr); }
 .tblMain .tblRow:last-child .tblCel:first-child { border-bottom-left-radius:6px; }
 .tblMain .tblRow:last-child .tblCel:last-child { border-bottom-right-radius:6px; }

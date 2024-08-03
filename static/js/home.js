@@ -13,7 +13,8 @@ let MadaraConstructor = function() {
     this.whiteListedProperties = {
         getConfigurations   : [ "actions", "index_name", "levels", "trend_check_points", "strike", "safe_sl", "stage" ],
         getOrderBook        : [ "entry_time", "script_name", "qty", "entry_price", "exit_price", "status", "exit_time" ],
-        getBrokerInfo       : [ "actions", "broker_name", "broker_user_id", "broker_user_name", "broker_mpin", "broker_api_token" ]   
+        getBrokerInfo       : [ "actions", "broker_name", "broker_user_id", "broker_user_name", "broker_mpin", "broker_api_token" ],
+        getScalperDetails   : [ "actions", "index_name", "strike", "target", "is_demo_trading_enabled", "use_full_capital", "lots" ]   
     };
 };
 
@@ -26,7 +27,7 @@ MadaraConstructor.prototype.templates = {
                         {logout}
                     </div>
                     <div id="body-container" class="flex wh100 flexG">
-                        <div id="lhs-container" class="ovrflwH">
+                        <div id="lhs-container" class="ovrflwH lhs-container-main">
                             <div id="lhs-module-container" class="flex-col lhs-container h100 posrel ovrflwA flexG">
                                 {modules_html}
                             </div>
@@ -48,7 +49,7 @@ MadaraConstructor.prototype.templates = {
                 </div>`,
 
     dataTableHtml : 
-                    `<div id="{module}-container" class="wh100 flexG pL35 pR35 pT20 pB20 clrD">
+                    `<div id="{module}-container" class="wh100 flexG pL35 pR35 pT20 pB20 clrD {module}-container">
                         <div class="tbl tblHead fshrink">   
                             {table_head_row}
                         </div>
@@ -141,6 +142,7 @@ MadaraConstructor.prototype.API = {
     addBrokerDetails    :   "/add_broker_details",
     editBrokerDetails   :   "/edit_broker_details",
     getOrderBookDetails :   "/get_order_book_details",
+    getScalperDetails   :   "/get_scalper_details",
     startIndex          :   "/start_index",
     stopIndex           :   "/stop_index",
     getPlans            :   "/plans",
@@ -148,7 +150,7 @@ MadaraConstructor.prototype.API = {
 };
 
 MadaraConstructor.prototype.getLHSModulesList = function() {
-    return [ "configurations", "orderBook", "brokerInfo", "scalper","plans", "needHelp" ];
+    return [ "configurations", "orderBook", "brokerInfo", "scalper" ];
 };
 
 MadaraConstructor.prototype.addLoaderForTheRHS = function() {
@@ -229,8 +231,11 @@ MadaraConstructor.prototype.updateBanner = function(bannerObject) {
 };
 
 MadaraConstructor.prototype.getFormattedTime = function(time) {
+    if(!isNaN(time)) {
+        time = time * 1000;
+    }
     let dateObject = new Date(time);
-    return dateObject.toDateString().split(' ').slice(1).join(' ') + ", " + dateObject.toLocaleTimeString(["en-US"], { hour12 : true, hour : '2-digit', minute : '2-digit' });
+    return dateObject.toDateString().split(' ').slice(1).join(' ') + ", " + dateObject.toLocaleTimeString(["en-US"], { hour12 : true, hour : '2-digit', minute : '2-digit', second : '2-digit' });
 };
 
 MadaraConstructor.prototype.populateNoDataFoundHTML = function() {
@@ -340,7 +345,76 @@ MadaraConstructor.prototype.viewBrokerInfo = function() {
                 eachConfigurationRow += self.templates.tableRow.replace(/{table_row_contents}/g, eachConfigurationCell);
             });
 
-            let dataTableForConfiguration = self.templates.dataTableHtml.replace(/{module}/g, "orderBook")
+            let dataTableForConfiguration = self.templates.dataTableHtml.replace(/{module}/g, "brokerInfo")
+                                                                        .replace(/{table_head_row}/g, tableHeadRow)
+                                                                        .replace(/{table_body}/g, eachConfigurationRow);
+
+            $(self.DOM_SELECTORS.rhs_container).html(dataTableForConfiguration);
+        },
+        error   :   function(errorResp) {
+            let errorContent = (JSON.parse(errorResp.responseText).message) ? self.checkAndGetResponseMessageFromResourceObject(JSON.parse(errorResp.responseText).message) : errorResp.statusText;
+            self.updateBanner({ type : "failure", content : errorContent });
+        }
+    }
+    this.makeAjaxRequest(url, {}, additionalAjaxOptions);
+};
+
+MadaraConstructor.prototype.viewScalper = function() {
+    let self = this;
+    this.setCurrentLHSModuleAsSelected("#module-configurations");
+    this.addLoaderForTheRHS();
+    let whiteListedProperties = this.whiteListedProperties.getScalperDetails;
+    let url = this.getWindowLocationOrigin() + this.API.getScalperDetails;
+    let additionalAjaxOptions = {
+        type    :   "GET",
+        success :   function(successResp) {
+            let tableHeadCell = "";
+            whiteListedProperties.forEach((property, index) => {
+                tableHeadCell +=  self.templates.tableCell.replace(/{table_cell_content}/g, Resource[property])
+                                                            .replace(/{tooltip_content}/g, Resource[property])
+                                                            .replace(/{disable_status}/, index === 0 ? "actions-table-cell" : "");
+            });
+            let tableHeadRow = self.templates.tableRow.replace(/{table_row_contents}/g, tableHeadCell);
+            let response = successResp.all_config_values;
+            if(!response.length) {
+                self.populateNoDataFoundHTML();
+                return;
+            }
+            let eachConfigurationRow = "";
+            response.forEach((key, index) => {
+                let currentConfiguration = response[index];
+                let configuration = currentConfiguration.index_name;
+                let configurationObject = currentConfiguration;
+                let disableStatus = configurationObject["disable"];
+                let actionsHtml = self.templates.actionsHtml.replace(/{start_button}/g, self.getStartIndexButton())
+                                                            .replace(/{stop_button}/g, self.getStopIndexButton())
+                                                            .replace(/{edit_button}/g, self.getEditButton());
+                                                            
+                actionsHtml = actionsHtml.replace(/{index}/g, configuration)
+                                        .replace(/{module}/g, "scalper")
+                                        .replace(/{purpose_of_edit}/g, "editThisIndexScalper");
+
+                let eachConfigurationCell = self.templates.tableCell.replace(/{table_cell_content}/g, actionsHtml)
+                                                                    .replace(/{tooltip_content}/g, "")
+                                                                    .replace(/{disable_status}/g, disableStatus ? "disabled actions-table-cell" : "actions-table-cell");
+
+                eachConfigurationCell += self.templates.tableCell.replace(/{table_cell_content}/g, Resource[configuration])
+                                                                    .replace(/{tooltip_content}/g, Resource[configuration])
+                                                                    .replace(/{disable_status}/g, disableStatus ? "disabled" : "");
+
+                whiteListedProperties.forEach(property => {
+                    if(property !== "index_name" && property !== "actions") {
+                        let valueFromResponse = configurationObject[property];
+                        let tableCellContent = (property === "stage") ? (Resource[valueFromResponse] ? Resource[valueFromResponse] : valueFromResponse) : valueFromResponse;
+                        eachConfigurationCell += self.templates.tableCell.replace(/{table_cell_content}/g, (typeof tableCellContent !== "undefined") ? tableCellContent : "-")
+                                                                         .replace(/{tooltip_content}/g, tableCellContent ? tableCellContent : "")
+                                                                         .replace(/{disable_status}/g, disableStatus ? "disabled" : "");
+                    }
+                });
+                eachConfigurationRow += self.templates.tableRow.replace(/{table_row_contents}/g, eachConfigurationCell);
+            });
+
+            let dataTableForConfiguration = self.templates.dataTableHtml.replace(/{module}/g, "scalper")
                                                                         .replace(/{table_head_row}/g, tableHeadRow)
                                                                         .replace(/{table_body}/g, eachConfigurationRow);
 
@@ -409,10 +483,11 @@ MadaraConstructor.prototype.viewConfigurations = function() {
 
                 whiteListedProperties.forEach(property => {
                     if(property !== "index_name" && property !== "actions") {
-                        let tableCellContent = (property === "stage") ? Resource[configurationObject[property]] : configurationObject[property];
+                        let valueFromResponse = configurationObject[property];
+                        let tableCellContent = (property === "stage") ? (Resource[valueFromResponse] ? Resource[valueFromResponse] : valueFromResponse) : valueFromResponse;
                         eachConfigurationCell += self.templates.tableCell.replace(/{table_cell_content}/g, tableCellContent ? tableCellContent : "-")
-                                                                            .replace(/{tooltip_content}/g, tableCellContent ? tableCellContent : "")
-                                                                            .replace(/{disable_status}/g, disableStatus ? "disabled" : "");
+                                                                         .replace(/{tooltip_content}/g, tableCellContent ? tableCellContent : "")
+                                                                         .replace(/{disable_status}/g, disableStatus ? "disabled" : "");
                     }
                 });
                 eachConfigurationRow += self.templates.tableRow.replace(/{table_row_contents}/g, eachConfigurationCell);
