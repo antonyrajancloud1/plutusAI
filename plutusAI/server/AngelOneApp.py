@@ -185,7 +185,8 @@ def createAngleOneCandle():
 
     # Initialize WebSocket parameters
     correlation_id = "admin_ws"
-    tokens = [35165]  # Define your tokens
+    symbol_token = BrokerObject.getTokenForSymbol(BANKNIFTY_FUTURES)
+    tokens = [symbol_token]  # Define your tokens
     global ltp_values_dict
     global start_time_dict
     ltp_values_dict = {}
@@ -287,4 +288,77 @@ def createAngleOneCandle():
 
     # Connect to the WebSocket
     sws.connect()
+
+
+@shared_task
+def angelOneWSNSE():
+    task_id = current_task.request.id
+
+    # Create a job entry in the database
+    JobDetails.objects.create(
+        user_id=ADMIN_USER_ID,
+        index_name=SOCKET_JOB,
+        job_id=task_id,
+        strategy=SOCKET_JOB
+    )
+
+    # Fetch broker details for the admin user
+    user_broker_data = BrokerDetails.objects.filter(user_id=ADMIN_USER_ID, index_group=INDIAN_INDEX)
+    BrokerObject = AngelOneBroker(user_broker_data)
+
+    # Initialize WebSocket parameters
+    correlation_id = "admin_ws"
+    nse_tokens = [99926000, 99926009, 99926037]  # Tokens for spot
+    nfo_tokens = [35089]  # Tokens for futures
+
+    global ltp_values_dict, start_time_dict
+    ltp_values_dict = {}
+    start_time_dict = {}
+
+    def on_open(wsapp):
+        addLogDetails(INFO, "WebSocket connection opened")
+        new_token = [{"exchangeType": 1, "tokens": nse_tokens}, {"exchangeType": 2, "tokens": nfo_tokens}]
+        sws.subscribe(correlation_id, 1, new_token)
+
+    def on_data(wsapp, message):
+        try:
+            token = message['token']
+            ltp = message['last_traded_price'] / 100.0  # Ensure LTP is a float
+            data = {'token': token, 'ltp': ltp}
+            print(data)
+            update_ltp_to_table(data)
+        except Exception as e:
+            print(e)
+            addLogDetails(ERROR, str(e))
+
+    def on_error(wsapp, error):
+        addLogDetails(ERROR, str(error))
+
+    def on_close(wsapp):
+        addLogDetails(INFO, "WebSocket connection closed")
+
+    def close_connection():
+        sws.close_connection()
+        addLogDetails(INFO, "WebSocket connection closed manually")
+
+    # Create and configure the WebSocket
+    sws = SmartWebSocketV2(
+            BrokerObject.auth_token,
+            BrokerObject.broker_api_token,
+            BrokerObject.broker_user_id,
+            BrokerObject.feed_token,
+            max_retry_attempt=2
+        )
+    sws.on_open = on_open
+    sws.on_data = on_data
+    sws.on_error = on_error
+    sws.on_close = on_close
+
+    # Connect to the WebSocket
+    sws.connect()
+
+    # Example usage of closing the connection (call close_connection when needed)
+    # close_connection()
+
+
 

@@ -376,7 +376,7 @@ def start_ws(request):
             user_data = JobDetails.objects.filter(
                 user_id=ADMIN_USER_ID, index_name=SOCKET_JOB, strategy=SOCKET_JOB
             )
-        elif ws_type == "2":
+        elif ws_type == "2" or ws_type == "3" :
             user_data = JobDetails.objects.filter(
                 user_id=ADMIN_USER_ID, index_name=HTTP_JOB, strategy=HTTP_JOB
             )
@@ -397,7 +397,7 @@ def stop_ws(request):
             ws_type = str(data_json.get("ws_type"))
             if ws_type == "1":
                 return terminate_task(ADMIN_USER_ID, SOCKET_JOB, SOCKET_JOB)
-            elif ws_type == "2":
+            elif ws_type == "2" or ws_type == "3":
                 return terminate_task(ADMIN_USER_ID, HTTP_JOB, HTTP_JOB)
         else:
             return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})

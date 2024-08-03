@@ -536,6 +536,8 @@ def start_ws_job(ws_type):
         elif ws_type.__eq__("2"):
             # AngelOneApp.createAngleOne.delay()
             AngelOneApp.createHttpData.delay()
+        elif ws_type.__eq__("3"):
+            AngelOneApp.angelOneWSNSE.delay()
         # elif ws_type.__eq__("3"):
         #     AngelOneApp.createHttpData.delay()
         # elif ws_type.__eq__("4"):
