@@ -23,23 +23,23 @@ MadaraConstructor.prototype.templates = {
                 `<div id="home-container" class="wh100 flex-col home-bg-container">
                     <div id="banner-container"></div>
                     <div id="header-container" class="flexC header-container p5">
-                        <div class="flexG textC font30 clrD">{project_name}</div>
+                        <div class="flexG textC font30 fontB">{project_name}</div>
                         {logout}
                     </div>
-                    <div id="body-container" class="flex wh100 flexG">
+                    <div id="body-container" class="flex w100 flexG body-container">
                         <div id="lhs-container" class="ovrflwH lhs-container-main">
                             <div id="lhs-module-container" class="flex-col lhs-container h100 posrel ovrflwA flexG">
                                 {modules_html}
                             </div>
                         </div>
-                        <div id="rhs-container" class="flex wh100 flexG"></div>
+                        <div id="rhs-container" class="flex wh100 flexG ovrflwH"></div>
                     </div>
                     <div id="footer-container" class="flex">
                     </div>
                 </div>`,
 
     eachModuleHtml :
-                    `<div id="module-{module_id}" class="font18 lhs-module flexM curP clrD" home-page-buttons purpose="view{purpose}">
+                    `<div id="module-{module_id}" class="font18 lhs-module flexM curP" home-page-buttons purpose="view{purpose}">
                         {module}
                     </div>`,
 
@@ -49,7 +49,7 @@ MadaraConstructor.prototype.templates = {
                 </div>`,
 
     dataTableHtml : 
-                    `<div id="{module}-container" class="wh100 flexG pL35 pR35 pT20 pB20 clrD {module}-container">
+                    `<div id="{module}-container" class="w100 flexG pL35 pR35 pT20 pB20 {module}-container ovrflwA data-table-container">
                         <div class="tbl tblHead fshrink">   
                             {table_head_row}
                         </div>
@@ -70,28 +70,28 @@ MadaraConstructor.prototype.templates = {
                         {edit_button}
                   </div>`,
 
-    startButton : `<div id="start-index" purpose="startIndex" home-page-buttons index="{index}" class="action-button xs fa fa-play curP clrG start-index-button p5 bdrR4" title="{start_index_title}"></div>`,
+    startButton : `<div id="start-index" purpose="startIndex" trigger-source="{trigger_source}" home-page-buttons index="{index}" class="action-button xs fa fa-play curP clrG start-index-button p5 bdrR4" title="{start_index_title}"></div>`,
 
-    stopButton : `<div id="stop-index" purpose="stopIndex" home-page-buttons index="{index}" class="action-button xs fa fa-stop curP clrR stop-index-button p5 bdrR4" title="{stop_index_title}"></div>`,
+    stopButton : `<div id="stop-index" purpose="stopIndex" trigger-source="{trigger_source}" home-page-buttons index="{index}" class="action-button xs fa fa-stop curP clrR stop-index-button p5 bdrR4" title="{stop_index_title}"></div>`,
 
     editButton : `<div id="edit-{module}" purpose="{purpose_of_edit}" home-page-buttons index="{index}" class="action-button fa xs fa-pencil curP clrB edit-config-button p5 bdrR4" title="{edit_module_title}"></div>`,
 
     logoutHtml : 
-                `<div id="logout-button" home-page-buttons class="primary-button logout-button clrD curP flexM bdrR10 sm" purpose="logoutUser" userId>
+                `<div id="logout-button" home-page-buttons class="primary-button logout-button curP flexM bdrR10 sm" purpose="logoutUser" userId>
                     {logout_text}
                 </div>`,
 
     bannerHtml : 
-                `<div id="banner-wrapper" class="{banner_type} banner-wrapper clrD dN textC">
-                    <div class="font16">{banner_content}</div>
+                `<div id="banner-wrapper" class="{banner_type} banner-wrapper dN textC">
+                    <div class="font16 clrW">{banner_content}</div>
                 </div>`,
 
     formHtml : 
                 `<div id="index-edit-configuration-form" class="index-edit-configuration-form mask-bg">
-                    <div id="form-main-container" class="form-main-container flex-col flexG clrD">
+                    <div id="form-main-container" class="form-main-container flex-col flexG">
                         <div id="form-header" class="flexM pB15 pL15 pR15 fontB fontItalic form-header justifySB">
                             <div class="font24">{index_configuration}</div>
-                            <div class="fa fa-close close-icon font14 curP" purpose="closeEditConfigurationForm" home-page-buttons title="{close}"></div>
+                            <div class="fa fa-close close-icon font14 curP clrW" purpose="closeEditConfigurationForm" home-page-buttons title="{close}"></div>
                         </div>
                         <div id="form-body" class="flexM">
                             <div id="form-input-elements" class="form-input-elements flex-col flexG gap20 p15" {main_key}="{index_name}">
@@ -121,7 +121,7 @@ MadaraConstructor.prototype.templates = {
                     </div>`,
 
     noDataFoundHtml : 
-                    `<div id="no-data-found-container" class="wh100 flexG pL35 pR35 pT20 pB20 clrD  flexM gap10 font24">  
+                    `<div id="no-data-found-container" class="wh100 flexG pL35 pR35 pT20 pB20  flexM gap10 font24">  
                         <div class="fa fa-close clrR flex"></div>
                         <div class="fontItalic">{no_data_text}</div>
                     </div>`
@@ -132,21 +132,22 @@ MadaraConstructor.prototype.getWindowLocationOrigin = function() {
 };
 
 MadaraConstructor.prototype.API = {
-    home                :   "/home",
-    login               :   "/login",
-    logout              :   "/logout",
-    getConfigValues     :   "/get_config_values",
-    updateConfigValues  :   "/update_config_values",
-    addUser             :   "/add_user",
-    getBrokerDetails    :   "/get_broker_details",
-    addBrokerDetails    :   "/add_broker_details",
-    editBrokerDetails   :   "/edit_broker_details",
-    getOrderBookDetails :   "/get_order_book_details",
-    getScalperDetails   :   "/get_scalper_details",
-    startIndex          :   "/start_index",
-    stopIndex           :   "/stop_index",
-    getPlans            :   "/plans",
-    editPlans           :   "/edit_plans"
+    home                    :   "/home",
+    login                   :   "/login",
+    logout                  :   "/logout",
+    getConfigValues         :   "/get_config_values",
+    updateConfigValues      :   "/update_config_values",
+    addUser                 :   "/add_user",
+    getBrokerDetails        :   "/get_broker_details",
+    addBrokerDetails        :   "/add_broker_details",
+    editBrokerDetails       :   "/edit_broker_details",
+    getOrderBookDetails     :   "/get_order_book_details",
+    getScalperDetails       :   "/get_scalper_details",
+    updateScalperDetails    :   "/update_scalper_details",
+    startIndex              :   "/start_index",
+    stopIndex               :   "/stop_index",
+    getPlans                :   "/plans",
+    editPlans               :   "/edit_plans"
 };
 
 MadaraConstructor.prototype.getLHSModulesList = function() {
@@ -231,9 +232,14 @@ MadaraConstructor.prototype.updateBanner = function(bannerObject) {
 };
 
 MadaraConstructor.prototype.getFormattedTime = function(time) {
+    if(!time) {
+        return "-";
+    }
+
     if(!isNaN(time)) {
         time = time * 1000;
     }
+    
     let dateObject = new Date(time);
     return dateObject.toDateString().split(' ').slice(1).join(' ') + ", " + dateObject.toLocaleTimeString(["en-US"], { hour12 : true, hour : '2-digit', minute : '2-digit', second : '2-digit' });
 };
@@ -392,7 +398,8 @@ MadaraConstructor.prototype.viewScalper = function() {
                                                             
                 actionsHtml = actionsHtml.replace(/{index}/g, configuration)
                                         .replace(/{module}/g, "scalper")
-                                        .replace(/{purpose_of_edit}/g, "editThisIndexScalper");
+                                        .replace(/{purpose_of_edit}/g, "editThisIndexScalper")
+                                        .replace(/{trigger_source}/g, "scalper");
 
                 let eachConfigurationCell = self.templates.tableCell.replace(/{table_cell_content}/g, actionsHtml)
                                                                     .replace(/{tooltip_content}/g, "")
@@ -471,7 +478,8 @@ MadaraConstructor.prototype.viewConfigurations = function() {
                                                             
                 actionsHtml = actionsHtml.replace(/{index}/g, configuration)
                                         .replace(/{module}/g, "configurations")
-                                        .replace(/{purpose_of_edit}/g, "editThisIndexConfiguration");
+                                        .replace(/{purpose_of_edit}/g, "editThisIndexConfiguration")
+                                        .replace(/{trigger_source}/g, "configurations");
 
                 let eachConfigurationCell = self.templates.tableCell.replace(/{table_cell_content}/g, actionsHtml)
                                                                     .replace(/{tooltip_content}/g, "")
@@ -518,6 +526,11 @@ MadaraConstructor.prototype.startIndex = function() {
     let data = {
         index_name  :   currentTarget.attr("index")
     };
+
+    let triggerSource = currentTarget.attr("trigger-source");
+    if(triggerSource === "scalper") {
+        data.strategy = triggerSource;
+    }
     let url = this.getWindowLocationOrigin() + this.API.startIndex;
     let additionalAjaxOptions = {
         type    :   "POST",
@@ -542,6 +555,11 @@ MadaraConstructor.prototype.stopIndex = function() {
         index_name  :   currentTarget.attr("index"),
         strategy    :   "hunter"
     };
+
+    let triggerSource = currentTarget.attr("trigger-source");
+    if(triggerSource === "scalper") {
+        data.strategy = triggerSource;
+    }
     let url = this.getWindowLocationOrigin() + this.API.stopIndex;
     let additionalAjaxOptions = {
         type    :   "POST",
@@ -635,6 +653,32 @@ MadaraConstructor.prototype.updateConfigurations = function() {
     }
 };
 
+MadaraConstructor.prototype.updateScalperDetails = function() {
+    let inputData = this.validateAndGetInputs();
+    if(inputData) {
+        let self = this;
+        let currentTarget = this.EVENT_AND_DOM_CACHE.currentTarget;
+        this.addLoaderInThisButton(currentTarget);
+        let data = inputData;
+        let url = this.getWindowLocationOrigin() + this.API.updateScalperDetails;
+        let additionalAjaxOptions = {
+            type    :   "PUT",
+            success :   function(successResp) {
+                self.removeLoaderInThisButton(currentTarget);
+                self.closeEditForm("#index-edit-configuration-form");
+                self.updateBanner({ type : "success", content : self.checkAndGetResponseMessageFromResourceObject(successResp.message) });
+                self.viewConfigurations();
+            },
+            error   :   function(errorResp) {
+                self.removeLoaderInThisButton(currentTarget);
+                let errorContent = (JSON.parse(errorResp.responseText).message) ? self.checkAndGetResponseMessageFromResourceObject(JSON.parse(errorResp.responseText).message) : errorResp.statusText;
+                self.updateBanner({ type : "failure", content : errorContent });
+            }
+        }
+        this.makeAjaxRequest(url, data, additionalAjaxOptions);
+    }
+};
+
 MadaraConstructor.prototype.closeEditConfigurationForm = function() {
     this.closeEditForm("#index-edit-configuration-form");
 };
@@ -670,9 +714,9 @@ MadaraConstructor.prototype.populateFormForEditingBrokerDetail = function(broker
     $(this.DOM_SELECTORS.home_container).prepend(formHtml);
 };
 
-MadaraConstructor.prototype.populateFormForEditingIndexConfiguration = function(indexData) {
+MadaraConstructor.prototype.populateFormForEditingIndexConfiguration = function(indexData, additionalData) {
     let inputHtml = "";
-    let blackListedProperties = ["index_name","stage"];
+    let blackListedProperties = ["index_name", "stage"];
     Object.keys(indexData).forEach(property => {
         if(!blackListedProperties.includes(property)) {
             if(typeof indexData[property] === "boolean") {
@@ -690,8 +734,8 @@ MadaraConstructor.prototype.populateFormForEditingIndexConfiguration = function(
                                             .replace(/{index_configuration}/g, Resource["index_config"] + Resource[indexData.index_name])
                                             .replace(/{index_name}/g, indexData.index_name)
                                             .replace(/{main_key}/g, "index_name")
-                                            .replace(/{update_config}/g, Resource["update_config"])
-                                            .replace(/{purpose_of_submit}/g, "updateConfigurations")
+                                            .replace(/{update_config}/g, (additionalData && additionalData.isFromScalper) ? Resource["update_scalper_details"] : Resource["update_config"])
+                                            .replace(/{purpose_of_submit}/g, (additionalData && additionalData.isFromScalper) ? "updateScalperDetails" : "updateConfigurations")
                                             .replace(/{close}/g, Resource["close"]);
 
     $(this.DOM_SELECTORS.home_container).prepend(formHtml);
@@ -732,6 +776,28 @@ MadaraConstructor.prototype.editThisIndexConfiguration = function() {
         success :   function(successResp) {
             self.removeLoaderInThisButton(currentTarget);
             self.populateFormForEditingIndexConfiguration(successResp);
+        },
+        error   :   function(errorResp) {
+            self.removeLoaderInThisButton(currentTarget);
+            self.updateBanner({ type : "failure", content : self.checkAndGetResponseMessageFromResourceObject(JSON.parse(errorResp.responseText).message) });
+        }
+    }
+    this.makeAjaxRequest(url, data, additionalAjaxOptions);
+};
+
+MadaraConstructor.prototype.editThisIndexScalper = function() {
+    let self = this;
+    let currentTarget = this.EVENT_AND_DOM_CACHE.currentTarget;
+    let data = {
+        index_name : currentTarget.attr("index")
+    };
+    this.addLoaderInThisButton(currentTarget);
+    let url = this.getWindowLocationOrigin() + this.API.getScalperDetails;
+    let additionalAjaxOptions = {
+        type    :   "GET",
+        success :   function(successResp) {
+            self.removeLoaderInThisButton(currentTarget);
+            self.populateFormForEditingIndexConfiguration(successResp, { isFromScalper : true });
         },
         error   :   function(errorResp) {
             self.removeLoaderInThisButton(currentTarget);

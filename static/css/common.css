@@ -31,7 +31,8 @@
 .tblRow { display: table-row; }
 .tblCel { display: table-cell; vertical-align: middle;padding: 15px 10px;text-align: center; }
 
-.tblHead .tblCel { background-color: var(--theme-clr); border: 1px solid var(--border-clr); border-right: none; font-size: 15px; font-weight: bold; color: var(--color-main); } 
+.tblHead { position: sticky;top: -20px; }
+.tblHead .tblCel { background-color: var(--table-header); border: 1px solid var(--border-clr); border-right: none; font-size: 15px; font-weight: bold; } 
 .tblHead .tblCel:first-child{ border-radius: 6px 0 0 0; } 
 .tblHead .tblCel:last-child  { border-radius: 0 6px 0 0; border-right: 1px solid var(--border-clr); }
 .tbl.tblMain { border-top: none; }
@@ -384,7 +385,7 @@ input.txt:focus, input[type="text"]:focus, input[type="checkbox"]:focus, input[t
 .start-index-button.action-button.rloader:after { border-right: 4px solid #50AE42 }
 .edit-config-button.action-button.rloader:after { border-right: 4px solid #2695F6 }
 .stop-index-button.action-button.rloader:after { border-right: 4px solid #F06C66 }
-.rloader:after { content: ''; height: 48px; width: 48px; position: absolute; left: 0; right: 0; top: 0; bottom: 0; margin: auto; border-radius: 50%; z-index: 1; border: 4px solid var(--border-clr); border-right: 4px solid #B8BBBD; animation: loader 1s linear infinite; box-sizing: border-box; }
+.rloader:after { content: ''; height: 48px; width: 48px; position: absolute; left: 0; right: 0; top: 0; bottom: 0; margin: auto; border-radius: 50%; z-index: 1; border: 4px solid #A6ABB3; border-right: 4px solid #000; animation: loader 1s linear infinite; box-sizing: border-box; }
 @keyframes loader { 100% { transform: rotate(360deg); } }
 
 /* Banner related CSS */
