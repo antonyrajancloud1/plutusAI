@@ -28,8 +28,8 @@ class Configuration(models.Model):
 
 class OrderBook(models.Model):
     user_id = models.CharField(max_length=500, default=None)
-    entry_time = models.BigIntegerField()
-    exit_time = models.BigIntegerField(blank=True, null=True)
+    entry_time = models.CharField(max_length=500, default=None)
+    exit_time = models.CharField(max_length=500, default=None,blank=True, null=True)
     script_name = models.CharField(max_length=250, default=None)
     qty = models.CharField(max_length=250, default=None)
     entry_price = models.CharField(max_length=250, default=None, blank=True)

@@ -91,7 +91,7 @@ class NSEPriceAction():
                     elif int(self.IndexLTP).__round__() <= self.nearestSupport:
                         self.pivotPoint = self.nearestSupport
                     updateIndexConfiguration(user_email=self.user_email, index=self.index_name,
-                                             data={'stage': 'pivot_decided'})
+                                             data={'stage': 'Pivot Decided : '+str(self.pivotPoint)})
                     addLogDetails(INFO, "Index Name: " + self.index_name + " pivot Decided, User:" + self.user_email)
                     while True:
                         self.IndexLTP = getCurrentIndexValue(self.index_name)
