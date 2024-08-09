@@ -145,7 +145,7 @@ def createV1Socket():
     ss = SmartWebSocket(BrokerObject.feed_token, CLIENT_CODE)
 
     def on_message(ws, message):
-        addLogDetails("Ticks: {}".format(message))
+        addLogDetails(INFO , "Ticks: {}".format(message))
 
     def on_open(ws):
         addLogDetails(INFO, "on open WS V1")

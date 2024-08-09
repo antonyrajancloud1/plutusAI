@@ -140,3 +140,16 @@ class CandleData(models.Model):
     @classmethod
     def search_by_name(cls, query):
         return cls.objects.filter(name__icontains=query)
+class UserAuthTokens(models.Model):
+    user_id = models.CharField(max_length=500, default=None)
+    refreshToken = models.CharField(max_length=2000, default=None)
+    jwtToken = models.CharField(max_length=2000, default=None)
+    feedToken = models.CharField(max_length=2000, default=None)
+    last_updated_time = models.CharField(max_length=500, default=None)
+
+
+    def __str__(self):
+        return f"{self.user_id} - {self.refreshToken} - {self.jwt_token} - {self.feedToken}"
+    @classmethod
+    def search_by_name(cls, query):
+        return cls.objects.filter(name__icontains=query)

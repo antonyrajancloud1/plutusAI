@@ -213,7 +213,7 @@ class NSEPriceAction():
         while True:
             try:
                 self.IndexLTP = getCurrentIndexValue(self.index_name)
-                addLogDetails(INFO, self.IndexLTP)
+                # addLogDetails(INFO, self.IndexLTP)
                 if not self.isPEOrderPlaced:
                     self.indexValueWhilePlacingOrder = self.IndexLTP
                     self.placeOrder("PE")

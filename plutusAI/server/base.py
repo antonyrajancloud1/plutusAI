@@ -236,7 +236,7 @@ def updateIndexDetails(token, data):
 def addOrderBookDetails(data, is_entry):
     try:
         addLogDetails(INFO, "addOrderBookDetails")
-        current_time_str = datetime.now().timestamp()
+        current_time_str = getCurrentTimestamp()
         # current_time_str=datetime.timestamp(datetime.now())
         if is_entry:
             data["entry_time"] = current_time_str
@@ -613,3 +613,7 @@ def convert_datetime_string(datetime_str):
     }
 
     return dt_dict
+
+
+def getCurrentTimestamp():
+    return str(datetime.now().timestamp())

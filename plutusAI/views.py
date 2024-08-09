@@ -252,7 +252,7 @@ def get_order_book_details(request):
 
 def add_order_book_details(data_json):
     try:
-        current_time = datetime.now()
+        current_time = getCurrentTimestamp()
         current_time_str = current_time.strftime("%Y-%m-%d %H:%M:%S")
         OrderBook.objects.create(
             user_id=data_json.get(USER_ID),
@@ -261,8 +261,9 @@ def add_order_book_details(data_json):
             entry_price=data_json.get(ENTRY_PRICE),
             exit_price=data_json.get(EXIT_PRICE),
             status=data_json.get(STATUS),
-            time=current_time_str,
+
         )
+        #time=current_time_str,
     except json.JSONDecodeError as e:
         return JsonResponse({STATUS: FAILED, MESSAGE: INVALID_JSON})
     except Exception as e:
@@ -275,7 +276,7 @@ def add_order_book_details(data_json):
 def start_index(request):
     try:
         if check_user_session(request):
-            checkSocketStatus()
+            # checkSocketStatus()
             user_email = get_user_email(request)
             # user_email='user1@gmail.com'
             data = json.loads(request.body)

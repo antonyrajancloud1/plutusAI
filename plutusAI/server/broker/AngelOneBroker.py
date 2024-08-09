@@ -2,12 +2,21 @@ from SmartApi import SmartConnect
 import pandas as pd
 import pyotp
 import requests
+
+from plutusAI.models import UserAuthTokens
 from plutusAI.server.base import addLogDetails, getTokenUsingSymbol
+from plutusAI.server.broker.AngelOne.AngelOneAuth import AngelOneAuth
 from plutusAI.server.constants import *
 
 
 class AngelOneBroker:
     def __init__(self, user_broker_data):
+        # self.user_token_data_list = None
+        # self.user_token_data_query = None
+        # self.refreshToken = None
+        # self.feed_token = None
+        # self.auth_token = None
+        # self.smartApi = None
         try:
 
             user_broker_details = list(user_broker_data.values())[0]
@@ -16,15 +25,30 @@ class AngelOneBroker:
             self.broker_api_token = user_broker_details[BROKER_API_TOKEN]
             self.broker_mpin = user_broker_details[BROKER_MPIN]
             self.broker_qr = user_broker_details[BROKER_QR]
-            self.smartApi = SmartConnect(self.broker_api_token)
-            self.totp = pyotp.TOTP(self.broker_qr).now()
-            self.data = self.smartApi.generateSession(self.broker_user_id, self.broker_mpin, self.totp)
-            self.refreshToken = self.data['data']['refreshToken']
-            self.auth_token = self.data['data']['jwtToken']
-            self.feed_token = self.data['data']['feedToken']
-            print(self.refreshToken)
-            print(self.auth_token)
-            print(self.feed_token)
+
+            self.setUserTokenData()
+            if self.user_token_data_list.__len__() > 0:
+                addLogDetails(INFO,"into Existing token flow " +self.user_id)
+                # self.user_token_data = self.user_token_data[0]
+                self.initBrokerWithToken()
+                profile_details = self.checkProfile()
+                if profile_details[MESSAGE] == "SUCCESS":
+                    addLogDetails(INFO,"Broker object initiated with existing token "+self.user_id)
+                else:
+                    # print("Generate token")
+                    AngelOneAuth(self.user_id)
+                    self.setUserTokenData()
+                    self.initBrokerWithToken()
+                    addLogDetails(INFO,"New Token generated "+ self.user_id)
+            else:
+                addLogDetails(INFO,"No Token Data "+ self.user_id)
+                AngelOneAuth(self.user_id)
+                self.setUserTokenData()
+                self.initBrokerWithToken()
+                addLogDetails(INFO,"New Token generated "+ self.user_id)
+            # print(self.refreshToken)
+            # print(self.auth_token)
+            # print(self.feed_token)
             self.profileDetails = self.checkProfile()
             # print(self.profileDetails)
             if str(self.profileDetails["message"]).__eq__("SUCCESS"):
@@ -39,6 +63,21 @@ class AngelOneBroker:
             addLogDetails(INFO, "initisuccess for angleone")
         except Exception as e:
             addLogDetails(ERROR, str(e))
+
+    def setUserTokenData(self):
+        self.user_token_data_query = UserAuthTokens.objects.filter(user_id=self.user_id)
+        self.user_token_data_list = list(self.user_token_data_query.values())
+        if self.user_token_data_list.__len__() > 0:
+            self.user_token_data = self.user_token_data_list[0]
+
+    def initBrokerWithToken(self):
+        self.refreshToken = self.user_token_data["refreshToken"]
+        self.feed_token = self.user_token_data["feedToken"]
+        self.auth_token = self.user_token_data["jwtToken"]
+        self.smartApi = SmartConnect(self.broker_api_token)
+        self.smartApi.__init__(refresh_token=self.refreshToken,
+                               feed_token=self.feed_token, access_token=self.auth_token,
+                               api_key=self.broker_api_token)
 
     def checkProfile(self):
         return self.smartApi.getProfile(self.refreshToken)
@@ -130,20 +169,20 @@ class AngelOneBroker:
         price_details = self.getOrderDetails(uniq_order_id)
         return str(price_details['averageprice'])
 
-    def getCandleData(self,exchange,symbol,from_time,to_time):
+    def getCandleData(self, exchange, symbol, from_time, to_time):
         try:
-            column=['timestamp',"open","high","low","close","volume"]
-            dataParam={
-                "exchange":exchange,
-                "symboltoken":symbol,
-                "interval":"ONE_MINUTE",
-                "fromdate":from_time,
-                "todate":to_time
+            column = ['timestamp', "open", "high", "low", "close", "volume"]
+            dataParam = {
+                "exchange": exchange,
+                "symboltoken": symbol,
+                "interval": "ONE_MINUTE",
+                "fromdate": from_time,
+                "todate": to_time
             }
             historic_data = self.smartApi.getCandleData(dataParam)
-            candle_data=historic_data["data"]
-            if historic_data["message"]=="SUCCESS":
-                df = pd.DataFrame(candle_data,columns=column)
+            candle_data = historic_data["data"]
+            if historic_data["message"] == "SUCCESS":
+                df = pd.DataFrame(candle_data, columns=column)
                 return df
         except Exception as e:
             addLogDetails(ERROR, "exception in getCandleData" + str(e))
