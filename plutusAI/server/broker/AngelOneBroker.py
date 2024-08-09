@@ -11,12 +11,7 @@ from plutusAI.server.constants import *
 
 class AngelOneBroker:
     def __init__(self, user_broker_data):
-        # self.user_token_data_list = None
-        # self.user_token_data_query = None
-        # self.refreshToken = None
-        # self.feed_token = None
-        # self.auth_token = None
-        # self.smartApi = None
+
         try:
 
             user_broker_details = list(user_broker_data.values())[0]
@@ -25,6 +20,7 @@ class AngelOneBroker:
             self.broker_api_token = user_broker_details[BROKER_API_TOKEN]
             self.broker_mpin = user_broker_details[BROKER_MPIN]
             self.broker_qr = user_broker_details[BROKER_QR]
+            self.is_demo_enabled = bool(user_broker_details[IS_DEMO_TRADING_ENABLED])
 
             self.setUserTokenData()
             if self.user_token_data_list.__len__() > 0:

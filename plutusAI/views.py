@@ -15,6 +15,8 @@ from plutusAI.server.priceAction.priceActionScalper import *
 from .models import *
 from datetime import datetime, timedelta
 
+from .server.broker.Broker import Broker
+
 
 def invaid_url(request, exception):
     return render(request, "invaid_url.html", status=404)
@@ -377,7 +379,7 @@ def start_ws(request):
             user_data = JobDetails.objects.filter(
                 user_id=ADMIN_USER_ID, index_name=SOCKET_JOB, strategy=SOCKET_JOB
             )
-        elif ws_type == "2" or ws_type == "3" :
+        elif ws_type == "2" or ws_type == "3":
             user_data = JobDetails.objects.filter(
                 user_id=ADMIN_USER_ID, index_name=HTTP_JOB, strategy=HTTP_JOB
             )
@@ -589,6 +591,41 @@ def check_task_status(request):
                 return JsonResponse({STATUS: SUCCESS, MESSAGE: "No Socket Job Present", "task_status": False})
         else:
             return render(request, "unauthorised.html")
+    except Exception as e:
+        addLogDetails(ERROR, str(e))
+        return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
+
+@csrf_exempt
+@require_http_methods([POST])
+def buy_manual_order(request):
+    print("buy_manual_order")
+
+    try:
+        #
+        if check_user_session(request):
+            user_email = get_user_email(request)
+            data = json.loads(request.body)
+            index_name = data["index_name"]
+            user_orders = OrderBook.objects.filter(user_id=user_email, strategy=STRATEGY_MANUAL, index_name=index_name)
+            print(user_orders)
+            broker_data = get_broker_details_json_using_id(user_email)[0]
+            print(broker_data)
+            if list(user_orders.values()).__len__() > 0:
+                print("ORDER_PRESENT")
+                return JsonResponse({STATUS: FAILED, MESSAGE: ORDER_PRESENT})
+            else:
+                print("ORDER_NOT_PRESENT")
+                BrokerObject = Broker(user_email, broker_data[INDEX_GROUP]).BrokerObject
+                is_demo_enabled = BrokerObject.is_demo_enabled
+                print(is_demo_enabled)
+                if is_demo_enabled:
+                    print("Place dummy order")
+                else:
+                    print("Place Broker order")
+                    BrokerObject.placeOrder()
+                return JsonResponse({STATUS: SUCCESS, MESSAGE: ORDER_PLACED})
+        else:
+            return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
     except Exception as e:
         addLogDetails(ERROR, str(e))
         return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})

@@ -2,6 +2,7 @@ from plutusAI.models import JobDetails
 from plutusAI.server.AngelOneApp import *
 from plutusAI.server.base import *
 from plutusAI.server.broker.AngelOneBroker import AngelOneBroker
+from plutusAI.server.broker.Broker import Broker
 from plutusAI.server.constants import *
 from plutusAI.server.priceAction.priceActionScalper import *
 
@@ -16,21 +17,23 @@ class NSEPriceAction():
             self.index_group = index_group
             self.user_data = Configuration.objects.filter(user_id=user_email, index_name=index)
             self.index_data = IndexDetails.objects.filter(index_name=index)
-            self.user_broker_data = BrokerDetails.objects.filter(user_id=user_email, index_group=self.index_group)
+            # self.user_broker_data = BrokerDetails.objects.filter(user_id=user_email, index_group=self.index_group)
 
             self.index_data = list(self.index_data.values())
             self.config_data = list(self.user_data.values())
-            self.user_broker_details = list(self.user_broker_data.values())
-            if len(self.user_broker_details) > 0:
-                self.user_broker_details = self.user_broker_details[0]
-                user_broker = self.user_broker_details[BROKER_NAME]
-                self.is_demo_enabled = bool(self.user_broker_details[IS_DEMO_TRADING_ENABLED])
-                match user_broker:
-                    case "angel_one":
-                        self.BrokerObject = AngelOneBroker(self.user_broker_data)
-                    case "kite":
-                        addLogDetails(INFO, "kite")
-
+            # self.user_broker_details = list(self.user_broker_data.values())
+            # if len(self.user_broker_details) > 0:
+            #     self.user_broker_details = self.user_broker_details[0]
+            #     user_broker = self.user_broker_details[BROKER_NAME]
+            #     self.is_demo_enabled = bool(self.user_broker_details[IS_DEMO_TRADING_ENABLED])
+            #     match user_broker:
+            #         case "angel_one":
+            #             self.BrokerObject = AngelOneBroker(self.user_broker_data)
+            #         case "kite":
+            #             addLogDetails(INFO, "kite")
+            self.BrokerObject=Broker(self.user_email,self.index_group).BrokerObject
+            self.is_demo_enabled =self.BrokerObject.is_demo_enabled
+            if self.BrokerObject.checkProfile()[MESSAGE]=="SUCCESS":
                 if len(self.config_data) > 0:
                     self.config_data = self.config_data[0]
                     self.levels = convert_string_to_int_array(str(self.config_data[LEVELS]).split(','))
@@ -79,7 +82,7 @@ class NSEPriceAction():
         while True:
             try:
                 self.IndexLTP = getCurrentIndexValue(self.index_name)
-                addLogDetails(INFO, self.IndexLTP)
+                # addLogDetails(INFO, self.IndexLTP)
                 if int(self.IndexLTP).__round__() >= self.nearestResistance or int(
                         self.IndexLTP).__round__() <= self.nearestSupport or int(
                         self.IndexLTP).__round__() in self.levels:
@@ -385,7 +388,7 @@ class NSEPriceAction():
             # print(self.optionDetails)
             self.optionBuyPrice = self.BrokerObject.getLtpForPremium(self.optionDetails)
             data = {USER_ID: self.user_email, SCRIPT_NAME: self.currentPremiumPlaced, QTY: self.qty,
-                    ENTRY_PRICE: self.optionBuyPrice, STATUS: ORDER_PLACED, STRATEGY: STRATEGY_HUNTER}
+                    ENTRY_PRICE: self.optionBuyPrice, STATUS: ORDER_PLACED, STRATEGY: STRATEGY_HUNTER,INDEX_NAME:self.index_name}
             addLogDetails(INFO, "data fine")
             addOrderBookDetails(data, True)
             if orderType == "CE":
@@ -448,7 +451,7 @@ class NSEPriceAction():
                         order_details))
                     self.optionBuyPrice = order_details["averageprice"]
                     data = {USER_ID: self.user_email, SCRIPT_NAME: self.currentPremiumPlaced, QTY: self.qty,
-                            ENTRY_PRICE: self.optionBuyPrice, STATUS: ORDER_PLACED, STRATEGY: STRATEGY_HUNTER}
+                            ENTRY_PRICE: self.optionBuyPrice, STATUS: ORDER_PLACED, STRATEGY: STRATEGY_HUNTER,INDEX_NAME:self.index_name}
                     addOrderBookDetails(data, True)
 
                     price = int(self.optionBuyPrice) - 10
@@ -507,7 +510,7 @@ class NSEPriceAction():
                     self.optionBuyPrice = self.BrokerObject.getOrderDetails(uniqueorderid)["averageprice"]
                     self.isCEOrderPlaced = True
                     data = {USER_ID: self.user_email, SCRIPT_NAME: self.currentPremiumPlaced, QTY: self.qty,
-                            ENTRY_PRICE: self.optionBuyPrice, STATUS: ORDER_PLACED, STRATEGY: STRATEGY_HUNTER}
+                            ENTRY_PRICE: self.optionBuyPrice, STATUS: ORDER_PLACED, STRATEGY: STRATEGY_HUNTER,INDEX_NAME:self.index_name}
                     addOrderBookDetails(data, True)
                     price = int(self.optionBuyPrice) - 10
                     trigger_price = int(self.optionBuyPrice) - 10

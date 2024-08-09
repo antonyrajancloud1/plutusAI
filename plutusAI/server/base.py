@@ -115,13 +115,15 @@ def get_broker_data_json(user_email, index):
     user_profiles_list = remove_data_from_list(list(user_data.values()))
     return user_profiles_list
 
-
+def get_broker_details_json_using_id(user_email):
+    user_data = BrokerDetails.objects.filter(user_id=user_email)
+    broker_data = list(user_data.values())
+    broker_data = remove_data_from_list(broker_data)
+    return broker_data
 def get_broker_details_using_id(user_email):
     try:
         # user_email = get_user_email(request)
-        user_data = BrokerDetails.objects.filter(user_id=user_email)
-        broker_data = list(user_data.values())
-        broker_data = remove_data_from_list(broker_data)
+        broker_data = get_broker_details_json_using_id(user_email)
         # user_profiles_list = get_broker_data_json(user_email,index)
         return JsonResponse({BROKER_DETAILS: broker_data})
     except json.JSONDecodeError as e:
@@ -505,6 +507,7 @@ logging.basicConfig(
 
 
 def addLogDetails(log_type, logDetails):
+    print(logDetails)
     if log_type == "info":
         logging.info(logDetails)
     elif log_type == "error":

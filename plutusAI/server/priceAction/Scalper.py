@@ -4,6 +4,7 @@ from django.db.models import Q
 
 from plutusAI.server.base import *
 from plutusAI.server.broker.AngelOneBroker import AngelOneBroker
+from plutusAI.server.broker.Broker import Broker
 
 
 # from plutusAI.views import stop_current_celery_task
@@ -33,10 +34,10 @@ class Scalper():
             self.index_name = index
             self.index_group = index_group
             self.index_data = IndexDetails.objects.filter(index_name=index)
-            self.user_broker_data = BrokerDetails.objects.filter(user_id=user_email, index_group=self.index_group)
+            # self.user_broker_data = BrokerDetails.objects.filter(user_id=user_email, index_group=self.index_group)
             self.user_scalper_details = ScalperDetails.objects.filter(user_id=user_email, index_name=self.index_name)
             self.index_data = list(self.index_data.values())
-            self.user_broker_details = list(self.user_broker_data.values())
+            # self.user_broker_details = list(self.user_broker_data.values())
             self.user_scalper_details = list(self.user_scalper_details.values())[0]
             print(self.user_scalper_details)
             self.user_target = self.user_scalper_details[TARGET]
@@ -45,16 +46,19 @@ class Scalper():
             self.qty = int(self.index_data[0][QTY])
             self.user_qty = int(self.qty) * int(self.lots)
             print(self.strike)
-            if len(self.user_broker_details) > 0:
-                self.user_broker_details = self.user_broker_details[0]
-                user_broker = self.user_broker_details[BROKER_NAME]
-                self.is_demo_enabled = bool(self.user_scalper_details[IS_DEMO_TRADING_ENABLED])
-                print(self.is_demo_enabled)
-                match user_broker:
-                    case "angel_one":
-                        self.BrokerObject = AngelOneBroker(self.user_broker_data)
-                    case "kite":
-                        addLogDetails(INFO, "kite")
+            # if len(self.user_broker_details) > 0:
+            #     self.user_broker_details = self.user_broker_details[0]
+            #     user_broker = self.user_broker_details[BROKER_NAME]
+            #     self.is_demo_enabled = bool(self.user_scalper_details[IS_DEMO_TRADING_ENABLED])
+            #     print(self.is_demo_enabled)
+            #     match user_broker:
+            #         case "angel_one":
+            #             self.BrokerObject = AngelOneBroker(self.user_broker_data)
+            #         case "kite":
+            #             addLogDetails(INFO, "kite")
+            self.BrokerObject = Broker(self.user_email, self.index_group).BrokerObject
+            self.is_demo_enabled = self.BrokerObject.is_demo_enabled
+            if self.BrokerObject.checkProfile()[MESSAGE] == "SUCCESS":
                 self.initilize_scalper()
             else:
                 # updateIndexConfiguration(user_email=self.user_email,index=self.index_name,data=STAGE_BROKER_NOT_PRESENT)
@@ -222,7 +226,7 @@ class Scalper():
                 print(order_details)
                 self.optionBuyPrice = order_details["averageprice"]
                 data = {USER_ID: self.user_email, SCRIPT_NAME: self.currentPremiumPlaced, QTY: self.user_qty,
-                        ENTRY_PRICE: self.optionBuyPrice, STATUS: ORDER_PLACED, STRATEGY: STRATEGY_HUNTER}
+                        ENTRY_PRICE: self.optionBuyPrice, STATUS: ORDER_PLACED, STRATEGY: STRATEGY_HUNTER,INDEX_NAME:self.index_name}
                 addOrderBookDetails(data, True)
                 self.isCEOrderPlaced = True
 
@@ -249,7 +253,7 @@ class Scalper():
                 print(order_details)
                 self.optionBuyPrice = order_details["averageprice"]
                 data = {USER_ID: self.user_email, SCRIPT_NAME: self.currentPremiumPlaced, QTY: self.qty,
-                        ENTRY_PRICE: self.optionBuyPrice, STATUS: ORDER_PLACED, STRATEGY: STRATEGY_HUNTER}
+                        ENTRY_PRICE: self.optionBuyPrice, STATUS: ORDER_PLACED, STRATEGY: STRATEGY_HUNTER,INDEX_NAME:self.index_name}
                 addOrderBookDetails(data, True)
                 self.isPEOrderPlaced = True
 
@@ -292,7 +296,7 @@ class Scalper():
             self.optionDetails = self.BrokerObject.getCurrentPremiumDetails(NFO, self.currentPremiumPlaced)
             self.optionBuyPrice = self.BrokerObject.getLtpForPremium(self.optionDetails)
             data = {USER_ID: self.user_email, SCRIPT_NAME: self.currentPremiumPlaced, QTY: self.user_qty,
-                    ENTRY_PRICE: self.optionBuyPrice, STATUS: ORDER_PLACED, STRATEGY: STRATEGY_SCALPER}
+                    ENTRY_PRICE: self.optionBuyPrice, STATUS: ORDER_PLACED, STRATEGY: STRATEGY_SCALPER,INDEX_NAME:self.index_name}
             # addLogDetails(INFO, "data fine")
             addOrderBookDetails(data, True)
             if orderType == "CE":

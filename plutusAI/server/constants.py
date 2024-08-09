@@ -7,6 +7,8 @@ SOCKET_JOB_TYPE='3'
 ### strategy ###
 STRATEGY_HUNTER='hunter'
 STRATEGY_SCALPER='scalper'
+STRATEGY_MANUAL='manual'
+
 ### index details 
 NIFTY_50='Nifty 50'
 NIFTY_BANK='Nifty Bank'
@@ -45,6 +47,8 @@ UPDATE_SCALPER = "update_scalper_details"
 GET_SCALPER_VALUES = "get_scalper_details"
 ADMIN_CONSOLE="admin_console"
 CHECK_TASK_STATUS="check_task_status"
+BUY_MANUAL="buy_manual"
+
 #### DATA CONSTANTS ####
 ID = "id"
 USER_NAME = "user_name"
@@ -67,6 +71,7 @@ BROKER_API_TOKEN = "broker_api_token"
 BROKER_QR = "broker_qr"
 INDEX_GROUP = "index_group"
 TOKEN='token'
+
 #### INDEX TYPES
 INDIAN_INDEX = "indian_index"
 FOREX_INDEX = "forex_index"
@@ -110,6 +115,7 @@ BROKER_DETAILS = "broker_details"
 BROKER_DETAILS_ADDED = "broker_details_added"
 BROKER_DETAILS_UPDATED= "broker_details_updated"
 SCALPER_VALUES_UPDATED = "scalper_details_updated"
+ORDER_PRESENT="order_present"
 
 ORDER_BOOK_DETAILS = "order_book_details"
 PLAN_DETAILS = "plan_details"
