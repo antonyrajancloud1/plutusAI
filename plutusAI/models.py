@@ -29,7 +29,7 @@ class Configuration(models.Model):
 class OrderBook(models.Model):
     user_id = models.CharField(max_length=500, default=None)
     entry_time = models.CharField(max_length=500, default=None)
-    exit_time = models.CharField(max_length=500, default=None,blank=True, null=True)
+    exit_time = models.CharField(max_length=500, default=None, blank=True, null=True)
     script_name = models.CharField(max_length=250, default=None)
     qty = models.CharField(max_length=250, default=None)
     entry_price = models.CharField(max_length=250, default=None, blank=True)
@@ -125,6 +125,7 @@ class ScalperDetails(models.Model):
     def search_by_name(cls, query):
         return cls.objects.filter(name__icontains=query)
 
+
 class CandleData(models.Model):
     index_name = models.CharField(max_length=50, default=None)
     token = models.CharField(max_length=50, default=None)
@@ -134,12 +135,14 @@ class CandleData(models.Model):
     low = models.CharField(max_length=50, default=None)
     close = models.CharField(max_length=50, default=None)
 
-
     def __str__(self):
         return f"{self.index_name} - {self.token} - {self.time} - {self.open} - {self.high} - {self.low} - {self.close}"
+
     @classmethod
     def search_by_name(cls, query):
         return cls.objects.filter(name__icontains=query)
+
+
 class UserAuthTokens(models.Model):
     user_id = models.CharField(max_length=500, default=None)
     refreshToken = models.CharField(max_length=2000, default=None)
@@ -147,9 +150,41 @@ class UserAuthTokens(models.Model):
     feedToken = models.CharField(max_length=2000, default=None)
     last_updated_time = models.CharField(max_length=500, default=None)
 
-
     def __str__(self):
         return f"{self.user_id} - {self.refreshToken} - {self.jwt_token} - {self.feedToken}"
+
+    @classmethod
+    def search_by_name(cls, query):
+        return cls.objects.filter(name__icontains=query)
+
+
+class ManualOrders(models.Model):
+    user_id = models.CharField(max_length=100, default=None)
+    index_name = models.CharField(max_length=100, default=None)
+    target = models.CharField(max_length=100, default=None)
+    stop_loss = models.CharField(max_length=100, default=None)
+    order_status = models.CharField(max_length=100, default=None)
+    time = models.CharField(max_length=100, default=None)
+    is_demo_trading_enabled = models.BooleanField(default=True)
+    def __str__(self):
+        return f"{self.user_id} - {self.index_name} - {self.target} - {self.stop_loss} - {self.order_status} - {self.time} - {self.is_demo_trading_enabled}"
+
+    @classmethod
+    def search_by_name(cls, query):
+        return cls.objects.filter(name__icontains=query)
+
+
+class WebhookDetails(models.Model):
+    user_id = models.CharField(max_length=100, default=None)
+    index_name = models.CharField(max_length=100, default=None)
+    target = models.CharField(max_length=100, default=None)
+    order_status = models.CharField(max_length=100, default=None)
+    time = models.CharField(max_length=100, default=None)
+    is_demo_trading_enabled = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"{self.user_id} - {self.index_name} - {self.target} -  {self.order_status} - {self.time} - {self.is_demo_trading_enabled}"
+
     @classmethod
     def search_by_name(cls, query):
         return cls.objects.filter(name__icontains=query)

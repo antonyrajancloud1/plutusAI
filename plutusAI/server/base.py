@@ -16,7 +16,7 @@ import pytz
 from dateutil.rrule import rrule, WEEKLY, TH, TU, WE, MO
 from celery import shared_task
 from celery.result import AsyncResult
-
+from logging.handlers import TimedRotatingFileHandler
 
 # import datetime
 
@@ -458,16 +458,59 @@ def validate_char_fields(data):
                 raise ValueError(INCORRECT_INPUT + getDisplayName(field))
 
 
+# log_file_path = os.path.join(os.getcwd(), 'madara.log')
+# logging.basicConfig(filename=log_file_path, level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+#
+#
+# def addLogDetails(log_type, logDetails):
+#     logging.basicConfig()
+#     print(logDetails)
+#     if str(log_type).__eq__("info"):
+#         logging.info(logDetails)
+#     elif str(log_type).__eq__("error"):
+#         logging.error(logDetails)
+
+# Define the log file path
 log_file_path = os.path.join(os.getcwd(), 'madara.log')
-logging.basicConfig(filename=log_file_path, level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+
+# Custom formatter to include timezone in log timestamps
+class TimezoneFormatter(logging.Formatter):
+    def __init__(self, fmt=None, datefmt=None, tzname='Asia/Kolkata'):
+        super().__init__(fmt, datefmt)
+        self.tz = pytz.timezone(tzname)
+
+    def formatTime(self, record, datefmt=None):
+        dt = datetime.fromtimestamp(record.created, tz=self.tz)
+        if datefmt:
+            return dt.strftime(datefmt)
+        else:
+            return dt.isoformat()
+
+
+# Create a handler for rotating logs
+handler = TimedRotatingFileHandler(
+    log_file_path, when='midnight', interval=1, backupCount=7
+)
+
+# Create a custom formatter with timezone
+formatter = TimezoneFormatter('%(asctime)s - %(levelname)s - %(message)s', '%Y-%m-%d %H:%M:%S %Z')
+handler.setFormatter(formatter)
+
+# Configure logging
+logging.basicConfig(
+    handlers=[handler],
+    level=logging.INFO,
+)
 
 
 def addLogDetails(log_type, logDetails):
-    print(logDetails)
-    if str(log_type).__eq__("info"):
+    if log_type == "info":
         logging.info(logDetails)
-    elif str(log_type).__eq__("error"):
+    elif log_type == "error":
         logging.error(logDetails)
+    else:
+        logging.warning(f"Unknown log type: {log_type}. Log details: {logDetails}")
 
 
 def is_time_less_than_current_time(time_string):
