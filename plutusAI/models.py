@@ -118,6 +118,7 @@ class ScalperDetails(models.Model):
     is_demo_trading_enabled = models.BooleanField(default=True)
     use_full_capital = models.BooleanField(default=False)
     lots = models.CharField(max_length=10, default=None)
+    on_candle_close = models.BooleanField(default=False)
 
     def __str__(self):
         return self.index_name
@@ -165,6 +166,8 @@ class ManualOrders(models.Model):
     target = models.CharField(max_length=100, default=None)
     stop_loss = models.CharField(max_length=100, default=None)
     order_status = models.CharField(max_length=100, default=None)
+    strike = models.CharField(max_length=100, default=None)
+    lots = models.CharField(max_length=100, default=None)
     time = models.CharField(max_length=100, default=None)
     is_demo_trading_enabled = models.BooleanField(default=True)
     def __str__(self):

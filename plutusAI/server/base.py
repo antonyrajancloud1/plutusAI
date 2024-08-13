@@ -18,6 +18,7 @@ from celery import shared_task
 from celery.result import AsyncResult
 from logging.handlers import TimedRotatingFileHandler
 
+
 # import datetime
 
 
@@ -115,11 +116,14 @@ def get_broker_data_json(user_email, index):
     user_profiles_list = remove_data_from_list(list(user_data.values()))
     return user_profiles_list
 
+
 def get_broker_details_json_using_id(user_email):
     user_data = BrokerDetails.objects.filter(user_id=user_email)
     broker_data = list(user_data.values())
     broker_data = remove_data_from_list(broker_data)
     return broker_data
+
+
 def get_broker_details_using_id(user_email):
     try:
         # user_email = get_user_email(request)
@@ -551,7 +555,7 @@ def terminate_task(user_email, index, strategy):
             result.revoke(terminate=True)
             if user_data.exists():
                 user_data.delete()
-                updateIndexConfiguration(user_email, index, data=STAGE_STOPPED)
+                # updateIndexConfiguration(user_email, index, data=STAGE_STOPPED)
 
                 return JsonResponse({STATUS: SUCCESS, MESSAGE: "Index Stopped", "task_status": False})
         else:
@@ -663,3 +667,31 @@ def convert_datetime_string(datetime_str):
 
 def getCurrentTimestamp():
     return str(datetime.now().timestamp())
+
+
+
+
+
+# def placeDummyOrder(user_email, data):
+#     try:
+#         addLogDetails(INFO, " User :" + user_email + " placeDummyOrder")
+#         order_response = {'message': 'SUCCESS', 'data': {'orderid': 'dummy_id'}}
+#         data = {USER_ID: user_email, SCRIPT_NAME: currentPremiumPlaced, QTY: user_qty,
+#                 ENTRY_PRICE: self.optionBuyPrice, STATUS: ORDER_PLACED, STRATEGY: STRATEGY_SCALPER,
+#                 INDEX_NAME: self.index_name}
+#         # addLogDetails(INFO, "data fine")
+#         addOrderBookDetails(data, True)
+#
+#         if orderType == "CE":
+#             self.isCEOrderPlaced = True
+#             self.isPEOrderPlaced = False
+#             print("dummy order isCEOrderPlaced " + str(self.isCEOrderPlaced))
+#         elif orderType == "PE":
+#             self.isPEOrderPlaced = True
+#             self.isCEOrderPlaced = False
+#             print("dummy order isPEOrderPlaced " + str(self.isPEOrderPlaced))
+#         self.currentOrderID = order_response['data']['orderid']
+#
+#         return order_response
+#     except Exception as e:
+#         addLogDetails(ERROR, "User :" + self.user_email + " exception in placeDummyOrder  -----  " + str(e))

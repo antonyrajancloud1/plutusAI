@@ -3,20 +3,15 @@ import time
 
 import pytz
 from SmartApi import SmartConnect, SmartWebSocket
-import pyotp
 from SmartApi.smartWebSocketV2 import SmartWebSocketV2
 from celery import shared_task
-from plutusAI.models import BrokerDetails, JobDetails, CandleData
-# from SmartApi import SmartWebSocket
+from plutusAI.models import BrokerDetails, JobDetails
 from plutusAI.server.base import addLogDetails, update_ltp_to_table, get_next_minute_start, format_time, \
     update_candle_data_to_table
 from plutusAI.server.broker.AngelOneBroker import AngelOneBroker
 from plutusAI.server.constants import *
-# import SmartWebSocket
 from celery import current_task
-import pandas as pd
 
-from plutusAI.server.websocket.WebsocketAngelOne import OHLCDataProcessor
 
 
 @shared_task

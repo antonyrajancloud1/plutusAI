@@ -104,6 +104,8 @@
             <input type="checkbox" id="demo" name="demo"><br><br>
             <label for="lots">Lots:</label>
             <input type="text" id="lots" name="lots" required><br><br>
+            <label for="on_candle_close">On Candle Close:</label>
+            <input type="checkbox" id="on_candle_close" name="on_candle_close"><br><br>
             <input type="submit" value="Update">
         </form>
     </div>
@@ -162,6 +164,7 @@
                     document.getElementById('strike').value = data.strike;
                     document.getElementById('target').value = data.target;
                     document.getElementById('demo').checked = data.is_demo_trading_enabled;
+                    document.getElementById('on_candle_close').checked = data.on_candle_close;
                     document.getElementById('lots').value = data.lots;
                 })
                 .catch(error => console.error('Error fetching data:', error));
@@ -174,7 +177,7 @@
                     index_name: "bank_nifty",
                     strike: document.getElementById('strike').value,
                     target: document.getElementById('target').value,
-                    is_demo_trading_enabled: document.getElementById('demo').checked,
+                    on_candle_close: document.getElementById('on_candle_close').checked,
                     lots: document.getElementById('lots').value,
                 };
 

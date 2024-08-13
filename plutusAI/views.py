@@ -1,4 +1,6 @@
 import json
+from builtins import int
+
 from django import forms
 from django.http import JsonResponse
 from django.shortcuts import redirect, render, HttpResponse
@@ -16,6 +18,7 @@ from .models import *
 from datetime import datetime, timedelta
 
 from .server.broker.Broker import Broker
+from .server.websocket.WebsocketAngelOne import WebsocketAngelOne
 
 
 def invaid_url(request, exception):
@@ -595,6 +598,7 @@ def check_task_status(request):
         addLogDetails(ERROR, str(e))
         return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
 
+
 @csrf_exempt
 @require_http_methods([POST])
 def buy_manual_order(request):
@@ -607,6 +611,14 @@ def buy_manual_order(request):
             data = json.loads(request.body)
             index_name = data["index_name"]
             user_orders = OrderBook.objects.filter(user_id=user_email, strategy=STRATEGY_MANUAL, index_name=index_name)
+            user_manual_details = ManualOrders.objects.filter(user_id=user_email, index_name=index_name)
+
+            index_data = IndexDetails.objects.filter(index_name=index_name)
+            index_data = list(index_data.values())[0]
+
+            user_manual_details = list(user_manual_details.values())[0]
+            strike = user_manual_details[STRIKE]
+            user_qty = int(user_manual_details[LOTS]) * int(index_data[QTY])
             print(user_orders)
             broker_data = get_broker_details_json_using_id(user_email)[0]
             print(broker_data)
@@ -618,11 +630,24 @@ def buy_manual_order(request):
                 BrokerObject = Broker(user_email, broker_data[INDEX_GROUP]).BrokerObject
                 is_demo_enabled = BrokerObject.is_demo_enabled
                 print(is_demo_enabled)
+                currentPremiumPlaced = getTradingSymbol(index_name) + str(
+                    BrokerObject.getCurrentAtm(index_name) - int(strike)) + "CE"
+                optionDetails = BrokerObject.getCurrentPremiumDetails(NFO, currentPremiumPlaced)
                 if is_demo_enabled:
                     print("Place dummy order")
+                    optionBuyPrice = BrokerObject.getLtpForPremium(optionDetails)
+                    data = {USER_ID: user_email, SCRIPT_NAME: currentPremiumPlaced, QTY: user_qty,
+                            ENTRY_PRICE: optionBuyPrice, STATUS: ORDER_PLACED, STRATEGY: STRATEGY_MANUAL,
+                            INDEX_NAME: index_name}
+                    print(data)
+                    addOrderBookDetails(data, True)
                 else:
                     print("Place Broker order")
                     BrokerObject.placeOrder()
+
+                symbol_token = BrokerObject.getTokenForSymbol(currentPremiumPlaced)
+                angle_candle = WebsocketAngelOne(user_email,index_name,symbol_token,STRATEGY_MANUAL)
+                angle_candle.connectWS()
                 return JsonResponse({STATUS: SUCCESS, MESSAGE: ORDER_PLACED})
         else:
             return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})

@@ -45,6 +45,7 @@ class Scalper():
             self.lots = int(self.user_scalper_details[LOTS])
             self.qty = int(self.index_data[0][QTY])
             self.user_qty = int(self.qty) * int(self.lots)
+            self.on_candle_close = self.user_scalper_details[ON_CANDLE_CLOSE]
             print(self.strike)
             # if len(self.user_broker_details) > 0:
             #     self.user_broker_details = self.user_broker_details[0]
@@ -90,6 +91,7 @@ class Scalper():
             self.to_time = increaseTime(self.started_time, self.tf)
             print(self.to_time)
             while self.base_value is None:
+                # print(getCurrentIndexValue(str(self.index_name)+"_fut"))
                 time.sleep(1)
                 if not is_time_less_than_current_time(current_time()[:-3].split(" ")[1]):
                     print("waiting for basevalue")
@@ -98,62 +100,111 @@ class Scalper():
                     # if self.base_value is not None:
                     #     self.to_time = increaseTime(self.to_time, self.tf)
                     #     print("increased time = "+ str(self.to_time))
-
                 else:
                     print("wait till market open")
-            if self.base_value is not None:
-                print(self.user_target)
-                is_target_reached = (int(self.total_price).__ge__(int(self.user_target)))
-                while not self.target_reached:
-                    time.sleep(1)
-                    candle_data = self.getAllCandleData(self.started_time, self.to_time)
-                    print(candle_data)
-                    if candle_data is not None:
-                        contains_next_candle = candle_data.map(
-                            lambda x: self.to_time in str(x)).any().any()
-                        print(contains_next_candle)
-                        print(self.to_time)
-                        if contains_next_candle:
-                            previous_close = self.getBaseValueUsingStartTime(candle_data)
-                            if previous_close > self.base_value:
-                                if not self.isCEOrderPlaced:
-                                    self.exitBasedOnCondition(self.currentPremiumValue, "place Call")
-                                    self.placeCallOption()
-                                    print("place call")
-                            elif previous_close < self.base_value:
-                                if not self.isPEOrderPlaced:
-                                    self.exitBasedOnCondition(self.currentPremiumValue, "Place put")
-                                    self.placePutOption()
-                                    print("place put")
+            if self.on_candle_close:
+                self.scalperOnCandleClose()
+            else :
+                self.scalperOnBaseValue()
 
-                            self.to_time = increaseTime(self.to_time, self.tf)
-
-                        if self.isCEOrderPlaced or self.isPEOrderPlaced:
-                            addLogDetails(INFO, "order placed waiting for target")
-                            self.currentOptionPrice = self.BrokerObject.getLtpForPremium(self.optionDetails)
-                            if self.currentOptionPrice is not CONNECTION_ERROR:
-                                if float(self.currentOptionPrice) + float(self.total_price) >= float(
-                                        self.optionBuyPrice) + float(self.user_target):
-                                    print(" target reached" + str(
-                                        float(self.currentOptionPrice) + float(self.total_price)))
-                                    self.exitBasedOnCondition(self.currentPremiumValue, "target Reached")
-                                    self.target_reached = True
-                                    # break
-                        if is_target_reached:
-                            addLogDetails(INFO, "stop scalper")
-                            terminate_task(self.user_email, self.index_name, SCALPER)
-                            break
-
-                    else:
-                        print("error in candle data")
-
-            else:
-                print("base value is not set")
 
 
         except Exception as e:
             print(e)
 
+    def scalperOnCandleClose(self):
+        if self.base_value is not None:
+            print(self.user_target)
+            is_target_reached = (int(self.total_price).__ge__(int(self.user_target)))
+            while not self.target_reached:
+                time.sleep(1)
+                candle_data = self.getAllCandleData(self.started_time, self.to_time)
+                print(candle_data)
+                if candle_data is not None:
+                    contains_next_candle = candle_data.map(
+                        lambda x: self.to_time in str(x)).any().any()
+                    print(contains_next_candle)
+                    print(self.to_time)
+                    if contains_next_candle:
+                        previous_close = self.getBaseValueUsingStartTime(candle_data)
+                        if previous_close > self.base_value:
+                            if not self.isCEOrderPlaced:
+                                self.exitBasedOnCondition(self.currentPremiumValue, "place Call")
+                                self.placeCallOption()
+                                print("place call")
+                        elif previous_close < self.base_value:
+                            if not self.isPEOrderPlaced:
+                                self.exitBasedOnCondition(self.currentPremiumValue, "Place put")
+                                self.placePutOption()
+                                print("place put")
+
+                        self.to_time = increaseTime(self.to_time, self.tf)
+
+                    if self.isCEOrderPlaced or self.isPEOrderPlaced:
+                        addLogDetails(INFO, "order placed waiting for target")
+                        self.currentOptionPrice = self.BrokerObject.getLtpForPremium(self.optionDetails)
+                        if self.currentOptionPrice is not CONNECTION_ERROR:
+                            if float(self.currentOptionPrice) + float(self.total_price) >= float(
+                                    self.optionBuyPrice) + float(self.user_target):
+                                print(" target reached" + str(
+                                    float(self.currentOptionPrice) + float(self.total_price)))
+                                self.exitBasedOnCondition(self.currentPremiumValue, "target Reached")
+                                self.target_reached = True
+                                # break
+                    if is_target_reached:
+                        addLogDetails(INFO, "stop scalper")
+                        terminate_task(self.user_email, self.index_name, SCALPER)
+                        break
+
+                else:
+                    print("error in candle data")
+
+        else:
+            print("base value is not set")
+
+    def scalperOnBaseValue(self):
+        if self.base_value is not None:
+            print(self.user_target)
+            is_target_reached = (int(self.total_price).__ge__(int(self.user_target)))
+            while not self.target_reached:
+                time.sleep(1)
+                # candle_data = self.getAllCandleData(self.started_time, self.to_time)
+                # print(candle_data)
+                # if candle_data is not None:
+                if getCurrentIndexValue(str(self.index_name)+"_fut") > self.base_value:
+                    if not self.isCEOrderPlaced:
+                        self.exitBasedOnCondition(self.currentPremiumValue, "place Call")
+                        self.placeCallOption()
+                        print("place call")
+                elif getCurrentIndexValue(str(self.index_name)+"_fut") < self.base_value:
+                    if not self.isPEOrderPlaced:
+                        self.exitBasedOnCondition(self.currentPremiumValue, "Place put")
+                        self.placePutOption()
+                        print("place put")
+
+                    # self.to_time = increaseTime(self.to_time, self.tf)
+
+                if self.isCEOrderPlaced or self.isPEOrderPlaced:
+                    addLogDetails(INFO, "order placed waiting for target")
+                    self.currentOptionPrice = self.BrokerObject.getLtpForPremium(self.optionDetails)
+                    if self.currentOptionPrice is not CONNECTION_ERROR:
+                        if float(self.currentOptionPrice) + float(self.total_price) >= float(
+                                self.optionBuyPrice) + float(self.user_target):
+                            print(" target reached" + str(
+                                float(self.currentOptionPrice) + float(self.total_price)))
+                            self.exitBasedOnCondition(self.currentPremiumValue, "target Reached")
+                            self.target_reached = True
+                            # break
+                if is_target_reached:
+                    addLogDetails(INFO, "stop scalper")
+                    terminate_task(self.user_email, self.index_name, SCALPER)
+                    break
+
+                else:
+                    print("error in candle data")
+
+        else:
+            print("base value is not set")
     def getBaseValueUsingStartTime(self, data):
         global base_value
         try:
@@ -226,7 +277,8 @@ class Scalper():
                 print(order_details)
                 self.optionBuyPrice = order_details["averageprice"]
                 data = {USER_ID: self.user_email, SCRIPT_NAME: self.currentPremiumPlaced, QTY: self.user_qty,
-                        ENTRY_PRICE: self.optionBuyPrice, STATUS: ORDER_PLACED, STRATEGY: STRATEGY_HUNTER,INDEX_NAME:self.index_name}
+                        ENTRY_PRICE: self.optionBuyPrice, STATUS: ORDER_PLACED, STRATEGY: STRATEGY_HUNTER,
+                        INDEX_NAME: self.index_name}
                 addOrderBookDetails(data, True)
                 self.isCEOrderPlaced = True
 
@@ -253,7 +305,8 @@ class Scalper():
                 print(order_details)
                 self.optionBuyPrice = order_details["averageprice"]
                 data = {USER_ID: self.user_email, SCRIPT_NAME: self.currentPremiumPlaced, QTY: self.qty,
-                        ENTRY_PRICE: self.optionBuyPrice, STATUS: ORDER_PLACED, STRATEGY: STRATEGY_HUNTER,INDEX_NAME:self.index_name}
+                        ENTRY_PRICE: self.optionBuyPrice, STATUS: ORDER_PLACED, STRATEGY: STRATEGY_HUNTER,
+                        INDEX_NAME: self.index_name}
                 addOrderBookDetails(data, True)
                 self.isPEOrderPlaced = True
 
@@ -296,7 +349,8 @@ class Scalper():
             self.optionDetails = self.BrokerObject.getCurrentPremiumDetails(NFO, self.currentPremiumPlaced)
             self.optionBuyPrice = self.BrokerObject.getLtpForPremium(self.optionDetails)
             data = {USER_ID: self.user_email, SCRIPT_NAME: self.currentPremiumPlaced, QTY: self.user_qty,
-                    ENTRY_PRICE: self.optionBuyPrice, STATUS: ORDER_PLACED, STRATEGY: STRATEGY_SCALPER,INDEX_NAME:self.index_name}
+                    ENTRY_PRICE: self.optionBuyPrice, STATUS: ORDER_PLACED, STRATEGY: STRATEGY_SCALPER,
+                    INDEX_NAME: self.index_name}
             # addLogDetails(INFO, "data fine")
             addOrderBookDetails(data, True)
             if orderType == "CE":
@@ -322,7 +376,7 @@ class Scalper():
                     EXIT_PRICE: self.BrokerObject.getLtpForPremium(self.optionDetails), STATUS: ORDER_EXITED}
             addLogDetails(INFO, "Index Name: " + self.index_name + " User :" + self.user_email + " " + str(data))
             addOrderBookDetails(data, False)
-            self.total_price = float(self.total_price) +( float(data[EXIT_PRICE]) - float(self.optionBuyPrice))
+            self.total_price = float(self.total_price) + (float(data[EXIT_PRICE]) - float(self.optionBuyPrice))
             self.isPEOrderPlaced = False
             self.isCEOrderPlaced = False
             return order_response

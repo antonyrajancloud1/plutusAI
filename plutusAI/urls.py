@@ -36,7 +36,7 @@ urlpatterns = [
     path(CHECK_TASK_STATUS, views.check_task_status, name=CHECK_TASK_STATUS),
 
     path(BUY_MANUAL, views.buy_manual_order, name=BUY_MANUAL),
-
+    # path(BUY_MANUAL, views.buy_manual_order, name=BUY_MANUAL),
     path("test", testerCheck, name="test"),
     path("scalper", views.html_test, name="scalperHtml"),
 ]

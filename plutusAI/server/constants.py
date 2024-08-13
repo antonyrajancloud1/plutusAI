@@ -91,6 +91,7 @@ STRIKE = "strike"
 ORDER_PLACED = "order_placed"
 ORDER_EXITED = "order_exited"
 TARGET="target"
+ON_CANDLE_CLOSE="on_candle_close"
 #### MESSSAGE CONSTANTS ####
 
 STATUS = "status"

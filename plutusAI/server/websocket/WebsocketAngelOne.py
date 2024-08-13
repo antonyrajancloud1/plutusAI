@@ -1,49 +1,84 @@
-import datetime
-import time
-import pandas as pd
+from SmartApi.smartWebSocketV2 import SmartWebSocketV2
+from celery import current_task
 
-from plutusAI.models import CandleData
+from plutusAI.server.base import *
+from plutusAI.server.constants import *
+from plutusAI.server.broker.Broker import Broker
 
+class WebsocketAngelOne:
 
-class OHLCDataProcessor:
-    def __init__(self):
-        self.data_dict = {}
-        self.candlestick_data = pd.DataFrame(columns=['timestamp', 'token', 'open', 'high', 'low', 'close'])
-        self.start_time = self.get_next_minute_start()
+    def __init__(self, user_email, index_name, symbol_token, strategy):
+        print(user_email)
+        print(symbol_token)
+        # self.task_id = current_task.request.id
+        self.correlation_id = "admin_ws"
+        # self.sws = None
+        self.user_email = user_email
+        self.index_name = index_name
+        self.strategy = strategy
+        # Initialize the broker object and tokens
+        # self.user_broker_data = BrokerDetails.objects.filter(user_id=user_email, index_group=INDIAN_INDEX)
+        self.BrokerObject = Broker(self.user_email,INDIAN_INDEX).BrokerObject
+        self.symbol_token = symbol_token
 
+        # self.create_job_entry()
+        self.connectWS()
+    def create_job_entry(self):
+        JobDetails.objects.create(
+            user_id=self.user_email,
+            index_name=self.index_name,
+            job_id=self.task_id,
+            strategy=self.strategy
+        )
 
-    @staticmethod
-    def get_next_minute_start():
-        now = datetime.datetime.now()
-        next_minute_start = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute, 0)
-        if now.second >= 59:  # Adjust the starting point based on your requirement (e.g., start from the current minute if second is 30 or more)
-            next_minute_start += datetime.timedelta(minutes=1)
-        return next_minute_start
+    def create_websocket_obj(self, token, exchangeType):
+        print(token)
+        self.token_list = [
+            {
+                "exchangeType": exchangeType,
+                "tokens": token
+            }
+        ]
+        swsObj = SmartWebSocketV2(
+            self.BrokerObject.auth_token,
+            self.BrokerObject.broker_api_token,
+            self.BrokerObject.broker_user_id,
+            self.BrokerObject.feed_token,
+            max_retry_attempt=2
+        )
+        return swsObj
 
-    def format_time(current_time):
-        return current_time.strftime('%H:%M:%S')
+    def on_open(self, wsapp):
+        addLogDetails(INFO, "WebSocket connection opened")
+        self.sws.subscribe(self.correlation_id, 1, self.token_list)
 
-    def update_candle_data(self,value):
-        ltp_values = []
-        start_time = self.get_next_minute_start()
-        ltp = float(value)
-        ltp_values.append(ltp)
-        print(ltp_values)
-        if datetime.datetime.now() >= start_time + datetime.timedelta(seconds=60):
-            open_price = ltp_values[0]
-            high_price = max(ltp_values)
-            low_price = min(ltp_values)
-            close_price = ltp_values[-1]
-            print(
-                f"{self.format_time(start_time)} - Open: {open_price}, High: {high_price}, Low: {low_price}, Close: {close_price}")
-            new_data = pd.DataFrame({
-                'timestamp': [start_time],
-                'open': [open_price],
-                'high': [high_price],
-                'low': [low_price],
-                'close': [close_price]
-            })
-            self.candlestick_data
-            self.candlestick_data = pd.concat([self.candlestick_data, new_data], ignore_index=True)
-            ltp_values = []
-            start_time = self.get_next_minute_start()
+    def on_data(self, wsapp, message):
+        try:
+            token = message['token']
+            ltp = message['last_traded_price'] / 100.0  # Ensure LTP is a float
+            data = {'token': token, 'ltp': ltp}
+            print(data)
+
+        except Exception as e:
+            print(e)
+
+    def on_error(self, wsapp, error):
+        addLogDetails(ERROR, str(error))
+
+    def on_close(self, wsapp):
+        addLogDetails(INFO, "WebSocket connection closed")
+
+    def close_connection(self):
+        self.sws.close_connection()
+        addLogDetails(INFO, "WebSocket connection closed manually")
+
+    def connectWS(self):
+        print("connectWSconnectWS")
+        print(self.symbol_token )
+        self.sws = self.create_websocket_obj(self.symbol_token , 2)
+        self.sws.on_open = self.on_open
+        self.sws.on_data = self.on_data
+        self.sws.on_error = self.on_error
+        self.sws.on_close = self.on_close
+        self.sws.connect()
+
