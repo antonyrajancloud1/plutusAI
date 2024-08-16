@@ -94,7 +94,7 @@ class NSEPriceAction():
                     elif int(self.IndexLTP).__round__() <= self.nearestSupport:
                         self.pivotPoint = self.nearestSupport
                     updateIndexConfiguration(user_email=self.user_email, index=self.index_name,
-                                             data={'stage': 'Pivot Decided : '+str(self.pivotPoint)})
+                                             data={'status': 'Pivot Decided : '+str(self.pivotPoint)})
                     addLogDetails(INFO, "Index Name: " + self.index_name + " pivot Decided, User:" + self.user_email)
                     while True:
                         self.IndexLTP = getCurrentIndexValue(self.index_name)
@@ -121,7 +121,7 @@ class NSEPriceAction():
         try:
             self.indexValueAfterTrendDecided = self.IndexLTP - self.index_trend_check
             updateIndexConfiguration(user_email=self.user_email, index=self.index_name,
-                                     data={'stage': 'Long :: ' + str(self.IndexLTP)})
+                                     data={'status': 'Long :: ' + str(self.IndexLTP)})
             self.stoplossExit = int(self.indexValueAfterTrendDecided) - self.index_trend_check
             self.exitConditions.append(self.stoplossExit)
             self.priceActionTarget = getTaregtForOrderFromList(self.levels, self.IndexLTP, "CE") - 5
@@ -135,7 +135,7 @@ class NSEPriceAction():
         try:
             self.indexValueAfterTrendDecided = self.IndexLTP + self.index_trend_check
             updateIndexConfiguration(user_email=self.user_email, index=self.index_name,
-                                     data={'stage': 'Short :: ' + str(self.IndexLTP)})
+                                     data={'status': 'Short :: ' + str(self.IndexLTP)})
             self.stoplossExit = int(self.indexValueAfterTrendDecided) + self.index_trend_check
             self.exitConditions.append(self.stoplossExit)
             self.priceActionTarget = getTaregtForOrderFromList(self.levels, self.IndexLTP, "PE") + 5
@@ -475,7 +475,7 @@ class NSEPriceAction():
                                   "Index Name: " + self.index_name + " User :" + self.user_email + " BuyOrderPlaced : \t" + self.currentPremiumPlaced + "Entry price: \t" + str(
                                       self.optionBuyPrice))
                     updateIndexConfiguration(user_email=self.user_email, index=self.index_name,
-                                             data={'stage': 'Long :: ' + str(self.IndexLTP)})
+                                             data={'status': 'Long :: ' + str(self.IndexLTP)})
                     addLogDetails(INFO, "Index Name: " + self.index_name + " User :" + self.user_email + " Long placed")
             addLogDetails(INFO,
                           "Index Name: " + self.index_name + " User :" + self.user_email + " " + str(order_response))
@@ -529,7 +529,7 @@ class NSEPriceAction():
                                   "Index Name: " + self.index_name + " User :" + self.user_email + " BuyOrderPlaced : \t" + self.currentPremiumPlaced + "Entry price: \t" + str(
                                       self.optionBuyPrice))
                     updateIndexConfiguration(user_email=self.user_email, index=self.index_name,
-                                             data={'stage': 'Short :: ' + str(self.IndexLTP)})
+                                             data={'status': 'Short :: ' + str(self.IndexLTP)})
                     addLogDetails(INFO,
                                   "Index Name: " + self.index_name + " User :" + self.user_email + " short placed")
         except Exception as e:
