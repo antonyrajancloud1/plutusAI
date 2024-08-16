@@ -71,6 +71,7 @@ Resource = {
     is_demo_trading_enabled :   "Is Demo trading enabled?",
     target              :   "Target",
     use_full_capital    :   "Use Full Capital?",
+    on_candle_close     :    "On Candle Close",
     update_scalper_details  :   "Update Scalper Details",
     scalper_details_updated :   "Scalper details Updated",
     initiated               :   "Initiated",

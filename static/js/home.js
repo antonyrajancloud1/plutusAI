@@ -14,7 +14,7 @@ let MadaraConstructor = function() {
         getConfigurations   : [ "actions", "index_name", "levels", "trend_check_points", "strike", "safe_sl", "status" ],
         getOrderBook        : [ "entry_time", "script_name", "qty", "entry_price", "exit_price", "status", "exit_time" ],
         getBrokerInfo       : [ "actions", "broker_name", "broker_user_id", "broker_user_name", "broker_mpin", "broker_api_token" ],
-        getScalperDetails   : [ "actions", "index_name", "strike", "target", "is_demo_trading_enabled", "use_full_capital", "lots" ,"status"]
+        getScalperDetails   : [ "actions", "index_name", "strike", "target", "is_demo_trading_enabled", "use_full_capital", "lots" ,"status","on_candle_close"]
     };
 };
 
