@@ -295,6 +295,7 @@ def start_index(request):
             if user_data.count() > 0:
                 return JsonResponse({STATUS: FAILED, MESSAGE: f"{index_name} process running"})
             else:
+                updateIndexConfiguration(user_email=user_email, index=data.get(INDEX_NAME), data=STAGE_INITIATED)
                 start_index_job.delay(user_email, data.get(INDEX_NAME))
                 index_name = data.get(INDEX_NAME).replace("_", " ").title().replace(" ", "")
                 return JsonResponse({STATUS: SUCCESS, MESSAGE: f"{index_name} started"})
@@ -481,6 +482,7 @@ def start_scalper(request):
             if user_data.count() > 0:
                 return JsonResponse({STATUS: FAILED, MESSAGE: f"{index_name} scalper running"})
             else:
+                updateScalperDetails(user_email, data.get(INDEX_NAME), data=STAGE_INITIATED)
                 start_scalper_task.delay(user_email, data.get(INDEX_NAME))
                 index_name = data.get(INDEX_NAME).replace("_", " ").title().replace(" ", "")
                 return JsonResponse({STATUS: SUCCESS, MESSAGE: f"{index_name} scalper started"})

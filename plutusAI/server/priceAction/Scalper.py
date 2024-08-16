@@ -69,7 +69,7 @@ class Scalper():
 
     def initilize_scalper(self):
         try:
-            print(STAGE_STARTED)
+            updateScalperDetails(self.user_email, self.index_name, data=STAGE_STARTED)
             print(self.BrokerObject.checkProfile())
             # from_time = "2024-06-28 09:15"
             # to_time = "2024-06-28 14:26"
@@ -115,7 +115,7 @@ class Scalper():
     def scalperOnCandleClose(self):
         if self.base_value is not None:
             print(self.user_target)
-            is_target_reached = (int(self.total_price).__ge__(int(self.user_target)))
+            self.target_reached = (int(self.total_price).__ge__(int(self.user_target)))
             while not self.target_reached:
                 time.sleep(1)
                 candle_data = self.getAllCandleData(self.started_time, self.to_time)
@@ -131,12 +131,12 @@ class Scalper():
                             if not self.isCEOrderPlaced:
                                 self.exitBasedOnCondition(self.currentPremiumValue, "place Call")
                                 self.placeCallOption()
-                                print("place call")
+                                updateScalperDetails(self.user_email, self.index_name, data=STAGE_LONG)
                         elif previous_close < self.base_value:
                             if not self.isPEOrderPlaced:
                                 self.exitBasedOnCondition(self.currentPremiumValue, "Place put")
                                 self.placePutOption()
-                                print("place put")
+                                updateScalperDetails(self.user_email, self.index_name, data=STAGE_SHORT)
 
                         self.to_time = increaseTime(self.to_time, self.tf)
 
@@ -151,7 +151,7 @@ class Scalper():
                                 self.exitBasedOnCondition(self.currentPremiumValue, "target Reached")
                                 self.target_reached = True
                                 # break
-                    if is_target_reached:
+                    if self.target_reached:
                         addLogDetails(INFO, "stop scalper")
                         terminate_task(self.user_email, self.index_name, SCALPER)
                         break
@@ -165,40 +165,41 @@ class Scalper():
     def scalperOnBaseValue(self):
         if self.base_value is not None:
             print(self.user_target)
-            is_target_reached = (int(self.total_price).__ge__(int(self.user_target)))
+            self.target_reached = (int(self.total_price).__ge__(int(self.user_target)))
             while not self.target_reached:
                 time.sleep(1)
-                # candle_data = self.getAllCandleData(self.started_time, self.to_time)
-                # print(candle_data)
-                # if candle_data is not None:
-                if getCurrentIndexValue(str(self.index_name)+"_fut") > self.base_value:
-                    if not self.isCEOrderPlaced:
-                        self.exitBasedOnCondition(self.currentPremiumValue, "place Call")
-                        self.placeCallOption()
-                        print("place call")
-                elif getCurrentIndexValue(str(self.index_name)+"_fut") < self.base_value:
-                    if not self.isPEOrderPlaced:
-                        self.exitBasedOnCondition(self.currentPremiumValue, "Place put")
-                        self.placePutOption()
-                        print("place put")
+                candle_data = self.getAllCandleData(self.started_time, self.to_time)
+                if candle_data is not None:
+                    contains_next_candle = candle_data.map(
+                        lambda x: self.to_time in str(x)).any().any()
+                    print(contains_next_candle)
+                    print(self.to_time)
+                    if contains_next_candle:
+                        if getCurrentIndexValue(str(self.index_name)+"_fut") > self.base_value:
+                            if not self.isCEOrderPlaced:
+                                self.exitBasedOnCondition(self.currentPremiumValue, "place Call")
+                                self.placeCallOption()
+                                updateScalperDetails(self.user_email, self.index_name, data=STAGE_LONG)
+                        elif getCurrentIndexValue(str(self.index_name)+"_fut") < self.base_value:
+                            if not self.isPEOrderPlaced:
+                                self.exitBasedOnCondition(self.currentPremiumValue, "Place put")
+                                self.placePutOption()
+                                updateScalperDetails(self.user_email, self.index_name, data=STAGE_SHORT)
+                        if self.isCEOrderPlaced or self.isPEOrderPlaced:
+                            addLogDetails(INFO, "order placed waiting for target")
+                            self.currentOptionPrice = self.BrokerObject.getLtpForPremium(self.optionDetails)
+                            if self.currentOptionPrice is not CONNECTION_ERROR:
+                                if float(self.currentOptionPrice) + float(self.total_price) >= float(
+                                        self.optionBuyPrice) + float(self.user_target):
+                                    print(" target reached" + str(
+                                        float(self.currentOptionPrice) + float(self.total_price)))
+                                    self.exitBasedOnCondition(self.currentPremiumValue, "target Reached")
+                                    self.target_reached = True
+                        if self.target_reached:
+                            addLogDetails(INFO, "stop scalper")
+                            terminate_task(self.user_email, self.index_name, SCALPER)
+                            break
 
-                    # self.to_time = increaseTime(self.to_time, self.tf)
-
-                if self.isCEOrderPlaced or self.isPEOrderPlaced:
-                    addLogDetails(INFO, "order placed waiting for target")
-                    self.currentOptionPrice = self.BrokerObject.getLtpForPremium(self.optionDetails)
-                    if self.currentOptionPrice is not CONNECTION_ERROR:
-                        if float(self.currentOptionPrice) + float(self.total_price) >= float(
-                                self.optionBuyPrice) + float(self.user_target):
-                            print(" target reached" + str(
-                                float(self.currentOptionPrice) + float(self.total_price)))
-                            self.exitBasedOnCondition(self.currentPremiumValue, "target Reached")
-                            self.target_reached = True
-                            # break
-                if is_target_reached:
-                    addLogDetails(INFO, "stop scalper")
-                    terminate_task(self.user_email, self.index_name, SCALPER)
-                    break
 
                 else:
                     print("error in candle data")

@@ -11,7 +11,7 @@ let MadaraConstructor = function() {
     this.project_name   =   "Madara";
     this.EVENT_AND_DOM_CACHE = {};
     this.whiteListedProperties = {
-        getConfigurations   : [ "actions", "index_name", "levels", "trend_check_points", "strike", "safe_sl", "stage" ],
+        getConfigurations   : [ "actions", "index_name", "levels", "trend_check_points", "strike", "safe_sl", "status" ],
         getOrderBook        : [ "entry_time", "script_name", "qty", "entry_price", "exit_price", "status", "exit_time" ],
         getBrokerInfo       : [ "actions", "broker_name", "broker_user_id", "broker_user_name", "broker_mpin", "broker_api_token" ],
         getScalperDetails   : [ "actions", "index_name", "strike", "target", "is_demo_trading_enabled", "use_full_capital", "lots" ]   
@@ -412,7 +412,7 @@ MadaraConstructor.prototype.viewScalper = function() {
                 whiteListedProperties.forEach(property => {
                     if(property !== "index_name" && property !== "actions") {
                         let valueFromResponse = configurationObject[property];
-                        let tableCellContent = (property === "stage") ? (Resource[valueFromResponse] ? Resource[valueFromResponse] : valueFromResponse) : valueFromResponse;
+                        let tableCellContent = (property === "status") ? (Resource[valueFromResponse] ? Resource[valueFromResponse] : valueFromResponse) : valueFromResponse;
                         eachConfigurationCell += self.templates.tableCell.replace(/{table_cell_content}/g, (typeof tableCellContent !== "undefined") ? tableCellContent : "-")
                                                                          .replace(/{tooltip_content}/g, tableCellContent ? tableCellContent : "")
                                                                          .replace(/{disable_status}/g, disableStatus ? "disabled" : "");
@@ -492,7 +492,7 @@ MadaraConstructor.prototype.viewConfigurations = function() {
                 whiteListedProperties.forEach(property => {
                     if(property !== "index_name" && property !== "actions") {
                         let valueFromResponse = configurationObject[property];
-                        let tableCellContent = (property === "stage") ? (Resource[valueFromResponse] ? Resource[valueFromResponse] : valueFromResponse) : valueFromResponse;
+                        let tableCellContent = (property === "status") ? (Resource[valueFromResponse] ? Resource[valueFromResponse] : valueFromResponse) : valueFromResponse;
                         eachConfigurationCell += self.templates.tableCell.replace(/{table_cell_content}/g, tableCellContent ? tableCellContent : "-")
                                                                          .replace(/{tooltip_content}/g, tableCellContent ? tableCellContent : "")
                                                                          .replace(/{disable_status}/g, disableStatus ? "disabled" : "");
@@ -716,7 +716,7 @@ MadaraConstructor.prototype.populateFormForEditingBrokerDetail = function(broker
 
 MadaraConstructor.prototype.populateFormForEditingIndexConfiguration = function(indexData, additionalData) {
     let inputHtml = "";
-    let blackListedProperties = ["index_name", "stage"];
+    let blackListedProperties = ["index_name", "status"];
     Object.keys(indexData).forEach(property => {
         if(!blackListedProperties.includes(property)) {
             if(typeof indexData[property] === "boolean") {

@@ -189,8 +189,11 @@ MIDCAP_DEFAULT_VALUES = {
 }
 ANGEL_ONE = "angel_one"
 AVAILABLE_BROKERS = {INDIAN_INDEX: [ANGEL_ONE, "kite"], "forex": ["exness"]}
-STAGE_STARTED = {"stage": "started"}
-STAGE_STOPPED = {"stage": "stopped"}
+STAGE_INITIATED = {"status": "initiated"}
+STAGE_STARTED = {"status": "started"}
+STAGE_STOPPED = {"status": "stopped"}
+STAGE_LONG = {"status": "long_placed"}
+STAGE_SHORT = {"status": "short_placed"}
 STAGE_BROKER_NOT_PRESENT = {"stage": "broker_not_present"}
 NIFTY_50 = "Nifty 50"
 ### Broker Param Values #### ANGLEONE ###

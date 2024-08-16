@@ -229,6 +229,14 @@ def updateIndexConfiguration(user_email, index, data):
         addLogDetails(ERROR, str(e))
 
 
+def updateScalperDetails(user_email, index, data):
+    try:
+        user_data = ScalperDetails.objects.filter(user_id=user_email, index_name=index)
+        user_data.update(**data)
+    except Exception as e:
+        addLogDetails(ERROR, str(e))
+
+
 def updateIndexDetails(token, data):
     try:
         index_data = IndexDetails.objects.filter(index_token=token)
@@ -511,7 +519,7 @@ logging.basicConfig(
 
 
 def addLogDetails(log_type, logDetails):
-    print(logDetails)
+    # print(logDetails)
     if log_type == "info":
         logging.info(logDetails)
     elif log_type == "error":
@@ -547,17 +555,26 @@ def increaseTime(datetime_str, minutes):
 @shared_task
 def terminate_task(user_email, index, strategy):
     try:
+        addLogDetails(INFO, f"terminate_task for {user_email} index {index} strategy {strategy}")
         user_data = JobDetails.objects.filter(user_id=user_email, index_name=index, strategy=strategy)
         job_details = list(user_data.values())
         if len(job_details) > 0:
             task_id = job_details[0]['job_id']
+
+            user_data.delete()
+            addLogDetails(INFO, "Job Deleted")
+
+            if strategy == STRATEGY_HUNTER:
+                updateIndexConfiguration(user_email, index, data=STAGE_STOPPED)
+            else:
+                updateScalperDetails(user_email, index, data=STAGE_STOPPED)
+
             result = AsyncResult(str(task_id))
             result.revoke(terminate=True)
-            if user_data.exists():
-                user_data.delete()
-                # updateIndexConfiguration(user_email, index, data=STAGE_STOPPED)
+            addLogDetails(INFO, "Job Terminated")
 
-                return JsonResponse({STATUS: SUCCESS, MESSAGE: "Index Stopped", "task_status": False})
+            return JsonResponse({STATUS: SUCCESS, MESSAGE: "Index Stopped", "task_status": False})
+
         else:
             return JsonResponse({STATUS: FAILED, MESSAGE: "Index not running"})
 
@@ -667,10 +684,6 @@ def convert_datetime_string(datetime_str):
 
 def getCurrentTimestamp():
     return str(datetime.now().timestamp())
-
-
-
-
 
 # def placeDummyOrder(user_email, data):
 #     try:

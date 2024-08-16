@@ -15,7 +15,7 @@ class Configuration(models.Model):
     initial_sl = models.CharField(max_length=10, default='10')
     safe_sl = models.CharField(max_length=10, default='3')
     target_for_safe_sl = models.CharField(max_length=10, default='10')
-    stage = models.CharField(max_length=250, default='stopped')
+    status = models.CharField(max_length=250, default='stopped')
     lots = models.CharField(max_length=50, default=None)
 
     def __str__(self):
@@ -119,7 +119,7 @@ class ScalperDetails(models.Model):
     use_full_capital = models.BooleanField(default=False)
     lots = models.CharField(max_length=10, default=None)
     on_candle_close = models.BooleanField(default=False)
-
+    status = models.CharField(max_length=250, default=None)
     def __str__(self):
         return self.index_name
 
