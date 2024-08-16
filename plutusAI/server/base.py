@@ -558,26 +558,20 @@ def terminate_task(user_email, index, strategy):
         addLogDetails(INFO, f"terminate_task for {user_email} index {index} strategy {strategy}")
         user_data = JobDetails.objects.filter(user_id=user_email, index_name=index, strategy=strategy)
         job_details = list(user_data.values())
+        if strategy == STRATEGY_HUNTER:
+            updateIndexConfiguration(user_email, index, data=STAGE_STOPPED)
+        else:
+            updateScalperDetails(user_email, index, data=STAGE_STOPPED)
         if len(job_details) > 0:
             task_id = job_details[0]['job_id']
-
             user_data.delete()
             addLogDetails(INFO, "Job Deleted")
-
-            if strategy == STRATEGY_HUNTER:
-                updateIndexConfiguration(user_email, index, data=STAGE_STOPPED)
-            else:
-                updateScalperDetails(user_email, index, data=STAGE_STOPPED)
-
             result = AsyncResult(str(task_id))
             result.revoke(terminate=True)
             addLogDetails(INFO, "Job Terminated")
-
             return JsonResponse({STATUS: SUCCESS, MESSAGE: "Index Stopped", "task_status": False})
-
         else:
             return JsonResponse({STATUS: FAILED, MESSAGE: "Index not running"})
-
     except Exception as e:
         addLogDetails(ERROR, str(e))
         return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
