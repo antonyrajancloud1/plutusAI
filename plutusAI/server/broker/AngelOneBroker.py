@@ -165,16 +165,17 @@ class AngelOneBroker:
         price_details = self.getOrderDetails(uniq_order_id)
         return str(price_details['averageprice'])
 
-    def getCandleData(self, exchange, symbol, from_time, to_time):
+    def getCandleData(self, exchange, symbol, from_time, to_time,time_frame):
         try:
             column = ['timestamp', "open", "high", "low", "close", "volume"]
             dataParam = {
                 "exchange": exchange,
                 "symboltoken": symbol,
-                "interval": "ONE_MINUTE",
+                "interval": time_frame,
                 "fromdate": from_time,
                 "todate": to_time
             }
+            print(dataParam)
             historic_data = self.smartApi.getCandleData(dataParam)
             candle_data = historic_data["data"]
             if historic_data["message"] == "SUCCESS":

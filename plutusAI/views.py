@@ -17,6 +17,7 @@ from plutusAI.server.priceAction.priceActionScalper import *
 from .models import *
 from datetime import datetime, timedelta
 
+from plutusAI.server.broker.AngelOne.AngelOneAuth import AngelOneAuth
 from .server.broker.Broker import Broker
 from .server.websocket.WebsocketAngelOne import WebsocketAngelOne
 
@@ -388,7 +389,7 @@ def start_ws(request):
                 user_id=ADMIN_USER_ID, index_name=HTTP_JOB, strategy=HTTP_JOB
             )
         if user_data.count() > 0:
-            return JsonResponse({STATUS: FAILED, MESSAGE: "Socket running", "task_status": True})
+            return JsonResponse({STATUS: FAILED, MESSAGE: "Socket running", TASK_STATUS: True})
         else:
             return start_ws_job(ws_type)
     else:
@@ -656,3 +657,13 @@ def buy_manual_order(request):
     except Exception as e:
         addLogDetails(ERROR, str(e))
         return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
+
+@csrf_exempt
+@require_http_methods([POST])
+def reGenerateAccessToken(request):
+    if check_user_session(request):
+        user_email = get_user_email(request)
+        AngelOneAuth(user_email)
+        return JsonResponse({STATUS: SUCCESS, MESSAGE: TOKEN_GENERATED,TASK_STATUS:	True })
+    else:
+        return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})

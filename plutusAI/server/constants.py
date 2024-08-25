@@ -48,7 +48,7 @@ GET_SCALPER_VALUES = "get_scalper_details"
 ADMIN_CONSOLE="admin_console"
 CHECK_TASK_STATUS="check_task_status"
 BUY_MANUAL="buy_manual"
-
+REGENERATE_TOKEN = "regenrate_token"
 #### DATA CONSTANTS ####
 ID = "id"
 USER_NAME = "user_name"
@@ -92,6 +92,8 @@ ORDER_PLACED = "order_placed"
 ORDER_EXITED = "order_exited"
 TARGET="target"
 ON_CANDLE_CLOSE="on_candle_close"
+TOKEN_GENERATED="token_generated"
+TASK_STATUS="task_status"
 #### MESSSAGE CONSTANTS ####
 
 STATUS = "status"
@@ -195,7 +197,7 @@ STAGE_STOPPED = {"status": "stopped"}
 STAGE_LONG = {"status": "long_placed"}
 STAGE_SHORT = {"status": "short_placed"}
 STAGE_BROKER_NOT_PRESENT = {"stage": "broker_not_present"}
-NIFTY_50 = "Nifty 50"
+# NIFTY_50 = "Nifty 50"
 ### Broker Param Values #### ANGLEONE ###
 VARIETY = "variety"
 TRADING_SYMBOL = "tradingsymbol"

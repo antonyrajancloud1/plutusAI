@@ -34,6 +34,7 @@ urlpatterns = [
     path(GET_SCALPER_VALUES, views.get_scalper_values, name=GET_SCALPER_VALUES),
     path(ADMIN_CONSOLE, views.admin_console, name=ADMIN_CONSOLE),
     path(CHECK_TASK_STATUS, views.check_task_status, name=CHECK_TASK_STATUS),
+    path(REGENERATE_TOKEN, views.reGenerateAccessToken, name=REGENERATE_TOKEN),
 
     path(BUY_MANUAL, views.buy_manual_order, name=BUY_MANUAL),
     # path(BUY_MANUAL, views.buy_manual_order, name=BUY_MANUAL),

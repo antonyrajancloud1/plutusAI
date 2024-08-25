@@ -1,0 +1,324 @@
+Watching for file changes with StatReloader
+/home/sahayaraj/PycharmProjects/plutusAI/plutusAI/server/broker/AngelOneBroker.py changed, reloading.
+2024-08-25 11:56:43 IST - INFO - /home/sahayaraj/PycharmProjects/plutusAI/plutusAI/server/broker/AngelOneBroker.py changed, reloading.
+Watching for file changes with StatReloader
+/home/sahayaraj/PycharmProjects/plutusAI/plutusAI/server/broker/AngelOneBroker.py changed, reloading.
+2024-08-25 12:05:18 IST - INFO - /home/sahayaraj/PycharmProjects/plutusAI/plutusAI/server/broker/AngelOneBroker.py changed, reloading.
+Watching for file changes with StatReloader
+/home/sahayaraj/PycharmProjects/plutusAI/plutusAI/server/broker/AngelOneBroker.py changed, reloading.
+2024-08-25 12:05:52 IST - INFO - /home/sahayaraj/PycharmProjects/plutusAI/plutusAI/server/broker/AngelOneBroker.py changed, reloading.
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 302 0
+2024-08-25 12:06:03 IST - INFO - "GET / HTTP/1.1" 302 0
+2024-08-25 12:06:03 IST - WARNING - /home/sahayaraj/.local/lib/python3.10/site-packages/celery/worker/consumer/consumer.py:508: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
+whether broker connection retries are made during startup in Celery 6.0 and above.
+If you wish to retain the existing behavior for retrying connections on startup,
+you should set broker_connection_retry_on_startup to True.
+  warnings.warn(
+
+2024-08-25 12:06:03 IST - INFO - Connected to redis://localhost:6379//
+2024-08-25 12:06:03 IST - WARNING - /home/sahayaraj/.local/lib/python3.10/site-packages/celery/worker/consumer/consumer.py:508: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
+whether broker connection retries are made during startup in Celery 6.0 and above.
+If you wish to retain the existing behavior for retrying connections on startup,
+you should set broker_connection_retry_on_startup to True.
+  warnings.warn(
+
+2024-08-25 12:06:03 IST - INFO - mingle: searching for neighbors
+"GET /login HTTP/1.1" 200 1113
+2024-08-25 12:06:03 IST - INFO - "GET /login HTTP/1.1" 200 1113
+"GET /static/js/login.js HTTP/1.1" 200 5080
+2024-08-25 12:06:04 IST - INFO - "GET /static/js/login.js HTTP/1.1" 200 5080
+"GET /static/css/global.css HTTP/1.1" 200 6016
+2024-08-25 12:06:04 IST - INFO - "GET /static/css/global.css HTTP/1.1" 200 6016
+"GET /static/css/common.css HTTP/1.1" 200 13915
+2024-08-25 12:06:04 IST - INFO - "GET /static/css/common.css HTTP/1.1" 200 13915
+"GET /static/js/resource.js HTTP/1.1" 304 0
+2024-08-25 12:06:04 IST - INFO - "GET /static/js/resource.js HTTP/1.1" 304 0
+Not Found: /static/css/images/login-bg.jpeg
+2024-08-25 12:06:04 IST - WARNING - Not Found: /static/css/images/login-bg.jpeg
+"GET /static/css/images/login-bg.jpeg HTTP/1.1" 404 190
+2024-08-25 12:06:04 IST - WARNING - "GET /static/css/images/login-bg.jpeg HTTP/1.1" 404 190
+2024-08-25 12:06:04 IST - INFO - mingle: all alone
+2024-08-25 12:06:04 IST - INFO - celery@sahayaraj ready.
+"POST /login HTTP/1.1" 200 49
+2024-08-25 12:07:34 IST - INFO - "POST /login HTTP/1.1" 200 49
+"GET /home HTTP/1.1" 200 971
+2024-08-25 12:07:34 IST - INFO - "GET /home HTTP/1.1" 200 971
+"GET /static/css/common.css HTTP/1.1" 304 0
+2024-08-25 12:07:34 IST - INFO - "GET /static/css/common.css HTTP/1.1" 304 0
+"GET /static/js/resource.js HTTP/1.1" 304 0
+2024-08-25 12:07:34 IST - INFO - "GET /static/js/resource.js HTTP/1.1" 304 0
+"GET /static/css/global.css HTTP/1.1" 304 0
+2024-08-25 12:07:34 IST - INFO - "GET /static/css/global.css HTTP/1.1" 304 0
+"GET /static/js/home.js HTTP/1.1" 304 0
+2024-08-25 12:07:34 IST - INFO - "GET /static/js/home.js HTTP/1.1" 304 0
+"GET /get_config_values HTTP/1.1" 200 1148
+2024-08-25 12:07:34 IST - INFO - "GET /get_config_values HTTP/1.1" 200 1148
+"GET /get_scalper_details HTTP/1.1" 200 206
+2024-08-25 12:07:39 IST - INFO - "GET /get_scalper_details HTTP/1.1" 200 206
+2024-08-25 12:07:38 IST - INFO - terminate_task for antonyrajan.d@gmail.com index bank_nifty strategy scalper
+"POST /stop_index HTTP/1.1" 200 52
+2024-08-25 12:07:38 IST - INFO - "POST /stop_index HTTP/1.1" 200 52
+2024-08-25 12:07:39 IST - INFO - scalper started for user: antonyrajan.d@gmail.com for index :BankNifty
+"POST /start_scalper HTTP/1.1" 200 61
+2024-08-25 12:07:40 IST - INFO - "POST /start_scalper HTTP/1.1" 200 61
+2024-08-25 12:07:40 IST - INFO - Task plutusAI.server.priceAction.priceActionScalper.start_scalper_task[c8f5d546-5967-4401-9e96-87b0c24d637f] received
+2024-08-25 12:07:40 IST - INFO - into Existing token flow antonyrajan.d@gmail.com
+2024-08-25 12:07:43 IST - INFO - New Token generated antonyrajan.d@gmail.com
+2024-08-25 12:07:46 IST - INFO - initisuccess for angleone
+2024-08-25 12:07:55 IST - INFO - terminate_task for antonyrajan.d@gmail.com index bank_nifty strategy scalper
+2024-08-25 12:07:55 IST - INFO - Job Deleted
+2024-08-25 12:07:55 IST - INFO - Job Terminated
+2024-08-25 12:07:55 IST - INFO - Terminating c8f5d546-5967-4401-9e96-87b0c24d637f (Signals.SIGTERM)
+"POST /stop_index HTTP/1.1" 200 71
+2024-08-25 12:07:55 IST - INFO - "POST /stop_index HTTP/1.1" 200 71
+/home/sahayaraj/PycharmProjects/plutusAI/plutusAI/server/broker/AngelOneBroker.py changed, reloading.
+2024-08-25 12:10:03 IST - INFO - /home/sahayaraj/PycharmProjects/plutusAI/plutusAI/server/broker/AngelOneBroker.py changed, reloading.
+Watching for file changes with StatReloader
+/home/sahayaraj/PycharmProjects/plutusAI/plutusAI/views.py changed, reloading.
+2024-08-25 12:13:10 IST - INFO - /home/sahayaraj/PycharmProjects/plutusAI/plutusAI/views.py changed, reloading.
+Watching for file changes with StatReloader
+/home/sahayaraj/PycharmProjects/plutusAI/plutusAI/server/constants.py changed, reloading.
+2024-08-25 12:13:52 IST - INFO - /home/sahayaraj/PycharmProjects/plutusAI/plutusAI/server/constants.py changed, reloading.
+Watching for file changes with StatReloader
+/home/sahayaraj/PycharmProjects/plutusAI/plutusAI/urls.py changed, reloading.
+2024-08-25 12:14:18 IST - INFO - /home/sahayaraj/PycharmProjects/plutusAI/plutusAI/urls.py changed, reloading.
+Watching for file changes with StatReloader
+/home/sahayaraj/PycharmProjects/plutusAI/plutusAI/urls.py changed, reloading.
+2024-08-25 12:14:32 IST - INFO - /home/sahayaraj/PycharmProjects/plutusAI/plutusAI/urls.py changed, reloading.
+Watching for file changes with StatReloader
+/home/sahayaraj/PycharmProjects/plutusAI/plutusAI/views.py changed, reloading.
+2024-08-25 12:15:17 IST - INFO - /home/sahayaraj/PycharmProjects/plutusAI/plutusAI/views.py changed, reloading.
+Watching for file changes with StatReloader
+/home/sahayaraj/PycharmProjects/plutusAI/plutusAI/views.py changed, reloading.
+2024-08-25 12:15:27 IST - INFO - /home/sahayaraj/PycharmProjects/plutusAI/plutusAI/views.py changed, reloading.
+Watching for file changes with StatReloader
+/home/sahayaraj/PycharmProjects/plutusAI/plutusAI/views.py changed, reloading.
+2024-08-25 12:16:44 IST - INFO - /home/sahayaraj/PycharmProjects/plutusAI/plutusAI/views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /home HTTP/1.1" 200 971
+2024-08-25 12:16:58 IST - INFO - "GET /home HTTP/1.1" 200 971
+"GET /static/js/resource.js HTTP/1.1" 304 0
+2024-08-25 12:16:58 IST - INFO - "GET /static/js/resource.js HTTP/1.1" 304 0
+"GET /static/js/home.js HTTP/1.1" 304 0
+"GET /static/css/common.css HTTP/1.1" 304 0
+2024-08-25 12:16:58 IST - INFO - "GET /static/js/home.js HTTP/1.1" 304 0
+2024-08-25 12:16:58 IST - INFO - "GET /static/css/common.css HTTP/1.1" 304 0
+"GET /static/css/global.css HTTP/1.1" 304 0
+2024-08-25 12:16:58 IST - INFO - "GET /static/css/global.css HTTP/1.1" 304 0
+"GET /get_config_values HTTP/1.1" 200 1148
+2024-08-25 12:16:58 IST - INFO - "GET /get_config_values HTTP/1.1" 200 1148
+"GET /get_order_book_details HTTP/1.1" 200 13645
+2024-08-25 12:17:05 IST - INFO - "GET /get_order_book_details HTTP/1.1" 200 13645
+Internal Server Error: /regenrate_token
+Traceback (most recent call last):
+  File "/home/sahayaraj/.local/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/sahayaraj/.local/lib/python3.10/site-packages/django/core/handlers/base.py", line 204, in _get_response
+    self.check_response(response, callback)
+  File "/home/sahayaraj/.local/lib/python3.10/site-packages/django/core/handlers/base.py", line 332, in check_response
+    raise ValueError(
+ValueError: The view plutusAI.views.reGenerateAccessToken didn't return an HttpResponse object. It returned None instead.
+2024-08-25 12:17:31 IST - ERROR - Internal Server Error: /regenrate_token
+Traceback (most recent call last):
+  File "/home/sahayaraj/.local/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/sahayaraj/.local/lib/python3.10/site-packages/django/core/handlers/base.py", line 204, in _get_response
+    self.check_response(response, callback)
+  File "/home/sahayaraj/.local/lib/python3.10/site-packages/django/core/handlers/base.py", line 332, in check_response
+    raise ValueError(
+ValueError: The view plutusAI.views.reGenerateAccessToken didn't return an HttpResponse object. It returned None instead.
+"POST /regenrate_token HTTP/1.1" 500 196
+2024-08-25 12:17:31 IST - ERROR - "POST /regenrate_token HTTP/1.1" 500 196
+/home/sahayaraj/PycharmProjects/plutusAI/plutusAI/views.py changed, reloading.
+2024-08-25 12:18:39 IST - INFO - /home/sahayaraj/PycharmProjects/plutusAI/plutusAI/views.py changed, reloading.
+Watching for file changes with StatReloader
+"POST /regenrate_token HTTP/1.1" 200 48
+2024-08-25 12:19:07 IST - INFO - "POST /regenrate_token HTTP/1.1" 200 48
+"POST /regenrate_token HTTP/1.1" 200 48
+2024-08-25 12:19:37 IST - INFO - "POST /regenrate_token HTTP/1.1" 200 48
+/home/sahayaraj/PycharmProjects/plutusAI/plutusAI/views.py changed, reloading.
+2024-08-25 12:19:52 IST - INFO - /home/sahayaraj/PycharmProjects/plutusAI/plutusAI/views.py changed, reloading.
+Watching for file changes with StatReloader
+"POST /regenrate_token HTTP/1.1" 200 51
+2024-08-25 12:19:59 IST - INFO - "POST /regenrate_token HTTP/1.1" 200 51
+"POST /regenrate_token HTTP/1.1" 200 51
+2024-08-25 12:20:24 IST - INFO - "POST /regenrate_token HTTP/1.1" 200 51
+"GET /home HTTP/1.1" 200 971
+2024-08-25 12:24:24 IST - INFO - "GET /home HTTP/1.1" 200 971
+"GET /static/css/common.css HTTP/1.1" 200 13915
+2024-08-25 12:24:24 IST - INFO - "GET /static/css/common.css HTTP/1.1" 200 13915
+"GET /static/css/global.css HTTP/1.1" 200 6016
+2024-08-25 12:24:24 IST - INFO - "GET /static/css/global.css HTTP/1.1" 200 6016
+"GET /static/js/resource.js HTTP/1.1" 200 3479
+2024-08-25 12:24:24 IST - INFO - "GET /static/js/resource.js HTTP/1.1" 200 3479
+"GET /static/js/home.js HTTP/1.1" 200 47884
+2024-08-25 12:24:24 IST - INFO - "GET /static/js/home.js HTTP/1.1" 200 47884
+"GET /get_config_values HTTP/1.1" 200 25
+2024-08-25 12:24:24 IST - INFO - "GET /get_config_values HTTP/1.1" 200 25
+"GET /admin_console HTTP/1.1" 200 6487
+2024-08-25 12:24:29 IST - INFO - "GET /admin_console HTTP/1.1" 200 6487
+"GET /check_task_status HTTP/1.1" 200 71
+2024-08-25 12:24:29 IST - INFO - "GET /check_task_status HTTP/1.1" 200 71
+"GET /admin_console HTTP/1.1" 200 6591
+2024-08-25 12:26:50 IST - INFO - "GET /admin_console HTTP/1.1" 200 6591
+"GET /check_task_status HTTP/1.1" 200 71
+2024-08-25 12:26:50 IST - INFO - "GET /check_task_status HTTP/1.1" 200 71
+"GET /admin_console HTTP/1.1" 200 6591
+2024-08-25 12:26:50 IST - INFO - "GET /admin_console HTTP/1.1" 200 6591
+"GET /admin_console HTTP/1.1" 200 6897
+2024-08-25 12:29:40 IST - INFO - "GET /admin_console HTTP/1.1" 200 6897
+"GET /check_task_status HTTP/1.1" 200 71
+2024-08-25 12:29:40 IST - INFO - "GET /check_task_status HTTP/1.1" 200 71
+"GET /admin_console HTTP/1.1" 200 6897
+2024-08-25 12:29:40 IST - INFO - "GET /admin_console HTTP/1.1" 200 6897
+"GET /admin_console HTTP/1.1" 200 6897
+2024-08-25 12:30:15 IST - INFO - "GET /admin_console HTTP/1.1" 200 6897
+"GET /check_task_status HTTP/1.1" 200 71
+2024-08-25 12:30:15 IST - INFO - "GET /check_task_status HTTP/1.1" 200 71
+"GET /admin_console HTTP/1.1" 200 6897
+2024-08-25 12:30:15 IST - INFO - "GET /admin_console HTTP/1.1" 200 6897
+"GET /admin_console HTTP/1.1" 200 6897
+2024-08-25 12:30:27 IST - INFO - "GET /admin_console HTTP/1.1" 200 6897
+"GET /check_task_status HTTP/1.1" 200 71
+2024-08-25 12:30:27 IST - INFO - "GET /check_task_status HTTP/1.1" 200 71
+"GET /admin_console HTTP/1.1" 200 6897
+2024-08-25 12:30:27 IST - INFO - "GET /admin_console HTTP/1.1" 200 6897
+"GET /admin_console HTTP/1.1" 200 6897
+2024-08-25 12:30:39 IST - INFO - "GET /admin_console HTTP/1.1" 200 6897
+"GET /check_task_status HTTP/1.1" 200 71
+2024-08-25 12:30:40 IST - INFO - "GET /check_task_status HTTP/1.1" 200 71
+"GET /admin_console HTTP/1.1" 200 6897
+2024-08-25 12:30:40 IST - INFO - "GET /admin_console HTTP/1.1" 200 6897
+"POST /regenrate_token HTTP/1.1" 200 51
+2024-08-25 12:30:52 IST - INFO - "POST /regenrate_token HTTP/1.1" 200 51
+Internal Server Error: /stop_ws
+Traceback (most recent call last):
+  File "/home/sahayaraj/.local/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/sahayaraj/.local/lib/python3.10/site-packages/django/core/handlers/base.py", line 204, in _get_response
+    self.check_response(response, callback)
+  File "/home/sahayaraj/.local/lib/python3.10/site-packages/django/core/handlers/base.py", line 332, in check_response
+    raise ValueError(
+ValueError: The view plutusAI.views.stop_ws didn't return an HttpResponse object. It returned None instead.
+2024-08-25 12:30:59 IST - ERROR - Internal Server Error: /stop_ws
+Traceback (most recent call last):
+  File "/home/sahayaraj/.local/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/sahayaraj/.local/lib/python3.10/site-packages/django/core/handlers/base.py", line 204, in _get_response
+    self.check_response(response, callback)
+  File "/home/sahayaraj/.local/lib/python3.10/site-packages/django/core/handlers/base.py", line 332, in check_response
+    raise ValueError(
+ValueError: The view plutusAI.views.stop_ws didn't return an HttpResponse object. It returned None instead.
+"POST /stop_ws HTTP/1.1" 500 196
+2024-08-25 12:30:59 IST - ERROR - "POST /stop_ws HTTP/1.1" 500 196
+2024-08-25 12:31:01 IST - INFO - terminate_task for madara@plutus.com index socket_job strategy socket_job
+2024-08-25 12:31:02 IST - INFO - Job Deleted
+2024-08-25 12:31:02 IST - INFO - Job Terminated
+"POST /stop_ws HTTP/1.1" 200 71
+2024-08-25 12:31:02 IST - INFO - "POST /stop_ws HTTP/1.1" 200 71
+"POST /regenrate_token HTTP/1.1" 200 51
+2024-08-25 12:31:49 IST - INFO - "POST /regenrate_token HTTP/1.1" 200 51
+2024-08-25 12:31:59 IST - INFO - terminate_task for madara@plutus.com index socket_job strategy socket_job
+"POST /stop_ws HTTP/1.1" 200 52
+2024-08-25 12:31:59 IST - INFO - "POST /stop_ws HTTP/1.1" 200 52
+2024-08-25 12:32:03 IST - INFO - Task plutusAI.server.base.updateExpiryDetails[d30c8403-e2d6-45fb-ab3a-9c819b0db277] received
+"POST /start_ws HTTP/1.1" 200 67
+2024-08-25 12:32:03 IST - INFO - "POST /start_ws HTTP/1.1" 200 67
+2024-08-25 12:32:03 IST - INFO - Task plutusAI.server.AngelOneApp.createAngleOneCandle[fbebc43d-fb3d-4867-8252-b2efdf78429b] received
+2024-08-25 12:32:03 IST - INFO - into Existing token flow madara@plutus.com
+2024-08-25 12:32:04 IST - INFO - Broker object initiated with existing token madara@plutus.com
+2024-08-25 12:32:06 IST - INFO - {'current_expiry': '25-JUL-2024', 'next_expiry': '29-AUG-2024'}
+2024-08-25 12:32:07 IST - INFO - initisuccess for angleone
+2024-08-25 12:32:07 IST - INFO - Websocket connected
+2024-08-25 12:32:07 IST - INFO - WebSocket connection opened
+2024-08-25 12:32:09 IST - INFO - {'current_expiry': '28-AUG-2024', 'next_expiry': '04-SEP-2024'}
+2024-08-25 12:32:11 IST - INFO - {'current_expiry': '27-AUG-2024', 'next_expiry': '03-SEP-2024'}
+2024-08-25 12:32:11 IST - INFO - Expiry Updated
+2024-08-25 12:32:11 IST - INFO - Task plutusAI.server.base.updateExpiryDetails[d30c8403-e2d6-45fb-ab3a-9c819b0db277] succeeded in 7.908110262999799s: None
+2024-08-25 12:32:18 IST - INFO - terminate_task for madara@plutus.com index socket_job strategy socket_job
+2024-08-25 12:32:18 IST - INFO - Job Deleted
+2024-08-25 12:32:18 IST - INFO - Job Terminated
+2024-08-25 12:32:18 IST - INFO - Terminating fbebc43d-fb3d-4867-8252-b2efdf78429b (Signals.SIGTERM)
+"POST /stop_ws HTTP/1.1" 200 71
+2024-08-25 12:32:18 IST - INFO - "POST /stop_ws HTTP/1.1" 200 71
+2024-08-25 12:32:19 IST - INFO - terminate_task for madara@plutus.com index socket_job strategy socket_job
+"POST /stop_ws HTTP/1.1" 200 52
+2024-08-25 12:32:19 IST - INFO - "POST /stop_ws HTTP/1.1" 200 52
+2024-08-25 12:32:33 IST - INFO - Websocket connected
+2024-08-25 12:32:33 IST - INFO - WebSocket connection opened
+/home/sahayaraj/PycharmProjects/plutusAI/plutusAI/views.py changed, reloading.
+2024-08-25 12:33:47 IST - INFO - /home/sahayaraj/PycharmProjects/plutusAI/plutusAI/views.py changed, reloading.
+Watching for file changes with StatReloader
+/home/sahayaraj/PycharmProjects/plutusAI/plutusAI/views.py changed, reloading.
+2024-08-25 12:34:16 IST - INFO - /home/sahayaraj/PycharmProjects/plutusAI/plutusAI/views.py changed, reloading.
+Watching for file changes with StatReloader
+/home/sahayaraj/PycharmProjects/plutusAI/plutusAI/views.py changed, reloading.
+2024-08-25 12:34:45 IST - INFO - /home/sahayaraj/PycharmProjects/plutusAI/plutusAI/views.py changed, reloading.
+Watching for file changes with StatReloader
+"POST /regenrate_token HTTP/1.1" 200 72
+2024-08-25 12:35:08 IST - INFO - "POST /regenrate_token HTTP/1.1" 200 72
+"GET /admin_console HTTP/1.1" 200 7337
+2024-08-25 12:44:47 IST - INFO - "GET /admin_console HTTP/1.1" 200 7337
+"GET /check_task_status HTTP/1.1" 200 79
+2024-08-25 12:44:48 IST - INFO - "GET /check_task_status HTTP/1.1" 200 79
+"GET /admin_console HTTP/1.1" 200 7337
+2024-08-25 12:44:48 IST - INFO - "GET /admin_console HTTP/1.1" 200 7337
+"GET /admin_console HTTP/1.1" 200 6639
+2024-08-25 12:47:26 IST - INFO - "GET /admin_console HTTP/1.1" 200 6639
+"GET /check_task_status HTTP/1.1" 200 79
+2024-08-25 12:47:26 IST - INFO - "GET /check_task_status HTTP/1.1" 200 79
+"GET /admin_console HTTP/1.1" 200 6639
+2024-08-25 12:47:26 IST - INFO - "GET /admin_console HTTP/1.1" 200 6639
+"GET /admin_console HTTP/1.1" 200 5057
+2024-08-25 12:50:21 IST - INFO - "GET /admin_console HTTP/1.1" 200 5057
+"GET /check_task_status HTTP/1.1" 200 79
+2024-08-25 12:50:21 IST - INFO - "GET /check_task_status HTTP/1.1" 200 79
+"GET /admin_console HTTP/1.1" 200 5057
+2024-08-25 12:50:21 IST - INFO - "GET /admin_console HTTP/1.1" 200 5057
+"GET /admin_console HTTP/1.1" 200 6639
+2024-08-25 12:50:30 IST - INFO - "GET /admin_console HTTP/1.1" 200 6639
+"GET /check_task_status HTTP/1.1" 200 79
+2024-08-25 12:50:30 IST - INFO - "GET /check_task_status HTTP/1.1" 200 79
+"GET /admin_console HTTP/1.1" 200 6639
+2024-08-25 12:50:30 IST - INFO - "GET /admin_console HTTP/1.1" 200 6639
+"GET /admin_console HTTP/1.1" 200 7337
+2024-08-25 12:50:38 IST - INFO - "GET /admin_console HTTP/1.1" 200 7337
+"GET /check_task_status HTTP/1.1" 200 79
+2024-08-25 12:50:38 IST - INFO - "GET /check_task_status HTTP/1.1" 200 79
+"GET /admin_console HTTP/1.1" 200 7337
+2024-08-25 12:50:38 IST - INFO - "GET /admin_console HTTP/1.1" 200 7337
+"GET /admin_console HTTP/1.1" 200 7337
+2024-08-25 12:50:41 IST - INFO - "GET /admin_console HTTP/1.1" 200 7337
+"GET /check_task_status HTTP/1.1" 200 79
+2024-08-25 12:50:41 IST - INFO - "GET /check_task_status HTTP/1.1" 200 79
+"GET /admin_console HTTP/1.1" 200 7337
+2024-08-25 12:50:41 IST - INFO - "GET /admin_console HTTP/1.1" 200 7337
+"GET /admin_console HTTP/1.1" 200 7337
+2024-08-25 12:53:15 IST - INFO - "GET /admin_console HTTP/1.1" 200 7337
+"GET /check_task_status HTTP/1.1" 200 79
+2024-08-25 12:53:15 IST - INFO - "GET /check_task_status HTTP/1.1" 200 79
+"GET /admin_console HTTP/1.1" 200 7337
+2024-08-25 12:53:15 IST - INFO - "GET /admin_console HTTP/1.1" 200 7337
+"GET /admin_console HTTP/1.1" 200 7337
+2024-08-25 12:53:47 IST - INFO - "GET /admin_console HTTP/1.1" 200 7337
+"GET /check_task_status HTTP/1.1" 200 79
+2024-08-25 12:53:47 IST - INFO - "GET /check_task_status HTTP/1.1" 200 79
+"GET /admin_console HTTP/1.1" 200 7337
+2024-08-25 12:53:47 IST - INFO - "GET /admin_console HTTP/1.1" 200 7337
+"GET /admin_console HTTP/1.1" 200 7337
+2024-08-25 12:54:13 IST - INFO - "GET /admin_console HTTP/1.1" 200 7337
+"GET /check_task_status HTTP/1.1" 200 79
+2024-08-25 12:54:14 IST - INFO - "GET /check_task_status HTTP/1.1" 200 79
+"GET /admin_console HTTP/1.1" 200 7337
+2024-08-25 12:54:14 IST - INFO - "GET /admin_console HTTP/1.1" 200 7337
+"GET /admin_console HTTP/1.1" 200 7337
+2024-08-25 13:08:55 IST - INFO - "GET /admin_console HTTP/1.1" 200 7337
+"GET /check_task_status HTTP/1.1" 200 79
+2024-08-25 13:08:55 IST - INFO - "GET /check_task_status HTTP/1.1" 200 79
+"POST /regenrate_token HTTP/1.1" 200 72
+2024-08-25 13:09:02 IST - INFO - "POST /regenrate_token HTTP/1.1" 200 72
+"GET /admin_console HTTP/1.1" 200 7337
+2024-08-25 13:09:07 IST - INFO - "GET /admin_console HTTP/1.1" 200 7337
+"GET /check_task_status HTTP/1.1" 200 79
+2024-08-25 13:09:08 IST - INFO - "GET /check_task_status HTTP/1.1" 200 79

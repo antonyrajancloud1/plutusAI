@@ -519,7 +519,7 @@ logging.basicConfig(
 
 
 def addLogDetails(log_type, logDetails):
-    # print(logDetails)
+    print(logDetails)
     if log_type == "info":
         logging.info(logDetails)
     elif log_type == "error":

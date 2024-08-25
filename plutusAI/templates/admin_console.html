@@ -85,6 +85,15 @@
         .add-btn:hover {
             background-color: #0056b3;
         }
+        .regen-tkn {
+    background-color: #7ed957; /* Orange */
+    width: 94%;
+}
+
+.regen-tkn:hover {
+    background-color: #5cbf41; /* Darker orange on hover */
+}
+
         .status {
             margin-top: 10px;
             font-size: 14px;
@@ -112,6 +121,7 @@
                 <input type="text" id="ws-input" name="ws-input" autocomplete="off" required>
                 <button id="startWS" type="button" class="start-btn">Start WebSocket</button>
                 <button id="stopWS" type="button" class="stop-btn">Stop WebSocket</button>
+                <button id="regenerateToken" type="button" class="regen-tkn">Regenerate Token</button>
                 <div class="status" id="ws-status">Loading...</div>
             </form>
         </div>
@@ -133,6 +143,7 @@
     <script>
         const startWSButton = document.getElementById("startWS");
         const stopWSButton = document.getElementById("stopWS");
+        const reGenerateTokenButton = document.getElementById("regenerateToken");
         const wsTypeInput = document.getElementById("ws-input");
         const statusDiv = document.getElementById('ws-status');
 
@@ -187,6 +198,20 @@
         stopWSButton.addEventListener("click", function() {
             makeAPICall('POST', 'stop_ws', { ws_type: wsTypeInput.value });
         });
+
+        reGenerateTokenButton.addEventListener("click", function() {
+            makeAPICall('POST', 'regenrate_token',null);
+        });
+
+const addUserButton = document.querySelector(".add-btn");
+
+addUserButton.addEventListener("click", function() {
+    const email = document.getElementById("email").value;
+    const name = document.getElementById("name").value;
+    const password = document.getElementById("password").value;
+    makeAPICall('POST', 'add_user', { email, name, password });
+});
+
     </script>
 </body>
 </html>
