@@ -1,18 +1,15 @@
-import datetime
-import time
+# import datetime
+# import time
 
-import pytz
-from SmartApi import SmartConnect, SmartWebSocket
+# import pytz
+from SmartApi import  SmartWebSocket
 from SmartApi.smartWebSocketV2 import SmartWebSocketV2
-from celery import shared_task
-from plutusAI.models import BrokerDetails, JobDetails
-from plutusAI.server.base import addLogDetails, update_ltp_to_table, get_next_minute_start, format_time, \
-    update_candle_data_to_table
+from plutusAI.server.base import *
 from plutusAI.server.broker.AngelOneBroker import AngelOneBroker
 from plutusAI.server.constants import *
 from celery import current_task
 
-
+import datetime
 
 @shared_task
 def createAngleOne():

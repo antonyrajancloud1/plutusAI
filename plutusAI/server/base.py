@@ -1,9 +1,9 @@
-from datetime import datetime, timedelta
 import json
 import logging
 import os
 import re
 import time
+from datetime import datetime, timedelta
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.utils import timezone
@@ -18,10 +18,6 @@ from celery import shared_task
 from celery.result import AsyncResult
 from logging.handlers import TimedRotatingFileHandler
 
-
-# import datetime
-
-# from datetime import *
 # from plutusAI.server.AngelOneApp import *
 
 
@@ -679,26 +675,14 @@ def convert_datetime_string(datetime_str):
 def getCurrentTimestamp():
     return str(datetime.now().timestamp())
 
-# def placeDummyOrder(user_email, data):
-#     try:
-#         addLogDetails(INFO, " User :" + user_email + " placeDummyOrder")
-#         order_response = {'message': 'SUCCESS', 'data': {'orderid': 'dummy_id'}}
-#         data = {USER_ID: user_email, SCRIPT_NAME: currentPremiumPlaced, QTY: user_qty,
-#                 ENTRY_PRICE: self.optionBuyPrice, STATUS: ORDER_PLACED, STRATEGY: STRATEGY_SCALPER,
-#                 INDEX_NAME: self.index_name}
-#         # addLogDetails(INFO, "data fine")
-#         addOrderBookDetails(data, True)
-#
-#         if orderType == "CE":
-#             self.isCEOrderPlaced = True
-#             self.isPEOrderPlaced = False
-#             print("dummy order isCEOrderPlaced " + str(self.isCEOrderPlaced))
-#         elif orderType == "PE":
-#             self.isPEOrderPlaced = True
-#             self.isCEOrderPlaced = False
-#             print("dummy order isPEOrderPlaced " + str(self.isPEOrderPlaced))
-#         self.currentOrderID = order_response['data']['orderid']
-#
-#         return order_response
-#     except Exception as e:
-#         addLogDetails(ERROR, "User :" + self.user_email + " exception in placeDummyOrder  -----  " + str(e))
+
+def getBrokerageForLots(lots,qty):
+    broker_price = 20
+    exchange_tax = 3.4081
+    stamp_charges = 0.2066
+    sebi_fee = 0.0069
+    base_gst = 4.2
+    runtime_gst = 0.6
+    total_charges = (int(lots) * (exchange_tax + stamp_charges + sebi_fee + runtime_gst)) + base_gst + broker_price
+    brokerage = 2*(total_charges/(int(lots)*int(qty)))
+    return -brokerage

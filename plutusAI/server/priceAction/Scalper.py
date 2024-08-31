@@ -129,11 +129,13 @@ class Scalper():
                         previous_close = self.getBaseValueUsingStartTime(candle_data)
                         if previous_close > self.base_value:
                             if not self.isCEOrderPlaced:
+                                self.total_price = self.total_price + getBrokerageForLots(self.lots, self.qty)
                                 self.exitBasedOnCondition(self.currentPremiumValue, "place Call")
                                 self.placeCallOption()
                                 updateScalperDetails(self.user_email, self.index_name, data=STAGE_LONG)
                         elif previous_close < self.base_value:
                             if not self.isPEOrderPlaced:
+                                self.total_price = self.total_price + getBrokerageForLots(self.lots, self.qty)
                                 self.exitBasedOnCondition(self.currentPremiumValue, "Place put")
                                 self.placePutOption()
                                 updateScalperDetails(self.user_email, self.index_name, data=STAGE_SHORT)
@@ -177,11 +179,13 @@ class Scalper():
                     if contains_next_candle:
                         if getCurrentIndexValue(str(self.index_name)+"_fut") > self.base_value:
                             if not self.isCEOrderPlaced:
+                                self.total_price = self.total_price + getBrokerageForLots(self.lots, self.qty)
                                 self.exitBasedOnCondition(self.currentPremiumValue, "place Call")
                                 self.placeCallOption()
                                 updateScalperDetails(self.user_email, self.index_name, data=STAGE_LONG)
                         elif getCurrentIndexValue(str(self.index_name)+"_fut") < self.base_value:
                             if not self.isPEOrderPlaced:
+                                self.total_price = self.total_price + getBrokerageForLots(self.lots, self.qty)
                                 self.exitBasedOnCondition(self.currentPremiumValue, "Place put")
                                 self.placePutOption()
                                 updateScalperDetails(self.user_email, self.index_name, data=STAGE_SHORT)
@@ -370,6 +374,7 @@ class Scalper():
 
     def revertDummyOrder(self, fromOptionPrice):
         if self.isCEOrderPlaced or self.isPEOrderPlaced:
+            # self.total_price = self.total_price + getBrokerageForLots(self.lots, self.qty)
             addLogDetails(INFO, "Index Name: " + self.index_name + " User :" + self.user_email + " revertDummyOrder")
             order_response = {'message': 'SUCCESS', 'data': {'order_id': 'exit_dummy_id'}}
             self.optionDetails = self.BrokerObject.getCurrentPremiumDetails(NFO, self.currentPremiumPlaced)
