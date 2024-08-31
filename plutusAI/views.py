@@ -439,14 +439,9 @@ def getDashboardDetails(request):
     try:
         if check_user_session(request):
             user_email = get_user_email(request)
-            start_of_day_timestamp = int(
-                time.mktime(time.strptime(time.strftime("%Y-%m-%d 00:00:00"), "%Y-%m-%d %H:%M:%S")))
-            ob_data = OrderBook.objects.filter(user_id=user_email, exit_time__gte=start_of_day_timestamp)
-            ob_data = list(ob_data.values())
-            total = 0
-            for data in ob_data:
-                total += float(data[TOTAL])
-            return JsonResponse({STATUS: SUCCESS, "data": {TOTAL: total}})
+            dashboard_data= {"all_data": getUserDashboardDetails(user_email, False),
+                             "today_data": getUserDashboardDetails(user_email, True)}
+            return JsonResponse({STATUS: SUCCESS, "dashboard":dashboard_data})
         else:
             return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
     except Exception as e:

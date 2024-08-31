@@ -229,3 +229,6 @@ INCORRECT_INPUT = "Invalid Entries Found For Field "
 INFO='info'
 ERROR='error'
 CONNECTION_ERROR="Internet connection issue"
+
+### Supported indeces ###
+INDECES=["nifty","bank_nifty", "fin_nifty"]

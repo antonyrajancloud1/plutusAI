@@ -5,6 +5,7 @@ import re
 import time
 from datetime import datetime, timedelta
 from django.contrib.auth.models import User
+from django.core.serializers.json import DjangoJSONEncoder
 from django.http import JsonResponse
 from django.utils import timezone
 import pandas as pd
@@ -20,6 +21,7 @@ from logging.handlers import TimedRotatingFileHandler
 
 # from plutusAI.server.AngelOneApp import *
 
+from django.db.models import Sum
 
 def admin_check(user):
     return user.is_authenticated and user.is_staff
@@ -686,3 +688,35 @@ def getBrokerageForLots(lots,qty):
     total_charges = (int(lots) * (exchange_tax + stamp_charges + sebi_fee + runtime_gst)) + base_gst + broker_price
     brokerage = 2*(total_charges/(int(lots)*int(qty)))
     return -brokerage
+
+def getUserOrderBookDetails(user_email,index_name,is_today):
+    try:
+        if is_today:
+            start_of_day_timestamp = int(
+                time.mktime(time.strptime(time.strftime("%Y-%m-%d 00:00:00"), "%Y-%m-%d %H:%M:%S")))
+            ob_data = OrderBook.objects.filter(user_id=user_email,index_name=index_name , exit_time__gte=start_of_day_timestamp).values('strategy').annotate(total_sum=Sum('total'))
+
+        else:
+            ob_data = OrderBook.objects.filter(user_id=user_email, index_name=index_name).values('strategy').annotate(total_sum=Sum('total'))
+        totals_by_strategy = {}
+        for record in ob_data:
+            strategy = record['strategy']
+            total = float(record['total_sum'])
+            totals_by_strategy[strategy] = totals_by_strategy.get(strategy, 0) + total
+
+        json_result = json.dumps(totals_by_strategy, cls=DjangoJSONEncoder)
+        return json_result
+
+    except Exception as e:
+        # Handle exceptions, e.g., log the error or return a default response
+        return addLogDetails(ERROR,str(e))
+
+def getUserDashboardDetails(user_email,is_today):
+    index = INDECES
+    all_data = {}
+    for index_name in index:
+        ob_data = getUserOrderBookDetails(user_email, index_name,is_today)
+        print(ob_data)
+        print(ob_data.upper().__contains__(index_name))
+        all_data[index_name] = ob_data
+    return all_data
