@@ -1,4 +1,5 @@
 import time
+from math import trunc
 
 from django.db.models import Q
 
@@ -59,6 +60,7 @@ class Scalper():
             #             addLogDetails(INFO, "kite")
             self.BrokerObject = Broker(self.user_email, self.index_group).BrokerObject
             self.is_demo_enabled = self.BrokerObject.is_demo_enabled
+            print(self.is_demo_enabled)
             if self.BrokerObject.checkProfile()[MESSAGE] == "SUCCESS":
                 self.initilize_scalper()
             else:
@@ -129,13 +131,13 @@ class Scalper():
                         previous_close = self.getBaseValueUsingStartTime(candle_data)
                         if previous_close > self.base_value:
                             if not self.isCEOrderPlaced:
-                                self.total_price = self.total_price + getBrokerageForLots(self.lots, self.qty)
+                                self.user_target = float(self.user_target)  + getBrokerageForLots(self.lots, self.qty)
                                 self.exitBasedOnCondition(self.currentPremiumValue, "place Call")
                                 self.placeCallOption()
                                 updateScalperDetails(self.user_email, self.index_name, data=STAGE_LONG)
                         elif previous_close < self.base_value:
                             if not self.isPEOrderPlaced:
-                                self.total_price = self.total_price + getBrokerageForLots(self.lots, self.qty)
+                                self.user_target =float(self.user_target)  + getBrokerageForLots(self.lots, self.qty)
                                 self.exitBasedOnCondition(self.currentPremiumValue, "Place put")
                                 self.placePutOption()
                                 updateScalperDetails(self.user_email, self.index_name, data=STAGE_SHORT)
@@ -179,13 +181,13 @@ class Scalper():
                     if contains_next_candle:
                         if getCurrentIndexValue(str(self.index_name)+"_fut") > self.base_value:
                             if not self.isCEOrderPlaced:
-                                self.total_price = self.total_price + getBrokerageForLots(self.lots, self.qty)
+                                self.user_target  = float(self.user_target)  + getBrokerageForLots(self.lots, self.qty)
                                 self.exitBasedOnCondition(self.currentPremiumValue, "place Call")
                                 self.placeCallOption()
                                 updateScalperDetails(self.user_email, self.index_name, data=STAGE_LONG)
                         elif getCurrentIndexValue(str(self.index_name)+"_fut") < self.base_value:
                             if not self.isPEOrderPlaced:
-                                self.total_price = self.total_price + getBrokerageForLots(self.lots, self.qty)
+                                self.user_target = float(self.user_target)  + getBrokerageForLots(self.lots, self.qty)
                                 self.exitBasedOnCondition(self.currentPremiumValue, "Place put")
                                 self.placePutOption()
                                 updateScalperDetails(self.user_email, self.index_name, data=STAGE_SHORT)
@@ -278,6 +280,7 @@ class Scalper():
             if order_response['message'].__eq__('SUCCESS'):
                 self.currentOrderID = order_response['data']['uniqueorderid']
                 uniqueorderid = order_response["data"]["uniqueorderid"]
+
                 order_details = self.BrokerObject.getOrderDetails(uniqueorderid)
                 print(order_details)
                 self.optionBuyPrice = order_details["averageprice"]
@@ -286,6 +289,23 @@ class Scalper():
                         INDEX_NAME: self.index_name}
                 addOrderBookDetails(data, True)
                 self.isCEOrderPlaced = True
+                trigger_price = round(float(self.optionBuyPrice)+ float(self.total_price) + float(self.user_target),1)
+                price = trigger_price + 0
+                sell_order_details = {VARIETY: STOPLOSS, EXCHANGE: NFO, TRADING_SYMBOL: self.currentPremiumPlaced,
+                                      SYMBOL_TOKEN: self.BrokerObject.getTokenForSymbol(self.currentPremiumPlaced),
+                                      TRANSACTION_TYPE: SELL, ORDER_TYPE: ORDER_TYPE_SL, PRICE: price,
+                                      TRIGGER_PRICE: trigger_price, PRODUCT_TYPE: INTRADAY, DURATION: DAY,
+                                      QUANTITY: self.user_qty}
+                sell_order_response = self.BrokerObject.placeOrder(sell_order_details)
+                addLogDetails(INFO, sell_order_details)
+                addLogDetails(INFO, sell_order_response)
+
+                if sell_order_response['message'].__eq__('SUCCESS'):
+                    self.currentOrderID = sell_order_response['data']['uniqueorderid']
+                    self.orderid = sell_order_response['data']['orderid']
+                    sell_order_response_details = self.BrokerObject.getOrderDetails(self.currentOrderID)
+                    addLogDetails(INFO, sell_order_response_details)
+
 
     def placePutOption(self):
         self.currentPremiumPlaced = getTradingSymbol(self.index_name) + str(
@@ -305,7 +325,9 @@ class Scalper():
                 order_response))
             if order_response['message'].__eq__('SUCCESS'):
                 self.currentOrderID = order_response['data']['uniqueorderid']
+                addLogDetails(INFO,"self.currentOrderID = "+str(self.currentOrderID))
                 uniqueorderid = order_response["data"]["uniqueorderid"]
+
                 order_details = self.BrokerObject.getOrderDetails(uniqueorderid)
                 print(order_details)
                 self.optionBuyPrice = order_details["averageprice"]
@@ -315,6 +337,25 @@ class Scalper():
                 addOrderBookDetails(data, True)
                 self.isPEOrderPlaced = True
 
+                trigger_price = round(float(self.optionBuyPrice)+ float(self.total_price) + float(self.user_target),1)
+                price = trigger_price +0
+                sell_order_details = {VARIETY: STOPLOSS, EXCHANGE: NFO, TRADING_SYMBOL: self.currentPremiumPlaced,
+                                      SYMBOL_TOKEN: self.BrokerObject.getTokenForSymbol(self.currentPremiumPlaced),
+                                      TRANSACTION_TYPE: SELL, ORDER_TYPE: ORDER_TYPE_SL, PRICE: price,
+                                      TRIGGER_PRICE: trigger_price, PRODUCT_TYPE: INTRADAY, DURATION: DAY,
+                                      QUANTITY: self.user_qty}
+
+                sell_order_response = self.BrokerObject.placeOrder(sell_order_details)
+                addLogDetails(INFO,sell_order_details)
+                addLogDetails(INFO, sell_order_response)
+                if sell_order_response['message'].__eq__('SUCCESS'):
+                    self.currentOrderID = sell_order_response['data']['uniqueorderid']
+                    self.orderid = sell_order_response['data']['orderid']
+
+                    addLogDetails(INFO, "self.currentOrderID = " + str(self.currentOrderID))
+                    sell_order_response_details = self.BrokerObject.getOrderDetails(self.currentOrderID)
+                    addLogDetails(INFO, sell_order_response_details)
+
     def exitBasedOnCondition(self, fromOptionPrice, reason):
         addLogDetails(INFO,
                       "Index Name: " + self.index_name + " User : " + self.user_email + " Exit Based on condition called based on " + reason)
@@ -322,28 +363,36 @@ class Scalper():
             if self.is_demo_enabled:
                 self.revertDummyOrder(fromOptionPrice)
             else:
+                addLogDetails(INFO," self.currentOrderID = " +str(self.currentOrderID))
                 if self.currentOrderID != "":
                     addLogDetails(INFO,
                                   "Index Name: " + self.index_name + " User :" + self.user_email + " OrderId: " + self.currentOrderID)
                     if self.BrokerObject.checkIfOrderExists(self.currentOrderID):
-                        sell_order_details = {VARIETY: STOPLOSS, EXCHANGE: NFO,
-                                              TRADING_SYMBOL: self.currentPremiumPlaced,
-                                              SYMBOL_TOKEN: self.BrokerObject.getTokenForSymbol(
-                                                  self.currentPremiumPlaced),
-                                              TRANSACTION_TYPE: SELL, ORDER_TYPE: MARKET, PRODUCT_TYPE: INTRADAY,
-                                              DURATION: DAY,
-                                              QUANTITY: self.user_qty}
-                        initial_sell_order = self.BrokerObject.placeOrder(sell_order_details)
-                        if initial_sell_order[MESSAGE].__eq__('SUCCESS'):
-                            sell_uniqueorderid = initial_sell_order["data"]["uniqueorderid"]
-                            sell_price = self.BrokerObject.getOrderDetails(sell_uniqueorderid)["averageprice"]
-                            self.total_price = float(self.total_price) + float(sell_price) - float(self.optionBuyPrice)
-                            data = {USER_ID: self.user_email, SCRIPT_NAME: self.currentPremiumPlaced,
-                                    QTY: self.user_qty, EXIT_PRICE: sell_price, STATUS: ORDER_EXITED}
-                            addLogDetails(INFO,
-                                          "Index Name: " + self.index_name + " User :" + self.user_email + " " + str(
-                                              data))
-                            addOrderBookDetails(data, False)
+                        addLogDetails(INFO,"currentOrderID is present "+str(self.currentOrderID))
+                        modify_order_details = {ORDERID: self.orderid, VARIETY: NORMAL, EXCHANGE: NFO,
+                                                TRADING_SYMBOL: self.currentPremiumPlaced,SYMBOL_TOKEN:self.BrokerObject.getTokenForSymbol(self.currentPremiumPlaced), TRANSACTION_TYPE: SELL,
+                                                ORDER_TYPE: MARKET, PRODUCT_TYPE: INTRADAY, DURATION: DAY,
+                                                QUANTITY: self.user_qty}
+                        addLogDetails(INFO,modify_order_details)
+                        modifyOrder_response = self.BrokerObject.modifyOrder(modify_order_details)
+
+                        addLogDetails(INFO,"modifyOrder_response = "+str(modifyOrder_response))
+
+                    else:
+                        addLogDetails(INFO,"self.BrokerObject.checkIfOrderExists is false")
+                        addLogDetails(INFO,self.BrokerObject.checkIfOrderExists(self.currentOrderID))
+
+                    sell_price = self.BrokerObject.getOrderDetails(self.currentOrderID)["averageprice"]
+                    self.total_price = float(self.total_price) + float(sell_price) - float(self.optionBuyPrice)
+                    self.isPEOrderPlaced = False
+                    self.isCEOrderPlaced = False
+                    data = {USER_ID: self.user_email, SCRIPT_NAME: self.currentPremiumPlaced,
+                            QTY: self.user_qty, EXIT_PRICE: sell_price, STATUS: ORDER_EXITED}
+                    addLogDetails(INFO,
+                                  "Index Name: " + self.index_name + " User :" + self.user_email + " " + str(
+                                      data))
+                    addOrderBookDetails(data, False)
+
         except Exception as e:
             addLogDetails(ERROR, str(self.index_name) + "exception in exitBasedOnCondition  -----  " + str(e))
 
@@ -388,3 +437,4 @@ class Scalper():
             return order_response
         else:
             addLogDetails(INFO, "No dummy orders present")
+

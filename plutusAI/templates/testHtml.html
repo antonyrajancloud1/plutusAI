@@ -1,188 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BN Scalper</title>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f8f8f8;
-        margin: 0;
-        padding: 20px;
-    }
-    h1 {
-        text-align: center;
-        color: #333;
-    }
-    #responseDiv {
-        margin-top: 20px;
-        padding: 20px;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        background-color: #eaf6ff;
-        font-size: 14px;
-        color: #333;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-    #scalperDetails {
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        max-width: 400px;
-        margin: 20px auto;
-    }
-    label {
-        display: block;
-        margin-bottom: 8px;
-        color: #333;
-        font-weight: bold;
-    }
-    input[type="text"], input[type="number"] {
-        width: calc(100% - 22px);
-        padding: 10px;
-        margin-bottom: 15px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 14px;
-    }
-    input[type="checkbox"] {
-        margin-right: 10px;
-    }
-    input[type="submit"] {
-        width: 100%;
-        padding: 10px;
-        background-color: #4CAF50;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 16px;
-    }
-    input[type="submit"]:hover {
-        background-color: #45a049;
-    }
-    button {
-        padding: 10px 20px;
-        background-color: #008CBA;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 16px;
-        margin: 10px;
-    }
-    button:hover {
-        background-color: #007BB5;
-    }
-    button:disabled {
-        background-color: #ddd;
-        cursor: not-allowed;
-    }
-    .button-container {
-        text-align: center;
-    }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Login Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body>
-    <h1>BN Scalper</h1>
-    <div class="button-container">
-        <button id="startButton">Start</button>
-        <button id="stopButton">Stop</button>
-    </div>
-    <div id="responseDiv">
-        <!-- Content will be dynamically updated by JavaScript -->
-    </div>
-    <div id="scalperDetails">
-        <form id="detailsForm">
-            <label for="strike">Strike:</label>
-            <input type="text" id="strike" name="strike" required><br><br>
-            <label for="target">Target:</label>
-            <input type="text" id="target" name="target" required><br><br>
-            <label for="demo">Demo Enabled:</label>
-            <input type="checkbox" id="demo" name="demo"><br><br>
-            <label for="lots">Lots:</label>
-            <input type="text" id="lots" name="lots" required><br><br>
-            <label for="on_candle_close">On Candle Close:</label>
-            <input type="checkbox" id="on_candle_close" name="on_candle_close"><br><br>
-            <input type="submit" value="Update">
+<body class="bg-gradient-to-r from-green-500 via-green-400 to-blue-500 min-h-screen flex items-center justify-center font-poppins">
+    <div class="bg-white p-10 rounded-2xl shadow-2xl w-full max-w-md transform transition-all duration-300 ease-in-out hover:scale-105">
+        <h2 class="text-4xl font-bold text-center mb-8 text-green-800">MADARA</h2>
+        <form id="loginForm" class="space-y-6">
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                <div class="relative rounded-md shadow-sm">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-envelope text-green-400"></i>
+                    </div>
+                    <input type="email" id="email" name="email" required aria-describedby="email-error" class="block w-full pl-10 pr-3 py-3 border-2 border-green-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-green-600 sm:text-sm transition duration-150 ease-in-out" placeholder="you@example.com">
+                </div>
+                <p id="email-error" class="mt-2 hidden text-sm text-red-600"></p>
+            </div>
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                <div class="relative rounded-md shadow-sm">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-lock text-green-400"></i>
+                    </div>
+                    <input type="password" id="password" name="password" required aria-describedby="password-error" class="block w-full pl-10 pr-3 py-3 border-2 border-green-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-green-600 sm:text-sm transition duration-150 ease-in-out" placeholder="••••••••">
+                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                        <button type="button" id="togglePassword" class="text-green-400 hover:text-green-500 focus:outline-none focus:text-green-500 transition ease-in-out duration-150">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <p id="password-error" class="mt-2 hidden text-sm text-red-600"></p>
+            </div>
+
+            <div>
+                <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 ease-in-out transform hover:scale-105">
+                    Sign in
+                </button>
+            </div>
         </form>
+
     </div>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const responseDiv = document.getElementById("responseDiv");
-            const startButton = document.getElementById("startButton");
-            const stopButton = document.getElementById("stopButton");
-            const form = document.getElementById("detailsForm");
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            let isValid = true;
+            const email = document.getElementById('email');
+            const password = document.getElementById('password');
+            const emailError = document.getElementById('email-error');
+            const passwordError = document.getElementById('password-error');
 
-            // Function to make API call
-            function makeAPICall(method, api_url, payload_data) {
-                const url = api_url;
-                const payload = payload_data;
-                const options = {
-                    method: method,
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
-                };
-
-                // Show loading indicator
-                responseDiv.innerHTML = 'Loading...';
-
-                fetch(url, options)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log('API Response:', data);
-                        responseDiv.innerHTML = data.message;
-                    })
-                    .catch(error => {
-                        console.error('Error making API call:', error);
-                        responseDiv.innerHTML = 'Error: ' + error.message;
-                    });
+            if (!email.value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+                emailError.textContent = 'Please enter a valid email address';
+                emailError.classList.remove('hidden');
+                isValid = false;
+            } else {
+                emailError.classList.add('hidden');
             }
 
-            // Event listeners for buttons
-            startButton.addEventListener("click", function() {
-                makeAPICall('POST', 'start_scalper', {"index_name": "bank_nifty", "strategy": "scalper"});
-            });
+            if (password.value.length < 8) {
+                passwordError.textContent = 'Password must be at least 8 characters long';
+                passwordError.classList.remove('hidden');
+                isValid = false;
+            } else {
+                passwordError.classList.add('hidden');
+            }
 
-            stopButton.addEventListener("click", function() {
-                makeAPICall('POST', 'stop_index', {"index_name": "bank_nifty", "strategy": "scalper"});
-            });
+            if (isValid) {
+                alert('Form submitted successfully!');
+            }
+        });
 
-            // Fetch initial data from API and populate form
-            fetch('get_scalper_details?index_name=bank_nifty')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('strike').value = data.strike;
-                    document.getElementById('target').value = data.target;
-                    document.getElementById('demo').checked = data.is_demo_trading_enabled;
-                    document.getElementById('on_candle_close').checked = data.on_candle_close;
-                    document.getElementById('lots').value = data.lots;
-                })
-                .catch(error => console.error('Error fetching data:', error));
-
-            // Submit form data to update API
-            form.addEventListener('submit', event => {
-                event.preventDefault(); // Prevent the default form submission
-
-                const formData = {
-                    index_name: "bank_nifty",
-                    strike: document.getElementById('strike').value,
-                    target: document.getElementById('target').value,
-                    on_candle_close: document.getElementById('on_candle_close').checked,
-                    lots: document.getElementById('lots').value,
-                };
-
-                makeAPICall('PUT', 'update_scalper_details', formData);
-            });
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const password = document.getElementById('password');
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            this.querySelector('i').classList.toggle('fa-eye');
+            this.querySelector('i').classList.toggle('fa-eye-slash');
         });
     </script>
 </body>

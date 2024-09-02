@@ -7,9 +7,12 @@ from plutusAI.server.supportResistance.AngelOneSR import SupportResistanceCalcul
 import requests
 
 def testerCheck(request):
-    # calculator = SupportResistanceCalculator("antonyrajan.d@gmail.com", INDIAN_INDEX,100)
-    # levels = calculator.fetch_support_resistance(NIFTY_BANK, "ONE_HOUR",60)
-
-    # print(levels)
+    user_email="antonyrajan.d@gmail.com"
+    BrokerObject = Broker(user_email, INDIAN_INDEX).BrokerObject
+    opt_symb=BrokerObject.getTokenForSymbol("BANKNIFTY04SEP2451300CE")
+    mod = {'orderid': '240902101267595', 'variety': 'NORMAL', 'exchange': 'NFO', 'tradingsymbol': "BANKNIFTY04SEP2451300CE","symboltoken": opt_symb,'transactiontype': 'BUY', 'ordertype': 'MARKET', 'producttype': 'INTRADAY', 'duration': 'DAY', 'quantity': 15}
+    print(mod)
+    data1=BrokerObject.modifyOrder(mod)
+    print(data1)
 
     return JsonResponse({STATUS: SUCCESS, MESSAGE: getBrokerageForLots(1,15)})

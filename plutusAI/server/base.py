@@ -686,8 +686,8 @@ def getBrokerageForLots(lots,qty):
     base_gst = 4.2
     runtime_gst = 0.6
     total_charges = (int(lots) * (exchange_tax + stamp_charges + sebi_fee + runtime_gst)) + base_gst + broker_price
-    brokerage = 2*(total_charges/(int(lots)*int(qty)))
-    return -brokerage
+    brokerage = float(2*(total_charges/(int(lots)*int(qty))))
+    return brokerage
 
 def getUserOrderBookDetails(user_email,index_name,is_today):
     try:

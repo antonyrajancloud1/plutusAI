@@ -120,7 +120,7 @@ class AngelOneBroker:
     def getOrderDetails(self, unique_order_id):
         order_details = self.smartApi.individual_order_details(unique_order_id)
         # print("getOrderDetails")
-        # print(order_details)
+        addLogDetails(INFO,order_details)
         return order_details['data']
 
     def getCurrentPremiumDetails(self, exchange, currentPremiumPlaced):
@@ -152,9 +152,9 @@ class AngelOneBroker:
     def checkIfOrderExists(self, order_details):
         try:
             order_details = self.smartApi.individual_order_details(order_details)
-            # print(order_details)
+            addLogDetails(INFO,order_details)
             order_status = order_details['data']['status']
-            if order_status.__eq__('trigger pending'):
+            if order_status.__eq__('trigger pending') or order_status.__eq__('open'):
                 return True
             else:
                 return False
