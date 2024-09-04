@@ -619,14 +619,41 @@ def get_next_minute_start():
     import datetime
     kolkata_tz = pytz.timezone('Asia/Kolkata')
     now_kolkata = datetime.datetime.now(kolkata_tz)
-    next_minute_start = now_kolkata.replace(second=0, microsecond=0) + datetime.timedelta(minutes=0)
-    return next_minute_start
+    next_minute_start = now_kolkata.replace(second=0, microsecond=0) + datetime.timedelta(minutes=1,seconds=00,milliseconds=000,microseconds=000)
+    print("Asia/Kolkata")
+    print(next_minute_start)
+    timestamp_ms = int(next_minute_start.timestamp() * 1000)
+
+    print(f"Timestamp in milliseconds: {timestamp_ms}")
+    return timestamp_ms
+
+def get_previous_minute_start(current_time_ms,with_sec):
+    import datetime
+    kolkata_tz = pytz.timezone('Asia/Kolkata')
+    timestamp_sec = current_time_ms / 1000
+    date_kolkata = datetime.datetime.fromtimestamp(timestamp_sec, kolkata_tz) - datetime.timedelta(minutes=1,seconds=00)
+    if with_sec:
+        return_date = date_kolkata.strftime('%Y-%m-%d %H:%M:%S')
+    else:
+        return_date = date_kolkata.strftime('%Y-%m-%d %H:%M')
+    print(return_date)
+    return return_date
 
 
 # Function to format time in HH:MM:SS
-def format_time(current_time):
-    return current_time.strftime('%Y-%m-%d %H:%M:%S')
+def format_time(current_time_ms):
+    import datetime
+    timestamp_sec = current_time_ms / 1000
+    kolkata_tz = pytz.timezone('Asia/Kolkata')
+    date_kolkata = datetime.datetime.fromtimestamp(timestamp_sec, kolkata_tz)
+    return date_kolkata.strftime('%Y-%m-%d %H:%M:%S')
 
+def format_time_in_min(current_time_ms):
+    import datetime
+    timestamp_sec = current_time_ms / 1000
+    kolkata_tz = pytz.timezone('Asia/Kolkata')
+    date_kolkata = datetime.datetime.fromtimestamp(timestamp_sec, kolkata_tz)
+    return date_kolkata.strftime('%Y-%m-%d %H:%M')
 
 def getCurrentIndexClose(index, start_date, end_date):
     index_data = IndexDetails.objects.filter(index_name=index)

@@ -179,12 +179,9 @@ def createAngleOneCandle():
     correlation_id = "admin_ws"
     symbol_token = BrokerObject.getTokenForSymbol(BANKNIFTY_FUTURES)
     tokens = [symbol_token]  # Define your tokens
-    global ltp_values_dict
     global start_time_dict
-    ltp_values_dict = {}
     start_time_dict = {}
     for tkn in tokens:
-        ltp_values_dict[tkn] = []
         start_time_dict[tkn] = get_next_minute_start()
 
     def createWebSocketObj(token, exchangeType):
@@ -217,26 +214,26 @@ def createAngleOneCandle():
             ltp = message['last_traded_price'] / 100.0  # Ensure LTP is a float
             data = {'token': token, 'ltp': ltp}
             print(data)
-
             for token in tokens:
-                ltp_values_dict[token].append(ltp)
-
-                if datetime.datetime.now(pytz.timezone('Asia/Kolkata')) >= start_time_dict[token] + datetime.timedelta(
-                        seconds=60):
-                    open_price = ltp_values_dict[token][0]
-                    high_price = max(ltp_values_dict[token])
-                    low_price = min(ltp_values_dict[token])
-                    close_price = ltp_values_dict[token][-1]
-                    print(
-                        f"{format_time(start_time_dict[token])} - Token: {token}, Open: {open_price}, High: {high_price}, Low: {low_price}, Close: {close_price}")
-                    candle_data = {"token": token, "time": format_time(start_time_dict[token]), "open": open_price,
+                candle_current_time=datetime.datetime.now(pytz.timezone('Asia/Kolkata'))
+                if  candle_current_time.timestamp() * 1000 >= start_time_dict[token] :
+                    addLogDetails(INFO,candle_current_time)
+                    from_time = get_previous_minute_start(start_time_dict[token],False)
+                    to_time = get_previous_minute_start(start_time_dict[token],False)
+                    candle_data_df = BrokerObject.getCandleData(NFO, token, from_time, to_time, "ONE_MINUTE")
+                    addLogDetails(INFO,candle_data_df)
+                    open_price = float(candle_data_df.loc[0, OPEN])
+                    high_price =float(candle_data_df.loc[0, HIGH])
+                    low_price = float(candle_data_df.loc[0, LOW])
+                    close_price = float(candle_data_df.loc[0, CLOSE])
+                    candle_time=candle_data_df.loc[0, CANDLE_TIMESTAMP]
+                    candle_time = pd.to_datetime(candle_time)
+                    candle_time = candle_time.strftime('%Y-%m-%d %H:%M:%S')
+                    candle_data = {"token": token, "time": candle_time, "open": open_price,
                                    "high": high_price, "low": low_price, "close": close_price}
-
                     update_candle_data_to_table(candle_data)
-                    print("Candle data pushed")
-                    ltp_values_dict[token] = []
+                    addLogDetails(INFO,candle_data)
                     start_time_dict[token] = get_next_minute_start()
-
             update_ltp_to_table(data)
         except Exception as e:
             print(e)
@@ -303,8 +300,8 @@ def angelOneWSNSE():
     nse_tokens = [99926000, 99926009, 99926037]  # Tokens for spot
     nfo_tokens = [35089]  # Tokens for futures
 
-    global ltp_values_dict, start_time_dict
-    ltp_values_dict = {}
+    global start_time_dict
+    # ltp_values_dict = {}
     start_time_dict = {}
 
     def on_open(wsapp):
