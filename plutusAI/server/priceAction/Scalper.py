@@ -256,8 +256,8 @@ class Scalper():
             # to_time = "2024-07-19 13:46"
             from_time = convert_datetime_string(from_time)
             to_time = convert_datetime_string(to_time)
-            print(from_time)
-            print(to_time)
+            # print(from_time)
+            # print(to_time)
             start_time = datetime(from_time['year'], from_time['month'], from_time['day'], from_time['hour'],
                                   from_time['minute'], from_time['second'])
             end_time = datetime(to_time['year'], to_time['month'], to_time['day'], to_time['hour'], to_time['minute'],
@@ -269,7 +269,7 @@ class Scalper():
             df['high'] = pd.to_numeric(df['high'], errors='coerce')
             df['low'] = pd.to_numeric(df['low'], errors='coerce')
             df['close'] = pd.to_numeric(df['close'], errors='coerce')
-            print(df)
+            # print(df)
             return df
 
             # return self.BrokerObject.getCandleData(self.exchange, self.symbol_token, from_time, to_time)

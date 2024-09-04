@@ -620,11 +620,7 @@ def get_next_minute_start():
     kolkata_tz = pytz.timezone('Asia/Kolkata')
     now_kolkata = datetime.datetime.now(kolkata_tz)
     next_minute_start = now_kolkata.replace(second=0, microsecond=0) + datetime.timedelta(minutes=1,seconds=00,milliseconds=000,microseconds=000)
-    print("Asia/Kolkata")
-    print(next_minute_start)
     timestamp_ms = int(next_minute_start.timestamp() * 1000)
-
-    print(f"Timestamp in milliseconds: {timestamp_ms}")
     return timestamp_ms
 
 def get_previous_minute_start(current_time_ms,with_sec):
@@ -636,7 +632,7 @@ def get_previous_minute_start(current_time_ms,with_sec):
         return_date = date_kolkata.strftime('%Y-%m-%d %H:%M:%S')
     else:
         return_date = date_kolkata.strftime('%Y-%m-%d %H:%M')
-    print(return_date)
+    # print(return_date)
     return return_date
 
 

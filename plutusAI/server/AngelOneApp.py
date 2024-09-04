@@ -217,11 +217,11 @@ def createAngleOneCandle():
             for token in tokens:
                 candle_current_time=datetime.datetime.now(pytz.timezone('Asia/Kolkata'))
                 if  candle_current_time.timestamp() * 1000 >= start_time_dict[token] :
-                    addLogDetails(INFO,candle_current_time)
+                    # addLogDetails(INFO,candle_current_time)
                     from_time = get_previous_minute_start(start_time_dict[token],False)
                     to_time = get_previous_minute_start(start_time_dict[token],False)
                     candle_data_df = BrokerObject.getCandleData(NFO, token, from_time, to_time, "ONE_MINUTE")
-                    addLogDetails(INFO,candle_data_df)
+                    # addLogDetails(INFO,candle_data_df)
                     open_price = float(candle_data_df.loc[0, OPEN])
                     high_price =float(candle_data_df.loc[0, HIGH])
                     low_price = float(candle_data_df.loc[0, LOW])
