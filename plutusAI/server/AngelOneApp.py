@@ -9,7 +9,8 @@ from plutusAI.server.broker.AngelOneBroker import AngelOneBroker
 from plutusAI.server.constants import *
 from celery import current_task
 
-import datetime
+# import datetime
+from datetime import datetime, time
 
 @shared_task
 def createAngleOne():
@@ -161,6 +162,7 @@ def createV1Socket():
 
 @shared_task
 def createAngleOneCandle():
+    kolkata_tz=pytz.timezone('Asia/Kolkata')
     task_id = current_task.request.id
 
     # Create a job entry in the database
@@ -182,7 +184,24 @@ def createAngleOneCandle():
     global start_time_dict
     start_time_dict = {}
     for tkn in tokens:
-        start_time_dict[tkn] = get_next_minute_start()
+        # started_time=get_next_minute_start()
+
+        given_timestamp_millis =get_next_minute_start()
+        timestamp_seconds = given_timestamp_millis / 1000
+        kolkata_tz = pytz.timezone('Asia/Kolkata')
+        dt_utc = datetime.fromtimestamp(timestamp_seconds, pytz.utc)
+        dt_kolkata = dt_utc.astimezone(kolkata_tz)
+        nine_fifteen_am = kolkata_tz.localize(datetime(dt_kolkata.year, dt_kolkata.month, dt_kolkata.day, 9, 15))
+        if dt_kolkata > nine_fifteen_am:
+            result = dt_kolkata
+        else:
+            result = nine_fifteen_am
+
+        result_timestamp = int(result.timestamp() * 1000)
+        print("Resulting datetime:", result_timestamp)
+        start_time_dict[tkn] = result_timestamp
+        print(start_time_dict)
+
 
     def createWebSocketObj(token, exchangeType):
         global mode
@@ -215,7 +234,7 @@ def createAngleOneCandle():
             data = {'token': token, 'ltp': ltp}
             print(data)
             for token in tokens:
-                candle_current_time=datetime.datetime.now(pytz.timezone('Asia/Kolkata'))
+                candle_current_time=datetime.now(kolkata_tz)
                 if  candle_current_time.timestamp() * 1000 >= start_time_dict[token] :
                     # addLogDetails(INFO,candle_current_time)
                     from_time = get_previous_minute_start(start_time_dict[token],False)
