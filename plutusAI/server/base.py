@@ -635,6 +635,18 @@ def get_previous_minute_start(current_time_ms,with_sec):
     # print(return_date)
     return return_date
 
+def get_next_minute_start_ms(current_time_ms,with_sec):
+    import datetime
+    kolkata_tz = pytz.timezone('Asia/Kolkata')
+    timestamp_sec = current_time_ms / 1000
+    date_kolkata = datetime.datetime.fromtimestamp(timestamp_sec, kolkata_tz) + datetime.timedelta(minutes=1,seconds=00)
+    if with_sec:
+        return_date = date_kolkata.strftime('%Y-%m-%d %H:%M:%S')
+    else:
+        return_date = date_kolkata.strftime('%Y-%m-%d %H:%M')
+    # print(return_date)
+    return return_date
+
 
 # Function to format time in HH:MM:SS
 def format_time(current_time_ms):

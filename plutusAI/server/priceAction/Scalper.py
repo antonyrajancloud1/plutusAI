@@ -483,7 +483,7 @@ class Scalper():
                                       f"Check order exists result: {self.BrokerObject.checkIfOrderExists(self.currentOrderID)}")
 
                     sell_price = float(self.BrokerObject.getOrderDetails(self.currentOrderID)["averageprice"])
-                    self.total_price = float(self.total_price) + sell_price - float(self.optionBuyPrice)
+                    self.total_price = float(self.total_price) - (sell_price - float(self.optionBuyPrice))
                     self.isPEOrderPlaced = False
                     self.isCEOrderPlaced = False
 
