@@ -44,7 +44,7 @@ start_process() {
 check_and_start_service mysql
 check_and_start_service redis-server
 start_process "python3 manage.py runserver 0.0.0.0:8000" "django.log"
-start_process "celery -A plutus.celery worker -l info --concurrency=20"
+start_process "celery -A plutus.celery worker -l info  --autoscale=100,1"
 
 # Create a named pipe to capture cloudflared output
 fifo=$(mktemp -u)

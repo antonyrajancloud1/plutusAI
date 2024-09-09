@@ -185,13 +185,13 @@ def createAngleOneCandle():
     start_time_dict = {}
     for tkn in tokens:
         # started_time=get_next_minute_start()
-        # given_timestamp_millis=1725594013000
+        # given_timestamp_millis=1725853100000
         given_timestamp_millis =get_next_minute_start()
         timestamp_seconds = given_timestamp_millis / 1000
         kolkata_tz = pytz.timezone('Asia/Kolkata')
         dt_utc = datetime.fromtimestamp(timestamp_seconds, pytz.utc)
         dt_kolkata = dt_utc.astimezone(kolkata_tz)
-        nine_fifteen_am = kolkata_tz.localize(datetime(dt_kolkata.year, dt_kolkata.month, dt_kolkata.day, 9, 15))
+        nine_fifteen_am = kolkata_tz.localize(datetime(dt_kolkata.year, dt_kolkata.month, dt_kolkata.day, 9, 16))
         if dt_kolkata > nine_fifteen_am:
             result = dt_kolkata
         else:
@@ -238,7 +238,7 @@ def createAngleOneCandle():
                 if  candle_current_time.timestamp() * 1000 >= start_time_dict[token] :
                     addLogDetails(INFO,"candle_current_time >= started time")
                     from_time = get_previous_minute_start(start_time_dict[token],False)
-                    to_time = get_previous_minute_start(start_time_dict[token],False)
+                    to_time = format_time_in_min(start_time_dict[token])
                     candle_data_df = BrokerObject.getCandleData(NFO, token, from_time, to_time, "ONE_MINUTE")
                     addLogDetails(INFO,candle_data_df)
                     open_price = float(candle_data_df.loc[0, OPEN])

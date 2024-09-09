@@ -15,6 +15,6 @@ def testerCheck(request):
     user_broker_data = BrokerDetails.objects.filter(user_id=ADMIN_USER_ID, index_group=INDIAN_INDEX)
     BrokerObject = AngelOneBroker(user_broker_data)
 
-    candle_data_df = BrokerObject.getCandleData(NFO, 35075, "2024-09-06 10:37", "2024-09-06 10:38", "ONE_MINUTE")
+    candle_data_df = BrokerObject.getCandleData(NFO, 35075, "2024-09-09 09:53", "2024-09-09 09:54", "ONE_MINUTE")
     print(candle_data_df)
     return JsonResponse({STATUS: SUCCESS, MESSAGE: getBrokerageForLots(1,15)})

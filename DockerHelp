@@ -12,6 +12,8 @@ docker start madara_container
 ######### Connect to Docker container ######
 docker exec -it madara_container /bin/bash
 
+sudo docker exec -it production /bin/bash
+
 
 ######### To delete #########
 docker rm 3885120897f1
