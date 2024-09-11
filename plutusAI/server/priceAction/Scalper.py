@@ -179,7 +179,7 @@ class Scalper():
 
         while not self.target_reached:
             try:
-                time.sleep(1)
+                time.sleep(0.5)
                 candle_data = self.getAllCandleData(self.started_time, self.to_time)
 
                 if candle_data is None:
@@ -216,11 +216,11 @@ class Scalper():
                     self.currentOptionPrice = self.BrokerObject.getLtpForPremium(self.optionDetails)
 
                     if self.currentOptionPrice != CONNECTION_ERROR:
-                        total_gain = float(self.currentOptionPrice) + float(self.total_price)
-                        target_value = float(self.optionBuyPrice) + float(self.user_target)
+                        total_gain = float(self.currentOptionPrice)
+                        target_value = float(self.optionBuyPrice) + float(self.user_target) + float(self.total_price)
 
                         if total_gain >= target_value:
-                            addLogDetails(INFO,f"Target reached: {total_gain}")
+                            addLogDetails(INFO,f"{self.user_email} Target reached: {total_gain}")
                             self.exitBasedOnCondition(self.currentPremiumValue, "Target Reached")
                             self.target_reached = True
 
