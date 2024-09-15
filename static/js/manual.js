@@ -131,7 +131,7 @@ async function saveOrderChanges(index_name) {
 
         const result = await response.json();
         if (result.status === 'success') {
-            showResult('Order updated successfully.', true);
+            showResult('Index updated successfully.', true);
             document.getElementById('editModal').style.display = 'none';
             fetchData(); // Refresh table after changes
         } else {
