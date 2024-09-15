@@ -134,9 +134,12 @@ tbody tr:hover {
 }
 
 #editOrderForm label {
-    width: 150px; /* Adjust width as needed */
-    margin-right: 10px;
-    font-weight: bold;
+
+    width: 100px;
+  margin-right: 10px;
+  font-weight: bold;
+  top: 30px;
+  position: relative;
 }
 
 #editOrderForm input[type="text"] {
@@ -145,6 +148,11 @@ tbody tr:hover {
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 16px;
+      position: relative;
+      width: 100px;
+  height: 120px;
+  left:100px
+
 }
 
 #editOrderForm .form-actions {
@@ -153,25 +161,34 @@ tbody tr:hover {
     gap: 10px;
 }
 
-#editOrderForm button {
-    background-color: #007BFF;
-    color: white;
+#editOrderForm  button {
+
+
     border: none;
     padding: 10px 20px;
     border-radius: 4px;
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s;
+    width: 200px;
+    height: 40px;
 }
+#editOrderForm #saveChanges {
+    background-color: #007BFF;
+    color: white;
+    left:10px;
+    top:45px;
+    position: relative;
 
-#editOrderForm button:hover {
-    background-color: #0056b3;
 }
-
 #editOrderForm button#cancelEdit {
-    background-color: #6c757d;
+    color: black;
+    background-color: #dadada;
+    position: relative;
+    left: 250px;
 }
+
 
 #editOrderForm button#cancelEdit:hover {
-    background-color: #5a6268;
+    background-color: grey;
 }
