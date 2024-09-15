@@ -19,7 +19,6 @@ from celery import shared_task
 from celery.result import AsyncResult
 from logging.handlers import TimedRotatingFileHandler
 
-# from plutusAI.server.AngelOneApp import *
 
 from django.db.models import Sum
 
@@ -764,3 +763,10 @@ def getUserDashboardDetails(user_email,is_today):
         print(ob_data.upper().__contains__(index_name))
         all_data[index_name] = ob_data
     return all_data
+
+def updateManualOrderDetails(user_email, index, data):
+    try:
+        user_data = ManualOrders.objects.filter(user_id=user_email, index_name=index)
+        user_data.update(**data)
+    except Exception as e:
+        addLogDetails(ERROR, str(e))

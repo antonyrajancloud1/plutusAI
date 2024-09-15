@@ -151,8 +151,8 @@ class Scalper():
                     self.currentOptionPrice = self.BrokerObject.getLtpForPremium(self.optionDetails)
 
                     if self.currentOptionPrice != CONNECTION_ERROR:
-                        total_gain = float(self.currentOptionPrice) + float(self.total_price)
-                        target_value = float(self.optionBuyPrice) + float(self.user_target)
+                        total_gain = float(self.currentOptionPrice)
+                        target_value = float(self.optionBuyPrice) + float(self.user_target) + float(self.total_price)
 
                         if total_gain >= target_value:
                             addLogDetails(INFO,f"Target reached: {total_gain}")

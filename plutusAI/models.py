@@ -168,10 +168,13 @@ class ManualOrders(models.Model):
     order_status = models.CharField(max_length=100, default=None)
     strike = models.CharField(max_length=100, default=None)
     lots = models.CharField(max_length=100, default=None)
+    trigger = models.CharField(max_length=100, default=None)
     time = models.CharField(max_length=100, default=None)
-    is_demo_trading_enabled = models.BooleanField(default=True)
+    order_id = models.CharField(max_length=100, default=None)
+    unique_order_id = models.CharField(max_length=100, default=None)
+    current_premium = models.CharField(max_length=100, default=None)
     def __str__(self):
-        return f"{self.user_id} - {self.index_name} - {self.target} - {self.stop_loss} - {self.order_status} - {self.time} - {self.is_demo_trading_enabled}"
+        return f"{self.user_id} - {self.index_name} - {self.target} - {self.stop_loss} - {self.order_status} - {self.time}"
 
     @classmethod
     def search_by_name(cls, query):

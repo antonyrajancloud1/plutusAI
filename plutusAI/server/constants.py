@@ -49,6 +49,13 @@ ADMIN_CONSOLE="admin_console"
 CHECK_TASK_STATUS="check_task_status"
 BUY_MANUAL="buy_manual"
 REGENERATE_TOKEN = "regenrate_token"
+MANUAL_DETAILS="manual_details"
+UPDATE_MANUAL_DETAILS="update_manual_details"
+PLACE_ORDER_BUY="place_order_buy"
+PLACE_ORDER_SELL="place_order_sell"
+CE="CE"
+PE="PE"
+
 #### DATA CONSTANTS ####
 ID = "id"
 USER_NAME = "user_name"

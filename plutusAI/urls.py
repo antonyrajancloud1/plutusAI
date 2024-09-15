@@ -1,4 +1,4 @@
-from django.urls import path, re_path
+from django.urls import path
 from plutusAI.server.constants import *
 from plutusAI.server.tester import testerCheck
 from . import views
@@ -37,7 +37,10 @@ urlpatterns = [
     path(REGENERATE_TOKEN, views.reGenerateAccessToken, name=REGENERATE_TOKEN),
 
     path(BUY_MANUAL, views.buy_manual_order, name=BUY_MANUAL),
-    # path(BUY_MANUAL, views.buy_manual_order, name=BUY_MANUAL),
+    path(MANUAL_DETAILS, views.getAllManualOrderDetails, name=MANUAL_DETAILS),
+    path(PLACE_ORDER_BUY, views.placeBuyOrderManual, name=PLACE_ORDER_BUY),
+    path(PLACE_ORDER_SELL, views.placeSellOrderManual, name=PLACE_ORDER_SELL),
+    path(UPDATE_MANUAL_DETAILS, views.update_manual_order_values, name=UPDATE_MANUAL_DETAILS),
     path("test", testerCheck, name="test"),
-    path("scalper", views.html_test, name="scalperHtml"),
+    path("manual", views.html_test, name="manual"),
 ]

@@ -19,6 +19,7 @@ from datetime import datetime, timedelta
 
 from plutusAI.server.broker.AngelOne.AngelOneAuth import AngelOneAuth
 from .server.broker.Broker import Broker
+from .server.manualOrder import placeManualOrder
 from .server.websocket.WebsocketAngelOne import WebsocketAngelOne
 
 
@@ -492,7 +493,7 @@ def start_scalper(request):
 @require_http_methods([GET])
 def html_test(request):
     if check_user_session(request):
-        return render(request, "testHtml.html")
+        return render(request, "manual.html")
     else:
         return redirect(LOGIN_URL)
 
@@ -662,3 +663,84 @@ def reGenerateAccessToken(request):
         return JsonResponse({STATUS: SUCCESS, MESSAGE: TOKEN_GENERATED,TASK_STATUS:	True })
     else:
         return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+
+
+@csrf_exempt
+@require_http_methods([GET])
+def getAllManualOrderDetails(request):
+    if not check_user_session(request):
+        return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+
+    user_email = get_user_email(request)
+    index = request.GET.get("index_name")
+
+    if index:
+        user_manual_details = ManualOrders.objects.filter(user_id=user_email, index_name=index)
+    else:
+        user_manual_details = ManualOrders.objects.filter(user_id=user_email)
+
+    user_manual_details = list(user_manual_details.values())
+
+    if user_manual_details:
+        return JsonResponse({STATUS: SUCCESS, MESSAGE: user_manual_details, TASK_STATUS: True})
+    else:
+        return JsonResponse({STATUS: FAILED, MESSAGE: INDEX_NOT_FOUND if index else 'No orders found'})
+
+
+
+@csrf_exempt
+@require_http_methods([POST])
+def placeBuyOrderManual(request):
+    if check_user_session(request):
+        user_email = get_user_email(request)
+        data = json.loads(request.body)
+        data = remove_spaces_from_json(data)
+        return placeManualOrder(user_email,data,CE)
+    else:
+        return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+
+@csrf_exempt
+@require_http_methods([POST])
+def placeSellOrderManual(request):
+    if check_user_session(request):
+        user_email = get_user_email(request)
+        data = json.loads(request.body)
+        data = remove_spaces_from_json(data)
+        return placeManualOrder(user_email,data,PE)
+    else:
+        return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+
+@login_required
+@csrf_exempt
+@require_http_methods([PUT])
+def update_manual_order_values(request):
+    try:
+        if check_user_session(request):
+            user_email = get_user_email(request)
+            data = json.loads(request.body)
+            data = remove_spaces_from_json(data)
+            index_name = data.get(INDEX_NAME)
+
+            validate_numeric_fields(data)
+            validate_float_field(data)
+            validate_levels(data)
+            user_data = ManualOrders.objects.filter(
+                user_id=user_email, index_name=index_name
+            )
+            user_data.update(**data)
+            updated_data = ManualOrders.objects.filter(
+                user_id=user_email, index_name=index_name
+            )
+            updated_list = remove_data_from_list(list(updated_data.values()))[0]
+
+            return JsonResponse(
+                {STATUS: SUCCESS, MESSAGE: CONFIG_VALUES_UPDATED, "data": updated_list}
+            )
+        else:
+            return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+    except json.JSONDecodeError as e:
+        return JsonResponse({STATUS: FAILED, MESSAGE: INVALID_JSON})
+    except ValueError as e:
+        return JsonResponse({STATUS: FAILED, MESSAGE: str(e)}, status=400)
+    except Exception as e:
+        return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
