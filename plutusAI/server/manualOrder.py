@@ -36,7 +36,7 @@ def placeManualOrder(user_email, user_index_data, OrderType):
             EXCHANGE: NFO,
             TRADING_SYMBOL: currentPremiumPlaced,
             SYMBOL_TOKEN: BrokerObject.getTokenForSymbol(currentPremiumPlaced),
-            TRANSACTION_TYPE: SELL,
+            TRANSACTION_TYPE: BUY,
             ORDER_TYPE: ORDER_TYPE_SL,
             PRICE: price,
             TRIGGER_PRICE: trigger_price,
@@ -44,7 +44,7 @@ def placeManualOrder(user_email, user_index_data, OrderType):
             DURATION: DAY,
             QUANTITY: user_qty
         }
-
+        print(buy_order_details)
         order_response = BrokerObject.placeOrder(buy_order_details)
         order_response_data = order_response.get("data", {})
         data = {
@@ -55,9 +55,9 @@ def placeManualOrder(user_email, user_index_data, OrderType):
         addLogDetails(INFO, f"Manual Order placed UserId ={user_email} LTP while placing order : {ltpDetails} data = {buy_order_details}")
         updateManualOrderDetails(user_email, index_name, data=data)
         order_response_from_broker = BrokerObject.getOrderDetails(order_response_data.get("uniqueorderid"))
-
+        print(order_response_from_broker)
         addLogDetails(INFO,f"Manual Order placed UserId ={user_email} data = {order_response}")
-        return JsonResponse({STATUS: SUCCESS, MESSAGE: order_response_from_broker.get("text", ""), TASK_STATUS: True})
+        return JsonResponse({STATUS: SUCCESS, MESSAGE: str(order_response_from_broker), TASK_STATUS: True})
 
     except Exception as e:
         logging.error(str(e))

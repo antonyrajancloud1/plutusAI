@@ -9,8 +9,8 @@ from plutusAI.server.broker.AngelOneBroker import AngelOneBroker
 from plutusAI.server.constants import *
 from celery import current_task
 
-# import datetime
-from datetime import datetime, time
+import datetime
+# from datetime import datetime, time
 
 @shared_task
 def createAngleOne():
@@ -117,10 +117,12 @@ def createHttpData():
     allData.append(BNData)
     allData.append(FNData)
     addLogDetails(INFO, "Expiry Details updated from createHttpData")
+    addLogDetails(INFO, allData)
     while True:
         for data in allData:
             value = {TOKEN: data[SYMBOL_TOKEN], LTP: str(BrokerObject.getLtpForPremium(data))}
-            if value[LTP] != None:
+            print(value)
+            if value[LTP] is not None:
                 update_ltp_to_table(value)
                 time.sleep(1)
 
