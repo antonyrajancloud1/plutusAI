@@ -37,19 +37,19 @@ def placeManualOrder(user_email, user_index_data, OrderType):
         target = price+target
         stop_loss=price-stop_loss
 
-        buy_order_details = {
-            VARIETY: STOPLOSS,
-            EXCHANGE: NFO,
-            TRADING_SYMBOL: currentPremiumPlaced,
-            SYMBOL_TOKEN: BrokerObject.getTokenForSymbol(currentPremiumPlaced),
-            TRANSACTION_TYPE: BUY,
-            ORDER_TYPE: ORDER_TYPE_SL,
-            PRICE: price,
-            TRIGGER_PRICE: trigger_price,
-            PRODUCT_TYPE: INTRADAY,
-            DURATION: DAY,
-            QUANTITY: user_qty
-        }
+        # buy_order_details = {
+        #     VARIETY: STOPLOSS,
+        #     EXCHANGE: NFO,
+        #     TRADING_SYMBOL: currentPremiumPlaced,
+        #     SYMBOL_TOKEN: BrokerObject.getTokenForSymbol(currentPremiumPlaced),
+        #     TRANSACTION_TYPE: BUY,
+        #     ORDER_TYPE: ORDER_TYPE_SL,
+        #     PRICE: price,
+        #     TRIGGER_PRICE: trigger_price,
+        #     PRODUCT_TYPE: INTRADAY,
+        #     DURATION: DAY,
+        #     QUANTITY: user_qty
+        # }
 
         # buy_order_details = {
         #     VARIETY: "ROBO",
@@ -65,6 +65,17 @@ def placeManualOrder(user_email, user_index_data, OrderType):
         #     "squareoff":target,
         #     "stoploss":stop_loss,
         # }
+        buy_order_details = {
+            VARIETY: STOPLOSS,
+            EXCHANGE: NFO,
+            TRADING_SYMBOL: currentPremiumPlaced,
+            SYMBOL_TOKEN: BrokerObject.getTokenForSymbol(currentPremiumPlaced),
+            TRANSACTION_TYPE: BUY,
+            ORDER_TYPE: MARKET,
+            PRODUCT_TYPE: INTRADAY,
+            DURATION: DAY,
+            QUANTITY: user_qty
+        }
         print(buy_order_details)
         order_response = BrokerObject.placeOrder(buy_order_details)
         order_response_data = order_response.get("data", {})
