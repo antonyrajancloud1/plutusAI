@@ -53,6 +53,12 @@ MANUAL_DETAILS="manual_details"
 UPDATE_MANUAL_DETAILS="update_manual_details"
 PLACE_ORDER_BUY="place_order_buy"
 PLACE_ORDER_SELL="place_order_sell"
+TRIGGER_BUY="trigger_buy"
+TRIGGER_SELL="trigger_sell"
+GET_AUTH_TOKEN="get_auth_token"
+GENERATE_AUTH_TOKEN="generate_auth_token"
+
+MANUAL="manual"
 CE="CE"
 PE="PE"
 
@@ -138,7 +144,7 @@ SCALPER='scalper'
 NSE_OPEN_TIME = "09:15"
 START_SCALPER= "start_scalper"
 STOP_SCALPER="stop_scalper"
-BANKNIFTY_FUTURES='BANKNIFTY25SEP24FUT'
+BANKNIFTY_FUTURES='BANKNIFTY30OCT24FUT'
 #### INDEX DEFAULT VALUES ####
 NIFTY_DEFAULT_VALUES = {
     "index_name": "nifty",
@@ -235,7 +241,7 @@ PRICE = "price"
 TRIGGER_PRICE = "triggerprice"
 ORDERID = "orderid"
 STOPLOSS = "STOPLOSS"
-
+STOP_LOSS = "stop_loss"
 ##error messages
 INCORRECT_INPUT = "Invalid Entries Found For Field "
 

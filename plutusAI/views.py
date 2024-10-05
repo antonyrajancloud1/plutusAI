@@ -22,6 +22,10 @@ from .server.broker.Broker import Broker
 from .server.manualOrder import placeManualOrder
 from .server.websocket.WebsocketAngelOne import WebsocketAngelOne
 
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.authtoken.models import Token
 
 def invaid_url(request, exception):
     return render(request, "invaid_url.html", status=404)
@@ -687,7 +691,6 @@ def getAllManualOrderDetails(request):
         return JsonResponse({STATUS: FAILED, MESSAGE: INDEX_NOT_FOUND if index else 'No orders found'})
 
 
-
 @csrf_exempt
 @require_http_methods([POST])
 def placeBuyOrderManual(request):
@@ -744,3 +747,60 @@ def update_manual_order_values(request):
         return JsonResponse({STATUS: FAILED, MESSAGE: str(e)}, status=400)
     except Exception as e:
         return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
+
+
+@csrf_exempt
+@require_http_methods([POST])
+@api_view([POST])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def placeBuyOrderManualWebHook(request):
+    if check_user_session(request):
+        user_email = get_user_email(request)
+        data = json.loads(request.body)
+        data = remove_spaces_from_json(data)
+        return placeManualOrder(user_email,data,CE)
+    else:
+        return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+
+@csrf_exempt
+@require_http_methods([POST])
+@api_view([POST])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def placeSellOrderManualWebHook(request):
+    if check_user_session(request):
+        user_email = get_user_email(request)
+        data = json.loads(request.body)
+        data = remove_spaces_from_json(data)
+        return placeManualOrder(user_email,data,PE)
+    else:
+        return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+
+
+@csrf_exempt
+@require_http_methods([POST])
+def getAuthToken(request):
+    if check_user_session(request):
+        user = User.objects.filter(username=request.user).first()
+        if user is None:
+            # Handle the case where the user doesn't exist
+            return JsonResponse({'error': 'User not found'}, status=400)
+        token, created = Token.objects.get_or_create(user=user)
+        return JsonResponse({STATUS: SUCCESS, MESSAGE: str(token.key)})
+    else:
+        return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+
+@csrf_exempt
+@require_http_methods([POST])
+def regenerateAuthToken(request):
+    if check_user_session(request):
+        user = User.objects.filter(username=request.user).first()
+        if user is None:
+            # Handle the case where the user doesn't exist
+            return JsonResponse({'error': 'User not found'}, status=400)
+        Token.objects.filter(user=user).delete()
+        new_token, created = Token.objects.get_or_create(user=user)
+        return JsonResponse({STATUS: SUCCESS, MESSAGE: str(new_token.key)})
+    else:
+        return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})

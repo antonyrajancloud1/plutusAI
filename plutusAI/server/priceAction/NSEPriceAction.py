@@ -330,13 +330,14 @@ class NSEPriceAction():
                                               float(self.optionBuyPrice) + self.safe_sl))
                             price = int(self.optionBuyPrice) + self.safe_sl
                             trigger_price = int(self.optionBuyPrice) + self.safe_sl
-                            modify_order_details = {ORDERID: self.currentOrderID, VARIETY: NORMAL, EXCHANGE: NSE,
+                            modify_order_details = {ORDERID: self.currentExitOrderID, VARIETY: NORMAL, EXCHANGE: NSE,
                                                     TRADING_SYMBOL: self.currentPremiumPlaced, TRANSACTION_TYPE: SELL,
                                                     ORDER_TYPE: ORDER_TYPE_SL, PRICE: price,
                                                     TRIGGER_PRICE: trigger_price, PRODUCT_TYPE: INTRADAY, DURATION: DAY,
                                                     QUANTITY: self.user_qty}
                             self.currentOrderID = self.BrokerObject.modifyOrder(modify_order_details)
                             # currentOrderID = sell_order
+                            self.trailedSLPrice=trigger_price
                             addLogDetails(INFO,
                                           "Index Name: " + self.index_name + " User :" + self.user_email + " Sell order placed with target || Order ID = " + str(
                                               self.currentOrderID))
@@ -473,7 +474,7 @@ class NSEPriceAction():
                     self.optionDetails = self.BrokerObject.getCurrentPremiumDetails(NFO, self.currentPremiumPlaced)
                     addLogDetails(INFO,
                                   "Index Name: " + self.index_name + " User :" + self.user_email + " BuyOrderPlaced : \t" + self.currentPremiumPlaced + "Entry price: \t" + str(
-                                      self.optionBuyPrice))
+                                      self.optionBuyPrice) + "self.currentOrderID  = "+self.currentOrderID )
                     updateIndexConfiguration(user_email=self.user_email, index=self.index_name,
                                              data={'status': 'Long :: ' + str(self.IndexLTP)})
                     addLogDetails(INFO, "Index Name: " + self.index_name + " User :" + self.user_email + " Long placed")
@@ -508,7 +509,7 @@ class NSEPriceAction():
                     self.currentOrderID = order_response['data']['orderid']
                     uniqueorderid = order_response["data"]["uniqueorderid"]
                     self.optionBuyPrice = self.BrokerObject.getOrderDetails(uniqueorderid)["averageprice"]
-                    self.isCEOrderPlaced = True
+                    # self.isCEOrderPlaced = True
                     data = {USER_ID: self.user_email, SCRIPT_NAME: self.currentPremiumPlaced, QTY: self.qty,
                             ENTRY_PRICE: self.optionBuyPrice, STATUS: ORDER_PLACED, STRATEGY: STRATEGY_HUNTER,INDEX_NAME:self.index_name}
                     addOrderBookDetails(data, True)
@@ -522,12 +523,14 @@ class NSEPriceAction():
                     initial_sell_order = self.BrokerObject.placeOrder(sell_order_details)
                     addLogDetails(INFO, "Index Name: " + self.index_name + " User :" + self.user_email + " " + str(
                         initial_sell_order))
-                    self.currentOrderID = initial_sell_order["data"]["orderid"]
+                    self.currentOrderID = initial_sell_order["data"]["uniqueorderid"]
+                    self.currentExitOrderID = initial_sell_order["data"]["orderid"]
                     self.isStoplossPlaced = True
+                    self.isPEOrderPlaced = True
                     self.optionDetails = self.BrokerObject.getCurrentPremiumDetails(NFO, self.currentPremiumPlaced)
                     addLogDetails(INFO,
                                   "Index Name: " + self.index_name + " User :" + self.user_email + " BuyOrderPlaced : \t" + self.currentPremiumPlaced + "Entry price: \t" + str(
-                                      self.optionBuyPrice))
+                                      self.optionBuyPrice) + "self.currentOrderID  = "+self.currentOrderID )
                     updateIndexConfiguration(user_email=self.user_email, index=self.index_name,
                                              data={'status': 'Short :: ' + str(self.IndexLTP)})
                     addLogDetails(INFO,

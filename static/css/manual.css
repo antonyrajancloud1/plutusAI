@@ -192,3 +192,24 @@ tbody tr:hover {
 #editOrderForm button#cancelEdit:hover {
     background-color: grey;
 }
+#auth_details{
+   position: fixed;
+  right: 1%;
+  top: 5%;
+  transform: translateY(-50%);
+  width: 32%;
+  height: 3.5%;
+  background-color: #96e0d0 ;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+#token_details{
+  position: fixed;
+  right: 40%;
+  top: 25%;
+  transform: translateY(-50%);
+  width: 32%;
+  height: 3.5%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}

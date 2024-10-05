@@ -113,9 +113,11 @@ def createHttpData():
     niftyData = BrokerObject.getCurrentPremiumDetails(NSE, NIFTY_50)  # "Nifty 50"
     BNData = BrokerObject.getCurrentPremiumDetails(NSE, NIFTY_BANK)
     FNData = BrokerObject.getCurrentPremiumDetails(NSE, NIFTY_FIN_SERVICE)
+    # BNFUT_DATA=BrokerObject.getTokenForSymbol(BANKNIFTY_FUTURES)
     allData.append(niftyData)
     allData.append(BNData)
     allData.append(FNData)
+    # allData.append(BNFUT_DATA)
     addLogDetails(INFO, "Expiry Details updated from createHttpData")
     addLogDetails(INFO, allData)
     while True:
@@ -319,7 +321,8 @@ def angelOneWSNSE():
     # Initialize WebSocket parameters
     correlation_id = "admin_ws"
     nse_tokens = [99926000, 99926009, 99926037]  # Tokens for spot
-    nfo_tokens = [35089]  # Tokens for futures
+    nfo_tokens = [BrokerObject.getTokenForSymbol(BANKNIFTY_FUTURES)]  # Tokens for futures
+
 
     global start_time_dict
     # ltp_values_dict = {}

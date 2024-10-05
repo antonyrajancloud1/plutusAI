@@ -14,3 +14,5 @@ smartapi-python
 websocket-client
 whitenoise
 mysqlclient
+djangorestframework-simplejwt
+djangorestframework

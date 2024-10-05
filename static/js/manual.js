@@ -104,6 +104,9 @@ function createEditForm(order) {
     document.getElementById('cancelEdit').addEventListener('click', function () {
         modal.style.display = 'none';
     });
+
+
+
 }
 
 // Save changes
@@ -189,6 +192,10 @@ async function fetchData() {
 
         if (data.status === 'success') {
             populateTable(data);
+            document.getElementById('tkn_btn').addEventListener('click', function () {
+            reGenTokenData();
+            });
+            getTokenData();
         } else {
             showResult('Failed to fetch data', false);
         }
@@ -205,5 +212,51 @@ function showResult(message, isSuccess = true) {
     resultDiv.style.display = 'block';  // Show the div
 }
 
+// Fetch data from the API to populate the table
+async function getTokenData() {
+    try {
+//        const response = await fetch('get_auth_token');
+        const response = await fetch("get_auth_token", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+
+        });
+        const token_details = document.getElementById('token_details');
+        const data = await response.json();
+        if (data.status === 'success') {
+            token_details.innerHTML = data.message
+        } else {
+           token_details.innerHTML = "No Token Present"
+        }
+console.log(response.json())
+    } catch (error) {
+//        showResult(`Error fetching data: ${error.message}`, false);
+        token_details.innerHTML =error
+    }
+}
+
+async function reGenTokenData() {
+    try {
+        const response = await fetch("generate_auth_token", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+
+        });
+        const token_details = document.getElementById('token_details');
+        const data = await response.json();
+        if (data.status === 'success') {
+            token_details.innerHTML = data.message
+        } else {
+           token_details.innerHTML = "No Token Present"
+        }
+console.log(response.json())
+    } catch (error) {
+        token_details.innerHTML =error
+    }
+}
 // Fetch and populate the table on page load
 window.onload = fetchData;

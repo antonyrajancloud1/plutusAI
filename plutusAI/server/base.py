@@ -770,3 +770,11 @@ def updateManualOrderDetails(user_email, index, data):
         user_data.update(**data)
     except Exception as e:
         addLogDetails(ERROR, str(e))
+
+def getManualOrderDetails(user_email, index):
+    try:
+        user_data = ManualOrders.objects.filter(user_id=user_email, index_name=index)
+        user_data=list(user_data.values())[0]
+        return user_data
+    except Exception as e:
+        addLogDetails(ERROR, str(e))
