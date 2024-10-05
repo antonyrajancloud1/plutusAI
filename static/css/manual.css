@@ -199,7 +199,7 @@ tbody tr:hover {
   transform: translateY(-50%);
   width: 32%;
   height: 3.5%;
-  background-color: #96e0d0 ;
+  background-color:  #DAF7A6 ;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   z-index: 1000;
 }
