@@ -6,22 +6,20 @@ from plutusAI.server.constants import *
 
 def placeManualOrder(user_email, user_index_data, OrderType):
     try:
+
         index_name = user_index_data.get(INDEX_NAME)
         strike = user_index_data.get(STRIKE)
         qty = int(user_index_data.get(LOTS))
         target = int(user_index_data.get(TARGET))
         stop_loss = int(user_index_data.get(STOP_LOSS))
         index_data = IndexDetails.objects.filter(index_name=index_name).values()
-       # manual_order_details = getManualOrderDetails(user_email, index_name)
+        manual_order_details = getManualOrderDetails(user_email, index_name)
         if not index_data:
             raise ValueError(f"Index data not found for {index_name}")
-
+        current_premium = manual_order_details.get("current_premium")
         index_qty = int(index_data[0].get(QTY, 0))
         user_qty = qty * index_qty
-
         BrokerObject = Broker(user_email, INDIAN_INDEX).BrokerObject
-       # print(manual_order_details)
-        #print(BrokerObject.smartApi.position())
         if OrderType == "CE":
             currentPremiumPlaced = f"{getTradingSymbol(index_name)}{BrokerObject.getCurrentAtm(index_name) - int(strike)}CE"
         elif OrderType == "PE":
@@ -65,18 +63,19 @@ def placeManualOrder(user_email, user_index_data, OrderType):
         #     "squareoff":target,
         #     "stoploss":stop_loss,
         # }
-        buy_order_details = {
-            VARIETY: STOPLOSS,
-            EXCHANGE: NFO,
-            TRADING_SYMBOL: currentPremiumPlaced,
-            SYMBOL_TOKEN: BrokerObject.getTokenForSymbol(currentPremiumPlaced),
-            TRANSACTION_TYPE: BUY,
-            ORDER_TYPE: MARKET,
-            PRODUCT_TYPE: INTRADAY,
-            DURATION: DAY,
-            QUANTITY: user_qty
-        }
-        print(buy_order_details)
+        sell_order_details = {VARIETY: NORMAL, EXCHANGE: NFO, TRADING_SYMBOL: current_premium,
+                             SYMBOL_TOKEN: BrokerObject.getTokenForSymbol(current_premium),
+                             TRANSACTION_TYPE: SELL, ORDER_TYPE: MARKET, PRODUCT_TYPE: INTRADAY, DURATION: DAY,
+                             QUANTITY: user_qty}
+        addLogDetails(INFO, sell_order_details)
+        sell_order_response = BrokerObject.placeOrder(sell_order_details)
+        sell_order_response_data = sell_order_response.get("data", {})
+        addLogDetails(INFO,sell_order_response_data)
+        buy_order_details = {VARIETY: NORMAL, EXCHANGE: NFO, TRADING_SYMBOL: currentPremiumPlaced,
+                             SYMBOL_TOKEN: BrokerObject.getTokenForSymbol(currentPremiumPlaced),
+                             TRANSACTION_TYPE: BUY, ORDER_TYPE: MARKET, PRODUCT_TYPE: INTRADAY, DURATION: DAY,
+                             QUANTITY: user_qty}
+        addLogDetails(INFO,buy_order_details)
         order_response = BrokerObject.placeOrder(buy_order_details)
         order_response_data = order_response.get("data", {})
         data = {
