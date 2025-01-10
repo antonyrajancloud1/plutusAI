@@ -46,7 +46,7 @@ class AngelOneBroker:
             # print(self.auth_token)
             # print(self.feed_token)
             self.profileDetails = self.checkProfile()
-            # print(self.profileDetails)
+            print(self.profileDetails)
             if str(self.profileDetails["message"]).__eq__("SUCCESS"):
                 data = {"token_status": "generated", BROKER_USER_NAME: self.profileDetails["data"]["name"]}
                 user_broker_data.update(**data)

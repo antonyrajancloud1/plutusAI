@@ -455,8 +455,8 @@ class NSEPriceAction():
                             ENTRY_PRICE: self.optionBuyPrice, STATUS: ORDER_PLACED, STRATEGY: STRATEGY_HUNTER,INDEX_NAME:self.index_name}
                     addOrderBookDetails(data, True)
 
-                    price = int(self.optionBuyPrice) - 10
-                    trigger_price = int(self.optionBuyPrice) - 10
+                    price = int(self.optionBuyPrice) - self.initialSL
+                    trigger_price = int(self.optionBuyPrice) - self.initialSL
                     sell_order_details = {VARIETY: STOPLOSS, EXCHANGE: NFO, TRADING_SYMBOL: self.currentPremiumPlaced,
                                           SYMBOL_TOKEN: self.BrokerObject.getTokenForSymbol(self.currentPremiumPlaced),
                                           TRANSACTION_TYPE: SELL, ORDER_TYPE: ORDER_TYPE_SL, PRICE: price,
@@ -513,8 +513,8 @@ class NSEPriceAction():
                     data = {USER_ID: self.user_email, SCRIPT_NAME: self.currentPremiumPlaced, QTY: self.qty,
                             ENTRY_PRICE: self.optionBuyPrice, STATUS: ORDER_PLACED, STRATEGY: STRATEGY_HUNTER,INDEX_NAME:self.index_name}
                     addOrderBookDetails(data, True)
-                    price = int(self.optionBuyPrice) - 10
-                    trigger_price = int(self.optionBuyPrice) - 10
+                    price = int(self.optionBuyPrice) - self.initialSL
+                    trigger_price = int(self.optionBuyPrice) - self.initialSL
                     sell_order_details = {VARIETY: STOPLOSS, EXCHANGE: NFO, TRADING_SYMBOL: self.currentPremiumPlaced,
                                           SYMBOL_TOKEN: self.BrokerObject.getTokenForSymbol(self.currentPremiumPlaced),
                                           TRANSACTION_TYPE: SELL, ORDER_TYPE: ORDER_TYPE_SL, PRICE: price,
