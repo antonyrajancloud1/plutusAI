@@ -46,6 +46,7 @@ class NSEPriceAction():
                     self.initialSL = int(self.config_data[INITIAL_SL])
                     self.targetforsafesl = int(self.config_data[TARGET_FOR_SAFE_SL])
                     self.safe_sl = int(self.config_data[SAFE_SL])
+                    self.is_place_sl_required = int(self.config_data[IS_SL_REQUIRED])
                     self.timeInterval = 1  ## need to get from USER
                     ### Start Madara ####
                     self.initilize_price_action()
@@ -68,53 +69,46 @@ class NSEPriceAction():
         self.isOrderExited = False
 
     def initilize_price_action(self):
-
         updateIndexConfiguration(user_email=self.user_email, index=self.index_name, data=STAGE_STARTED)
         self.initDefaultValues()
         self.indexBaseValue = getCurrentIndexValue(self.index_name)
-        self.nearestSupport = getTaregtForOrderFromList(self.levels, self.indexBaseValue, "PE")
-        self.nearestResistance = getTaregtForOrderFromList(self.levels, self.indexBaseValue, "CE")
-        self.mainSchedulerText = "Job started for User :" + self.user_email + " Index Name: " + self.index_name + "\tnearestSupport == " + str(
-            self.nearestSupport) + "\tnearestResistance == " + str(self.nearestResistance)
-
+        self.nearestSupport, self.nearestResistance = (
+            getTaregtForOrderFromList(self.levels, self.indexBaseValue, "PE"),
+            getTaregtForOrderFromList(self.levels, self.indexBaseValue, "CE")
+        )
+        self.mainSchedulerText = (
+            f"Job started for User: {self.user_email} Index Name: {self.index_name}\t"
+            f"nearestSupport == {self.nearestSupport}\tnearestResistance == {self.nearestResistance}"
+        )
         addLogDetails(INFO, self.mainSchedulerText)
 
         while True:
             try:
-                self.IndexLTP = getCurrentIndexValue(self.index_name)
-                # addLogDetails(INFO, self.IndexLTP)
-                if int(self.IndexLTP).__round__() >= self.nearestResistance or int(
-                        self.IndexLTP).__round__() <= self.nearestSupport or int(
-                        self.IndexLTP).__round__() in self.levels:
+                self.IndexLTP = round(getCurrentIndexValue(self.index_name))
+                if self.IndexLTP >= self.nearestResistance or self.IndexLTP <= self.nearestSupport or self.IndexLTP in self.levels:
                     self.indexValueAfterTrendDecided = self.indexBaseValue
-                    if int(self.IndexLTP).__round__() in self.levels:
-                        self.pivotPoint = self.IndexLTP
-                    elif int(self.IndexLTP).__round__() >= self.nearestResistance:
-                        self.pivotPoint = self.nearestResistance
-                    elif int(self.IndexLTP).__round__() <= self.nearestSupport:
-                        self.pivotPoint = self.nearestSupport
-                    updateIndexConfiguration(user_email=self.user_email, index=self.index_name,
-                                             data={'status': 'Pivot Decided : '+str(self.pivotPoint)})
-                    addLogDetails(INFO, "Index Name: " + self.index_name + " pivot Decided, User:" + self.user_email)
+                    self.pivotPoint = (
+                        self.IndexLTP if self.IndexLTP in self.levels else
+                        self.nearestResistance if self.IndexLTP >= self.nearestResistance else
+                        self.nearestSupport
+                    )
+                    updateIndexConfiguration(
+                        user_email=self.user_email, index=self.index_name,
+                        data={'status': f'Pivot Decided : {self.pivotPoint}'}
+                    )
+                    addLogDetails(INFO, f"Index Name: {self.index_name} pivot Decided, User: {self.user_email}")
                     while True:
                         self.IndexLTP = getCurrentIndexValue(self.index_name)
                         addLogDetails(INFO, self.IndexLTP)
-                        if self.IndexLTP >= int(self.pivotPoint) + self.index_trend_check:
-                            # self.CESetTargetAndStopLoss(int(self.pivotPoint) + self.index_trend_check)
+                        if self.IndexLTP >= self.pivotPoint + self.index_trend_check:
                             self.CESetTargetAndStopLoss()
                             self.startCE()
-                        elif self.IndexLTP <= int(self.pivotPoint) - self.index_trend_check:
+                        elif self.IndexLTP <= self.pivotPoint - self.index_trend_check:
                             self.PESetTargetAndStoploss()
                             self.startPE()
-                        time.sleep(self.timeInterval)  # change time
+                        time.sleep(self.timeInterval)
             except Exception as e:
-                addLogDetails(ERROR, "exception in main while  -----  " + str(e))
-                # profileDetails = self.BrokerObject.checkProfile()
-                # if profileDetails.__contains__("token error"):
-                #     addLogDetails(INFO,str(profileDetails))
-                #     break
-                # else:
-                #     addLogDetails(INFO,str(profileDetails))
+                addLogDetails(ERROR, f"Exception in main while: {e}")
             time.sleep(self.timeInterval)
 
     def CESetTargetAndStopLoss(self):
@@ -454,19 +448,19 @@ class NSEPriceAction():
                     data = {USER_ID: self.user_email, SCRIPT_NAME: self.currentPremiumPlaced, QTY: self.qty,
                             ENTRY_PRICE: self.optionBuyPrice, STATUS: ORDER_PLACED, STRATEGY: STRATEGY_HUNTER,INDEX_NAME:self.index_name}
                     addOrderBookDetails(data, True)
-
-                    price = int(self.optionBuyPrice) - self.initialSL
-                    trigger_price = int(self.optionBuyPrice) - self.initialSL
-                    sell_order_details = {VARIETY: STOPLOSS, EXCHANGE: NFO, TRADING_SYMBOL: self.currentPremiumPlaced,
-                                          SYMBOL_TOKEN: self.BrokerObject.getTokenForSymbol(self.currentPremiumPlaced),
-                                          TRANSACTION_TYPE: SELL, ORDER_TYPE: ORDER_TYPE_SL, PRICE: price,
-                                          TRIGGER_PRICE: trigger_price, PRODUCT_TYPE: INTRADAY, DURATION: DAY,
-                                          QUANTITY: self.user_qty}
-                    addLogDetails(INFO, "Index Name: " + self.index_name + " User :" + self.user_email + " " + str(
-                        sell_order_details))
-                    initial_sell_order = self.BrokerObject.placeOrder(sell_order_details)
-                    addLogDetails(INFO, "Index Name: " + self.index_name + " User :" + self.user_email + " " + str(
-                        initial_sell_order))
+                    if self.is_place_sl_required:
+                        price = int(self.optionBuyPrice) - self.initialSL
+                        trigger_price = int(self.optionBuyPrice) - self.initialSL
+                        sell_order_details = {VARIETY: STOPLOSS, EXCHANGE: NFO, TRADING_SYMBOL: self.currentPremiumPlaced,
+                                              SYMBOL_TOKEN: self.BrokerObject.getTokenForSymbol(self.currentPremiumPlaced),
+                                              TRANSACTION_TYPE: SELL, ORDER_TYPE: ORDER_TYPE_SL, PRICE: price,
+                                              TRIGGER_PRICE: trigger_price, PRODUCT_TYPE: INTRADAY, DURATION: DAY,
+                                              QUANTITY: self.user_qty}
+                        addLogDetails(INFO, "Index Name: " + self.index_name + " User :" + self.user_email + " " + str(
+                            sell_order_details))
+                        initial_sell_order = self.BrokerObject.placeOrder(sell_order_details)
+                        addLogDetails(INFO, "Index Name: " + self.index_name + " User :" + self.user_email + " " + str(
+                            initial_sell_order))
                     self.currentOrderID = initial_sell_order["data"]["uniqueorderid"]
                     self.currentExitOrderID = initial_sell_order["data"]["orderid"]
                     self.isStoplossPlaced = True

@@ -76,5 +76,7 @@ Resource = {
     scalper_details_updated :   "Scalper details Updated",
     initiated               :   "Initiated",
     long_placed             :   "Long Placed",
-    short_placed            :   "Short Placed"
+    short_placed            :   "Short Placed",
+    strategy                :   "Strategy"
+
 }   
