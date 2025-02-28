@@ -55,6 +55,8 @@ PLACE_ORDER_BUY="place_order_buy"
 PLACE_ORDER_SELL="place_order_sell"
 TRIGGER_BUY="trigger_buy"
 TRIGGER_SELL="trigger_sell"
+TRIGGER_EXIT="trigger_exit"
+
 GET_AUTH_TOKEN="get_auth_token"
 GENERATE_AUTH_TOKEN="generate_auth_token"
 GET_INDEX_DATA="get_index_data"

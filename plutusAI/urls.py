@@ -42,6 +42,8 @@ urlpatterns = [
     path(PLACE_ORDER_SELL, views.placeSellOrderManual, name=PLACE_ORDER_SELL),
     path(TRIGGER_BUY, views.placeBuyOrderWebHook, name=TRIGGER_BUY),
     path(TRIGGER_SELL, views.placeSellOrderWebHook, name=TRIGGER_SELL),
+    path(TRIGGER_EXIT, views.placeExitOrderWebHook, name=TRIGGER_EXIT),
+
     path(UPDATE_MANUAL_DETAILS, views.update_manual_order_values, name=UPDATE_MANUAL_DETAILS),
     path(MANUAL, views.html_test, name=MANUAL),
     path(GET_AUTH_TOKEN, views.getAuthToken, name=GET_AUTH_TOKEN),
