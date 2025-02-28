@@ -1,217 +1,65 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="#">
     <title>WebSocket and User Form</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            height: 100%;
-            padding-top: 50px;
-        }
-        .container {
-            display: flex;
-            justify-content: space-around;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 800px;
-            width: 100%;
-        }
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #333;
-        }
-        .form-container {
-            margin: 0 20px;
-            width: 45%;
-        }
-        h2 {
-            color: #333;
-            margin-bottom: 10px;
-        }
-        label {
-            display: block;
-            margin: 10px 0 5px;
-            font-weight: bold;
-            color: #555;
-        }
-        input {
-            padding: 10px;
-            width: calc(100% - 22px);
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-        button {
-            padding: 8px;
-            width: 46%;
-            border: none;
-            border-radius: 5px;
-            color: white;
-            font-size: 14px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            display: inline-block;
-        }
-        .start-btn {
-            background-color: #7ed957; /* Light green */
-        }
-        .start-btn:hover {
-            background-color: #5cbf41; /* Darker green on hover */
-        }
-        .stop-btn {
-            background-color: #ff6f6f; /* Light red */
-        }
-        .stop-btn:hover {
-            background-color: #e85454; /* Darker red on hover */
-        }
-        .add-btn {
-            background-color: #007BFF;
-            width: 94%;
-        }
-        .add-btn:hover {
-            background-color: #0056b3;
-        }
-        .regen-tkn {
-    background-color: #7ed957; /* Orange */
-    width: 94%;
-}
-
-.regen-tkn:hover {
-    background-color: #5cbf41; /* Darker orange on hover */
-}
-
-        .status {
-            margin-top: 10px;
-            font-size: 14px;
-            text-align: center;
-            color: white;
-            padding: 8px;
-            border-radius: 5px;
-            width: 90%;
-            margin-left: 0px;
-        }
-        .status.true {
-            background-color: #7ed957; /* Light green */
-        }
-        .status.false {
-            background-color: #ff6f6f; /* Light red */
-        }
-    </style>
+<link rel="shortcut icon" href="#">
 </head>
 <body>
     <div class="container">
-        <div class="form-container">
-            <h2>Start WebSocket</h2>
-            <form id="ws-form" autocomplete="off">
-                <label for="ws-input">WebSocket Input:</label>
-                <input type="text" id="ws-input" name="ws-input" autocomplete="off" required>
-                <button id="startWS" type="button" class="start-btn">Start WebSocket</button>
-                <button id="stopWS" type="button" class="stop-btn">Stop WebSocket</button>
-                <button id="regenerateToken" type="button" class="regen-tkn">Regenerate Token</button>
-                <div class="status" id="ws-status">Loading...</div>
-            </form>
-        </div>
-
-        <div class="form-container">
-            <h2>Add User</h2>
-            <form id="user-form" autocomplete="off">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" autocomplete="off" required>
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" autocomplete="off" required>
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" autocomplete="off" required>
-                <button type="button" class="add-btn">Add User</button>
-            </form>
-        </div>
+        <h2>Start WebSocket</h2>
+        <form id="ws-form" autocomplete="off">
+            <label for="ws-input">WebSocket Input:</label>
+            <input type="text" id="ws-input" name="ws-input" autocomplete="off" required>
+            <button id="startWS" type="button" class="start-btn">Start WebSocket</button>
+            <button id="stopWS" type="button" class="stop-btn">Stop WebSocket</button>
+            <button id="regenerateToken" type="button" class="regen-tkn">Regenerate Token</button>
+            <button id="updateExpiry" type="button" class="update-expiry">Update Expiry Details</button>
+            <div class="status" id="ws-status"></div>
+        </form>
     </div>
 
-    <script>
-        const startWSButton = document.getElementById("startWS");
-        const stopWSButton = document.getElementById("stopWS");
-        const reGenerateTokenButton = document.getElementById("regenerateToken");
-        const wsTypeInput = document.getElementById("ws-input");
-        const statusDiv = document.getElementById('ws-status');
+    <!-- Add User Form -->
+    <div class="container">
+        <h2>Add User</h2>
+        <form id="user-form" autocomplete="off">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" autocomplete="off" required>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" autocomplete="off" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" autocomplete="off" required>
+            <button type="button" class="add-btn">Add User</button>
+        </form>
+    </div>
 
-        function makeAPICall(method, api_url, payload_data) {
-            const url = api_url;
-            const payload = payload_data;
-            const options = {
-                method: method,
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            };
+    <!-- Index Data Table -->
+    <div class="container">
+        <h2>Index Data</h2>
+        <table id="indexTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Index Name</th>
+                    <th>Group</th>
+                    <th>Token</th>
+                    <th>LTP</th>
+                    <th>Last Updated</th>
+                    <th>Qty</th>
+                    <th>Current Expiry</th>
+                    <th>Next Expiry</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Table rows will be populated here -->
+            </tbody>
+        </table>
+    </div>
 
-            fetch(url, options)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('API Response:', data);
-                    statusDiv.textContent = data.message;
-                    statusDiv.className = data.task_status ? 'status true' : 'status false';
-                })
-                .catch(error => {
-                    console.error('Error making API call:', error);
-                    statusDiv.textContent = 'Error: ' + error.message;
-                    statusDiv.className = 'status false';
-                });
-        }
+     <script src="{% static 'js/admin.js'%}" type="text/javascript"></script>
 
-        document.addEventListener('DOMContentLoaded', function() {
-            fetch('check_task_status')
-                .then(response => response.json())
-                .then(data => {
-                    statusDiv.textContent = data.message;
-                    statusDiv.className = data.task_status ? 'status true' : 'status false';
-                })
-                .catch(error => {
-                    console.error('Error fetching API:', error);
-                    statusDiv.textContent = 'Failed to fetch API status';
-                    statusDiv.className = 'status false';
-                });
-        });
-
-        startWSButton.addEventListener("click", function() {
-            makeAPICall('POST', 'start_ws', { ws_type: wsTypeInput.value });
-        });
-
-        stopWSButton.addEventListener("click", function() {
-            makeAPICall('POST', 'stop_ws', { ws_type: wsTypeInput.value });
-        });
-
-        reGenerateTokenButton.addEventListener("click", function() {
-            makeAPICall('POST', 'regenrate_token',null);
-        });
-
-const addUserButton = document.querySelector(".add-btn");
-
-addUserButton.addEventListener("click", function() {
-    const email = document.getElementById("email").value;
-    const name = document.getElementById("name").value;
-    const password = document.getElementById("password").value;
-    makeAPICall('POST', 'add_user', { email, name, password });
-});
-
-    </script>
+    <link rel="stylesheet" href="{% static 'css/admin.css'%}">
 </body>
 </html>

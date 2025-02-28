@@ -57,6 +57,8 @@ TRIGGER_BUY="trigger_buy"
 TRIGGER_SELL="trigger_sell"
 GET_AUTH_TOKEN="get_auth_token"
 GENERATE_AUTH_TOKEN="generate_auth_token"
+GET_INDEX_DATA="get_index_data"
+UPDATE_EXPIRY_DETAILS="update_expiry_details"
 
 MANUAL="manual"
 CE="CE"

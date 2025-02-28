@@ -814,3 +814,30 @@ def regenerateAuthToken(request):
         return JsonResponse({STATUS: SUCCESS, MESSAGE: str(new_token.key)})
     else:
         return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+
+@require_http_methods([GET])
+@csrf_exempt
+def getIndexDetails(request):
+    if admin_check(request.user):
+        try:
+            index_data= IndexDetails.objects.values_list('index_name', flat=True).distinct()
+            index_data_list = list(index_data.values())
+            return JsonResponse({STATUS: SUCCESS, MESSAGE: {"index_data":index_data_list}})
+        except Exception as e:
+            print(e)
+            return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
+    else:
+        return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+
+@require_http_methods([POST])
+@csrf_exempt
+def updateIndexExpiryDetails(request):
+    if admin_check(request.user):
+        try:
+            updateExpiryDetails()
+            return JsonResponse({STATUS: SUCCESS, MESSAGE: "Expiry details Updated",TASK_STATUS: True})
+        except Exception as e:
+            print(e)
+            return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
+    else:
+        return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})

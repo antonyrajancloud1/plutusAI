@@ -46,6 +46,8 @@ urlpatterns = [
     path(MANUAL, views.html_test, name=MANUAL),
     path(GET_AUTH_TOKEN, views.getAuthToken, name=GET_AUTH_TOKEN),
     path(GENERATE_AUTH_TOKEN, views.regenerateAuthToken, name=GENERATE_AUTH_TOKEN),
+    path(GET_INDEX_DATA, views.getIndexDetails, name=GET_INDEX_DATA),
+    path(UPDATE_EXPIRY_DETAILS, views.updateIndexExpiryDetails, name=UPDATE_EXPIRY_DETAILS),
 
-    path("test", testerCheck, name="test"),
+    path("test", views.getIndexDetails, name="test"),
 ]
