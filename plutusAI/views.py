@@ -20,7 +20,7 @@ from datetime import datetime, timedelta
 from plutusAI.server.broker.AngelOne.AngelOneAuth import AngelOneAuth
 from .server.authentication.authentication import QueryParamTokenAuthentication
 from .server.broker.Broker import Broker
-from .server.manualOrder import placeManualOrder
+from .server.manualOrder import *
 from .server.websocket.WebsocketAngelOne import WebsocketAngelOne
 
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
@@ -755,16 +755,21 @@ def update_manual_order_values(request):
 @api_view([POST])
 @authentication_classes([QueryParamTokenAuthentication])
 @permission_classes([IsAuthenticated])
-def placeBuyOrderManualWebHook(request):
+def placeBuyOrderWebHook(request):
+
     if check_user_session(request):
-        user_email = get_user_email(request)
-        data = json.loads(request.body)
-        index=data[INDEX_NAME]
-        if index:
-            user_manual_details = ManualOrders.objects.filter(user_id=user_email, index_name=index)
-            data = list(user_manual_details.values())[0]
-        data = remove_spaces_from_json(data)
-        return placeManualOrder(user_email,data,CE)
+        try:
+            user_email = get_user_email(request)
+            data = json.loads(request.body)
+            index=data[INDEX_NAME]
+            strategy = data.get(STRATEGY, "DefaultStrategy")
+            if index:
+                user_manual_details = ManualOrders.objects.filter(user_id=user_email, index_name=index)
+                data = list(user_manual_details.values())[0]
+            data = remove_spaces_from_json(data)
+            return triggerOrder(user_email, data, strategy, BUY)
+        except Exception as e:
+            print(e)
     else:
         return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
 
@@ -773,17 +778,18 @@ def placeBuyOrderManualWebHook(request):
 @api_view([POST])
 @authentication_classes([QueryParamTokenAuthentication])
 @permission_classes([IsAuthenticated])
-def placeSellOrderManualWebHook(request):
+def placeSellOrderWebHook(request):
     #@authentication_classes([TokenAuthentication])
     if check_user_session(request):
         user_email = get_user_email(request)
         data = json.loads(request.body)
         index = data[INDEX_NAME]
+        strategy = data.get(STRATEGY, "DefaultStrategy")
         if index:
             user_manual_details = ManualOrders.objects.filter(user_id=user_email, index_name=index)
             data = list(user_manual_details.values())[0]
         data = remove_spaces_from_json(data)
-        return placeManualOrder(user_email,data,PE)
+        return triggerOrder(user_email, data, strategy, SELL)
     else:
         return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
 

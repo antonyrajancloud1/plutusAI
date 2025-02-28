@@ -3,116 +3,6 @@ from plutusAI.server.base import *
 from plutusAI.server.broker.Broker import Broker
 from plutusAI.server.constants import *
 
-
-# def placeManualOrder(user_email, user_index_data, OrderType):
-#     try:
-#
-#         index_name = user_index_data.get(INDEX_NAME)
-#         strike = user_index_data.get(STRIKE)
-#         qty = int(user_index_data.get(LOTS))
-#         target = int(user_index_data.get(TARGET))
-#         stop_loss = int(user_index_data.get(STOP_LOSS))
-#         index_data = IndexDetails.objects.filter(index_name=index_name).values()
-#         manual_order_details = getManualOrderDetails(user_email, index_name)
-#         if not index_data:
-#             raise ValueError(f"Index data not found for {index_name}")
-#         current_premium = manual_order_details.get("current_premium")
-#         index_qty = int(index_data[0].get(QTY, 0))
-#         user_qty = qty * index_qty
-#         BrokerObject = Broker(user_email, INDIAN_INDEX).BrokerObject
-#         if OrderType == "CE":
-#             currentPremiumPlaced = f"{getTradingSymbol(index_name)}{BrokerObject.getCurrentAtm(index_name) - int(strike)}CE"
-#         elif OrderType == "PE":
-#             currentPremiumPlaced = f"{getTradingSymbol(index_name)}{BrokerObject.getCurrentAtm(index_name) + int(strike)}PE"
-#         else:
-#             raise ValueError("Invalid OrderType provided. Must be 'CE' or 'PE'.")
-#
-#         optionDetails = BrokerObject.getCurrentPremiumDetails(NFO, currentPremiumPlaced)
-#         addLogDetails(INFO,optionDetails)
-#         ltpDetails = BrokerObject.getLtpForPremium(optionDetails)
-#
-#         trigger_price = round(float(ltpDetails), 1)+float(user_index_data.get("trigger"))
-#         price = trigger_price
-#         #target = price+target
-#         stop_loss=price-stop_loss
-#
-#         # buy_order_details = {
-#         #     VARIETY: STOPLOSS,
-#         #     EXCHANGE: NFO,
-#         #     TRADING_SYMBOL: currentPremiumPlaced,
-#         #     SYMBOL_TOKEN: BrokerObject.getTokenForSymbol(currentPremiumPlaced),
-#         #     TRANSACTION_TYPE: BUY,
-#         #     ORDER_TYPE: ORDER_TYPE_SL,
-#         #     PRICE: price,
-#         #     TRIGGER_PRICE: trigger_price,
-#         #     PRODUCT_TYPE: INTRADAY,
-#         #     DURATION: DAY,
-#         #     QUANTITY: user_qty
-#         # }
-#
-#         # buy_order_details = {
-#         #     VARIETY: "ROBO",
-#         #     EXCHANGE: NFO,
-#         #     TRADING_SYMBOL: currentPremiumPlaced,
-#         #     SYMBOL_TOKEN: BrokerObject.getTokenForSymbol(currentPremiumPlaced),
-#         #     TRANSACTION_TYPE: BUY,
-#         #     ORDER_TYPE: "LIMIT",
-#         #     PRICE: price,
-#         #     PRODUCT_TYPE: INTRADAY,
-#         #     DURATION: DAY,
-#         #     QUANTITY: user_qty,
-#         #     "squareoff":target,
-#         #     "stoploss":stop_loss,
-#         # }
-#         try:
-#             sell_order_details = {VARIETY: NORMAL, EXCHANGE: NFO, TRADING_SYMBOL: current_premium,
-#                                  SYMBOL_TOKEN: BrokerObject.getTokenForSymbol(current_premium),
-#                                  TRANSACTION_TYPE: SELL, ORDER_TYPE: MARKET, PRODUCT_TYPE: INTRADAY, DURATION: DAY,
-#                                  QUANTITY: user_qty}
-#             addLogDetails(INFO, sell_order_details)
-#             sell_order_response = BrokerObject.placeOrder(sell_order_details)
-#             addLogDetails(INFO, sell_order_response)
-#             sell_order_response_data = sell_order_response.get("data", {})
-#             addLogDetails(INFO,sell_order_response_data)
-#         except Exception as e:
-#             addLogDetails(ERROR, "Error in selling previous order")
-#             addLogDetails(ERROR,str(e))
-#
-#         buy_order_details = {VARIETY: NORMAL, EXCHANGE: NFO, TRADING_SYMBOL: currentPremiumPlaced,
-#                              SYMBOL_TOKEN: BrokerObject.getTokenForSymbol(currentPremiumPlaced),
-#                              TRANSACTION_TYPE: BUY, ORDER_TYPE: MARKET, PRODUCT_TYPE: INTRADAY, DURATION: DAY,
-#                              QUANTITY: user_qty}
-#         addLogDetails(INFO,buy_order_details)
-#         order_response = BrokerObject.placeOrder(buy_order_details)
-#
-#
-#
-#
-#         order_response_data = order_response.get("data", {})
-#         data = {
-#             "current_premium": order_response_data.get("script"),
-#             "order_id": order_response_data.get("orderid"),
-#             "unique_order_id": order_response_data.get("uniqueorderid")
-#         }
-#         addLogDetails(INFO, f"Manual Order placed UserId ={user_email} LTP while placing order : {ltpDetails} data = {buy_order_details}")
-#         updateManualOrderDetails(user_email, index_name, data=data)
-#         order_response_from_broker = BrokerObject.getOrderDetails(order_response_data.get("uniqueorderid"))
-#         addLogDetails(INFO, "order_response_from_broker")
-#         addLogDetails(INFO,order_response_from_broker)
-#         #option_buy_price=order_response_from_broker["data"][""]
-#         addLogDetails(INFO,f"Manual Order placed UserId ={user_email} data = {order_response}")
-#         # exit_order_details = {VARIETY: NORMAL, EXCHANGE: NFO, TRADING_SYMBOL: currentPremiumPlaced,
-#         #                       SYMBOL_TOKEN: BrokerObject.getTokenForSymbol(currentPremiumPlaced),
-#         #                       TRANSACTION_TYPE: SELL, ORDER_TYPE: ORDER_TYPE_LIMIT, PRODUCT_TYPE: INTRADAY, DURATION: DAY,
-#         #                       QUANTITY: user_qty, PRICE: float(ltpDetails)+target}
-#         # addLogDetails(INFO, exit_order_details)
-#         # exit_order_response = BrokerObject.placeOrder(exit_order_details)
-#         # addLogDetails(INFO, exit_order_response)
-#         return JsonResponse({STATUS: SUCCESS, MESSAGE: str(order_response_from_broker), TASK_STATUS: True})
-#
-#     except Exception as e:
-#         addLogDetails(ERROR,str(e))
-#         return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR, TASK_STATUS: False})
 def placeManualOrder(user_email, user_index_data, OrderType):
     try:
         # Validate input data
@@ -204,3 +94,107 @@ def placeManualOrder(user_email, user_index_data, OrderType):
         error_msg = f"Unexpected error: {str(e)}"
         addLogDetails(ERROR, error_msg)
         return JsonResponse({STATUS: FAILED, MESSAGE: error_msg, TASK_STATUS: False})
+
+
+def triggerOrder(user_email, user_index_data, strategy, order_type):
+    strategy = strategy if strategy else "DefaultStrategy"
+
+    index_name = user_index_data.get(INDEX_NAME)
+    strike = int(user_index_data.get(STRIKE, 0))
+    qty = int(user_index_data.get(LOTS, 0))
+
+    index_data = IndexDetails.objects.filter(index_name=index_name).values().first()
+    if not index_data:
+        error_msg = f"Index data not found for {index_name}"
+        addLogDetails(ERROR, error_msg)
+        return JsonResponse({STATUS: FAILED, MESSAGE: error_msg, TASK_STATUS: False})
+
+    index_qty = int(index_data.get(QTY, 0))
+    user_qty = qty * index_qty
+
+    broker = Broker(user_email, INDIAN_INDEX).BrokerObject
+    atm = broker.getCurrentAtm(index_name)
+
+    # Determine option type and strike logic
+    if order_type.upper() == BUY:
+        option_type = "CE"
+        strike_price = atm - strike  # Call Option (CE) -> atm - strike
+    elif order_type.upper() == SELL:
+        option_type = "PE"
+        strike_price = atm + strike  # Put Option (PE) -> atm + strike
+    else:
+        error_msg = f"Invalid order type: {order_type}"
+        addLogDetails(ERROR, error_msg)
+        return JsonResponse({STATUS: FAILED, MESSAGE: error_msg, TASK_STATUS: False})
+
+    trading_symbol = f"{getTradingSymbol(index_name)}{strike_price}{option_type}"
+
+    # Fetch current premium details
+    option_details = broker.getCurrentPremiumDetails(NFO, trading_symbol)
+    ltp = broker.getLtpForPremium(option_details)
+
+    if broker.is_demo_enabled:
+        print("into demo")
+        optionBuyPrice = ltp
+        data = {
+            USER_ID: user_email, SCRIPT_NAME: trading_symbol, QTY: qty,
+            ENTRY_PRICE: optionBuyPrice, STATUS: ORDER_PLACED, STRATEGY: strategy,
+            INDEX_NAME: index_name
+        }
+    else:
+        order_details = {
+            VARIETY: NORMAL, EXCHANGE: NFO, TRADING_SYMBOL: trading_symbol,
+            SYMBOL_TOKEN: broker.getTokenForSymbol(trading_symbol),
+            TRANSACTION_TYPE: BUY if order_type.upper() == BUY else SELL,
+            ORDER_TYPE: MARKET, PRODUCT_TYPE: INTRADAY,
+            DURATION: DAY, QUANTITY: user_qty
+        }
+
+        addLogDetails(INFO, f"Placing {order_type.lower()} order for {trading_symbol}")
+        order_response = broker.placeOrder(order_details)
+        addLogDetails(INFO, f"{order_type.capitalize()} order response: {order_response}")
+
+        uniqueorderid = order_response.get("data", {}).get("uniqueorderid")
+        order_response_details = broker.getOrderDetails(uniqueorderid)
+
+        optionBuyPrice = order_response_details.get("averageprice", ltp)  # Fallback to LTP if missing
+        data = {
+            USER_ID: user_email, SCRIPT_NAME: trading_symbol, QTY: qty,
+            ENTRY_PRICE: optionBuyPrice, STATUS: ORDER_PLACED, STRATEGY: strategy,
+            INDEX_NAME: index_name
+        }
+
+        # Update order details
+        updateManualOrderDetails(user_email, index_name, {
+            "current_premium": trading_symbol,
+            "order_id": order_response.get("data", {}).get("orderid"),
+            "unique_order_id": uniqueorderid
+        })
+
+    addOrderBookDetails(data, True)
+    return JsonResponse(
+        {STATUS: SUCCESS, MESSAGE: f"{order_type.capitalize()} order placed successfully", TASK_STATUS: True}
+    )
+
+def exitOrderWebhook(strategy,data):
+    print(strategy)
+    current_time_str = getCurrentTimestamp()
+    data[EXIT_TIME] = current_time_str
+    broker = Broker(data[USER_ID], INDIAN_INDEX).BrokerObject
+
+
+    user_data = OrderBook.objects.filter(
+        user_id=data[USER_ID], strategy=strategy, exit_price=None
+    )
+    order_info = list(user_data.values())[0]
+    entry_price = order_info[ENTRY_PRICE]
+    exit_price = data[EXIT_PRICE]
+    qty = order_info[QTY]
+    if broker.is_demo_enabled:
+        option_details = broker.getCurrentPremiumDetails(NFO, order_info[SCRIPT_NAME])
+        ltp = broker.getLtpForPremium(option_details)
+        total = str(float((float(exit_price) - float(entry_price)) * int(qty)))
+        data[TOTAL] = total
+    else:
+        print("sell order")
+    user_data.update(**data)
