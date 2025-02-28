@@ -112,11 +112,8 @@ def triggerOrder(user_email, user_index_data, strategy, order_type):
 
     index_qty = int(index_data.get(QTY, 0))
     user_qty = qty * index_qty
-    print("before broker")
     broker = Broker(user_email, INDIAN_INDEX).BrokerObject
-    print("After broker")
     atm = broker.getCurrentAtm(index_name)
-    print(atm)
     # Determine option type and strike logic
     if order_type.upper() == BUY:
         option_type = "CE"
@@ -176,31 +173,36 @@ def triggerOrder(user_email, user_index_data, strategy, order_type):
     addOrderBookDetails(data, True)
     return JsonResponse({STATUS: SUCCESS, MESSAGE: f"{order_type.capitalize()} order placed successfully", TASK_STATUS: True})
 
-def exitOrderWebhook(strategy,data):
+def exitOrderWebhook(strategy,data,user_email):
     try:
         print(strategy)
         current_time_str = getCurrentTimestamp()
         data[EXIT_TIME] = current_time_str
-        broker = Broker(data[USER_ID], INDIAN_INDEX).BrokerObject
+        broker = Broker(user_email, INDIAN_INDEX).BrokerObject
 
 
         user_data = OrderBook.objects.filter(
-            user_id=data[USER_ID], strategy=strategy, exit_price=None
+            user_id=user_email, strategy=strategy, exit_price=None
         )
-        order_info = list(user_data.values())[0]
-        entry_price = order_info[ENTRY_PRICE]
-        exit_price = data[EXIT_PRICE]
-        qty = order_info[QTY]
-        script_name=order_info[SCRIPT_NAME]
-        if broker.is_demo_enabled:
-            option_details = broker.getCurrentPremiumDetails(NFO, script_name)
-            ltp = broker.getLtpForPremium(option_details)
-            total = str(float((float(exit_price) - float(entry_price)) * int(qty)))
-            data[TOTAL] = total
+
+        if list(user_data.values())>0:
+            order_info = list(user_data.values())[0]
+            entry_price = order_info[ENTRY_PRICE]
+            qty = order_info[QTY]
+            script_name = order_info[SCRIPT_NAME]
+            print(len(order_info))
+            if broker.is_demo_enabled:
+                option_details = broker.getCurrentPremiumDetails(NFO, script_name)
+                ltp = broker.getLtpForPremium(option_details)
+                total = str(float((float(ltp) - float(entry_price)) * int(qty)))
+                data[TOTAL] = total
+                data[EXIT_PRICE]=ltp
+            else:
+                print("sell order")
+            user_data.update(**data)
+            return JsonResponse({STATUS: FAILED, MESSAGE: "Order Exited", TASK_STATUS: True})
         else:
-            print("sell order")
-        user_data.update(**data)
-        return JsonResponse({STATUS: FAILED, MESSAGE: "Order Exited", TASK_STATUS: True})
+            return JsonResponse({STATUS: FAILED, MESSAGE: f"No Pending orders for strategy {strategy}", TASK_STATUS: True})
     except Exception as e:
         error_msg = f"Unexpected error: {str(e)}"
         addLogDetails(ERROR, error_msg)

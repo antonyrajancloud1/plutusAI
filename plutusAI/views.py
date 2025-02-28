@@ -848,17 +848,18 @@ def updateIndexExpiryDetails(request):
     else:
         return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
 
-@require_http_methods([POST])
+
 @csrf_exempt
+@require_http_methods([POST])
+@api_view([POST])
+@authentication_classes([QueryParamTokenAuthentication])
+@permission_classes([IsAuthenticated])
 def placeExitOrderWebHook(request):
-    if check_user_session(request.user):
-        try:
-            user_email = get_user_email(request)
-            data = json.loads(request.body)
-            strategy = data.get(STRATEGY, "DefaultStrategy")
-            return exitOrderWebhook(strategy,data)
-        except Exception as e:
-            print(e)
-            return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
+    #@authentication_classes([TokenAuthentication])
+    if check_user_session(request):
+        user_email = get_user_email(request)
+        data = json.loads(request.body)
+        strategy = data.get(STRATEGY, "DefaultStrategy")
+        return exitOrderWebhook(strategy,data,user_email)
     else:
         return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
