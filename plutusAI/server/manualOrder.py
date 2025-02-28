@@ -185,7 +185,7 @@ def exitOrderWebhook(strategy,data,user_email):
             user_id=user_email, strategy=strategy, exit_price=None
         )
 
-        if list(user_data.values())>0:
+        if len(list(user_data.values()))>0:
             order_info = list(user_data.values())[0]
             entry_price = order_info[ENTRY_PRICE]
             qty = order_info[QTY]
