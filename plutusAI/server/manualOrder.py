@@ -96,22 +96,9 @@ def placeManualOrder(user_email, user_index_data, OrderType):
         return JsonResponse({STATUS: FAILED, MESSAGE: error_msg, TASK_STATUS: False})
 
 
-from django.http import JsonResponse
-from logging import ERROR, INFO
 
-# Constants
-BUY = "BUY"
-SELL = "SELL"
-CE = "CE"
-PE = "PE"
-NFO = "NFO"
-ORDER_PLACED = "Order Placed"
-MARKET = "MARKET"
-INTRADAY = "INTRADAY"
-DAY = "DAY"
-NORMAL = "NORMAL"
-SUCCESS = "Success"
-FAILED = "Failed"
+
+
 
 
 def triggerOrder(user_email, user_index_data, strategy, order_type):
@@ -135,76 +122,89 @@ def triggerOrder(user_email, user_index_data, strategy, order_type):
         atm = broker.getCurrentAtm(index_name)
 
         # Exit order handling
-        user_index_data[EXIT_TIME] = getCurrentTimestamp()
 
         user_data = OrderBook.objects.filter(
             user_id=user_email, strategy=strategy, exit_price=None
         )
+        print(len(user_data.values()))
 
-        if user_data.exists():
-            order_info = user_data.values().first()
-            entry_price = order_info[ENTRY_PRICE]
-            script_name = order_info[SCRIPT_NAME]
+        order_info = user_data.values().first()
+        print("order_info")
+        print(order_info)
+        if (order_type==BUY and str(order_info[SCRIPT_NAME]).upper().__contains__(PE)) or (order_type==SELL and str(order_info[SCRIPT_NAME]).upper().__contains__(CE))  :
+            if len(user_data.values()) == 0:
+                print(f"new strategey {strategy}")
+            else:
+                print(f"old strategey {strategy}")
+                if user_data.exists():
+
+
+                    order_info[EXIT_TIME] = getCurrentTimestamp()
+                    entry_price = order_info[ENTRY_PRICE]
+                    script_name = order_info[SCRIPT_NAME]
+
+                    if broker.is_demo_enabled:
+                        option_details = broker.getCurrentPremiumDetails(NFO, script_name)
+                        ltp = broker.getLtpForPremium(option_details)
+                        order_info.update({
+                            TOTAL: str((float(ltp) - float(entry_price)) * int(qty)),
+                            EXIT_PRICE: ltp,
+                            STATUS: ORDER_EXITED
+                        })
+                        print("aaaaaaa")
+                        print(order_info)
+                    else:
+                        print("Sell order")
+                    user_data.update(**order_info)
+                else:
+                    addLogDetails(INFO,"No Orders present for exit")
+
+            # Determine option type and strike logic
+            option_type = CE if order_type.upper() == BUY else PE
+            strike_price = atm - strike if order_type.upper() == BUY else atm + strike
+            trading_symbol = f"{getTradingSymbol(index_name)}{strike_price}{option_type}"
+
+            # Fetch current premium details
+            option_details = broker.getCurrentPremiumDetails(NFO, trading_symbol)
+            ltp = broker.getLtpForPremium(option_details)
+            print(option_details)
 
             if broker.is_demo_enabled:
-                option_details = broker.getCurrentPremiumDetails(NFO, script_name)
-                ltp = broker.getLtpForPremium(option_details)
-                user_index_data.update({
-                    TOTAL: str((float(ltp) - float(entry_price)) * int(qty)),
-                    EXIT_PRICE: ltp,
-                    STATUS: ORDER_EXITED
-                })
+                print("Into demo mode")
+                option_buy_price = ltp
             else:
-                print("Sell order")
-            user_data.update(**user_index_data)
-        else:
-            addLogDetails(INFO,"No Orders present for exit")
+                order_details = {
+                    VARIETY: NORMAL, EXCHANGE: NFO, TRADING_SYMBOL: trading_symbol,
+                    SYMBOL_TOKEN: broker.getTokenForSymbol(trading_symbol),
+                    TRANSACTION_TYPE: BUY if order_type.upper() == BUY else SELL,
+                    ORDER_TYPE: MARKET, PRODUCT_TYPE: INTRADAY,
+                    DURATION: DAY, QUANTITY: user_qty
+                }
 
-        # Determine option type and strike logic
-        option_type = CE if order_type.upper() == BUY else PE
-        strike_price = atm - strike if order_type.upper() == BUY else atm + strike
-        trading_symbol = f"{getTradingSymbol(index_name)}{strike_price}{option_type}"
+                addLogDetails(INFO, f"Placing {order_type.lower()} order for {trading_symbol}")
+                order_response = broker.placeOrder(order_details)
+                addLogDetails(INFO, f"{order_type.capitalize()} order response: {order_response}")
 
-        # Fetch current premium details
-        option_details = broker.getCurrentPremiumDetails(NFO, trading_symbol)
-        ltp = broker.getLtpForPremium(option_details)
-        print(option_details)
+                unique_order_id = order_response.get("data", {}).get("uniqueorderid")
+                order_response_details = broker.getOrderDetails(unique_order_id)
+                option_buy_price = order_response_details.get("averageprice", ltp)  # Fallback to LTP
 
-        if broker.is_demo_enabled:
-            print("Into demo mode")
-            option_buy_price = ltp
-        else:
-            order_details = {
-                VARIETY: NORMAL, EXCHANGE: NFO, TRADING_SYMBOL: trading_symbol,
-                SYMBOL_TOKEN: broker.getTokenForSymbol(trading_symbol),
-                TRANSACTION_TYPE: BUY if order_type.upper() == BUY else SELL,
-                ORDER_TYPE: MARKET, PRODUCT_TYPE: INTRADAY,
-                DURATION: DAY, QUANTITY: user_qty
+                updateManualOrderDetails(user_email, index_name, {
+                    "current_premium": trading_symbol,
+                    "order_id": order_response.get("data", {}).get("orderid"),
+                    "unique_order_id": unique_order_id
+                })
+
+            data = {
+                USER_ID: user_email, SCRIPT_NAME: trading_symbol, QTY: user_qty,
+                ENTRY_PRICE: option_buy_price, STATUS: ORDER_PLACED, STRATEGY: strategy,
+                INDEX_NAME: index_name
             }
 
-            addLogDetails(INFO, f"Placing {order_type.lower()} order for {trading_symbol}")
-            order_response = broker.placeOrder(order_details)
-            addLogDetails(INFO, f"{order_type.capitalize()} order response: {order_response}")
-
-            unique_order_id = order_response.get("data", {}).get("uniqueorderid")
-            order_response_details = broker.getOrderDetails(unique_order_id)
-            option_buy_price = order_response_details.get("averageprice", ltp)  # Fallback to LTP
-
-            updateManualOrderDetails(user_email, index_name, {
-                "current_premium": trading_symbol,
-                "order_id": order_response.get("data", {}).get("orderid"),
-                "unique_order_id": unique_order_id
-            })
-
-        data = {
-            USER_ID: user_email, SCRIPT_NAME: trading_symbol, QTY: qty,
-            ENTRY_PRICE: option_buy_price, STATUS: ORDER_PLACED, STRATEGY: strategy,
-            INDEX_NAME: index_name
-        }
-
-        addOrderBookDetails(data, True)
-        return JsonResponse({STATUS: SUCCESS, MESSAGE: f"{order_type.capitalize()} order placed successfully", TASK_STATUS: True})
-
+            addOrderBookDetails(data, True)
+            return JsonResponse({STATUS: SUCCESS, MESSAGE: f"{order_type.capitalize()} order placed successfully", TASK_STATUS: True})
+        else:
+            return JsonResponse({STATUS: SUCCESS, MESSAGE: f"{order_type.capitalize()} order already exists", TASK_STATUS: True})
     except Exception as e:
         error_msg = f"Unexpected error in trigger_order: {str(e)}"
         addLogDetails(ERROR, error_msg)
