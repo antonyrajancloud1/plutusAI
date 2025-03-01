@@ -4,10 +4,10 @@ import pyotp
 import requests
 
 from plutusAI.models import UserAuthTokens
-from plutusAI.server.base import addLogDetails, getTokenUsingSymbol
+from plutusAI.server.base import addLogDetails, getTokenUsingSymbol, getCurrentTimestamp
 from plutusAI.server.broker.AngelOne.AngelOneAuth import AngelOneAuth
 from plutusAI.server.constants import *
-
+import jwt as pyjwt  # Ensure correct import
 
 class AngelOneBroker:
     def __init__(self, user_broker_data):
@@ -25,17 +25,21 @@ class AngelOneBroker:
             self.setUserTokenData()
             if self.user_token_data_list.__len__() > 0:
                 addLogDetails(INFO,"into Existing token flow " +self.user_id)
-                # self.user_token_data = self.user_token_data[0]
-
-                # profile_details = self.checkProfile()
-                if self.initBrokerWithToken():
-                    addLogDetails(INFO,"Broker object initiated with existing token "+self.user_id)
+                self.initBrokerWithToken()
+                decoded_token = pyjwt.decode(self.auth_token, options={"verify_signature": False})
+                expiry_time =int(decoded_token.get("exp", 0))
+                current_time =getCurrentTimestamp()
+                float_timestamp = float(current_time)  # Convert to float first
+                int_timestamp = int(float_timestamp)
+                if expiry_time > int_timestamp:
+                    addLogDetails(INFO, "Broker object initiated with existing token " + self.user_id)
                 else:
-                    # print("Generate token")
+                    addLogDetails(INFO,"SmartAPI token is invalid or expired.")
                     AngelOneAuth(self.user_id)
                     self.setUserTokenData()
                     self.initBrokerWithToken()
-                    addLogDetails(INFO,"New Token generated "+ self.user_id)
+                    addLogDetails(INFO, "New Token generated " + self.user_id)
+
             else:
                 addLogDetails(INFO,"No Token Data "+ self.user_id)
                 AngelOneAuth(self.user_id)
@@ -47,9 +51,10 @@ class AngelOneBroker:
             # print(self.feed_token)
             # self.profileDetails = self.checkProfile()
             # print(self.profileDetails)
+
             # if str(self.profileDetails["message"]).__eq__("SUCCESS"):
-            # data = {"token_status": "generated", BROKER_USER_NAME: self.profileDetails["data"]["name"]}
-            # user_broker_data.update(**data)
+            #     data = {"token_status": "generated", BROKER_USER_NAME: self.profileDetails["data"]["name"]}
+            #     user_broker_data.update(**data)
 
             self.headers = {"Authorization": "Bearer " + self.auth_token}
             self.session = requests.session()
@@ -67,18 +72,14 @@ class AngelOneBroker:
             self.user_token_data = self.user_token_data_list[0]
 
     def initBrokerWithToken(self):
-        try:
-            self.refreshToken = self.user_token_data["refreshToken"]
-            self.feed_token = self.user_token_data["feedToken"]
-            self.auth_token = self.user_token_data["jwtToken"]
-            self.smartApi = SmartConnect(self.broker_api_token)
-            self.smartApi.__init__(refresh_token=self.refreshToken,
-                                   feed_token=self.feed_token, access_token=self.auth_token,
-                                   api_key=self.broker_api_token)
-            return True
-        except Exception as e:
-            addLogDetails(ERROR,str(e))
-            return False
+        self.refreshToken = self.user_token_data["refreshToken"]
+        self.feed_token = self.user_token_data["feedToken"]
+        self.auth_token = self.user_token_data["jwtToken"]
+        self.smartApi = SmartConnect(self.broker_api_token)
+        self.smartApi.__init__(refresh_token=self.refreshToken,
+                               feed_token=self.feed_token, access_token=self.auth_token,
+                               api_key=self.broker_api_token)
+
 
     def checkProfile(self):
         return self.smartApi.getProfile(self.refreshToken)
