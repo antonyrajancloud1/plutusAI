@@ -26,9 +26,9 @@ class AngelOneBroker:
             if self.user_token_data_list.__len__() > 0:
                 addLogDetails(INFO,"into Existing token flow " +self.user_id)
                 # self.user_token_data = self.user_token_data[0]
-                self.initBrokerWithToken()
-                profile_details = self.checkProfile()
-                if profile_details[MESSAGE] == "SUCCESS":
+
+                # profile_details = self.checkProfile()
+                if self.initBrokerWithToken():
                     addLogDetails(INFO,"Broker object initiated with existing token "+self.user_id)
                 else:
                     # print("Generate token")
@@ -45,11 +45,11 @@ class AngelOneBroker:
             # print(self.refreshToken)
             # print(self.auth_token)
             # print(self.feed_token)
-            self.profileDetails = self.checkProfile()
-            print(self.profileDetails)
-            if str(self.profileDetails["message"]).__eq__("SUCCESS"):
-                data = {"token_status": "generated", BROKER_USER_NAME: self.profileDetails["data"]["name"]}
-                user_broker_data.update(**data)
+            # self.profileDetails = self.checkProfile()
+            # print(self.profileDetails)
+            # if str(self.profileDetails["message"]).__eq__("SUCCESS"):
+            # data = {"token_status": "generated", BROKER_USER_NAME: self.profileDetails["data"]["name"]}
+            # user_broker_data.update(**data)
 
             self.headers = {"Authorization": "Bearer " + self.auth_token}
             self.session = requests.session()
@@ -67,13 +67,18 @@ class AngelOneBroker:
             self.user_token_data = self.user_token_data_list[0]
 
     def initBrokerWithToken(self):
-        self.refreshToken = self.user_token_data["refreshToken"]
-        self.feed_token = self.user_token_data["feedToken"]
-        self.auth_token = self.user_token_data["jwtToken"]
-        self.smartApi = SmartConnect(self.broker_api_token)
-        self.smartApi.__init__(refresh_token=self.refreshToken,
-                               feed_token=self.feed_token, access_token=self.auth_token,
-                               api_key=self.broker_api_token)
+        try:
+            self.refreshToken = self.user_token_data["refreshToken"]
+            self.feed_token = self.user_token_data["feedToken"]
+            self.auth_token = self.user_token_data["jwtToken"]
+            self.smartApi = SmartConnect(self.broker_api_token)
+            self.smartApi.__init__(refresh_token=self.refreshToken,
+                                   feed_token=self.feed_token, access_token=self.auth_token,
+                                   api_key=self.broker_api_token)
+            return True
+        except Exception as e:
+            addLogDetails(ERROR,str(e))
+            return False
 
     def checkProfile(self):
         return self.smartApi.getProfile(self.refreshToken)
