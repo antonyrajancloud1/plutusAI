@@ -230,7 +230,7 @@ async function getTokenData() {
             token_details.innerHTML = "No Token Present";
         }
 
-        console.log(data); // ✅ Log the parsed JSON object, NOT response.json()
+//        console.log(data); // ✅ Log the parsed JSON object, NOT response.json()
 
     } catch (error) {
         document.getElementById('token_details').innerHTML = error;
@@ -287,7 +287,14 @@ window.onload = function () {
 // Function to fetch strategy summary and display in a Chart.js bar chart
 async function fetchStrategySummary() {
     try {
-        const response = await fetch("http://localhost:8000/get_strategy_summary");
+//        const response = await fetch("http://localhost:8000/get_strategy_summary");
+        const response = await fetch("get_strategy_summary", {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+
+        });
         const data = await response.json();
 
         // Check if API response contains the expected structure
