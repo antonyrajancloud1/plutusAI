@@ -7,6 +7,7 @@
     <title>Trade Actions Table</title>
 
     <link rel="stylesheet" href="{% static 'css/manual.css'%}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -46,7 +47,10 @@
         </form>
     </div>
 </div>
-
+<div id="summary">
+     <h2>Strategy Summary Chart</h2>
+<canvas id="strategyChart"></canvas>
+</div>
 </body>
 <script src="{% static 'js/manual.js'%}" type="text/javascript"></script>
 </html>

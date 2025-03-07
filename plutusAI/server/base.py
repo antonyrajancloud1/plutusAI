@@ -20,7 +20,8 @@ from celery.result import AsyncResult
 from logging.handlers import TimedRotatingFileHandler
 
 
-from django.db.models import Sum
+from django.db.models import *
+
 
 def admin_check(user):
     return user.is_authenticated and user.is_staff
@@ -778,3 +779,16 @@ def getManualOrderDetails(user_email, index):
         return user_data
     except Exception as e:
         addLogDetails(ERROR, str(e))
+def getStrategySummaryUsingEmail(user_email):
+    BROKERAGE_PER_ORDER=70
+    try:
+        strategy_summary = OrderBook.objects.filter(user_id=user_email).values('strategy', 'index_name').annotate(
+            order_count=Count('id'),
+            total_profit=ExpressionWrapper(Sum('total') - Count('id') * BROKERAGE_PER_ORDER, output_field=FloatField())
+        ).order_by('-total_profit')
+
+        return list(strategy_summary)
+
+    except Exception as e:
+        addLogDetails(ERROR, f"Error in getStrategySummaryUsingEmail: {str(e)}")
+        return []

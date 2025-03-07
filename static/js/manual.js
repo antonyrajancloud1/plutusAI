@@ -215,27 +215,28 @@ function showResult(message, isSuccess = true) {
 // Fetch data from the API to populate the table
 async function getTokenData() {
     try {
-//        const response = await fetch('get_auth_token');
         const response = await fetch("get_auth_token", {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-
+            headers: { 'Content-Type': 'application/json' }
         });
+
+        const data = await response.json(); // ✅ Parse JSON once and store it
+
         const token_details = document.getElementById('token_details');
-        const data = await response.json();
+
         if (data.status === 'success') {
-            token_details.innerHTML = data.message
+            token_details.innerHTML = data.message;
         } else {
-           token_details.innerHTML = "No Token Present"
+            token_details.innerHTML = "No Token Present";
         }
-console.log(response.json())
+
+        console.log(data); // ✅ Log the parsed JSON object, NOT response.json()
+
     } catch (error) {
-//        showResult(`Error fetching data: ${error.message}`, false);
-        token_details.innerHTML =error
+        document.getElementById('token_details').innerHTML = error;
     }
 }
+
 
 async function reGenTokenData() {
     try {
@@ -258,5 +259,81 @@ console.log(response.json())
         token_details.innerHTML =error
     }
 }
+
+
 // Fetch and populate the table on page load
-window.onload = fetchData;
+//window.onload = fetchData;
+
+
+
+
+// Call the function when the page loads
+window.onload = function () {
+    fetchData();  // Existing function to fetch table data
+    fetchStrategySummary();  // Fetch and display the chart
+};
+
+
+
+
+
+
+//document.addEventListener("DOMContentLoaded", function () {
+//    fetchStrategySummary();  // Fetch and display the strategy chart
+//
+//    fetchData();  // Ensure trade table data is fetched
+//});
+
+// Function to fetch strategy summary and display in a Chart.js bar chart
+async function fetchStrategySummary() {
+    try {
+        const response = await fetch("http://localhost:8000/get_strategy_summary");
+        const data = await response.json();
+
+        // Check if API response contains the expected structure
+        if (!data || data.status !== "success" || !data.summary) {
+            console.error("Unexpected API response:", data);
+            return;
+        }
+
+        renderChart(data.summary); // ✅ Pass correct data structure
+    } catch (error) {
+        console.error("Error fetching strategy summary:", error);
+    }
+}
+
+
+// Function to render the chart using Chart.js
+function renderChart(summaryData) {
+    const canvas = document.getElementById("strategyChart");
+
+    if (!canvas) {
+        console.error("Error: 'strategyChart' canvas element not found in HTML.");
+        return;
+    }
+
+    const ctx = canvas.getContext("2d"); // ✅ This line won't break if canvas is missing
+
+    // Destroy existing chart if it exists (prevents duplication)
+    if (window.strategyChartInstance) {
+        window.strategyChartInstance.destroy();
+    }
+
+    window.strategyChartInstance = new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: summaryData.map(item => item.strategy),
+            datasets: [{
+                label: "Total Profit (After Brokerage)",
+                data: summaryData.map(item => item.total_profit ?? 0),
+                backgroundColor: summaryData.map(value => value.total_profit >= 0 ? "green" : "red"),
+                borderColor: "black",
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+}

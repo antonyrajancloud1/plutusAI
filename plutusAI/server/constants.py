@@ -61,6 +61,7 @@ GET_AUTH_TOKEN="get_auth_token"
 GENERATE_AUTH_TOKEN="generate_auth_token"
 GET_INDEX_DATA="get_index_data"
 UPDATE_EXPIRY_DETAILS="update_expiry_details"
+GET_STRATEGY_SUMMARY="get_strategy_summary"
 
 MANUAL="manual"
 CE="CE"

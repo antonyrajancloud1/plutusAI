@@ -863,3 +863,18 @@ def placeExitOrderWebHook(request):
         return exitOrderWebhook(strategy,data,user_email)
     else:
         return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+
+@require_http_methods([GET])
+@csrf_exempt
+def getStrategySummary(request):
+    if check_user_session(request):
+        try:
+            user_email = get_user_email(request)
+            user_data = getStrategySummaryUsingEmail(user_email)
+            print(user_data)
+            return JsonResponse({STATUS: SUCCESS, "summary":user_data,TASK_STATUS: True})
+        except Exception as e:
+            print(e)
+            return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
+    else:
+        return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
