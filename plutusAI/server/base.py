@@ -18,7 +18,7 @@ from dateutil.rrule import rrule, WEEKLY, TH, TU, WE, MO
 from celery import shared_task
 from celery.result import AsyncResult
 from logging.handlers import TimedRotatingFileHandler
-
+from django.utils.timezone import now
 
 from django.db.models import *
 
@@ -781,27 +781,34 @@ def getManualOrderDetails(user_email, index):
         addLogDetails(ERROR, str(e))
 
 
+from datetime import datetime
+from django.db.models import Count, Sum, F, ExpressionWrapper, FloatField
+from django.utils.timezone import now
+
 def getStrategySummaryUsingEmail(user_email):
     BROKERAGE_PER_ORDER = 70
-    current_timestamp = getCurrentTimestamp()  # Get the timestamp as float
-    current_date = datetime.fromtimestamp(float(current_timestamp)).date()  # Get the current date
-    print(current_date)
+    current_date = now().date()  # Get today's date
 
     try:
         # Fetch all available data
-        #full_summary = OrderBook.objects.filter(user_id=user_email).values('strategy', 'index_name').annotate(
-            #order_count=Count('id'),
-         #   total_profit=ExpressionWrapper(Sum('total') - Count('id') * BROKERAGE_PER_ORDER, output_field=FloatField())).order_by('-total_profit')
-        full_summary = OrderBook.objects.filter(user_id=user_email).values('strategy', 'index_name').annotate(
+        full_summary = OrderBook.objects.filter(user_id=user_email).values(
+            'strategy', 'index_name'
+        ).annotate(
             order_count=Count('id'),
             total_profit=ExpressionWrapper(Sum('total') - Count('id') * BROKERAGE_PER_ORDER, output_field=FloatField())
         ).order_by('-total_profit')
 
         # Fetch only today's data
         today_summary = OrderBook.objects.filter(
-            user_id=user_email,
-            entry_time=current_date  # Filter only today's data
-        ).values('strategy', 'index_name').annotate(
+            user_id=user_email
+        ).annotate(
+            entry_date=ExpressionWrapper(F('entry_time'), output_field=FloatField())  # Keep entry_time as float
+        ).filter(
+            entry_date__gte=datetime.combine(current_date, datetime.min.time()).timestamp(),
+            entry_date__lt=datetime.combine(current_date, datetime.max.time()).timestamp()
+        ).values(
+            'strategy', 'index_name'
+        ).annotate(
             order_count=Count('id'),
             total_profit=ExpressionWrapper(Sum('total') - Count('id') * BROKERAGE_PER_ORDER, output_field=FloatField())
         ).order_by('-total_profit')
@@ -809,18 +816,17 @@ def getStrategySummaryUsingEmail(user_email):
         return {
             "status": "success",
             "full_summary": list(full_summary),  # All available data
-            "current_day_summary": list(today_summary),  # Today's data
+            "current_day_summary": list(today_summary),  # Only today's data
             "current_date": current_date.strftime("%Y-%m-%d"),
             "task_status": True
         }
-
 
     except Exception as e:
         addLogDetails(ERROR, f"Error in getStrategySummaryUsingEmail: {str(e)}")
 
     return {
         "status": "error",
-        "summary": [],
+        "full_summary": [],
         "current_date_summary": [],
         "current_date": current_date.strftime("%Y-%m-%d"),
         "task_status": False
