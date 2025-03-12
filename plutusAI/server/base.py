@@ -779,16 +779,49 @@ def getManualOrderDetails(user_email, index):
         return user_data
     except Exception as e:
         addLogDetails(ERROR, str(e))
+
+
 def getStrategySummaryUsingEmail(user_email):
-    BROKERAGE_PER_ORDER=70
+    BROKERAGE_PER_ORDER = 70
+    current_timestamp = getCurrentTimestamp()  # Get the timestamp as float
+    current_date = datetime.fromtimestamp(float(current_timestamp)).date()  # Get the current date
+    print(current_date)
+
     try:
-        strategy_summary = OrderBook.objects.filter(user_id=user_email).values('strategy', 'index_name').annotate(
+        # Fetch all available data
+        #full_summary = OrderBook.objects.filter(user_id=user_email).values('strategy', 'index_name').annotate(
+            #order_count=Count('id'),
+         #   total_profit=ExpressionWrapper(Sum('total') - Count('id') * BROKERAGE_PER_ORDER, output_field=FloatField())).order_by('-total_profit')
+        full_summary = OrderBook.objects.filter(user_id=user_email).values('strategy', 'index_name').annotate(
             order_count=Count('id'),
             total_profit=ExpressionWrapper(Sum('total') - Count('id') * BROKERAGE_PER_ORDER, output_field=FloatField())
         ).order_by('-total_profit')
 
-        return list(strategy_summary)
+        # Fetch only today's data
+        today_summary = OrderBook.objects.filter(
+            user_id=user_email,
+            entry_time=current_date  # Filter only today's data
+        ).values('strategy', 'index_name').annotate(
+            order_count=Count('id'),
+            total_profit=ExpressionWrapper(Sum('total') - Count('id') * BROKERAGE_PER_ORDER, output_field=FloatField())
+        ).order_by('-total_profit')
+
+        return {
+            "status": "success",
+            "full_summary": list(full_summary),  # All available data
+            "current_day_summary": list(today_summary),  # Today's data
+            "current_date": current_date.strftime("%Y-%m-%d"),
+            "task_status": True
+        }
+
 
     except Exception as e:
         addLogDetails(ERROR, f"Error in getStrategySummaryUsingEmail: {str(e)}")
-        return []
+
+    return {
+        "status": "error",
+        "summary": [],
+        "current_date_summary": [],
+        "current_date": current_date.strftime("%Y-%m-%d"),
+        "task_status": False
+    }

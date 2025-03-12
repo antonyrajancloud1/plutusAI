@@ -303,7 +303,9 @@ async function fetchStrategySummary() {
             return;
         }
 
-        renderChart(data.summary); // ✅ Pass correct data structure
+//        renderChart(data.summary.full_summary); // ✅ Pass correct data structure
+        renderTable(data.summary.full_summary, "fullSummaryTable");
+        renderTable(data.summary.current_day_summary, "currentDaySummaryTable");
     } catch (error) {
         console.error("Error fetching strategy summary:", error);
     }
@@ -342,5 +344,27 @@ function renderChart(summaryData) {
             responsive: true,
             scales: { y: { beginAtZero: true } }
         }
+    });
+}
+function renderTable(data, tableId) {
+    const tableBody = document.querySelector(`#${tableId} tbody`);
+    tableBody.innerHTML = "";
+
+    if (data.length === 0) {
+        tableBody.innerHTML = "<tr><td colspan='4' style='text-align:center;'>No data available</td></tr>";
+        return;
+    }
+
+    data.forEach(item => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${item.strategy}</td>
+            <td>${item.index_name}</td>
+            <td>${item.order_count}</td>
+            <td style="color: ${item.total_profit >= 0 ? 'green' : 'red'};">
+                ${item.total_profit !== null ? item.total_profit.toFixed(2) : "N/A"}
+            </td>
+        `;
+        tableBody.appendChild(row);
     });
 }

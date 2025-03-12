@@ -47,10 +47,39 @@
         </form>
     </div>
 </div>
-<div id="summary">
-     <h2>Strategy Summary Chart</h2>
 <canvas id="strategyChart"></canvas>
+    <div id="summaryWrapper">
+    <div id="currentDaySummaryContainer">
+        <h3>Current Day Summary ({{current_date}})</h3>
+        <table id="currentDaySummaryTable" border="1">
+            <thead>
+                <tr>
+                    <th>Strategy</th>
+                    <th>Index Name</th>
+                    <th>Order Count</th>
+                    <th>Total Profit</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div id="fullSummaryContainer">
+        <h3>Full Summary</h3>
+        <table id="fullSummaryTable" border="1">
+            <thead>
+                <tr>
+                    <th>Strategy</th>
+                    <th>Index Name</th>
+                    <th>Order Count</th>
+                    <th>Total Profit</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
 </div>
+
 </body>
 <script src="{% static 'js/manual.js'%}" type="text/javascript"></script>
 </html>

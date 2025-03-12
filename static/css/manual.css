@@ -213,8 +213,20 @@ tbody tr:hover {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   z-index: 1000;
 }
-#summary{
-height: 5%;
-  width: 50%;
 
+
+#summaryWrapper {
+    display: flex;
+    justify-content: space-between; /* Positions left and right */
+    width: 100%;
+}
+
+#currentDaySummaryContainer {
+    text-align: left;
+    width: 48%;
+}
+
+#fullSummaryContainer {
+    text-align: right;
+    width: 48%;
 }
