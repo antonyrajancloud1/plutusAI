@@ -443,13 +443,17 @@ def stop_ws(request):
 @require_http_methods([GET])
 def getDashboardDetails(request):
     try:
+        # if check_user_session(request):
+        #     user_email = get_user_email(request)
+        #     dashboard_data= {"all_data": getUserDashboardDetails(user_email, False),
+        #                      "today_data": getUserDashboardDetails(user_email, True)}
+        #     return JsonResponse({STATUS: SUCCESS, "dashboard":dashboard_data})
+        # else:
+        #     return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
         if check_user_session(request):
-            user_email = get_user_email(request)
-            dashboard_data= {"all_data": getUserDashboardDetails(user_email, False),
-                             "today_data": getUserDashboardDetails(user_email, True)}
-            return JsonResponse({STATUS: SUCCESS, "dashboard":dashboard_data})
+            return render(request, "dashboard.html")
         else:
-            return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+            return redirect(LOGIN_URL)
     except Exception as e:
         addLogDetails(ERROR, str(e))
         return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
