@@ -50,7 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
      fetch('get_strategy_summary')
        .then(response => response.json())
        .then(data => {
-       console.log(data)
          const positionsData = data.summary.current_day_summary;
          displayAllData(positionsData);
        })
@@ -93,75 +92,80 @@ document.addEventListener('DOMContentLoaded', () => {
     return strategyColors[strategy];
   }
 
+function calculateTotalPNL(positions) {
+    let totalPNL = 0;
+
+    for (let i = 0; i < positions.length; i++) {
+        let profit = positions[i].total_profit;
+
+        // Ensure total_profit is a valid number before adding
+        if (typeof profit === "number" && !isNaN(profit)) {
+            totalPNL += profit;
+        }
+    }
+
+    return totalPNL;
+}
+
+
   function displayChart(positions) {
+    console.log("Raw Positions Data:", positions);
+    console.log("Positions with total_profit:", positions.map(pos => pos.total_profit)); // Debugging
+
+
     const pnlChartContainer = document.querySelector('.pnl-chart');
-    pnlChartContainer.innerHTML = ''; // Clear existing content
 
-    // Calculate total profit for percentage calculation
-    const totalProfit = positions.reduce((sum, pos) => sum + pos.total_profit, 0);
-    let conicGradientValue = '';
+    // **Filter out null total_profit values**
+const validPositions = positions.filter(pos =>
+    typeof pos.total_profit === "number" && !isNaN(pos.total_profit)
+);
 
-    // Create chart elements
-    const chartCircle = document.createElement('div');
-    chartCircle.classList.add('chart-circle');
 
-    const chartValue = document.createElement('div');
-    chartValue.classList.add('chart-value');
-    chartValue.textContent = totalProfit.toLocaleString('en-IN', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
+    // **Chart Data Extraction**
+    const labels = validPositions.map(pos => pos.strategy);
+    const data = validPositions.map(pos => pos.total_profit || 0);
+
+    const canvas = document.getElementById('pnlChart');
+    const ctx = canvas.getContext('2d');
+
+    // **Destroy Previous Chart If Exists**
+    if (canvas.chartInstance) {
+        canvas.chartInstance.destroy();
+    }
+
+    // **Create New Chart**
+    canvas.chartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+                hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
     });
 
-    const chartLegend = document.createElement('div');
-    chartLegend.classList.add('chart-legend');
+    let totalPNL = calculateTotalPNL(positions);
+    console.log("Overall PNL:", totalPNL);
 
-    let startAngle = 0;
+    document.getElementById("pnlInfo").innerHTML =`<h3 style="text-align:center; margin-bottom:10px; font-size:18px;">
+            Overall PNL: <span style="color: ${totalPNL >= 0 ? 'green' : 'red'};">
+            ₹${totalPNL.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </span>
+        </h3>
+    `;;
+}
 
-    positions.forEach((position, index) => {
-      const percentage = (position.total_profit / totalProfit) * 100;
-      const angle = percentage * 3.6; // 360 degrees / 100%
-      const color = getColorForStrategy(position.strategy);
-
-      conicGradientValue += `${color} ${startAngle}deg ${startAngle + angle}deg, `;
-      startAngle += angle;
-
-      // Create legend item
-      const legendItem = document.createElement('div');
-      legendItem.classList.add('legend-item');
-      legendItem.classList.add(position.strategy.replace(/_/g, '-'));
-
-      const legendLabel = document.createElement('span');
-      legendLabel.classList.add('legend-label');
-      legendLabel.textContent = position.strategy;
-
-      const legendPercentage = document.createElement('span');
-      legendPercentage.classList.add('legend-percentage');
-      legendPercentage.textContent = percentage.toFixed(2) + '%';
-
-      legendItem.appendChild(legendLabel);
-      legendItem.appendChild(legendPercentage);
-      chartLegend.appendChild(legendItem);
-    });
-
-    // Remove trailing comma and space from conicGradientValue
-    conicGradientValue = conicGradientValue.slice(0, -2);
-
-    // Create the ::before pseudo-element using JavaScript
-    const chartCircleBefore = document.createElement('div');
-    chartCircleBefore.style.position = 'absolute';
-    chartCircleBefore.style.top = '0';
-    chartCircleBefore.style.left = '0';
-    chartCircleBefore.style.width = '100%';
-    chartCircleBefore.style.height = '100%';
-    chartCircleBefore.style.borderRadius = '50%';
-    chartCircleBefore.style.background = `conic-gradient(${conicGradientValue})`;
-    chartCircleBefore.style.opacity = '0.8';
-
-    chartCircle.appendChild(chartValue);
-    chartCircle.appendChild(chartCircleBefore); // Append the pseudo-element
-    pnlChartContainer.appendChild(chartCircle);
-    pnlChartContainer.appendChild(chartLegend);
-  }
 
   function displayPositions(positions) {
     const positionsContainer = document.querySelector('.positions');

@@ -196,3 +196,11 @@ h2 {
 .position-value.negative {
   color: #f44336;
 }
+.positions,
+.orders {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto; /* Enable vertical scrolling */
+  border: 1px solid #333; /* Optional: Adds a border */
+  padding: 10px;
+}
