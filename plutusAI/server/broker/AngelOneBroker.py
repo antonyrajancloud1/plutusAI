@@ -181,12 +181,12 @@ class AngelOneBroker:
                 "fromdate": from_time,
                 "todate": to_time
             }
-            print(dataParam)
+            # print(dataParam)
             historic_data = self.smartApi.getCandleData(dataParam)
             candle_data = historic_data["data"]
             if historic_data["message"] == "SUCCESS":
                 df = pd.DataFrame(candle_data, columns=column)
-                print(df)
+                # print(df)
                 return df
         except Exception as e:
             addLogDetails(ERROR, "exception in getCandleData" + str(e))

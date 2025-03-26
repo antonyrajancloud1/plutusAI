@@ -82,13 +82,15 @@ def addAllIndexValues(user_id):
         add_config_values(value)
 
 
-def add_user_and_populate_data(user_id):
+def add_user_and_populate_data(user_data):
     try:
+        user_id = user_data.get(USER_ID)
+        user_password = user_data.get(PASSWORD)
         username = str(user_id).split("@")[0]
-        password = "New@2024"
+        password = user_password
         user_details = add_user(username, user_id, password)
         user_response = json.loads(user_details.content)
-        addLogDetails(INFO, "New user added Response:" + str(user_response))
+        addLogDetails(INFO, f"New user added Response:  {user_response}")
         if user_response.get(MESSAGE).__eq__(USER_ADDED):
             addAllIndexValues(user_id)
             return JsonResponse(
@@ -234,6 +236,12 @@ def updateScalperDetails(user_email, index, data):
     except Exception as e:
         addLogDetails(ERROR, str(e))
 
+def updateFlashConfiguration(user_email, index, data):
+    try:
+        user_data = FlashDetails.objects.filter(user_id=user_email, index_name=index)
+        user_data.update(**data)
+    except Exception as e:
+        addLogDetails(ERROR, str(e))
 
 def updateIndexDetails(token, data):
     try:
@@ -777,6 +785,31 @@ def getManualOrderDetails(user_email, index):
         user_data = ManualOrders.objects.filter(user_id=user_email, index_name=index)
         user_data=list(user_data.values())[0]
         return user_data
+    except Exception as e:
+        addLogDetails(ERROR, str(e))
+
+# def updateWebhookOrderDetails(user_email, index,strategy, data):
+#     try:
+#         user_data = WebhookDetails.objects.filter(user_id=user_email, index_name=index,strategy=strategy)
+#         user_data.update(**data)
+#     except Exception as e:
+#         addLogDetails(ERROR, str(e))
+
+
+def addWebhookOrderDetails(user_email, index,strategy, data):
+    try:
+        addLogDetails(INFO, "addWebhookOrderDetails")
+        current_time_str = getCurrentTimestamp()
+        data["time"] = current_time_str
+
+        user_data = WebhookDetails.objects.filter(user_id=user_email, index_name=index, strategy=strategy)
+        if list(user_data.values()) <= 0:
+            WebhookDetails.objects.create(**data)
+        else:
+            user_data.update(**data)
+        addLogDetails(INFO, "addWebhookOrderDetails : " + str(data))
+        # if(list(user_data.values()) >0):
+
     except Exception as e:
         addLogDetails(ERROR, str(e))
 

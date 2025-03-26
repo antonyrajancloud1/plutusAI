@@ -52,5 +52,9 @@ urlpatterns = [
     path(UPDATE_EXPIRY_DETAILS, views.updateIndexExpiryDetails, name=UPDATE_EXPIRY_DETAILS),
     path(GET_STRATEGY_SUMMARY, views.getStrategySummary, name=GET_STRATEGY_SUMMARY),
 
+    path(UPDATE_FLASH, views.update_flash_values, name=UPDATE_FLASH),
+    path(GET_FLASH_DETAILS, views.get_flash_values, name=GET_FLASH_DETAILS),
+    path(START_FLASH, views.start_flash, name=START_FLASH),
+
     path("test", views.getIndexDetails, name="test"),
 ]

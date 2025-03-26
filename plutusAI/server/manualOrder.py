@@ -151,18 +151,43 @@ def triggerOrder(user_email, user_index_data, strategy, order_type):
         # Fetch current premium details
         option_details = broker.getCurrentPremiumDetails(NFO, trading_symbol)
         ltp = broker.getLtpForPremium(option_details)
-
+        print(option_details)
         if broker.is_demo_enabled:
             option_buy_price = ltp
         else:
-            order_details = {
-                VARIETY: NORMAL, EXCHANGE: NFO, TRADING_SYMBOL: trading_symbol,
-                SYMBOL_TOKEN: broker.getTokenForSymbol(trading_symbol),
-                TRANSACTION_TYPE: BUY if order_type.upper() == BUY else SELL,
-                ORDER_TYPE: MARKET, PRODUCT_TYPE: INTRADAY,
-                DURATION: DAY, QUANTITY: user_qty
-            }
+            # Get Candle Data
 
+            from_time = str(get_previous_minute_start(get_current_minute_start(), False))
+            to_time = str(get_next_minute_start_ms(get_current_minute_start(), False))
+            print(from_time,to_time)
+            from_time = "2025-03-26 14:04"
+            to_time="2025-03-26 14:05"
+
+            candle_data_df = broker.getCandleData(NFO, option_details[SYMBOL_TOKEN], from_time, to_time, "ONE_MINUTE")
+            high_price = float(candle_data_df.loc[0, HIGH])
+
+            # order_details=None
+            if high_price is None or float(ltp) > high_price:
+
+                ## Option Buying ##
+                order_details = {
+                    VARIETY: NORMAL, EXCHANGE: NFO, TRADING_SYMBOL: trading_symbol,
+                    SYMBOL_TOKEN: broker.getTokenForSymbol(trading_symbol),
+                    TRANSACTION_TYPE: BUY if order_type.upper() == BUY else SELL,
+                    ORDER_TYPE: MARKET, PRODUCT_TYPE: INTRADAY,
+                    DURATION: DAY, QUANTITY: user_qty
+                }
+            else:
+                order_details= {
+                    VARIETY: NORMAL, EXCHANGE: NFO, TRADING_SYMBOL: trading_symbol,
+                    SYMBOL_TOKEN: broker.getTokenForSymbol(trading_symbol),
+                    TRANSACTION_TYPE: BUY if order_type.upper() == BUY else SELL,
+                    ORDER_TYPE: ORDER_TYPE_SL, PRODUCT_TYPE: INTRADAY,
+                    DURATION: DAY, QUANTITY: user_qty,TRIGGER_PRICE:high_price,PRICE:high_price
+                }
+            print("#############")
+            print(order_details)
+            print("#############")
             addLogDetails(INFO, f"Placing {order_type.lower()} order for {trading_symbol}")
             order_response = broker.placeOrder(order_details)
             addLogDetails(INFO, f"{order_type.capitalize()} order response: {order_response}")
@@ -171,7 +196,7 @@ def triggerOrder(user_email, user_index_data, strategy, order_type):
             order_response_details = broker.getOrderDetails(unique_order_id)
             option_buy_price = order_response_details.get("averageprice", ltp)  # Fallback to LTP
 
-            updateManualOrderDetails(user_email, index_name, {
+            addWebhookOrderDetails(user_email, index_name, strategy,{
                 "current_premium": trading_symbol,
                 "order_id": order_response.get("data", {}).get("orderid"),
                 "unique_order_id": unique_order_id

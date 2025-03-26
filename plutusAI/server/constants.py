@@ -8,6 +8,7 @@ SOCKET_JOB_TYPE='3'
 STRATEGY_HUNTER='hunter'
 STRATEGY_SCALPER='scalper'
 STRATEGY_MANUAL='manual'
+STRATEGY_FLASH='flash'
 
 ### index details 
 NIFTY_50='Nifty 50'
@@ -56,6 +57,9 @@ PLACE_ORDER_SELL="place_order_sell"
 TRIGGER_BUY="trigger_buy"
 TRIGGER_SELL="trigger_sell"
 TRIGGER_EXIT="trigger_exit"
+START_FLASH = "start_flash"
+UPDATE_FLASH = "update_flash_details"
+GET_FLASH_DETAILS = "get_flash_details"
 
 GET_AUTH_TOKEN="get_auth_token"
 GENERATE_AUTH_TOKEN="generate_auth_token"
@@ -89,6 +93,8 @@ BROKER_API_TOKEN = "broker_api_token"
 BROKER_QR = "broker_qr"
 INDEX_GROUP = "index_group"
 TOKEN='token'
+MAX_PROFIT="max_profit"
+MAX_LOSS="max_loss"
 
 #### INDEX TYPES
 INDIAN_INDEX = "indian_index"
@@ -140,6 +146,7 @@ BROKER_DETAILS = "broker_details"
 BROKER_DETAILS_ADDED = "broker_details_added"
 BROKER_DETAILS_UPDATED= "broker_details_updated"
 SCALPER_VALUES_UPDATED = "scalper_details_updated"
+FLASH_VALUES_UPDATED = "flash_details_updated"
 ORDER_PRESENT="order_present"
 
 ORDER_BOOK_DETAILS = "order_book_details"

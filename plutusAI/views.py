@@ -109,8 +109,8 @@ def get_config_values(request):
 def add_user(request):
     if admin_check(request.user):
         data = json.loads(request.body)
-        user_id = data.get(USER_ID)
-        return add_user_and_populate_data(user_id)
+        # user_id = data.get(USER_ID)
+        return add_user_and_populate_data(data)
     else:
         return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
 
@@ -882,3 +882,89 @@ def getStrategySummary(request):
             return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
     else:
         return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+
+@csrf_exempt
+@require_http_methods([GET])
+def get_flash_values(request):
+    # user_email='user1@gmail.com'
+    if check_user_session(request):
+        user_email = get_user_email(request)
+        if "index_name" in request.GET:
+            index = request.GET.get("index_name")
+            user_data = FlashDetails.objects.filter(user_id=user_email, index_name=index)
+            user_profiles_list = list(user_data.values())
+            user_profiles_list = remove_data_from_list(user_profiles_list)
+            if len(user_profiles_list) > 0:
+                return JsonResponse(user_profiles_list[0])
+            else:
+                return JsonResponse({STATUS: FAILED, MESSAGE: INDEX_NOT_FOUND})
+        else:
+            user_data = FlashDetails.objects.filter(user_id=user_email)
+            user_profiles_list = list(user_data.values())
+            remove_data_from_list(user_profiles_list)
+            return JsonResponse({ALL_CONFIG_VALUES: user_profiles_list})
+    else:
+        return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+
+@login_required
+@csrf_exempt
+@require_http_methods([PUT])
+def update_flash_values(request):
+    try:
+        if check_user_session(request):
+            user_email = get_user_email(request)
+            data = json.loads(request.body)
+            data = remove_spaces_from_json(data)
+            index_name = data.get(INDEX_NAME)
+
+            validate_numeric_fields(data)
+            validate_float_field(data)
+            # validate_levels(data)
+            user_data = FlashDetails.objects.filter(
+                user_id=user_email, index_name=index_name
+            )
+            user_data.update(**data)
+            updated_data = FlashDetails.objects.filter(
+                user_id=user_email, index_name=index_name
+            )
+            updated_list = remove_data_from_list(list(updated_data.values()))[0]
+
+            return JsonResponse(
+                {STATUS: SUCCESS, MESSAGE: FLASH_VALUES_UPDATED, "data": updated_list}
+            )
+        else:
+            return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+    except json.JSONDecodeError as e:
+        return JsonResponse({STATUS: FAILED, MESSAGE: INVALID_JSON})
+    except ValueError as e:
+        return JsonResponse({STATUS: FAILED, MESSAGE: str(e)}, status=400)
+    except Exception as e:
+        return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
+
+@csrf_exempt  # need to remove
+@require_http_methods([POST])
+def start_flash(request):
+    try:
+        if check_user_session(request):
+            # checkSocketStatus()
+            user_email = get_user_email(request)
+            data = json.loads(request.body)
+            index_name = data.get(INDEX_NAME).replace("_", " ").title().replace(" ", "")
+            # strategy = data.get(STRATEGY)
+            addLogDetails(INFO, "Flash started for user: " + str(user_email) + " for index :" + index_name)
+
+            user_data = JobDetails.objects.filter(
+                user_id=user_email, index_name=data.get(INDEX_NAME), strategy=STRATEGY_FLASH
+            )
+            if user_data.count() > 0:
+                return JsonResponse({STATUS: FAILED, MESSAGE: f"{index_name} Flash running"})
+            else:
+                updateFlashConfiguration(user_email=user_email, index=data.get(INDEX_NAME), data=STAGE_INITIATED)
+                start_flash_job.delay(user_email, data.get(INDEX_NAME))
+                index_name = data.get(INDEX_NAME).replace("_", " ").title().replace(" ", "")
+                return JsonResponse({STATUS: SUCCESS, MESSAGE: f"{index_name} flash started"})
+        else:
+            return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+    except Exception as e:
+        addLogDetails(ERROR, str(e))
+        return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
