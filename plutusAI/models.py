@@ -184,7 +184,7 @@ class ManualOrders(models.Model):
 class WebhookDetails(models.Model):
     user_id = models.CharField(max_length=100, default=None)
     index_name = models.CharField(max_length=100, default=None)
-    target = models.CharField(max_length=100, default=None)
+    target = models.CharField(max_length=100, default=None , null=True)
     order_status = models.CharField(max_length=100, default=None)
     time = models.CharField(max_length=100, default=None)
     is_demo_trading_enabled = models.BooleanField(default=True)
