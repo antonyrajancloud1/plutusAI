@@ -138,6 +138,9 @@ def triggerOrder(user_email, user_index_data, strategy, order_type):
                     })
                 else:
                     print("Sell order")
+                    exit_data = {INDEX_NAME: index_name,STRATEGY:strategy}
+
+                    exitOrderWebhook(strategy, exit_data, user_email)
                 user_data.update(**order_info)
             else:
                 return JsonResponse(
@@ -160,8 +163,8 @@ def triggerOrder(user_email, user_index_data, strategy, order_type):
             from_time = str(get_previous_minute_start(get_current_minute_start(), False))
             to_time = str(get_next_minute_start_ms(get_current_minute_start(), False))
             print(from_time,to_time)
-            from_time = "2025-03-26 14:04"
-            to_time="2025-03-26 14:05"
+            # from_time = "2025-03-26 14:04"
+            # to_time="2025-03-26 14:05"
 
             candle_data_df = broker.getCandleData(NFO, option_details[SYMBOL_TOKEN], from_time, to_time, "ONE_MINUTE")
             high_price = float(candle_data_df.loc[0, HIGH])
@@ -173,19 +176,21 @@ def triggerOrder(user_email, user_index_data, strategy, order_type):
                 order_details = {
                     VARIETY: NORMAL, EXCHANGE: NFO, TRADING_SYMBOL: trading_symbol,
                     SYMBOL_TOKEN: broker.getTokenForSymbol(trading_symbol),
-                    TRANSACTION_TYPE: BUY if order_type.upper() == BUY else SELL,
+                    TRANSACTION_TYPE: BUY ,
                     ORDER_TYPE: MARKET, PRODUCT_TYPE: INTRADAY,
                     DURATION: DAY, QUANTITY: user_qty
                 }
             else:
                 order_details= {
-                    VARIETY: NORMAL, EXCHANGE: NFO, TRADING_SYMBOL: trading_symbol,
+                    VARIETY: STOPLOSS, EXCHANGE: NFO, TRADING_SYMBOL: trading_symbol,
                     SYMBOL_TOKEN: broker.getTokenForSymbol(trading_symbol),
-                    TRANSACTION_TYPE: BUY if order_type.upper() == BUY else SELL,
+                    TRANSACTION_TYPE: BUY,
                     ORDER_TYPE: ORDER_TYPE_SL, PRODUCT_TYPE: INTRADAY,
                     DURATION: DAY, QUANTITY: user_qty,TRIGGER_PRICE:high_price,PRICE:high_price
                 }
             print("#############")
+            print(ltp)
+            print(high_price)
             print(order_details)
             print("#############")
             addLogDetails(INFO, f"Placing {order_type.lower()} order for {trading_symbol}")
@@ -242,7 +247,25 @@ def exitOrderWebhook(strategy, data, user_email):
                     STATUS:ORDER_EXITED
                 })
             else:
-                print("Sell order")
+                user_webkook_data = WebhookDetails.objects.filter(user_id=user_email, index_name=data[INDEX_NAME],
+                                                                  strategy=strategy)
+                user_webkook_data= list(user_webkook_data.values())[0]
+                trading_symbol = user_webkook_data[CURRENT_PREMIUM]
+                print("EXIT")
+                print(broker.smartApi.position())
+                print(broker.checkIfOrderExists(user_webkook_data[UNIQUE_ORDER_ID]))
+                if broker.checkIfOrderPlaced(user_webkook_data[UNIQUE_ORDER_ID]):
+                    order_details = {
+                        VARIETY: NORMAL, EXCHANGE: NFO, TRADING_SYMBOL: trading_symbol,
+                        SYMBOL_TOKEN: broker.getTokenForSymbol(trading_symbol),
+                        TRANSACTION_TYPE: SELL,
+                        ORDER_TYPE: MARKET, PRODUCT_TYPE: INTRADAY,
+                        DURATION: DAY, QUANTITY: qty
+                    }
+                    order_response = broker.placeOrder(order_details)
+                    print(order_response)
+                elif broker.checkIfOrderExists(user_webkook_data[UNIQUE_ORDER_ID]):
+                    broker.cancelOrder(user_webkook_data[ORDER_ID],NORMAL)
             user_data.update(**data)
             return JsonResponse({STATUS: SUCCESS, MESSAGE: "Order Exited", TASK_STATUS: True})
         else:
