@@ -863,6 +863,7 @@ def placeExitOrderWebHook(request):
     if check_user_session(request):
         user_email = get_user_email(request)
         data = json.loads(request.body)
+        # index = data[INDEX_NAME]
         strategy = data.get(STRATEGY, "DefaultStrategy")
         return exitOrderWebhook(strategy,data,user_email)
     else:
