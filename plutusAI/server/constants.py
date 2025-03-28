@@ -255,6 +255,9 @@ TRIGGER_PRICE = "triggerprice"
 ORDERID = "orderid"
 STOPLOSS = "STOPLOSS"
 STOP_LOSS = "stop_loss"
+CURRENT_PREMIUM="current_premium"
+UNIQUE_ORDER_ID="unique_order_id"
+ORDER_ID="order_id"
 ##error messages
 INCORRECT_INPUT = "Invalid Entries Found For Field "
 
