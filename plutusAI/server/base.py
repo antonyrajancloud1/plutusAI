@@ -801,14 +801,16 @@ def addWebhookOrderDetails(user_email, index,strategy, data):
         addLogDetails(INFO, "addWebhookOrderDetails")
         current_time_str = getCurrentTimestamp()
         data["time"] = current_time_str
-
+        data[USER_ID]= user_email
+        data[INDEX_NAME] = index
+        data[STRATEGY] = strategy
+        data["order_status"] = ORDER_PLACED
         user_data = WebhookDetails.objects.filter(user_id=user_email, index_name=index, strategy=strategy)
-        if list(user_data.values()) <= 0:
+        if len(list(user_data.values())) <= 0:
             WebhookDetails.objects.create(**data)
         else:
             user_data.update(**data)
         addLogDetails(INFO, "addWebhookOrderDetails : " + str(data))
-        # if(list(user_data.values()) >0):
 
     except Exception as e:
         addLogDetails(ERROR, str(e))
