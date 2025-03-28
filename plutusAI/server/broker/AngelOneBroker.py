@@ -155,6 +155,14 @@ class AngelOneBroker:
             # print("exception in modifyOrder")
             addLogDetails(ERROR, "exception in modifyOrder" + str(e))
 
+    def cancelOrder(self, order_id,variety):
+        try:
+            orderid = self.smartApi.cancelOrder(order_id,variety)
+            return orderid
+        except Exception as e:
+            # print("exception in modifyOrder")
+            addLogDetails(ERROR, "exception in cancelOrder" + str(e))
+
     def checkIfOrderExists(self, order_details):
         try:
             order_details = self.smartApi.individual_order_details(order_details)
@@ -166,6 +174,17 @@ class AngelOneBroker:
                 return False
         except Exception as e:
             addLogDetails(ERROR, "exception in checkIfOrderExists" + str(e))
+    def checkIfOrderPlaced(self, order_details):
+        try:
+            order_details = self.smartApi.individual_order_details(order_details)
+            addLogDetails(INFO,order_details)
+            order_status = order_details['data']['status']
+            if order_status.__eq__('complete') :
+                return True
+            else:
+                return False
+        except Exception as e:
+            addLogDetails(ERROR, "exception in checkIfOrderPlaced" + str(e))
 
     def getPrice(self, uniq_order_id):
         price_details = self.getOrderDetails(uniq_order_id)
