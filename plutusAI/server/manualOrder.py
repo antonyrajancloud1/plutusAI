@@ -88,12 +88,12 @@ def placeManualOrder(user_email, user_index_data, OrderType):
             "unique_order_id": order_response.get("data", {}).get("uniqueorderid")
         })
 
-        return JsonResponse({STATUS: SUCCESS, MESSAGE: f"Order placed successfully {trading_symbol}", TASK_STATUS: True})
+        return JsonResponse({STATUS: SUCCESS, MESSAGE: f"Message Sent successfully {trading_symbol}", TASK_STATUS: True})
 
     except Exception as e:
         error_msg = f"Unexpected error: {str(e)}"
         addLogDetails(ERROR, error_msg)
-        return JsonResponse({STATUS: FAILED, MESSAGE: error_msg, TASK_STATUS: False})
+        return JsonResponse({STATUS: FAILED, MESSAGE: "Unexpected error Check Logs", TASK_STATUS: False})
 
 def triggerOrder(user_email, user_index_data, strategy, order_type):
     try:
@@ -108,7 +108,7 @@ def triggerOrder(user_email, user_index_data, strategy, order_type):
         if not index_data:
             error_msg = f"Index data not found for {index_name}"
             addLogDetails(ERROR, error_msg)
-            return JsonResponse({STATUS: FAILED, MESSAGE: error_msg, TASK_STATUS: False})
+            return JsonResponse({STATUS: FAILED, MESSAGE: "error_msg", TASK_STATUS: False})
 
         index_qty = int(index_data.get(QTY, 0))
         user_qty = qty * index_qty
@@ -143,8 +143,8 @@ def triggerOrder(user_email, user_index_data, strategy, order_type):
                     exitOrderWebhook(strategy, exit_data, user_email)
                 user_data.update(**order_info)
             else:
-                return JsonResponse(
-                    {STATUS: SUCCESS, MESSAGE: f"{order_type.capitalize()} order already exists", TASK_STATUS: True})
+                addLogDetails(INFO,f"{order_type.capitalize()} order already exists")
+                return JsonResponse({STATUS: SUCCESS, MESSAGE: "Message Exists" , TASK_STATUS: True})
 
         # Determine option type and strike logic
         option_type = CE if order_type.upper() == BUY else PE
@@ -188,19 +188,15 @@ def triggerOrder(user_email, user_index_data, strategy, order_type):
                     ORDER_TYPE: ORDER_TYPE_SL, PRODUCT_TYPE: INTRADAY,
                     DURATION: DAY, QUANTITY: user_qty,TRIGGER_PRICE:high_price,PRICE:high_price
                 }
-            print("#############")
-            print(ltp)
-            print(high_price)
-            print(order_details)
-            print("#############")
             addLogDetails(INFO, f"Placing {order_type.lower()} order for {trading_symbol}")
             order_response = broker.placeOrder(order_details)
             addLogDetails(INFO, f"{order_type.capitalize()} order response: {order_response}")
-
             unique_order_id = order_response.get("data", {}).get("uniqueorderid")
             order_response_details = broker.getOrderDetails(unique_order_id)
-            option_buy_price = order_response_details.get("averageprice", ltp)  # Fallback to LTP
-
+            if str(order_details.get(ORDER_TYPE)).__eq__(MARKET):
+                option_buy_price = order_response_details.get("averageprice", ltp)  # Fallback to LTP
+            else:
+                option_buy_price = order_response_details.get("triggerprice", ltp)
             addWebhookOrderDetails(user_email, index_name, strategy,{
                 "current_premium": trading_symbol,
                 "order_id": order_response.get("data", {}).get("orderid"),
@@ -214,14 +210,74 @@ def triggerOrder(user_email, user_index_data, strategy, order_type):
         }
 
         addOrderBookDetails(data, True)
+        addLogDetails(INFO,f"{order_type.capitalize()} order placed successfully")
         return JsonResponse(
-            {STATUS: SUCCESS, MESSAGE: f"{order_type.capitalize()} order placed successfully", TASK_STATUS: True})
+            {STATUS: SUCCESS, MESSAGE: "Message Exits", TASK_STATUS: True})
 
     except Exception as e:
         error_msg = f"Unexpected error in trigger_order: {str(e)}"
         addLogDetails(ERROR, error_msg)
-        return JsonResponse({STATUS: FAILED, MESSAGE: error_msg, TASK_STATUS: False})
+        return JsonResponse({STATUS: FAILED, MESSAGE: "Unexpected error Check lohs", TASK_STATUS: False})
 
+
+# def exitOrderWebhook(strategy, data, user_email):
+#     try:
+#         data[EXIT_TIME] = getCurrentTimestamp()
+#         broker = Broker(user_email, INDIAN_INDEX).BrokerObject
+#
+#         user_data = OrderBook.objects.filter(
+#             user_id=user_email, strategy=strategy, exit_price=None
+#         )
+#
+#         if user_data.exists():
+#             order_info = user_data.values().first()
+#             entry_price = order_info[ENTRY_PRICE]
+#             qty = order_info[QTY]
+#             script_name = order_info[SCRIPT_NAME]
+#             option_details = broker.getCurrentPremiumDetails(NFO, script_name)
+#             ltp = broker.getLtpForPremium(option_details)
+#             if broker.is_demo_enabled:
+#
+#                 data.update({
+#                     TOTAL: str((float(ltp) - float(entry_price)) * int(qty)),
+#                     EXIT_PRICE: ltp,
+#                     STATUS:ORDER_EXITED
+#                 })
+#             else:
+#                 user_webkook_data = WebhookDetails.objects.filter(user_id=user_email, index_name=data[INDEX_NAME],
+#                                                                   strategy=strategy)
+#                 user_webkook_data= list(user_webkook_data.values())[0]
+#                 trading_symbol = user_webkook_data[CURRENT_PREMIUM]
+#                 if broker.checkIfOrderPlaced(user_webkook_data[UNIQUE_ORDER_ID]):
+#                     order_details = {
+#                         VARIETY: NORMAL, EXCHANGE: NFO, TRADING_SYMBOL: trading_symbol,
+#                         SYMBOL_TOKEN: broker.getTokenForSymbol(trading_symbol),
+#                         TRANSACTION_TYPE: SELL,
+#                         ORDER_TYPE: MARKET, PRODUCT_TYPE: INTRADAY,
+#                         DURATION: DAY, QUANTITY: qty
+#                     }
+#                     order_response_details = broker.placeOrder(order_details)
+#                     addLogDetails(INFO,order_response_details)
+#                     option_exit_price = order_response_details.get("averageprice", ltp)
+#                     data.update({
+#                         TOTAL: str((float(option_exit_price) - float(entry_price)) * int(qty)),
+#                         EXIT_PRICE: option_exit_price,
+#                         STATUS: ORDER_EXITED
+#                     })
+#                 elif broker.checkIfOrderExists(user_webkook_data[UNIQUE_ORDER_ID]):
+#                     broker.cancelOrder(user_webkook_data[ORDER_ID],NORMAL)
+#
+#             user_data.update(**data)
+#             addLogDetails(INFO,"Order exited")
+#             return JsonResponse({STATUS: SUCCESS, MESSAGE: "Message completed", TASK_STATUS: True})
+#         else:
+#             addLogDetails(INFO, f"No Pending orders for strategy {strategy}")
+#             return JsonResponse({STATUS: FAILED, MESSAGE: "No message", TASK_STATUS: True})
+#
+#     except Exception as e:
+#         error_msg = f"Unexpected error in exit_order_webhook: {str(e)}"
+#         addLogDetails(ERROR, error_msg)
+#         return JsonResponse({STATUS: FAILED, MESSAGE: "Unexpected error Check logs", TASK_STATUS: False})
 
 def exitOrderWebhook(strategy, data, user_email):
     try:
@@ -232,46 +288,63 @@ def exitOrderWebhook(strategy, data, user_email):
             user_id=user_email, strategy=strategy, exit_price=None
         )
 
-        if user_data.exists():
-            order_info = user_data.values().first()
-            entry_price = order_info[ENTRY_PRICE]
-            qty = order_info[QTY]
-            script_name = order_info[SCRIPT_NAME]
+        if not user_data.exists():
+            addLogDetails(INFO, f"No Pending orders for strategy {strategy}")
+            return JsonResponse({STATUS: FAILED, MESSAGE: "No pending Messages", TASK_STATUS: False})
 
-            if broker.is_demo_enabled:
-                option_details = broker.getCurrentPremiumDetails(NFO, script_name)
-                ltp = broker.getLtpForPremium(option_details)
-                data.update({
-                    TOTAL: str((float(ltp) - float(entry_price)) * int(qty)),
-                    EXIT_PRICE: ltp,
-                    STATUS:ORDER_EXITED
-                })
-            else:
-                user_webkook_data = WebhookDetails.objects.filter(user_id=user_email, index_name=data[INDEX_NAME],
-                                                                  strategy=strategy)
-                user_webkook_data= list(user_webkook_data.values())[0]
-                trading_symbol = user_webkook_data[CURRENT_PREMIUM]
-                print("EXIT")
-                print(broker.smartApi.position())
-                print(broker.checkIfOrderExists(user_webkook_data[UNIQUE_ORDER_ID]))
-                if broker.checkIfOrderPlaced(user_webkook_data[UNIQUE_ORDER_ID]):
-                    order_details = {
-                        VARIETY: NORMAL, EXCHANGE: NFO, TRADING_SYMBOL: trading_symbol,
-                        SYMBOL_TOKEN: broker.getTokenForSymbol(trading_symbol),
-                        TRANSACTION_TYPE: SELL,
-                        ORDER_TYPE: MARKET, PRODUCT_TYPE: INTRADAY,
-                        DURATION: DAY, QUANTITY: qty
-                    }
-                    order_response = broker.placeOrder(order_details)
-                    print(order_response)
-                elif broker.checkIfOrderExists(user_webkook_data[UNIQUE_ORDER_ID]):
-                    broker.cancelOrder(user_webkook_data[ORDER_ID],NORMAL)
-            user_data.update(**data)
-            return JsonResponse({STATUS: SUCCESS, MESSAGE: "Order Exited", TASK_STATUS: True})
+        order_info = user_data.values().first()
+        entry_price = order_info.get(ENTRY_PRICE)
+        qty = order_info.get(QTY)
+        script_name = order_info.get(SCRIPT_NAME)
+
+        option_details = broker.getCurrentPremiumDetails(NFO, script_name)
+        ltp = broker.getLtpForPremium(option_details)
+
+        if broker.is_demo_enabled:
+            data.update({
+                TOTAL: str((float(ltp) - float(entry_price)) * int(qty)),
+                EXIT_PRICE: ltp,
+                STATUS: ORDER_EXITED
+            })
         else:
-            return JsonResponse({STATUS: FAILED, MESSAGE: f"No Pending orders for strategy {strategy}", TASK_STATUS: True})
+            user_webhook_data = WebhookDetails.objects.filter(
+                user_id=user_email, index_name=data[INDEX_NAME], strategy=strategy
+            )
+
+            if not user_webhook_data.exists():
+                addLogDetails(INFO, f"No webhook data found for {strategy}")
+                return JsonResponse({STATUS: FAILED, MESSAGE: "No webhook data found", TASK_STATUS: False})
+
+            user_webhook_data = user_webhook_data.values().first()
+            trading_symbol = user_webhook_data.get(CURRENT_PREMIUM)
+            unique_order_id = user_webhook_data.get(UNIQUE_ORDER_ID)
+
+            if broker.checkIfOrderPlaced(unique_order_id):
+                order_details = {
+                    VARIETY: NORMAL, EXCHANGE: NFO, TRADING_SYMBOL: trading_symbol,
+                    SYMBOL_TOKEN: broker.getTokenForSymbol(trading_symbol),
+                    TRANSACTION_TYPE: SELL, ORDER_TYPE: MARKET, PRODUCT_TYPE: INTRADAY,
+                    DURATION: DAY, QUANTITY: qty
+                }
+
+                order_response_details = broker.placeOrder(order_details)
+                addLogDetails(INFO, f"Order placed: {order_response_details}")
+
+                option_exit_price = order_response_details.get("averageprice") or ltp
+                data.update({
+                    TOTAL: str((float(option_exit_price) - float(entry_price)) * int(qty)),
+                    EXIT_PRICE: option_exit_price,
+                    STATUS: ORDER_EXITED
+                })
+            elif broker.checkIfOrderExists(unique_order_id):
+                broker.cancelOrder(user_webhook_data.get(ORDER_ID), NORMAL)
+                addLogDetails(INFO, "Existing order cancelled.")
+
+        user_data.update(**data)
+        addLogDetails(INFO, "Order exited successfully.")
+        return JsonResponse({STATUS: SUCCESS, MESSAGE: "Message Done", TASK_STATUS: True})
 
     except Exception as e:
-        error_msg = f"Unexpected error in exit_order_webhook: {str(e)}"
+        error_msg = f"Unexpected error in exit_order_webhook: {repr(e)}"
         addLogDetails(ERROR, error_msg)
-        return JsonResponse({STATUS: FAILED, MESSAGE: error_msg, TASK_STATUS: False})
+        return JsonResponse({STATUS: FAILED, MESSAGE: "Unexpected error. Check logs.", TASK_STATUS: False})
