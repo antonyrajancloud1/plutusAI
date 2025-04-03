@@ -97,7 +97,7 @@ def placeManualOrder(user_email, user_index_data, OrderType):
 
 def triggerOrder(user_email, user_index_data, strategy, order_type):
     try:
-        print(user_email, user_index_data, strategy, order_type)
+        # print(user_email, user_index_data, strategy, order_type)
         strategy = strategy or "DefaultStrategy"
 
         index_name = user_index_data.get(INDEX_NAME)
@@ -136,12 +136,13 @@ def triggerOrder(user_email, user_index_data, strategy, order_type):
                         EXIT_PRICE: ltp,
                         STATUS: ORDER_EXITED
                     })
+                    user_data.update(**order_info)
                 else:
-                    print("Sell order")
+                    addLogDetails(INFO, "Sell order")
                     exit_data = {INDEX_NAME: index_name,STRATEGY:strategy}
 
                     exitOrderWebhook(strategy, exit_data, user_email)
-                user_data.update(**order_info)
+                # user_data.update(**order_info)
             else:
                 addLogDetails(INFO,f"{order_type.capitalize()} order already exists")
                 return JsonResponse({STATUS: SUCCESS, MESSAGE: "Message Exists" , TASK_STATUS: True})
@@ -154,21 +155,26 @@ def triggerOrder(user_email, user_index_data, strategy, order_type):
         # Fetch current premium details
         option_details = broker.getCurrentPremiumDetails(NFO, trading_symbol)
         ltp = broker.getLtpForPremium(option_details)
-        print(option_details)
+        addLogDetails(INFO,option_details)
         if broker.is_demo_enabled:
             option_buy_price = ltp
         else:
             # Get Candle Data
 
-            from_time = str(get_previous_minute_start(get_current_minute_start(), False))
+            # from_time = str(get_previous_minute_start(get_current_minute_start(), False))
+            from_time = str(get_previous_n_minute_start(get_current_minute_start(), False,5))
             to_time = str(get_next_minute_start_ms(get_current_minute_start(), False))
-            print(from_time,to_time)
-            # from_time = "2025-03-26 14:04"
-            # to_time="2025-03-26 14:05"
-
-            candle_data_df = broker.getCandleData(NFO, option_details[SYMBOL_TOKEN], from_time, to_time, "ONE_MINUTE")
+            # print(from_time,to_time)
+            # from_time = "2025-04-03 14:05"
+            # to_time="2025-04-03 14:11"
+            addLogDetails(INFO,"Get Candle Details")
+            addLogDetails(INFO,f"from_time {str(from_time)}")
+            addLogDetails(INFO, f"to_time {str(to_time)}")
+            candle_data_df = broker.getCandleData(NFO, option_details[SYMBOL_TOKEN], from_time, to_time, "FIVE_MINUTE")
             high_price = float(candle_data_df.loc[0, HIGH])
+            # print(candle_data_df)
 
+            addLogDetails(INFO,high_price)
             # order_details=None
             if high_price is None or float(ltp) > high_price:
 
@@ -306,6 +312,7 @@ def exitOrderWebhook(strategy, data, user_email):
                 EXIT_PRICE: ltp,
                 STATUS: ORDER_EXITED
             })
+            user_data.update(**data)
         else:
             user_webhook_data = WebhookDetails.objects.filter(
                 user_id=user_email, index_name=data[INDEX_NAME], strategy=strategy
@@ -336,11 +343,13 @@ def exitOrderWebhook(strategy, data, user_email):
                     EXIT_PRICE: option_exit_price,
                     STATUS: ORDER_EXITED
                 })
+                user_data.update(**data)
             elif broker.checkIfOrderExists(unique_order_id):
                 broker.cancelOrder(user_webhook_data.get(ORDER_ID), NORMAL)
                 addLogDetails(INFO, "Existing order cancelled.")
+                user_data.delete()
 
-        user_data.update(**data)
+        # user_data.update(**data)
         addLogDetails(INFO, "Order exited successfully.")
         return JsonResponse({STATUS: SUCCESS, MESSAGE: "Message Done", TASK_STATUS: True})
 
