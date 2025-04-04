@@ -162,7 +162,7 @@ def triggerOrder(user_email, user_index_data, strategy, order_type):
             # Get Candle Data
 
             # from_time = str(get_previous_minute_start(get_current_minute_start(), False))
-            from_time = str(get_previous_n_minute_start(get_current_minute_start(), False,5))
+            from_time = str(get_previous_n_minute_start(get_current_minute_start(), False,6))
             to_time = str(get_next_minute_start_ms(get_current_minute_start(), False))
             # print(from_time,to_time)
             # from_time = "2025-04-03 14:05"
