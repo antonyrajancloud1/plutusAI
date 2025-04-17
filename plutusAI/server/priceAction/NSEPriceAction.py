@@ -159,8 +159,6 @@ class NSEPriceAction():
                         self.trailedSLPrice))
                     if float(self.currentOptionPrice) <= self.trailedSLPrice:
                         self.exitBasedOnCondition(True, "Option price less than safeSL")
-                        self.PESetTargetAndStoploss()
-                        self.startPE()
                         break
                 if self.isOrderExited:
                     addLogDetails(INFO, "isOrderExited ")
@@ -226,8 +224,6 @@ class NSEPriceAction():
                     self.currentOptionPrice = self.BrokerObject.getLtpForPremium(self.optionDetails)
                     if float(self.currentOptionPrice) <= self.trailedSLPrice:
                         self.exitBasedOnCondition(True, "Option price less than safeSL")
-                        self.CESetTargetAndStoploss()
-                        self.startCE()
                         break
                         # self.isOrderExited=True
                 if self.isOrderExited:
