@@ -1,32 +1,21 @@
-import json
 from builtins import int
 
-from django import forms
-from django.http import JsonResponse
-from django.shortcuts import redirect, render, HttpResponse
 from django.contrib.auth import authenticate, login, logout
-from django.views.decorators.csrf import csrf_exempt
-from plutusAI.server.AngelOneApp import *
-from plutusAI.server.base import *
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_POST, require_http_methods
-from django.db.models import Q
+from django.shortcuts import redirect, render
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
+from rest_framework.authtoken.models import Token
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.permissions import IsAuthenticated
 
-from plutusAI.server.constants import *
-from plutusAI.server.priceAction.priceActionScalper import *
-from .models import *
-from datetime import datetime, timedelta
-
+from plutusAI.server.AngelOneApp import *
 from plutusAI.server.broker.AngelOne.AngelOneAuth import AngelOneAuth
+from plutusAI.server.priceAction.priceActionScalper import *
 from .server.authentication.authentication import QueryParamTokenAuthentication
-from .server.broker.Broker import Broker
 from .server.manualOrder import *
 from .server.websocket.WebsocketAngelOne import WebsocketAngelOne
 
-from rest_framework.authentication import TokenAuthentication, SessionAuthentication
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.authtoken.models import Token
 
 def invaid_url(request, exception):
     return render(request, "invaid_url.html", status=404)
@@ -903,7 +892,8 @@ def get_flash_values(request):
             user_data = FlashDetails.objects.filter(user_id=user_email)
             user_profiles_list = list(user_data.values())
             remove_data_from_list(user_profiles_list)
-            return JsonResponse({ALL_CONFIG_VALUES: user_profiles_list})
+            # return JsonResponse({ALL_CONFIG_VALUES: user_profiles_list})
+            return JsonResponse({STATUS: SUCCESS, MESSAGE: user_profiles_list, TASK_STATUS: True})
     else:
         return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
 
@@ -964,6 +954,22 @@ def start_flash(request):
                 start_flash_job.delay(user_email, data.get(INDEX_NAME))
                 index_name = data.get(INDEX_NAME).replace("_", " ").title().replace(" ", "")
                 return JsonResponse({STATUS: SUCCESS, MESSAGE: f"{index_name} flash started"})
+        else:
+            return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+    except Exception as e:
+        addLogDetails(ERROR, str(e))
+        return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
+
+@csrf_exempt  # need to remove
+@require_http_methods([POST])
+def stop_flash(request):
+    try:
+        if check_user_session(request):
+            # raw_text = request.body.decode('utf-8')
+            user_email = get_user_email(request)
+            # user_email='user1@gmail.com'
+            data = json.loads(request.body)
+            return terminate_task(user_email, data.get(INDEX_NAME), data.get(STRATEGY))
         else:
             return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
     except Exception as e:

@@ -169,10 +169,10 @@ class ManualOrders(models.Model):
     strike = models.CharField(max_length=100, default=None)
     lots = models.CharField(max_length=100, default=None)
     trigger = models.CharField(max_length=100, default=None)
-    time = models.CharField(max_length=100, default=None)
-    order_id = models.CharField(max_length=100, default=None)
-    unique_order_id = models.CharField(max_length=100, default=None)
-    current_premium = models.CharField(max_length=100, default=None)
+    time = models.CharField(max_length=100, default=None,blank=True, null=True)
+    order_id = models.CharField(max_length=100, default=None ,blank=True, null=True)
+    unique_order_id = models.CharField(max_length=100, default=None,blank=True, null=True)
+    current_premium = models.CharField(max_length=100, default=None,blank=True, null=True)
     def __str__(self):
         return f"{self.user_id} - {self.index_name} - {self.target} - {self.stop_loss} - {self.order_status} - {self.time}"
 
@@ -201,16 +201,18 @@ class WebhookDetails(models.Model):
 
 
 class FlashDetails(models.Model):
-    user_id = models.CharField(max_length=500, default=None)
-    index_name = models.CharField(max_length=50, default=None)
+    user_id = models.CharField(max_length=100, default=None)
+    index_name = models.CharField(max_length=20, default=None)
     strike = models.CharField(max_length=10, default=None)
-    max_profit = models.CharField(max_length=100, default=None)
-    max_loss = models.CharField(max_length=100, default=None)
+    max_profit = models.CharField(max_length=20, default=None)
+    max_loss = models.CharField(max_length=20, default=None)
     trend_check_points = models.CharField(max_length=10, default='15')
     trailing_points = models.CharField(max_length=10, default='10')
     is_demo_trading_enabled = models.BooleanField(default=True)
     lots = models.CharField(max_length=10, default=None)
-    status = models.CharField(max_length=250, default=None)
+    status = models.CharField(max_length=20, default=None)
+    average_points = models.CharField(max_length=20, default=None)
+
     def __str__(self):
         return self.index_name
 

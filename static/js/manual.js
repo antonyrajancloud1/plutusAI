@@ -1,57 +1,116 @@
-// Function to dynamically populate the table based on the data
+// ====== Utility DOM Selectors ======
+const $ = (selector) => document.querySelector(selector);
+const $$ = (selector) => document.querySelectorAll(selector);
+
+// ====== Dynamic Table Rendering ======
 function populateTable(data) {
-    const tableBody = document.getElementById('tradeTableBody');
-    tableBody.innerHTML = ''; // Clear existing content
+    const tableBody = $('#tradeTableBody');
+    tableBody.innerHTML = '';
 
     data.message.forEach((item, index) => {
-        const row = document.createElement('tr');
-
-        row.innerHTML = `
-            <td>
-                <button class="buy-button" data-index="${index}">Buy</button>
-                <button class="sell-button" data-index="${index}" ${item.order_status !== 'order_placed' ? 'disabled' : ''}>Sell</button>
-                <button class="exit-button" data-index="${index}" disabled>Exit</button>
-                <button class="edit-button" data-index="${index}" ${item.order_status !== 'order_placed' ? 'disabled' : ''}>Edit</button>
-                <button class="add-button" data-index="${index}" disabled>Add</button>
-            </td>
-            <td>${item.index_name}</td>
-            <td><input type="text" value="${item.lots}" id="lots-${index}"></td>
-            <td><input type="text" value="${item.trigger}" id="trigger-${index}"></td>
-            <td><input type="text" value="${item.stop_loss}" id="sl-${index}"></td>
-            <td><input type="text" value="${item.target}" id="target-${index}"></td>
-            <td><input type="text" value="${item.strike}" id="strike-${index}"></td>
-            <td>${item.current_premium}</td>
+        tableBody.innerHTML += `
+            <tr>
+                <td>
+                    <button class="buy-button" data-index="${index}">Buy</button>
+                    <button class="sell-button" data-index="${index}" ${item.order_status !== 'order_placed' ? 'disabled' : ''}>Sell</button>
+                    <button class="exit-button" data-index="${index}" disabled>Exit</button>
+                    <button class="edit-button" data-index="${index}" ${item.order_status !== 'order_placed' ? 'disabled' : ''}>Edit</button>
+                    <button class="add-button" data-index="${index}" disabled>Add</button>
+                </td>
+                <td>${item.index_name}</td>
+                <td><input type="text" value="${item.lots}" id="lots-${index}"></td>
+                <td><input type="text" value="${item.trigger}" id="trigger-${index}"></td>
+                <td><input type="text" value="${item.stop_loss}" id="sl-${index}"></td>
+                <td><input type="text" value="${item.target}" id="target-${index}"></td>
+                <td><input type="text" value="${item.strike}" id="strike-${index}"></td>
+                <td>${item.current_premium}</td>
+            </tr>
         `;
-        tableBody.appendChild(row);
     });
 }
 
-// Delegate event listeners for Buy, Sell, and Edit buttons
-document.getElementById('tradeTableBody').addEventListener('click', function (event) {
-    const target = event.target;
-    const index = target.getAttribute('data-index');
+function populateFlashTable(data) {
+    const tableBody = $('#flashTableBody');
+    tableBody.innerHTML = '';
 
-    if (target.classList.contains('buy-button')) {
-        handleOrder('place_order_buy', index);
-    } else if (target.classList.contains('sell-button')) {
-        handleOrder('place_order_sell', index);
-    } else if (target.classList.contains('edit-button')) {
-        editOrder(index);
-    }
+    data.message.forEach((item, index) => {
+        tableBody.innerHTML += `
+            <tr>
+                <td>
+                    <button class="start-button" data-index="${index}">Start</button>
+                    <button class="stop-button" data-index="${index}">Stop</button>
+                    <button class="edit-button" data-index="${index}">Edit</button>
+                </td>
+                <td>${item.index_name}</td>
+                <td><input type="text" value="${item.lots}" id="lots-${index}"></td>
+                <td><input type="text" value="${item.strike}" id="strike-${index}"></td>
+                <td><input type="text" value="${item.max_profit}" id="max_profit-${index}"></td>
+                <td><input type="text" value="${item.max_loss}" id="max_loss-${index}"></td>
+                <td><input type="text" value="${item.trend_check_points}" id="trend_check_points-${index}"></td>
+                <td>${item.status}</td>
+            </tr>
+        `;
+    });
+}
+
+// ====== Event Delegation for Buttons ======
+$('#tradeTableBody').addEventListener('click', (event) => {
+    const target = event.target;
+    const index = target.dataset.index;
+
+    if (target.classList.contains('buy-button')) handleOrder('place_order_buy', index);
+    else if (target.classList.contains('sell-button')) handleOrder('place_order_sell', index);
+    else if (target.classList.contains('edit-button')) editOrder(index);
 });
 
+$('#flashTableBody').addEventListener('click', (event) => {
+    const target = event.target;
+    const index = target.dataset.index;
+    const flash_data = { index_name: 'nifty', strategy: 'flash' };
+
+    if (target.classList.contains('start-button')) stopFlash('start_flash', flash_data);
+    else if (target.classList.contains('stop-button')) stopFlash('stop_index', flash_data);
+    else if (target.classList.contains('edit-button')) editFlash(index);
+});
+
+// ====== Order Management ======
 async function handleOrder(url, index) {
     const orderDetails = getOrderDetails(index);
     await placeOrder(url, orderDetails);
 }
 
-// Function to handle Edit button click
+async function placeOrder(url, orderDetails) {
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(orderDetails)
+        });
+
+        const result = await response.json();
+        showResult(result.message, result.status === 'success');
+    } catch (error) {
+        showResult(`Error placing order: ${error.message}`, false);
+    }
+}
+
+function getOrderDetails(index) {
+    return {
+        index_name: $(`#tradeTableBody tr:nth-child(${+index + 1}) td:nth-child(2)`).textContent.trim(),
+        lots: $(`#lots-${index}`).value,
+        trigger: $(`#trigger-${index}`).value,
+        stop_loss: $(`#sl-${index}`).value,
+        target: $(`#target-${index}`).value,
+        strike: $(`#strike-${index}`).value
+    };
+}
+
+// ====== Edit Functionality ======
 function editOrder(index) {
-    const index_name = document.querySelector(`#tradeTableBody tr:nth-child(${parseInt(index) + 1}) td:nth-child(2)`).textContent.trim();
+    const index_name = $(`#tradeTableBody tr:nth-child(${+index + 1}) td:nth-child(2)`).textContent.trim();
     fetchEditOrderDetails(index_name);
 }
 
-// Fetch edit details from API
 async function fetchEditOrderDetails(index_name) {
     try {
         const response = await fetch(`manual_details?index_name=${index_name}`);
@@ -67,58 +126,33 @@ async function fetchEditOrderDetails(index_name) {
     }
 }
 
-// Create and show the edit form in a modal popup
 function createEditForm(order) {
-    const modal = document.getElementById('editModal');
-    const form = document.getElementById('editOrderForm');
+    const modal = $('#editModal');
+    const form = $('#editOrderForm');
 
-    // Clear previous form content
     form.innerHTML = `
         <h3>Edit Order for ${order.index_name}</h3>
-        <label for="edit-lots">Lots:</label>
-        <input type="text" id="edit-lots" value="${order.lots}" name="lots"><br><br>
-
-        <label for="edit-trigger">Trigger:</label>
-        <input type="text" id="edit-trigger" value="${order.trigger}" name="trigger"><br><br>
-
-        <label for="edit-stop_loss">Stop Loss:</label>
-        <input type="text" id="edit-stop_loss" value="${order.stop_loss}" name="stop_loss"><br><br>
-
-        <label for="edit-target">Target:</label>
-        <input type="text" id="edit-target" value="${order.target}" name="target"><br><br>
-
-        <label for="edit-strike">Strike:</label>
-        <input type="text" id="edit-strike" value="${order.strike}" name="strike"><br><br>
-
+        ${['lots', 'trigger', 'stop_loss', 'target', 'strike'].map(field => `
+            <label for="edit-${field}">${field.replace('_', ' ')}:</label>
+            <input type="text" id="edit-${field}" value="${order[field]}" name="${field}"><br><br>
+        `).join('')}
         <button type="button" id="saveChanges">Save Changes</button>
         <button type="button" id="cancelEdit">Cancel</button>
     `;
 
-    // Show the modal
     modal.style.display = 'block';
 
-    document.getElementById('saveChanges').addEventListener('click', function () {
-        saveOrderChanges(order.index_name);
-    });
-
-    document.getElementById('cancelEdit').addEventListener('click', function () {
-        modal.style.display = 'none';
-    });
-
-
-
+    $('#saveChanges').onclick = () => saveOrderChanges(order.index_name);
+    $('#cancelEdit').onclick = () => modal.style.display = 'none';
 }
 
-// Save changes
 async function saveOrderChanges(index_name) {
-    const orderDetails = {
-        index_name: index_name,
-        lots: document.getElementById('edit-lots').value,
-        trigger: document.getElementById('edit-trigger').value,
-        stop_loss: document.getElementById('edit-stop_loss').value,
-        target: document.getElementById('edit-target').value,
-        strike: document.getElementById('edit-strike').value
-    };
+    const fields = ['lots', 'trigger', 'stop_loss', 'target', 'strike'];
+    const orderDetails = { index_name };
+
+    fields.forEach(field => {
+        orderDetails[field] = $(`#edit-${field}`).value;
+    });
 
     if (!validateForm(orderDetails)) {
         showResult('Please fill in all fields correctly.', false);
@@ -126,76 +160,125 @@ async function saveOrderChanges(index_name) {
     }
 
     try {
-        const response = await fetch('update_manual_details', { // Replace with actual save URL
+        const response = await fetch('update_manual_details', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(orderDetails)
         });
 
         const result = await response.json();
+        showResult(result.status === 'success' ? 'Index updated successfully.' : `Failed to update: ${result.message}`, result.status === 'success');
+
         if (result.status === 'success') {
-            showResult('Index updated successfully.', true);
-            document.getElementById('editModal').style.display = 'none';
-            fetchData(); // Refresh table after changes
-        } else {
-            showResult(`Failed to update: ${result.message}`, false);
+            $('#editModal').style.display = 'none';
+            fetchData();
         }
     } catch (error) {
         showResult(`Error updating order: ${error.message}`, false);
     }
 }
 
-// Validate form fields
 function validateForm(orderDetails) {
-    return Object.values(orderDetails).every(value => value.trim() !== '');
+    return Object.values(orderDetails).every(val => val.toString().trim() !== '');
 }
 
-// Function to get order details from the row based on index
-function getOrderDetails(index) {
-    return {
-        index_name: document.querySelector(`#tradeTableBody tr:nth-child(${parseInt(index) + 1}) td:nth-child(2)`).textContent.trim(),
-        lots: document.getElementById(`lots-${index}`).value,
-        trigger: document.getElementById(`trigger-${index}`).value,
-        stop_loss: document.getElementById(`sl-${index}`).value,
-        target: document.getElementById(`target-${index}`).value,
-        strike: document.getElementById(`strike-${index}`).value
-    };
-}
-
-// Function to make API call to place_order
-async function placeOrder(url, orderDetails) {
+// ====== Flash Order Handling ======
+async function stopFlash(url, orderDetails) {
     try {
         const response = await fetch(url, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(orderDetails)
         });
-        const result = await response.json();
 
-        if (result.status === 'success') {
-            showResult(result.message, true);
-        } else {
-            showResult(`Failed to place order: ${result.message}`, false);
-        }
+        const result = await response.json();
+        showResult(result.status === 'success' ? result.message : `Failed: ${result.message}`, result.status === 'success');
     } catch (error) {
-        showResult(`Error placing order: ${error.message}`, false);
+        showResult(`Error: ${error.message}`, false);
     }
 }
 
-// Fetch data from the API to populate the table
+// ====== Strategy Summary ======
+async function fetchStrategySummary() {
+    try {
+        const response = await fetch("get_strategy_summary", {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        const data = await response.json();
+        if (data.status === "success" && data.summary) {
+            renderTable(data.summary.full_summary, "fullSummaryTable");
+            renderTable(data.summary.current_day_summary, "currentDaySummaryTable");
+        }
+    } catch (error) {
+        console.error("Error fetching strategy summary:", error);
+    }
+}
+
+function renderTable(data, tableId) {
+    const tableBody = $(`#${tableId} tbody`);
+    tableBody.innerHTML = data.length
+        ? data.map(item => `
+            <tr>
+                <td>${item.strategy}</td>
+                <td>${item.index_name}</td>
+                <td>${item.order_count}</td>
+                <td style="color: ${item.total_profit >= 0 ? 'green' : 'red'};">
+                    ${item.total_profit != null ? item.total_profit.toFixed(2) : "N/A"}
+                </td>
+            </tr>`).join('')
+        : "<tr><td colspan='4' style='text-align:center;'>No data available</td></tr>";
+}
+
+// ====== Token Management ======
+async function getTokenData() {
+    try {
+        const response = await fetch("get_auth_token", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        const data = await response.json();
+        $('#token_details').innerHTML = data.status === 'success' ? data.message : "No Token Present";
+    } catch (error) {
+        $('#token_details').innerHTML = error;
+    }
+}
+
+async function reGenTokenData() {
+    try {
+        const response = await fetch("generate_auth_token", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        const data = await response.json();
+        $('#token_details').innerHTML = data.status === 'success' ? data.message : "No Token Present";
+    } catch (error) {
+        $('#token_details').innerHTML = error;
+    }
+}
+
+// ====== UI Feedback ======
+function showResult(message, isSuccess = true) {
+    const resultDiv = $('#result');
+    resultDiv.textContent = message;
+    resultDiv.className = isSuccess ? 'success' : 'error';
+    resultDiv.style.display = 'block';
+}
+
+// ====== Fetch All Data ======
 async function fetchData() {
     try {
-        const response = await fetch('manual_details'); // Replace with actual API endpoint URL
+        const response = await fetch('manual_details');
         const data = await response.json();
 
         if (data.status === 'success') {
             populateTable(data);
-            document.getElementById('tkn_btn').addEventListener('click', function () {
-            reGenTokenData();
-            });
+            $('#tkn_btn').addEventListener('click', reGenTokenData);
             getTokenData();
+            fetchFlashData();
         } else {
             showResult('Failed to fetch data', false);
         }
@@ -204,167 +287,23 @@ async function fetchData() {
     }
 }
 
-// Function to show a result (can be tied to specific button actions)
-function showResult(message, isSuccess = true) {
-    const resultDiv = document.getElementById('result');
-    resultDiv.innerHTML = message;
-    resultDiv.className = isSuccess ? 'success' : 'error';  // Toggle between success and error styles
-    resultDiv.style.display = 'block';  // Show the div
-}
-
-// Fetch data from the API to populate the table
-async function getTokenData() {
+async function fetchFlashData() {
     try {
-        const response = await fetch("get_auth_token", {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' }
-        });
-
-        const data = await response.json(); // ✅ Parse JSON once and store it
-
-        const token_details = document.getElementById('token_details');
-
-        if (data.status === 'success') {
-            token_details.innerHTML = data.message;
-        } else {
-            token_details.innerHTML = "No Token Present";
-        }
-
-//        console.log(data); // ✅ Log the parsed JSON object, NOT response.json()
-
-    } catch (error) {
-        document.getElementById('token_details').innerHTML = error;
-    }
-}
-
-
-async function reGenTokenData() {
-    try {
-        const response = await fetch("generate_auth_token", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-
-        });
-        const token_details = document.getElementById('token_details');
+        const response = await fetch('get_flash_details');
         const data = await response.json();
+
         if (data.status === 'success') {
-            token_details.innerHTML = data.message
+            populateFlashTable(data);
         } else {
-           token_details.innerHTML = "No Token Present"
+            showResult('Failed to fetch flash data', false);
         }
-console.log(response.json())
     } catch (error) {
-        token_details.innerHTML =error
+        showResult(`Error fetching flash data: ${error.message}`, false);
     }
 }
 
-
-// Fetch and populate the table on page load
-//window.onload = fetchData;
-
-
-
-
-// Call the function when the page loads
-window.onload = function () {
-    fetchData();  // Existing function to fetch table data
-    fetchStrategySummary();  // Fetch and display the chart
+// ====== On Load Initialization ======
+window.onload = () => {
+    fetchData();
+    fetchStrategySummary();
 };
-
-
-
-
-
-
-//document.addEventListener("DOMContentLoaded", function () {
-//    fetchStrategySummary();  // Fetch and display the strategy chart
-//
-//    fetchData();  // Ensure trade table data is fetched
-//});
-
-// Function to fetch strategy summary and display in a Chart.js bar chart
-async function fetchStrategySummary() {
-    try {
-//        const response = await fetch("http://localhost:8000/get_strategy_summary");
-        const response = await fetch("get_strategy_summary", {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-
-        });
-        const data = await response.json();
-
-        // Check if API response contains the expected structure
-        if (!data || data.status !== "success" || !data.summary) {
-            console.error("Unexpected API response:", data);
-            return;
-        }
-
-//        renderChart(data.summary.full_summary); // ✅ Pass correct data structure
-        renderTable(data.summary.full_summary, "fullSummaryTable");
-        renderTable(data.summary.current_day_summary, "currentDaySummaryTable");
-    } catch (error) {
-        console.error("Error fetching strategy summary:", error);
-    }
-}
-
-
-// Function to render the chart using Chart.js
-function renderChart(summaryData) {
-    const canvas = document.getElementById("strategyChart");
-
-    if (!canvas) {
-        console.error("Error: 'strategyChart' canvas element not found in HTML.");
-        return;
-    }
-
-    const ctx = canvas.getContext("2d"); // ✅ This line won't break if canvas is missing
-
-    // Destroy existing chart if it exists (prevents duplication)
-    if (window.strategyChartInstance) {
-        window.strategyChartInstance.destroy();
-    }
-
-    window.strategyChartInstance = new Chart(ctx, {
-        type: "bar",
-        data: {
-            labels: summaryData.map(item => item.strategy),
-            datasets: [{
-                label: "Total Profit (After Brokerage)",
-                data: summaryData.map(item => item.total_profit ?? 0),
-                backgroundColor: summaryData.map(value => value.total_profit >= 0 ? "green" : "red"),
-                borderColor: "black",
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: { y: { beginAtZero: true } }
-        }
-    });
-}
-function renderTable(data, tableId) {
-    const tableBody = document.querySelector(`#${tableId} tbody`);
-    tableBody.innerHTML = "";
-
-    if (data.length === 0) {
-        tableBody.innerHTML = "<tr><td colspan='4' style='text-align:center;'>No data available</td></tr>";
-        return;
-    }
-
-    data.forEach(item => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-            <td>${item.strategy}</td>
-            <td>${item.index_name}</td>
-            <td>${item.order_count}</td>
-            <td style="color: ${item.total_profit >= 0 ? 'green' : 'red'};">
-                ${item.total_profit !== null ? item.total_profit.toFixed(2) : "N/A"}
-            </td>
-        `;
-        tableBody.appendChild(row);
-    });
-}

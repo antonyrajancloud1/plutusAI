@@ -24,8 +24,8 @@ button {
     cursor: pointer;
 }
 
-.buy-button { background-color: #4CAF50; color: white; }
-.sell-button { background-color: #f44336; color: white; }
+.buy-button,.start-button { background-color: #4CAF50; color: white; }
+.sell-button ,.stop-button{ background-color: #f44336; color: white; }
 .exit-button { background-color: #2196F3; color: white; }
 .edit-button { background-color: #FFC107; color: black; }
 .add-button { background-color: #673AB7; color: white; }

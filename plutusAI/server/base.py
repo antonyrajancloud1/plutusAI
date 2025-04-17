@@ -65,6 +65,60 @@ def add_config_values(data_json):
         lots=data_json.get(LOTS),
     )
 
+def add_broker_details(data_json):
+    BrokerDetails.objects.create(
+        user_id=data_json.get("user_id"),
+        broker_user_id=data_json.get("broker_user_id"),
+        broker_user_name=data_json.get("broker_user_name"),
+        broker_name=data_json.get("broker_name"),
+        token_status=data_json.get("token_status"),
+        is_demo_trading_enabled=data_json.get("is_demo_trading_enabled"),
+        broker_api_token=data_json.get("broker_api_token"),
+        broker_mpin=data_json.get("broker_mpin"),
+        broker_qr=data_json.get("broker_qr"),
+        index_group=data_json.get("index_group")
+    )
+def add_manual_order(data_json):
+    ManualOrders.objects.create(
+        user_id=data_json.get("user_id"),
+        index_name=data_json.get("index_name"),
+        target=data_json.get("target"),
+        stop_loss=data_json.get("stop_loss"),
+        order_status=data_json.get("order_status"),
+        time=data_json.get("time"),
+        strike=data_json.get("strike"),
+        lots=data_json.get("lots"),
+        trigger=data_json.get("trigger"),
+
+    )
+
+
+def add_scalper_details(data_json):
+    ScalperDetails.objects.create(
+        user_id=data_json.get("user_id"),
+        index_name=data_json.get("index_name"),
+        strike=data_json.get("strike"),
+        is_demo_trading_enabled=data_json.get("is_demo_trading_enabled"),
+        use_full_capital=data_json.get("use_full_capital"),
+        target=data_json.get("target"),
+        lots=data_json.get("lots"),
+        on_candle_close=data_json.get("on_candle_close"),
+        status=data_json.get("status")
+    )
+def add_flash_details(data_json):
+    FlashDetails.objects.create(
+        user_id=data_json.get("user_id"),
+        index_name=data_json.get("index_name"),
+        strike=data_json.get("strike"),
+        max_profit=data_json.get("max_profit"),
+        max_loss=data_json.get("max_loss"),
+        trend_check_points=data_json.get("trend_check_points"),
+        trailing_points=data_json.get("trailing_points"),
+        is_demo_trading_enabled=data_json.get("is_demo_trading_enabled"),
+        lots=data_json.get("lots"),
+        status=data_json.get("status"),
+        average_points=data_json.get("average_points")
+    )
 
 def addAllIndexValues(user_id):
     nifty_default_values = NIFTY_DEFAULT_VALUES
@@ -82,29 +136,80 @@ def addAllIndexValues(user_id):
         add_config_values(value)
 
 
+# def add_user_and_populate_data(user_data):
+#     try:
+#         user_id = user_data.get(USER_ID)
+#         user_password = user_data.get(PASSWORD)
+#         username = str(user_id).split("@")[0]
+#         password = user_password
+#         user_details = add_user(username, user_id, password)
+#         user_response = json.loads(user_details.content)
+#         addLogDetails(INFO, f"New user added Response:  {user_response}")
+#
+#         if user_response.get(MESSAGE).__eq__(USER_ADDED):
+#             addAllIndexValues(user_id)
+#             broker_sample_data_json["user_id"] = user_id
+#             add_broker_details(broker_sample_data_json)
+#             scalper_data_json["user_id"] = user_id
+#             add_scalper_details(scalper_data_json)
+#             webhook_data_json["user_id"] = user_id
+#             add_webhook_details(webhook_data_json)
+#             for order_data in manual_orders_sample_data:
+#                 order_data["user_id"] = user_id
+#                 add_manual_order(order_data)
+#
+#             return JsonResponse(
+#                 {
+#                     STATUS: SUCCESS,
+#                     MESSAGE: "User added",
+#                     USER_NAME: username,
+#                     PASSWORD: password,
+#                     USER_ID: user_id,
+#                 }
+#             )
+#         else:
+#             return JsonResponse(user_response)
+#     except json.JSONDecodeError as e:
+#         return JsonResponse({STATUS: FAILED, MESSAGE: INVALID_JSON})
+#     except Exception as e:
+#         addLogDetails(ERROR, str(e))
+#         return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
 def add_user_and_populate_data(user_data):
     try:
-        user_id = user_data.get(USER_ID)
+        user_id = user_data.get("email")
         user_password = user_data.get(PASSWORD)
+        if not user_id or not user_password:
+            return JsonResponse({STATUS: FAILED, MESSAGE: "Missing user_id or password"})
         username = str(user_id).split("@")[0]
         password = user_password
         user_details = add_user(username, user_id, password)
         user_response = json.loads(user_details.content)
-        addLogDetails(INFO, f"New user added Response:  {user_response}")
-        if user_response.get(MESSAGE).__eq__(USER_ADDED):
+        addLogDetails(INFO, f"New user added Response: {user_response}")
+        if user_response.get(MESSAGE) == USER_ADDED:
             addAllIndexValues(user_id)
-            return JsonResponse(
-                {
-                    STATUS: SUCCESS,
-                    MESSAGE: "User added",
-                    USER_NAME: username,
-                    PASSWORD: password,
-                    USER_ID: user_id,
-                }
-            )
+            broker_data = broker_sample_data_json.copy()
+            broker_data["user_id"] = user_id
+            add_broker_details(broker_data)
+            scalper_data = scalper_data_json.copy()
+            scalper_data["user_id"] = user_id
+            add_scalper_details(scalper_data)
+            flash_data = flash_sample_data_json.copy()
+            flash_data["user_id"] = user_id
+            add_flash_details(flash_data)
+            for order_data in manual_orders_sample_data:
+                order = order_data.copy()
+                order["user_id"] = user_id
+                add_manual_order(order)
+            return JsonResponse({
+                STATUS: SUCCESS,
+                MESSAGE: "User added",
+                USER_NAME: username,
+                PASSWORD: password,
+                USER_ID: user_id,
+            })
         else:
             return JsonResponse(user_response)
-    except json.JSONDecodeError as e:
+    except json.JSONDecodeError:
         return JsonResponse({STATUS: FAILED, MESSAGE: INVALID_JSON})
     except Exception as e:
         addLogDetails(ERROR, str(e))

@@ -1,7 +1,7 @@
 from django.urls import path
 from plutusAI.server.constants import *
 from plutusAI.server.tester import testerCheck
-from . import views
+from . import views, tests
 from django.urls import re_path as url
 from django.conf import settings
 
@@ -55,6 +55,7 @@ urlpatterns = [
     path(UPDATE_FLASH, views.update_flash_values, name=UPDATE_FLASH),
     path(GET_FLASH_DETAILS, views.get_flash_values, name=GET_FLASH_DETAILS),
     path(START_FLASH, views.start_flash, name=START_FLASH),
+    path(STOP_INDEX, views.stop_index, name=STOP_INDEX),
 
-    path("test", views.getIndexDetails, name="test"),
+    path("test", tests.tester, name="test"),
 ]
