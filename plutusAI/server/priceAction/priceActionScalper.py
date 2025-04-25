@@ -8,7 +8,8 @@ import pandas as pd
 import requests
 from plutusAI.models import *
 from plutusAI.server.base import *
-from plutusAI.server.priceAction.FlashTrade import FlashTrade
+from plutusAI.server.broker.Broker import Broker
+from plutusAI.server.priceAction.FlashTrade import  IndexPriceActionChecker
 from plutusAI.server.priceAction.NSEPriceAction import NSEPriceAction
 from plutus import celery
 from plutus.celery import app
@@ -61,6 +62,15 @@ def start_flash_job(user_email, index):
     index_data = IndexDetails.objects.filter(index_name=index)
     index_group_name = get_index_group_name(index_data)
     if index_group_name == INDIAN_INDEX:
-        FlashTrade(user_email, index, INDIAN_INDEX)
+        # FlashTrade(user_email, index, INDIAN_INDEX)
+        broker_obj = Broker(user_email, index_group_name).BrokerObject
+        user_data = Configuration.objects.filter(user_id=user_email, index_name=index)
+        config_dict = list(user_data.values())[0]
+        print("values Generated")
+        print(config_dict)
+        checker = IndexPriceActionChecker(index_name=index, user_email=user_email, BrokerObject=broker_obj,
+                                          config=config_dict)
+        checker.evaluatePriceAction()
+        # checker.isIndexStarted = True
     elif index_group_name == FOREX_INDEX:
         addLogDetails(INFO, "Forex market")
