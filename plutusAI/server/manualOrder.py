@@ -348,7 +348,9 @@ def exitOrderWebhook(strategy, data, user_email):
                 broker.cancelOrder(user_webhook_data.get(ORDER_ID), NORMAL)
                 addLogDetails(INFO, "Existing order cancelled.")
                 user_data.delete()
-
+            else:
+                addLogDetails(INFO, "Order status not found so deleting entry.")
+                user_data.delete()
         # user_data.update(**data)
         addLogDetails(INFO, "Order exited successfully.")
         return JsonResponse({STATUS: SUCCESS, MESSAGE: "Message Done", TASK_STATUS: True})
