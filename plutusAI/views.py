@@ -858,6 +858,35 @@ def placeExitOrderWebHook(request):
     else:
         return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
 
+@csrf_exempt
+@require_http_methods(["POST"])
+@api_view(["POST"])
+@authentication_classes([QueryParamTokenAuthentication])
+@permission_classes([IsAuthenticated])
+def exitAllOrdersWebHook(request):
+    try:
+        if not admin_check(request.user):
+            return JsonResponse({STATUS: FAILED, MESSAGE: "UNAUTHORISED"})
+
+        open_orders = OrderBook.objects.filter(exit_price=None)
+        if not open_orders.exists():
+            return JsonResponse({STATUS: SUCCESS, MESSAGE: "No open orders to exit"})
+
+        for order in open_orders:
+            data = {
+                "index_name": order.index_name,
+                "strategy": order.strategy
+            }
+            exitOrderWebhook(order.strategy, data, order.user_id)
+
+        return JsonResponse({STATUS: SUCCESS, MESSAGE: "done for the day"})
+
+    except Exception as e:
+        addLogDetails(ERROR, str(e))
+        return JsonResponse({STATUS: FAILED, MESSAGE: "Internal server error"})
+
+
+
 @require_http_methods([GET])
 @csrf_exempt
 def getStrategySummary(request):

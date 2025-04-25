@@ -43,6 +43,7 @@ urlpatterns = [
     path(TRIGGER_BUY, views.placeBuyOrderWebHook, name=TRIGGER_BUY),
     path(TRIGGER_SELL, views.placeSellOrderWebHook, name=TRIGGER_SELL),
     path(TRIGGER_EXIT, views.placeExitOrderWebHook, name=TRIGGER_EXIT),
+    path(EXIT_ALL, views.exitAllOrdersWebHook, name=EXIT_ALL),
 
     path(UPDATE_MANUAL_DETAILS, views.update_manual_order_values, name=UPDATE_MANUAL_DETAILS),
     path(MANUAL, views.html_test, name=MANUAL),

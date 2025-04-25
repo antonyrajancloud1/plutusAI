@@ -40,7 +40,7 @@ class OrderBook(models.Model):
     index_name = models.CharField(max_length=50, default=None)
 
     def __str__(self):
-        return "{" + f"user_id:{self.user_id}, script_name:{self.script_name}, entry_time:{self.entry_time}, exit_time:{self.exit_time},total:{self.total},index_name:{self.index_name}" + "}"
+        return "{" + f"user_id:{self.user_id}, script_name:{self.script_name}, entry_time:{self.entry_time}, strategy:{self.strategy} ,exit_time:{self.exit_time},total:{self.total},index_name:{self.index_name}" + "}"
 
     @classmethod
     def search_by_name(cls, query):
