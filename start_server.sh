@@ -43,23 +43,5 @@ start_process() {
 # Main script
 check_and_start_service mysql
 check_and_start_service redis-server
-start_process "python3 manage.py runserver 0.0.0.0:8000" "django.log"
+start_process "python3 manage.py runserver 0.0.0.0:80" "django.log"
 start_process "celery -A plutus.celery worker -l info  --autoscale=100,1"
-
-# Create a named pipe to capture cloudflared output
-fifo=$(mktemp -u)
-mkfifo "$fifo"
-trap "rm -f $fifo" EXIT
-
-cloudflared tunnel --url http://localhost:8000 > "$fifo" 2>&1 &
-
-# Capture the output in a background process
-output=""
-while read -r line; do
-    output+="$line"$'\n'
-    if echo "$line" | grep -oP 'https://[a-zA-Z0-9-]+\.trycloudflare\.com' > /dev/null; then
-        url=$(echo "$line" | grep -oP 'https://[a-zA-Z0-9-]+\.trycloudflare\.com')
-        python3 Informer.py "$url"
-        echo "$url"
-    fi
-done < "$fifo" &
