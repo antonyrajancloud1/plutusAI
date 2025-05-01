@@ -62,11 +62,11 @@ aside {
 }
 
 .nav-item.active {
-  background-color: #333;
+  background-color: #126969;
 }
 
 .nav-item:hover {
-  background-color: #333;
+  background-color: #126969;
 }
 
 main {
@@ -90,6 +90,8 @@ h2 {
   display: flex;
   flex-direction: column;
   align-items: center;
+    height: 300px;
+    padding: 10px;
 }
 
 .chart-circle {
@@ -200,7 +202,206 @@ h2 {
 .orders {
   display: flex;
   flex-direction: column;
-  overflow-y: auto; /* Enable vertical scrolling */
-  border: 1px solid #333; /* Optional: Adds a border */
+  overflow-y: auto;
+  border: 1px solid #333;
   padding: 10px;
+}
+.table-container {
+    background-color: #1e1e1e;
+    padding: 1rem;
+    border-radius: 12px;
+    color: #fff;
+    font-family: sans-serif;
+    overflow-x: auto;
+    width: 85%;
+    position:absolute;
+    }
+
+.table-container table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 0.5rem;
+}
+
+.table-container thead th {
+    text-align: left;
+    padding: 0.75rem 1rem;
+    color: #9ca3af;
+    font-size: 0.875rem;
+    font-weight: 500;
+    background-color: #2a2a3d;
+}
+
+.table-container tbody tr {
+    background-color: #1e1e1e;
+    transition: background-color 0.2s ease;
+}
+
+.table-container tbody tr:hover {
+    background-color: #333;
+}
+
+.table-container tbody td {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    color: #e5e7eb;
+    text-decoration: none;
+    text-align: center; /* Center the content */
+    vertical-align: middle; /* Vertically align the content */
+}
+
+.table-container .status-no {
+    color: #f87171;
+    font-weight: bold;
+}
+
+.table-container .status-yes {
+    color: #34d399;
+    font-weight: bold;
+}
+
+.table-container .revenue {
+    color: #10b981;
+    font-weight: bold;
+}
+.order-book-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.order-book-header-cell {
+    padding: 12px 16px;
+    border-bottom: 1px solid #1e1e1e;
+    text-align: left;
+    background-color: #1e1e1e;
+    font-weight: bold;
+    color: #9ca3af;
+}
+
+.order-book-cell {
+    padding: 12px 16px;
+    border-bottom: 1px solid #1e1e1e;
+    text-align: center; /* Center the content */
+    vertical-align: middle;
+    color: #e5e7eb;
+}
+
+.order-exited-row {
+    background-color: #2f2f43;
+    color: #e5e7eb;
+}
+
+/* Alternating row colors */
+.order-book-table tr:nth-child(odd) {
+    background-color: #2f2f43;
+}
+
+.order-book-table tr:nth-child(even) {
+    background-color: #3a3a50;
+}
+
+.order-book-table th,
+.order-book-table td {
+    border-bottom: 1px solid #e0e0e0;
+    padding: 12px 16px;
+    text-align: left;
+}
+
+.order-book-table th {
+    background-color: #1e1e1e;
+    font-weight: bold;
+    color: #9ca3af;
+}
+
+/* spacing and padding  */
+.order-book-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    background-color: #1e1e2f;
+}
+
+.order-book-header-cell {
+    padding: 12px 16px;
+    border-bottom: 1px solid #1e1e1e;
+    text-align: center;
+    background-color: #1e1e1e;
+    font-weight: bold;
+    color: #9ca3af;
+}
+
+.order-book-cell {
+    padding: 12px 16px;
+    border-bottom: 1px solid #1e1e1e;
+    text-align: center; /* Center the content */
+    vertical-align: middle;
+    color: #e5e7eb;
+}
+
+.order-exited-row {
+    background-color: #2f2f43;
+    color: #e5e7eb;
+}
+
+/* alternating row colors  */
+.order-book-table tr:nth-child(odd) {
+    background-color: #2f2f43;
+    color: #e5e7eb;
+}
+
+.order-book-table tr:nth-child(even) {
+    background-color: #3a3a50;
+    color: #e5e7eb;
+}
+
+.order-book-table th,
+.order-book-table td {
+    border-bottom: 1px solid #e0e0e0;
+    padding: 12px 16px;
+    text-align: left;
+}
+
+.order-book-table th {
+    background-color: #1e1e1e;
+    font-weight: bold;
+    color: #9ca3af;
+}
+
+/* border radius to the first and last row */
+.order-book-table tr:first-child th:first-child,
+.order-book-table tr:first-child td:first-child {
+    border-top-left-radius: 8px;
+}
+
+.order-book-table tr:first-child th:last-child,
+.order-book-table tr:first-child td:last-child {
+    border-top-right-radius: 8px;
+}
+
+.order-book-table tr:last-child td:first-child {
+    border-bottom-left-radius: 8px;
+}
+
+.order-book-table tr:last-child td:last-child {
+    border-bottom-right-radius: 8px;
+}
+
+/* Remove border for the last row */
+.order-book-table tr:last-child td {
+    border-bottom: none;
+}
+
+.page-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 150px;
+  height: 150px;
 }

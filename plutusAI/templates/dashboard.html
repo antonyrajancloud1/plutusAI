@@ -21,8 +21,8 @@
       <div class="logout">Logout</div>
     </header>
     <aside>
-      <div class="nav-item active">Dashboard</div>
-      <div class="nav-item">Order</div>
+      <div class="nav-item active" id="dashboard">Dashboard</div>
+      <div class="nav-item" id="order">Order</div>
       <div class="nav-item">Webhook</div>
       <div class="nav-item">Manual Orders</div>
       <div class="nav-item">Strategy</div>
@@ -31,30 +31,8 @@
       <div class="nav-item">Help</div>
     </aside>
     <main>
-      <section class="pnl">
-        <h2>Today's PNL</h2>
-        <div class="pnl-chart">
-    <canvas id="pnlChart"></canvas>
-</div>
-            <div id="pnlInfo"></div> <!-- This stays in HTML -->
 
 
-
-      </section>
-      <section class="positions">
-        <h2>Live Positions</h2>
-        <div class="positions-header">
-          <div class="position-name-header">Strategy (Index)</div>
-          <div class="position-value-header">Total Profit</div>
-        </div>
-        </section>
-      <section class="orders">
-        <h2>Orders</h2>
-        <div class="orders-header">
-          <div class="order-name-header">Strategy (Index)</div>
-          <div class="order-count-header">Order Count</div>
-        </div>
-        </section>
     </main>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
