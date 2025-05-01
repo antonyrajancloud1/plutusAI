@@ -132,7 +132,7 @@ def triggerOrder(user_email, user_index_data, strategy, order_type):
                     option_details = broker.getCurrentPremiumDetails(NFO, script_name)
                     ltp = broker.getLtpForPremium(option_details)
                     order_info.update({
-                        TOTAL: str((float(ltp) - float(entry_price)) * int(qty)),
+                        TOTAL: str((float(ltp) - float(entry_price)) * int(user_qty)),
                         EXIT_PRICE: ltp,
                         STATUS: ORDER_EXITED
                     })

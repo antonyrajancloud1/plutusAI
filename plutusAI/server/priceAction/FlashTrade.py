@@ -13,10 +13,10 @@ class IndexPriceActionChecker:
             levels_raw = config.get("levels", "")
             self.levels = list(map(int, levels_raw.split(','))) if isinstance(levels_raw, str) else levels_raw
             self.strike = int(config.get("strike", 0))
-            self.index_trend_check = int(config.get("index_trend_check", 50))
+            self.index_trend_check = int(config.get("trend_check_points", 20))
             self.user_qty = int(config.get("user_qty", 50))
-            self.is_demo_enabled = config.get("is_demo_enabled", False)
-            self.is_place_sl_required = config.get("is_place_sl_required", True)
+            self.is_demo_enabled = self.BrokerObject.is_demo_enabled
+            self.is_place_sl_required = config.get("is_place_sl_required", False)
             self.initialSL = int(config.get("initialSL", 10))
             self.wait_for_candle_confirmation = config.get("next_candle_confirmation", False)
 
@@ -27,6 +27,7 @@ class IndexPriceActionChecker:
             self.isPEOrderPlaced = False
             self.isStoplossPlaced = False
             self.pivotPoint = None
+            self.isPivotDecided=False
             self.indexBaseValue = None
             self.IndexLTP = None
             self.currentOrderID = None
@@ -54,73 +55,78 @@ class IndexPriceActionChecker:
 
     def checkAndSetPivot(self):
         try:
-            while True:
-                self.updateIndex()
-                self.indexBaseValue = self.IndexLTP
-                if self.use_levels:
-                    self.nearestSupport = getTaregtForOrderFromList(self.levels, self.indexBaseValue, "PE")
-                    self.nearestResistance = getTaregtForOrderFromList(self.levels, self.indexBaseValue, "CE")
+            self.updateIndex()
+            self.indexBaseValue = self.IndexLTP
 
-                    if (
-                        self.IndexLTP in self.levels or
-                        self.IndexLTP <= self.nearestSupport or
-                        self.IndexLTP >= self.nearestResistance
-                    ):
-                        self.pivotPoint = (
-                            self.IndexLTP if self.IndexLTP in self.levels else
-                            self.nearestResistance if self.IndexLTP >= self.nearestResistance else
-                            self.nearestSupport
-                        )
-                else:
-                    self.pivotPoint = self.IndexLTP
+            if self.use_levels:
+                self.nearestSupport = getTaregtForOrderFromList(self.levels, self.indexBaseValue, "PE")
+                self.nearestResistance = getTaregtForOrderFromList(self.levels, self.indexBaseValue, "CE")
 
-                if self.pivotPoint:
-                    updateIndexConfiguration(
-                        user_email=self.user_email,
-                        index=self.index_name,
-                        data={'status': f'Pivot Decided : {self.pivotPoint}'}
+                at_level = self.IndexLTP in self.levels
+                near_support = self.IndexLTP <= self.nearestSupport
+                near_resistance = self.IndexLTP >= self.nearestResistance
+
+                if at_level or near_support or near_resistance:
+                    self.pivotPoint = (
+                        self.IndexLTP if at_level else
+                        self.nearestResistance if near_resistance else
+                        self.nearestSupport
                     )
-                    addLogDetails(INFO, f"[checkAndSetPivot] Pivot set to {self.pivotPoint}")
-                    break
+            else:
+                self.pivotPoint = self.IndexLTP
+
+            if self.pivotPoint:
+                self.isPivotDecided = True
+                self._logPivotDecision()
 
         except Exception as e:
             addLogDetails(ERROR, f"[checkAndSetPivot] Error: {e}")
 
+    def _logPivotDecision(self):
+        updateIndexConfiguration(
+            user_email=self.user_email,
+            index=self.index_name,
+            data={'status': f'Pivot Decided : {self.pivotPoint}'}
+        )
+        addLogDetails(INFO, f"[checkAndSetPivot] Pivot set to {self.pivotPoint}")
+
     def evaluatePriceAction(self):
         try:
-            if not self.pivotPoint:
-                self.checkAndSetPivot()
-                return
-
-            self.updateIndex()
-            if self.IndexLTP >= self.pivotPoint + self.index_trend_check:
-                self.startCE()
-            elif self.IndexLTP <= self.pivotPoint - self.index_trend_check:
-                self.startPE()
-            else:
-                addLogDetails(INFO, f"[evaluatePriceAction] Index {self.index_name} holding near pivot {self.pivotPoint}, no action taken.")
+            while True:
+                time.sleep(1)
+                if not self.isPivotDecided:
+                    self.checkAndSetPivot()
+                elif self.isPivotDecided:
+                    self.updateIndex()
+                    if self.IndexLTP >= self.pivotPoint + self.index_trend_check:
+                        self.startCE()
+                    elif self.IndexLTP <= self.pivotPoint - self.index_trend_check:
+                        self.startPE()
+                    else:
+                        addLogDetails(INFO, f"[evaluatePriceAction] Index {self.index_name} holding near pivot {self.pivotPoint}, no action taken.")
         except Exception as e:
             addLogDetails(ERROR, f"[evaluatePriceAction] Error: {e}")
 
     def startCE(self):
         try:
-            if self.isStoplossPlaced:
-                addLogDetails(INFO, f"[startCE] Stoploss already placed. Blocking CE entry.")
-                return
-            self.resetPEFlag()
-            self.CESetTargetAndStopLoss()
-            self.placeOrder("CE")
+            if not self.isCEOrderPlaced:
+                print("CE not placed")
+                self.resetPEFlag()
+                self.CESetTargetAndStopLoss()
+                self.placeOrder("CE",self.strike)
+            else:
+                print("CE already placed")
         except Exception as e:
             addLogDetails(ERROR, f"[startCE] Error: {e}")
 
     def startPE(self):
         try:
-            if self.isStoplossPlaced:
-                addLogDetails(INFO, f"[startPE] Stoploss already placed. Blocking PE entry.")
-                return
-            self.resetCEFlag()
-            self.PESetTargetAndStoploss()
-            self.placeOrder("PE")
+            if not self.isPEOrderPlaced:
+                self.resetCEFlag()
+                self.PESetTargetAndStoploss()
+                self.placeOrder("PE",-self.strike)
+            else:
+                print("PE is already placed")
         except Exception as e:
             addLogDetails(ERROR, f"[startPE] Error: {e}")
 
@@ -165,62 +171,74 @@ class IndexPriceActionChecker:
     def placeOrder(self, direction: str, strike_offset: int):
         try:
             suffix = self.getSuffix(direction)
-            optionToBuy = getTradingSymbol(self.index_name) + str(
-                self.BrokerObject.getCurrentAtm(self.index_name) + strike_offset) + suffix
+            atm_strike = self.BrokerObject.getCurrentAtm(self.index_name)
+            optionToBuy = f"{getTradingSymbol(self.index_name)}{atm_strike + strike_offset}{suffix}"
             self.currentPremiumPlaced = optionToBuy
 
-            buy_order_details = {
-                VARIETY: NORMAL, EXCHANGE: NFO, TRADING_SYMBOL: optionToBuy,
-                SYMBOL_TOKEN: self.BrokerObject.getTokenForSymbol(optionToBuy),
-                TRANSACTION_TYPE: BUY, ORDER_TYPE: MARKET, PRODUCT_TYPE: INTRADAY,
-                DURATION: DAY, QUANTITY: self.user_qty
-            }
+            order_details = self._prepareOrderDetails(optionToBuy, BUY, MARKET)
+            addLogDetails(INFO, f"Index Name: {self.index_name} User: {self.user_email} {order_details}")
 
-            addLogDetails(INFO, f"Index Name: {self.index_name} User: {self.user_email} {buy_order_details}")
-
-            if self.is_demo_enabled:
-                order_response = self.placeDummyOrder(direction)
-            else:
-                order_response = self.BrokerObject.placeOrder(buy_order_details)
+            order_response = self.placeDummyOrder(direction) if self.is_demo_enabled else self.BrokerObject.placeOrder(
+                order_details)
 
             if order_response.get("message") == "SUCCESS":
-                uniqueorderid = order_response["data"].get("uniqueorderid", order_response["data"].get("orderid"))
-                self.currentOrderID = uniqueorderid
-                self.optionDetails = self.BrokerObject.getCurrentPremiumDetails(NFO, optionToBuy)
-                self.optionBuyPrice = self.BrokerObject.getLtpForPremium(self.optionDetails)
-
-                data = {
-                    USER_ID: self.user_email, SCRIPT_NAME: optionToBuy, QTY: self.user_qty,
-                    ENTRY_PRICE: self.optionBuyPrice, STATUS: ORDER_PLACED,
-                    STRATEGY: STRATEGY_HUNTER, INDEX_NAME: self.index_name
-                }
-                addOrderBookDetails(data, True)
-
-                if self.is_place_sl_required:
-                    sl_price = int(self.optionBuyPrice) - self.initialSL
-                    sl_order_details = {
-                        VARIETY: STOPLOSS, EXCHANGE: NFO, TRADING_SYMBOL: optionToBuy,
-                        SYMBOL_TOKEN: self.BrokerObject.getTokenForSymbol(optionToBuy),
-                        TRANSACTION_TYPE: SELL, ORDER_TYPE: ORDER_TYPE_SL,
-                        PRICE: sl_price, TRIGGER_PRICE: sl_price,
-                        PRODUCT_TYPE: INTRADAY, DURATION: DAY,
-                        QUANTITY: self.user_qty
-                    }
-                    sl_order = self.BrokerObject.placeOrder(sl_order_details)
-                    self.currentExitOrderID = sl_order["data"]["orderid"]
-                    self.isStoplossPlaced = True
-
-                if direction == "CE":
-                    self.isCEOrderPlaced = True
-                    status_str = f"Long :: {self.IndexLTP}"
-                else:
-                    self.isPEOrderPlaced = True
-                    status_str = f"Short :: {self.IndexLTP}"
-
-                updateIndexConfiguration(self.user_email, self.index_name, {"status": status_str})
-
+                self._handleSuccessfulOrder(order_response, optionToBuy, direction)
         except Exception as e:
-            addLogDetails(ERROR, f"User: {self.user_email} exception in place{direction}Option ---- {e}")
+            addLogDetails(ERROR, f"User: {self.user_email} exception in place{direction} ---- {e}")
+
+    def _prepareOrderDetails(self, symbol: str, txn_type: str, order_type: str, price=None, trigger_price=None):
+        details = {
+            VARIETY: NORMAL if order_type == MARKET else STOPLOSS,
+            EXCHANGE: NFO,
+            TRADING_SYMBOL: symbol,
+            SYMBOL_TOKEN: self.BrokerObject.getTokenForSymbol(symbol),
+            TRANSACTION_TYPE: txn_type,
+            ORDER_TYPE: order_type,
+            PRODUCT_TYPE: INTRADAY,
+            DURATION: DAY,
+            QUANTITY: self.user_qty
+        }
+        if price:
+            details[PRICE] = price
+        if trigger_price:
+            details[TRIGGER_PRICE] = trigger_price
+        return details
+
+    def _handleSuccessfulOrder(self, response, option_symbol, direction):
+        data = response["data"]
+        self.currentOrderID = data.get("uniqueorderid", data.get("orderid"))
+        self.optionDetails = self.BrokerObject.getCurrentPremiumDetails(NFO, option_symbol)
+        self.optionBuyPrice = self.BrokerObject.getLtpForPremium(self.optionDetails)
+
+        order_data = {
+            USER_ID: self.user_email,
+            SCRIPT_NAME: option_symbol,
+            QTY: self.user_qty,
+            ENTRY_PRICE: self.optionBuyPrice,
+            STATUS: ORDER_PLACED,
+            STRATEGY: STRATEGY_HUNTER,
+            INDEX_NAME: self.index_name
+        }
+
+        if not self.is_demo_enabled:
+            addOrderBookDetails(order_data, True)
+
+            if self.is_place_sl_required:
+                sl_price = float(self.optionBuyPrice) - self.initialSL
+                sl_order_details = self._prepareOrderDetails(option_symbol, SELL, ORDER_TYPE_SL, price=sl_price,
+                                                             trigger_price=sl_price)
+                sl_order = self.BrokerObject.placeOrder(sl_order_details)
+                self.currentExitOrderID = sl_order["data"]["orderid"]
+                self.isStoplossPlaced = True
+
+        if direction == "CE":
+            self.isCEOrderPlaced = True
+            status_str = f"Long :: {self.IndexLTP}"
+        else:
+            self.isPEOrderPlaced = True
+            status_str = f"Short :: {self.IndexLTP}"
+
+        updateIndexConfiguration(self.user_email, self.index_name, {"status": status_str})
 
     def getSuffix(self, direction):
         return "CE" if direction == "CE" else "PE"
@@ -240,7 +258,6 @@ class IndexPriceActionChecker:
                 QTY: self.user_qty, ENTRY_PRICE: self.optionBuyPrice,
                 STATUS: ORDER_PLACED, STRATEGY: STRATEGY_HUNTER, INDEX_NAME: self.index_name
             }
-            addOrderBookDetails(data, True)
 
             if orderType == "CE":
                 self.isCEOrderPlaced = True
@@ -250,7 +267,8 @@ class IndexPriceActionChecker:
             self.currentOrderID = order_id
             self.currentExitOrderID = f"{order_id}_SL"
             self.isStoplossPlaced = True
-
+            addOrderBookDetails(data, True)
+            print("DummY Order Placed")
             return order_response
 
         except Exception as e:
