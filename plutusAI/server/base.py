@@ -942,6 +942,8 @@ def getStrategySummaryUsingEmail(user_email):
     current_date = now().date()  # Get today's date
 
     try:
+        user = User.objects.get(email=user_email)
+        user_name = user.username
         # Fetch all available data
         full_summary = OrderBook.objects.filter(user_id=user_email).values(
             'strategy', 'index_name'
@@ -964,13 +966,16 @@ def getStrategySummaryUsingEmail(user_email):
             order_count=Count('id'),
             total_profit=ExpressionWrapper(Sum('total') - Count('id') * BROKERAGE_PER_ORDER, output_field=FloatField())
         ).order_by('-total_profit')
+        total_orders_today = today_summary.aggregate(total=Sum('order_count'))['total'] or 0
 
         return {
             "status": "success",
             "full_summary": list(full_summary),  # All available data
             "current_day_summary": list(today_summary),  # Only today's data
             "current_date": current_date.strftime("%Y-%m-%d"),
-            "task_status": True
+            "task_status": True,
+            "user_name":user_name,
+            "total_orders_today": total_orders_today
         }
 
     except Exception as e:

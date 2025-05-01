@@ -28,6 +28,12 @@ function fetchData() {
         .then(response => response.json())
         .then(data => {
             const positionsData = data.summary.current_day_summary;
+            let userName = data.summary.user_name;
+            userName = userName.charAt(0).toUpperCase() + userName.slice(1);
+            document.getElementById("userName").innerHTML = "Welcome,  "+userName;
+            document.getElementById("today_orders").innerHTML = "Today's Orders: "+data.summary.total_orders_today;
+
+
             displayAllData(positionsData);
         })
         .catch(error => console.error('Error fetching data:', error));
