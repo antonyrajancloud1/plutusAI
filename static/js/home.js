@@ -6,7 +6,8 @@ let MadaraConstructor = function() {
         lhs_container           :   "#lhs-container",
         lhs_module_container    :   "#lhs-module-container",
         rhs_container           :   "#rhs-container",
-        footer_container        :   "#footer-container"
+        footer_container        :   "#footer-container",
+        profile_name            :   "#profile-name"
     };
     this.project_name   =   "Madara";
     this.EVENT_AND_DOM_CACHE = {};
@@ -20,26 +21,26 @@ let MadaraConstructor = function() {
 
 MadaraConstructor.prototype.templates = {
     mainHtml : 
-                `<div id="home-container" class="wh100 flex-col home-bg-container">
+                `<div id="home-container" class="wh100 home-bg-container">
                     <div id="banner-container"></div>
-                    <div id="header-container" class="flexC header-container p5">
-                        <div class="flexG textC font30 fontB">{project_name}</div>
+                    <div id="header-container" class="flexC header-container pL15 pT5 pB5 pR20">
+                        {profile_html}
+                        <div class="flexG font1_5 fontB textC">{project_name}</div>
                         {logout}
                     </div>
                     <div id="body-container" class="flex w100 flexG body-container">
-                        <div id="lhs-container" class="ovrflwH lhs-container-main">
-                            <div id="lhs-module-container" class="flex-col lhs-container h100 posrel ovrflwA flexG">
+                        <div id="lhs-container" class="ovrflwH lhs-container-main p15">
+                            <div id="lhs-module-container" class="flex-col lhs-container h100 posrel ovrflwA gap10">
                                 {modules_html}
                             </div>
                         </div>
-                        <div id="rhs-container" class="flex wh100 flexG ovrflwH"></div>
+                        <div id="rhs-container" class="flex h100 flexG ovrflwH rhs-bg-container p20"></div>
                     </div>
-                    <div id="footer-container" class="flex">
                     </div>
                 </div>`,
 
     eachModuleHtml :
-                    `<div id="module-{module_id}" class="font18 lhs-module flexM curP" home-page-buttons purpose="view{purpose}">
+                    `<div id="module-{module_id}" class="font18 lhs-module curP bdrR5" home-page-buttons purpose="view{purpose}">
                         {module}
                     </div>`,
 
@@ -49,7 +50,7 @@ MadaraConstructor.prototype.templates = {
                 </div>`,
 
     dataTableHtml : 
-                    `<div id="{module}-container" class="w100 flexG pL35 pR35 pT20 pB20 {module}-container ovrflwA data-table-container">
+                    `<div id="{module}-container" class="wh100 flexG {module}-container ovrflwAuto data-table-container">
                         <div class="tbl tblHead fshrink">   
                             {table_head_row}
                         </div>
@@ -64,7 +65,7 @@ MadaraConstructor.prototype.templates = {
 
     tableCell : `<div class="tblCel {disable_status} ellips" title="{tooltip_content}">{table_cell_content}</div>`,
 
-    actionsHtml : `<div id="actions-container" class="flexM gap20">
+    actionsHtml : `<div id="actions-container" class="flexM gap10">
                         {start_button}
                         {stop_button}
                         {edit_button}
@@ -77,9 +78,18 @@ MadaraConstructor.prototype.templates = {
     editButton : `<div id="edit-{module}" purpose="{purpose_of_edit}" home-page-buttons index="{index}" class="action-button fa xs fa-pencil curP clrB edit-config-button p5 bdrR4" title="{edit_module_title}"></div>`,
 
     logoutHtml : 
-                `<div id="logout-button" home-page-buttons class="primary-button logout-button curP flexM bdrR10 sm" purpose="logoutUser" userId>
+                `<div id="logout-button" home-page-buttons class="primary-button logout-button curP flexM bdrR5 sm" purpose="logoutUser" userId>
                     {logout_text}
                 </div>`,
+
+    profileHtml :   `<div id="profile-region" class="profile-region flexC gap10">
+                        <div id="profile-container" class="profile-container bdrR100">
+                            <div class="profile-wrapper wh100">
+                                <img id="profile-image" src="{profile_image}" class="profile-image wh100 bdrR100" alt="Profile Image">
+                            </div>
+                        </div>
+                        <div id="profile-name" class="profile-name font16 ellips"></div>
+                    </div>`,
 
     bannerHtml : 
                 `<div id="banner-wrapper" class="{banner_type} banner-wrapper dN textC">
@@ -121,9 +131,33 @@ MadaraConstructor.prototype.templates = {
                     </div>`,
 
     noDataFoundHtml : 
-                    `<div id="no-data-found-container" class="wh100 flexG pL35 pR35 pT20 pB20  flexM gap10 font24">  
+                    `<div id="no-data-found-container" class="wh100 flexG pL35 pR35 pT20 pB20 flexM gap10 font24 no-data-found-container">  
                         <div class="fa fa-close clrR flex"></div>
                         <div class="fontItalic">{no_data_text}</div>
+                    </div>`,
+
+    dashboardHtml : 
+                    `<div id="dashboard-container" class="dashboard-container">
+                        <div class="item-1 pnl flex-col">
+                            <div class="font18 fontB">{pnl_header}</div>
+                            {chart_html}
+                        </div>
+                        <div class="item-2 positions ovrflwH flex-col gap10">
+                            <div class="font18 fontB">{positions_header}</div>
+                            {positions_html}
+                        </div>
+                        <div class="item-3 orders ovrflwH flex-col gap10">
+                            <div class="font18 fontB">{orders_header}</div>
+                            {orders_html}
+                        </div>
+                        <div class="item-4 open-orders"></div>
+                    </div>`,
+
+    htmlForCellContentHightlighter : `<span class="{class_for_highlighting}">{cell_content}</span>`,
+
+    pnlInfoHtml :   `<div class="textC font18 fontB">
+                        {pnl_info_header}
+                        <span class="{class_for_total_pnl}">{total_pnl_cost_in_rupees}</span>
                     </div>`
 };
 
@@ -136,6 +170,7 @@ MadaraConstructor.prototype.API = {
     login                   :   "/login",
     logout                  :   "/logout",
     getConfigValues         :   "/get_config_values",
+    getSummary              :   "/get_strategy_summary",    
     updateConfigValues      :   "/update_config_values",
     addUser                 :   "/add_user",
     getBrokerDetails        :   "/get_broker_details",
@@ -146,13 +181,13 @@ MadaraConstructor.prototype.API = {
     updateScalperDetails    :   "/update_scalper_details",
     startIndex              :   "/start_index",
     stopIndex               :   "/stop_index",
-    startScalper              :   "/start_scalper",
+    startScalper            :   "/start_scalper",
     getPlans                :   "/plans",
     editPlans               :   "/edit_plans"
 };
 
 MadaraConstructor.prototype.getLHSModulesList = function() {
-    return [ "configurations", "scalper","orderBook", "brokerInfo" ];
+    return [ "dashboard", "configurations", "manualOrders", "scalper","orderBook", "brokerInfo" ];
 };
 
 MadaraConstructor.prototype.addLoaderForTheRHS = function() {
@@ -182,9 +217,14 @@ MadaraConstructor.prototype.getLogoutButton = function() {
     return this.templates.logoutHtml.replace(/{logout_text}/g, this.getResource("logout"));
 };
 
+MadaraConstructor.prototype.getProfileHtml = function() {
+    return this.templates.profileHtml.replace(/{profile_image}/g, "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1024px-Default_pfp.svg.png");
+};
+
 MadaraConstructor.prototype.getHomeHtml = function() {
     return this.templates.mainHtml.replace(/{modules_html}/g, this.getLHSModulesHtml())
                                     .replace(/{logout}/g, this.getLogoutButton())
+                                    .replace(/{profile_html}/g, this.getProfileHtml())
                                     .replace(/{project_name}/g, this.project_name);
 };
 
@@ -514,6 +554,203 @@ MadaraConstructor.prototype.viewConfigurations = function() {
         }
     }
     this.makeAjaxRequest(url, {}, additionalAjaxOptions);
+};
+
+MadaraConstructor.prototype.viewDashboard = function() {
+    let self = this;
+    this.setCurrentLHSModuleAsSelected("#module-dashboard");
+    this.addLoaderForTheRHS();
+    let url = this.getWindowLocationOrigin() + this.API.getSummary;
+    let additionalAjaxOptions = {
+        type    :   "GET",
+        success :   function(successResp) {
+            let summary = successResp.summary;
+            let userName = summary.user_name;
+            userName = userName.charAt(0).toUpperCase() + userName.slice(1);
+            $(self.DOM_SELECTORS.profile_name).text(userName).attr("title", Resource.hello + " " + userName);
+            
+            let totalOrdersForToday = summary.total_orders_today;
+            let currentDaySummary = summary.current_day_summary;
+            let fullSummary = summary.full_summary;
+            let dashBoardHtml = self.templates.dashboardHtml.replace(/{pnl_header}/g, Resource.todays_pandl)
+                                                            .replace(/{positions_header}/g, Resource.live_positions)
+                                                            .replace(/{orders_header}/g, Resource.orders)
+                                                            .replace(/{chart_html}/g, self.getChartHTML())
+                                                            .replace(/{positions_html}/g, self.getPositionsAndOrdersHTML(currentDaySummary, false))
+                                                            .replace(/{orders_html}/g, self.getPositionsAndOrdersHTML(currentDaySummary, true))
+
+            $(self.DOM_SELECTORS.rhs_container).html(dashBoardHtml);
+            self.renderChartForPNL(currentDaySummary);
+        },
+        error   :   function(errorResp) {
+            let errorContent = (JSON.parse(errorResp.responseText).message) ? self.checkAndGetResponseMessageFromResourceObject(JSON.parse(errorResp.responseText).message) : errorResp.statusText;
+            self.updateBanner({ type : "failure", content : errorContent });
+        }
+    }
+    this.makeAjaxRequest(url, {}, additionalAjaxOptions);
+};
+
+MadaraConstructor.prototype.getChartHTML = function() {
+    let chartHtml = `<div class="flex-col gap10 flexG">
+                        <div id="pnl-chart" class="pnl-chart flex-col p10 flexG">
+                            <canvas id="pnlChart"></canvas>
+                        </div>
+                        <div id="pnlInfo" class="flexM line24"></div>
+                    </div>`;
+    return chartHtml;
+};
+
+MadaraConstructor.prototype.renderChartForPNL = function(currentDaySummary) {
+    // Filter out invalid entries
+    const validPositions = currentDaySummary.filter(pos =>
+        typeof pos.total_profit === "number" && !isNaN(pos.total_profit)
+    );
+
+    //Use Month labels or fallback to strategy names
+    const labels = validPositions.map((pos, index) => pos.month || pos.strategy || `Item ${index + 1}`);
+    const data = validPositions.map(pos => pos.total_profit || 0);
+    const backgroundColors = data.map(value => value >= 0 ? '#4CAF50' : '#F44336');
+
+    const canvas = document.getElementById('pnlChart');
+    const ctx = canvas.getContext('2d');
+
+    // Destroy previous chart
+    if(canvas.chartInstance) {
+        canvas.chartInstance.destroy();
+    }
+
+    // Create Bar Chart
+    try {
+        canvas.chartInstance = new Chart(ctx, {
+            type    : 'bar',
+            data    : {
+                labels  : labels,
+                datasets            : [{
+                    label           : Resource.monthly_pandl,
+                    data            : data,
+                    backgroundColor : backgroundColors,
+                    barPercentage   : 0.3,
+                }]
+            },
+            options : {
+                indexAxis           : 'y',
+                responsive          : true,
+                maintainAspectRatio : false,
+                plugins : {
+                    legend  : {
+                        display : true,
+                        labels  : {
+                            generateLabels  : () => [
+                                {
+                                    text        : Resource.negative_liquidity,
+                                    fillStyle   : '#F44336',
+                                    fontColor   : '#FFFFFF'
+                                },
+                                {
+                                    text        : Resource.positive_liquidity,
+                                    fillStyle   : '#4CAF50',
+                                    fontColor   : '#FFFFFF'
+                                }
+                            ],
+                            fontColor   : '#FFFFFF',
+                            boxWidth    : 15,
+                            padding     : 15
+                        }
+                    }
+                },
+                scales  : {
+                    y   : {
+                        beginAtZero : true,
+                        ticks   : {
+                            color   : '#FFFFFF'        //Y-axis labels
+                        }
+                    },
+                    x   : {
+                        ticks   : {
+                            color   : '#FFFFFF'        //X-axis labels
+                        }
+                    }
+                }
+            }
+        });
+    } catch(error) {
+        console.log(error);
+    }
+
+    // Display overall PNL
+    const totalPNL = this.calculateTotalPNL(currentDaySummary);
+
+    let pnlInfoHtml = this.templates.pnlInfoHtml.replace(/{pnl_info_header}/g, Resource.overall_pandl)
+                            .replace(/{class_for_total_pnl}/g, (totalPNL >= 0) ? "positive" : "negative")
+                            .replace(/{total_pnl_cost_in_rupees}/g, "₹" + totalPNL.toLocaleString('en-IN', { minimumFractionDigits : 2, maximumFractionDigits : 2 }));
+
+    document.getElementById("pnlInfo").innerHTML = pnlInfoHtml;
+}
+
+MadaraConstructor.prototype.calculateTotalPNL = function(currentDaySummary) {
+    let totalPNL = 0;
+    for (let i = 0; i < currentDaySummary.length; i++) {
+        let profit = currentDaySummary[i].total_profit;
+
+        //Ensure total_profit is a valid number before adding
+        if (typeof profit === "number" && !isNaN(profit)) {
+            totalPNL += profit;
+        }
+    }
+
+    return totalPNL;
+}
+MadaraConstructor.prototype.getPositionsAndOrdersHTML = function(currentDaySummary, needOrderDetails) {
+    let positionsHtml = "";
+    let self = this;
+    if(!currentDaySummary.length) {
+        positionsHtml = this.templates.noDataFoundHtml.replace(/{no_data_text}/g, Resource["no_live_positions"]);
+        return positionsHtml;
+    }
+
+    let headerPropeties = ["strategy_header", "profit_header"];
+    if(needOrderDetails) {
+        headerPropeties = ["strategy_header", "order_count_header"];
+    } else {
+        headerPropeties = ["strategy_header", "profit_header"];
+    }
+    let tableHeadCell = "";
+    headerPropeties.forEach((property, index) => {
+        tableHeadCell +=  self.templates.tableCell.replace(/{table_cell_content}/g, Resource[property])
+                                                    .replace(/{tooltip_content}/g, Resource[property])
+                                                    .replace(/{disable_status}/, "");
+    });
+    let tableHeadRow = self.templates.tableRow.replace(/{table_row_contents}/g, tableHeadCell);
+    let eachConfigurationRow = "";
+    currentDaySummary.forEach((position, index) => {
+        let indexName = position.index_name;
+        indexName = indexName.toUpperCase();
+        let orderCount = position.order_count;
+        let totalProfit = position.total_profit;
+        totalProfit = totalProfit.toLocaleString('en-IN', { minimumFractionDigits : 2, maximumFractionDigits : 2 });
+        let strategy = position.strategy;
+
+        let totalProfitHtml = self.templates.htmlForCellContentHightlighter.replace(/{class_for_highlighting}/g, (totalProfit > 0) ? "positive" : "negative")
+                                                                            .replace(/{cell_content}/g, totalProfit);
+        let totalOrderHtml = self.templates.htmlForCellContentHightlighter.replace(/{class_for_highlighting}/g, (orderCount > 0) ? "positive" : "negative")
+                                                                            .replace(/{cell_content}/g, orderCount);
+                                                                            
+        let eachConfigurationCell = "";
+        headerPropeties.forEach(property => {
+            let tableCellContent = (property === "strategy_header") ? (strategy + " (" + indexName + ")") : (property === "profit_header" && !needOrderDetails) ? totalProfitHtml : totalOrderHtml;
+            let contentForTooltip = (property === "strategy_header") ? (strategy + " (" + indexName + ")") : (property === "profit_header" && !needOrderDetails) ? totalProfit : orderCount;
+            eachConfigurationCell += self.templates.tableCell.replace(/{table_cell_content}/g, tableCellContent ? tableCellContent : "-")
+                                                                .replace(/{tooltip_content}/g, contentForTooltip ? contentForTooltip : "")
+                                                                .replace(/{disable_status}/g, "");
+        });
+        eachConfigurationRow += self.templates.tableRow.replace(/{table_row_contents}/g, eachConfigurationCell);
+    });
+
+    let dataTable = self.templates.dataTableHtml.replace(/{module}/g, needOrderDetails ? "orders" : "positions")
+                                                .replace(/{table_head_row}/g, tableHeadRow)
+                                                .replace(/{table_body}/g, eachConfigurationRow);
+
+    return dataTable;
 };
 
 MadaraConstructor.prototype.checkAndGetResponseMessageFromResourceObject = function(key) {
@@ -866,11 +1103,15 @@ MadaraConstructor.prototype.logoutUser = function() {
     this.makeAjaxRequest(url, userDetails, additionalAjaxOptions);
 };
 
+MadaraConstructor.prototype.getLandingModule = function() {
+    return "dashboard";
+};
+
 MadaraConstructor.prototype.populateHome = function() {
     let mainContainer = $(this.DOM_SELECTORS.main_container);
     mainContainer.append(this.getHomeHtml());
     this.bindEvents();
-    mainContainer.find("#module-configurations").click();
+    mainContainer.find("#module-" + this.getLandingModule()).click();
 };
 
 document.addEventListener("DOMContentLoaded", function() {

@@ -28,10 +28,10 @@
 .gap30 { gap:30px; }
 
 .tbl { display: table; width: 100%; table-layout: fixed; }
-.tblRow { display: table-row; }
+.tblRow { display: table-row;background: var(--table-header); }
 .tblCel { display: table-cell; vertical-align: middle;padding: 15px 10px;text-align: center; }
 
-.tblHead { position: sticky;top: -20px; }
+.tblHead { position: sticky;top: 0px;color: var(--table-header-clr); }
 .tblHead .tblCel { background-color: var(--table-header); border: 1px solid var(--border-clr); border-right: none; font-size: 15px; font-weight: bold; } 
 .tblHead .tblCel:first-child{ border-radius: 6px 0 0 0; } 
 .tblHead .tblCel:last-child  { border-radius: 0 6px 0 0; border-right: 1px solid var(--border-clr); }
@@ -70,7 +70,8 @@
 .clrB-lite { color: #54a2ee; }
 .clrR { color: #f06c66; }
 .clr-link { color: #117fd1; }
-/*Font Property*/
+
+/*Font Properties in px */
 .font6 { font-size: 6px; }
 .font8 { font-size: 8px; }
 .font9 { font-size: 9px; }
@@ -99,6 +100,27 @@
 .fontM { font-weight: 500; }
 .fontItalic { font-style: italic; }
 .font600 { font-weight: 600; }
+
+/*Font Properties in em */
+.font1 { font-size: 1em; }
+.font1_5 { font-size: 1.5em; }
+.font2 { font-size: 2em; }
+.font2_5 { font-size: 2.5em; }
+.font3 { font-size: 3em; }
+.font3_5 { font-size: 3.5em; }
+.font4 { font-size: 4em; }
+.font4_5 { font-size: 4.5em; }
+.font5 { font-size: 5em; }
+.font5_5 { font-size: 5.5em; }
+.font6_5 { font-size: 6.5em; }
+.font7 { font-size: 7em; }
+.font7_5 { font-size: 7.5em; }
+.font8 { font-size: 8em; }
+.font8_5 { font-size: 8.5em; }
+.font9 { font-size: 9em; }
+.font9_5 { font-size: 9.5em; }
+.font10 { font-size: 10em; }
+.font10_5 { font-size: 10.5em; }
 
 /*Padding Property*/
 .p0 { padding: 0px; }
@@ -340,6 +362,7 @@
 .ovrflwXA{overflow-x: auto;}
 .ovrflwA { overflow-x: hidden; overflow-y: auto; }
 .ovrflwH { overflow: hidden; }
+.ovrflwAuto { overflow: auto; }
 .objFitCover{ object-fit: cover; }
 .vhcenter { position: absolute; left: 50%; top: 50%; transform: translateX(-50%) translateY(-50%); }
 .alignM { position: absolute; left: 0; right: 0; margin: auto; top: 0; bottom: 0; } /* middle of container */

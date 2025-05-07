@@ -87,12 +87,11 @@ MadaraLoginConstructor.prototype.loginUser = function() {
     let url = this.API.login;
     let additionalAjaxOptions = {
         success :   function(successResp) {
-            //console.log(successResp);
             if (successResp.status === 'success'){
-                window.location.href='/home'
+                window.location.href = '/home';
             }
             else if (successResp.status === 'failed'){
-                alert("Login Error")
+                alert("Login Error");
             }
         },
         error   :   function(errorResp) {

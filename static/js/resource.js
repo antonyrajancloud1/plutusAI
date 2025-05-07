@@ -1,6 +1,9 @@
 Resource = {
-    userInfo            :   "User Info", 
-    configurations      :   "Hunter", 
+    hello               :   "Hello",
+    userInfo            :   "User Info",
+    dashboard           :   "Dashboard", 
+    configurations      :   "Hunter",
+    manualOrders        :   "Manual Orders", 
     position            :   "Position",
     orderBook           :   "Order Book",
     brokerInfo          :   "Broker Info",
@@ -77,6 +80,17 @@ Resource = {
     initiated               :   "Initiated",
     long_placed             :   "Long Placed",
     short_placed            :   "Short Placed",
-    strategy                :   "Strategy"
-
+    strategy                :   "Strategy",
+    todays_pandl            :   "Today's PNL",
+    live_positions          :   "Live Positions",
+    orders                  :   "Orders",
+    overall_pandl           :   "Overall PNL",
+    strategy_header         :   "Strategy (Index)",
+    profit_header           :   "Total Profit",
+    order_count_header      :   "Order Count",
+    no_live_positions       :   "No Live Positions",
+    monthly_pandl           :   "Monthly PNL",
+    negative_liquidity      :   "Negative Liquidity",
+    positive_liquidity      :   "Positive Liquidity",
+    overall_pandl           :   "Overall PNL : "
 }   

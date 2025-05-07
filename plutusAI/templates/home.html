@@ -1,24 +1,26 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Madara</title>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Madara</title>
 
-    <!-- Scripts to be imported -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="{% static 'js/resource.js'%}" type="text/javascript"></script>
-    <script src="{% static 'js/home.js'%}" type="text/javascript"></script>
+        <!-- Scripts to be imported -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="{% static 'js/resource.js'%}" type="text/javascript"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="{% static 'js/home.js'%}" type="text/javascript"></script>
 
-    <!-- Stylesheets to be imported -->
-    <link rel="icon" href="https://i.pinimg.com/originals/04/f3/36/04f3361e6208afd87f085c7c9b38e4dd.jpg">
-    <link rel="stylesheet" href="{% static 'css/global.css'%}">
-    <link rel="stylesheet" href="{% static 'css/common.css'%}">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-</head>
-<body>
-	<div id="main-container" class="wh100 ovrflwH posabs"></div>
-</body>
+        <!-- Stylesheets to be imported -->
+        <link rel="icon" href="https://i.pinimg.com/originals/04/f3/36/04f3361e6208afd87f085c7c9b38e4dd.jpg">
+        <link rel="stylesheet" href="{% static 'css/global.css'%}">
+        <link rel="stylesheet" href="{% static 'css/common.css'%}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
+    <body>
+        <div id="main-container" class="wh100 ovrflwH posabs main-container"></div>
+    </body>
 </html>
