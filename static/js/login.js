@@ -11,10 +11,10 @@ var MadaraLoginConstructor = function() {
                                 <div id="login-header" class="font30 clrW">{login_text}</div>
                                 <div id="login-inputs" class="login-inputs-container flex-col gap20">
                                     <div id="username-input">
-                                        <input id="user-name" type="text" class="login-input-element" placeholder="{username}" autocomplete="false">
+                                        <input id="user-name" type="text" class="login-input-element w100" placeholder="{username}" autocomplete="false">
                                     </div>
                                     <div id="password-input">
-                                        <input id="password" type="password" class="login-input-element" placeholder="{password}" autocomplete="false">
+                                        <input id="password" type="password" class="login-input-element w100" placeholder="{password}" autocomplete="false">
                                     </div>
                                     <div id="login-submit-button" login-page-buttons purpose="loginUser" class="login-submit-button flexM clrW curP">{submit_text}</div>
                                 </div>
@@ -44,6 +44,7 @@ MadaraLoginConstructor.prototype.getLoginHtml = function() {
 
 MadaraLoginConstructor.prototype.bindEvents = function() {
     this.bindClickEvent();
+    this.bindKeyUpEvent();
 };
 
 MadaraLoginConstructor.prototype.bindClickEvent = function() {
@@ -59,6 +60,35 @@ MadaraLoginConstructor.prototype.bindClickEvent = function() {
             self.removeEventCache();
         }
     })
+};
+
+MadaraLoginConstructor.prototype.bindKeyUpEvent = function() {
+    let self = this;
+    let loginMainContainer = $(this.DOM_SELECTORS.login_main_container);
+    loginMainContainer.on("keypress", function(event) {
+        event.stopImmediatePropagation();
+        if (event.which === 13) {                           // 13 is the Enter key
+            event.preventDefault();
+            let validLogin = self.ValidateAndGetCredentials();
+            if(!validLogin) {
+                return;
+            }
+            self.loginUser();    
+        }
+    });
+};
+
+MadaraLoginConstructor.prototype.ValidateAndGetCredentials = function() {
+    let userName = $(this.DOM_SELECTORS.user_name).val();
+    let password = $(this.DOM_SELECTORS.password).val();
+    if(userName === "" || password === "") {
+        alert("Please fill all the fields");
+        return;
+    }
+    return {
+        user_name   :   userName,
+        password    :   password
+    };
 };
 
 MadaraLoginConstructor.prototype.addEventAndDomCache = function(event) {
@@ -78,12 +108,11 @@ MadaraLoginConstructor.prototype.removeEventCache = function() {
 };
 
 MadaraLoginConstructor.prototype.loginUser = function() {
-    let userName = $(this.DOM_SELECTORS.user_name).val();
-    let password = $(this.DOM_SELECTORS.password).val();
-    let userDetails = {
-        user_name   :   userName,
-        password    :   password
-    };
+    let validLogin = this.ValidateAndGetCredentials();
+    if(!validLogin) {
+        return;
+    }
+    let userDetails = validLogin;
     let url = this.API.login;
     let additionalAjaxOptions = {
         success :   function(successResp) {

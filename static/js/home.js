@@ -14,6 +14,8 @@ let MadaraConstructor = function() {
     this.whiteListedProperties = {
         getConfigurations   : [ "actions", "index_name", "levels", "trend_check_points", "strike", "safe_sl", "status" ],
         getScalperDetails   : [ "actions", "index_name", "strike", "target", "is_demo_trading_enabled", "use_full_capital", "lots" ,"status","on_candle_close"],
+        getManualDetails    : [ "actions", "index_name", "lots", "trigger", "stop_loss", "target", "strike", "current_premium" ],
+        getWebhookDetails   : [ "index_name", "buy_url", "sell_url", "exit_url", "input_data" ],
         getOrderBook        : [ "entry_time", "script_name", "qty", "entry_price", "exit_price", "status", "exit_time","strategy" ],
         getBrokerInfo       : [ "actions", "broker_name", "broker_user_id", "broker_user_name", "broker_mpin", "broker_api_token" ]
     };
@@ -50,7 +52,7 @@ MadaraConstructor.prototype.templates = {
                 </div>`,
 
     dataTableHtml : 
-                    `<div id="{module}-container" class="wh100 flexG {module}-container ovrflwAuto data-table-container">
+                    `<div id="{module}-container" class="wh100 flexG {module}-container ovrflwAuto data-table-container" home-page-buttons purpose="{purpose}">
                         <div class="tbl tblHead fshrink">   
                             {table_head_row}
                         </div>
@@ -68,6 +70,7 @@ MadaraConstructor.prototype.templates = {
     actionsHtml : `<div id="actions-container" class="flexM gap10">
                         {start_button}
                         {stop_button}
+                        {exit_button}
                         {edit_button}
                   </div>`,
 
@@ -76,6 +79,8 @@ MadaraConstructor.prototype.templates = {
     stopButton : `<div id="stop-index" purpose="stopIndex" trigger-source="{trigger_source}" home-page-buttons index="{index}" class="action-button xs fa fa-stop curP clrR stop-index-button p5 bdrR4" title="{stop_index_title}"></div>`,
 
     editButton : `<div id="edit-{module}" purpose="{purpose_of_edit}" home-page-buttons index="{index}" class="action-button fa xs fa-pencil curP clrB edit-config-button p5 bdrR4" title="{edit_module_title}"></div>`,
+
+    exitButton : `<div id="exit-{module}" purpose="{purpose_of_exit}" home-page-buttons index="{index}" class="action-button fa xs fa-remove curP clrY exit-config-button p5 bdrR4" title="{exit_module_title}"></div>`,
 
     logoutHtml : 
                 `<div id="logout-button" home-page-buttons class="primary-button logout-button curP flexM bdrR5 sm" purpose="logoutUser" userId>
@@ -137,7 +142,7 @@ MadaraConstructor.prototype.templates = {
                     </div>`,
 
     dashboardHtml : 
-                    `<div id="dashboard-container" class="dashboard-container">
+                    `<div id="dashboard-container" class="dashboard-container wh100">
                         <div class="item-1 pnl flex-col">
                             <div class="font18 fontB">{pnl_header}</div>
                             {chart_html}
@@ -150,7 +155,10 @@ MadaraConstructor.prototype.templates = {
                             <div class="font18 fontB">{orders_header}</div>
                             {orders_html}
                         </div>
-                        <div class="item-4 open-orders"></div>
+                        <div class="item-4 open-orders">
+                            <div class="font18 fontB">{open_orders_header}</div>
+                            {open_orders_html}
+                        </div>
                     </div>`,
 
     htmlForCellContentHightlighter : `<span class="{class_for_highlighting}">{cell_content}</span>`,
@@ -158,6 +166,27 @@ MadaraConstructor.prototype.templates = {
     pnlInfoHtml :   `<div class="textC font18 fontB">
                         {pnl_info_header}
                         <span class="{class_for_total_pnl}">{total_pnl_cost_in_rupees}</span>
+                    </div>`,
+
+    manualOrdersHtml :
+                    `<div id="manual-order-container" class="manual-order-container flex-col">
+                        {strategy_search_html}
+                        {manual_orders_table}
+                        {webhook_details}
+                    </div>`,
+
+    strategySearchHtml :    
+                    `<div id="strategy-search-container" class="flexC strategy-search-container pB20 gap15">
+                        <div>{strategy_name_text}</div>
+                        <input id="strategy-name-input" type="text" placeholder="{strategy_search_placeholder}" value="{strategy_search_value}" class="strategy-name-input edit-config-input-elements" home-page-buttons purpose="updateWebhookDataTableWithThisStrategy" autocomplete="off" value="{strategy_name}" />
+                    </div>`,
+
+    webhookDetailsHtml : 
+                    `<div id="webhook-details-container" class="webhook-details-container flex-col ovrflwH">
+                        <div class="font18 fontB mT30 mB20">{webhook_details_header}</div>
+                        <div class="flex-col gap10 ovrflwA">
+                            {webhook_details_table}
+                        </div>
                     </div>`
 };
 
@@ -170,7 +199,8 @@ MadaraConstructor.prototype.API = {
     login                   :   "/login",
     logout                  :   "/logout",
     getConfigValues         :   "/get_config_values",
-    getSummary              :   "/get_strategy_summary",    
+    getSummary              :   "/get_strategy_summary",
+    getManualDetails        :   "/manual_details",    
     updateConfigValues      :   "/update_config_values",
     addUser                 :   "/add_user",
     getBrokerDetails        :   "/get_broker_details",
@@ -182,6 +212,12 @@ MadaraConstructor.prototype.API = {
     startIndex              :   "/start_index",
     stopIndex               :   "/stop_index",
     startScalper            :   "/start_scalper",
+    placeManualOrder        :   "/place_order_buy",
+    placeOrderViaWebhook    :   "/trigger_buy",
+    sellManualOrder         :   "/place_order_sell",
+    sellOrderViaWebhook     :   "/trigger_sell",
+    exitManualOrder         :   "/place_order_exit",
+    exitOrderViaWebhook     :   "/trigger_exit",
     getPlans                :   "/plans",
     editPlans               :   "/edit_plans"
 };
@@ -255,6 +291,10 @@ MadaraConstructor.prototype.getEditButton = function() {
     return this.templates.editButton.replace(/{edit_module_title}/g, Resource.edit_config);
 };
 
+MadaraConstructor.prototype.getExitButton = function() {
+    return this.templates.exitButton.replace(/{edit_module_title}/g, Resource.exit_config);
+};
+
 MadaraConstructor.prototype.updateBanner = function(bannerObject) {
     if(!bannerObject || (bannerObject.content === "")) {
         return;
@@ -320,7 +360,7 @@ MadaraConstructor.prototype.viewOrderBook = function() {
                 let eachConfigurationCell = "";
                 whiteListedProperties.forEach(property => {
                     if(property !== "index_name") {
-                        let tableCellContent = property === "status" ? Resource[configurationObject[property]] : property.includes("time") ? self.getFormattedTime(configurationObject[property]) : configurationObject[property];
+                        let tableCellContent = (property === "status") ? Resource[configurationObject[property]] : property.includes("time") ? self.getFormattedTime(configurationObject[property]) : configurationObject[property];
                         eachConfigurationCell += self.templates.tableCell.replace(/{table_cell_content}/g, tableCellContent ? tableCellContent : "-")
                                                                             .replace(/{tooltip_content}/g, tableCellContent ? tableCellContent : "")
                                                                             .replace(/{disable_status}/g, disableStatus ? "disabled" : "");
@@ -371,6 +411,7 @@ MadaraConstructor.prototype.viewBrokerInfo = function() {
                 let disableStatus = configurationObject["disable"];
                 let actionsHtml = self.templates.actionsHtml.replace(/{start_button}/g, "")
                                                             .replace(/{stop_button}/g, "")
+                                                            .replace(/{exit_button}/g, "")
                                                             .replace(/{edit_button}/g, self.getEditButton());
                 
                 actionsHtml = actionsHtml.replace(/{index}/g, configurationObject["broker_name"])
@@ -435,6 +476,7 @@ MadaraConstructor.prototype.viewScalper = function() {
                 let disableStatus = configurationObject["disable"];
                 let actionsHtml = self.templates.actionsHtml.replace(/{start_button}/g, self.getStartIndexButton())
                                                             .replace(/{stop_button}/g, self.getStopIndexButton())
+                                                            .replace(/{exit_button}/g, "")
                                                             .replace(/{edit_button}/g, self.getEditButton());
                                                             
                 actionsHtml = actionsHtml.replace(/{index}/g, configuration)
@@ -515,6 +557,7 @@ MadaraConstructor.prototype.viewConfigurations = function() {
                 let disableStatus = configurationObject["disable"];
                 let actionsHtml = self.templates.actionsHtml.replace(/{start_button}/g, self.getStartIndexButton())
                                                             .replace(/{stop_button}/g, self.getStopIndexButton())
+                                                            .replace(/{exit_button}/g, "")
                                                             .replace(/{edit_button}/g, self.getEditButton());
                                                             
                 actionsHtml = actionsHtml.replace(/{index}/g, configuration)
@@ -575,9 +618,11 @@ MadaraConstructor.prototype.viewDashboard = function() {
             let dashBoardHtml = self.templates.dashboardHtml.replace(/{pnl_header}/g, Resource.todays_pandl)
                                                             .replace(/{positions_header}/g, Resource.live_positions)
                                                             .replace(/{orders_header}/g, Resource.orders)
+                                                            .replace(/{open_orders_header}/g, Resource.open_orders)
                                                             .replace(/{chart_html}/g, self.getChartHTML())
-                                                            .replace(/{positions_html}/g, self.getPositionsAndOrdersHTML(currentDaySummary, false))
-                                                            .replace(/{orders_html}/g, self.getPositionsAndOrdersHTML(currentDaySummary, true))
+                                                            .replace(/{positions_html}/g, self.getPositionsAndOrdersHTML(currentDaySummary, "needPositions"))
+                                                            .replace(/{orders_html}/g, self.getPositionsAndOrdersHTML(currentDaySummary, "needOrders"))
+                                                            .replace(/{open_orders_html}/g, self.getPositionsAndOrdersHTML(currentDaySummary, "needOpenOrders"))
 
             $(self.DOM_SELECTORS.rhs_container).html(dashBoardHtml);
             self.renderChartForPNL(currentDaySummary);
@@ -588,6 +633,189 @@ MadaraConstructor.prototype.viewDashboard = function() {
         }
     }
     this.makeAjaxRequest(url, {}, additionalAjaxOptions);
+};
+
+MadaraConstructor.prototype.viewManualOrders = function() {
+    let self = this;
+    this.setCurrentLHSModuleAsSelected("#module-dashboard");
+    this.addLoaderForTheRHS();
+    let whiteListedProperties = this.whiteListedProperties.getManualDetails;
+    let url = this.getWindowLocationOrigin() + this.API.getManualDetails;
+    let additionalAjaxOptions = {
+        type    :   "GET",
+        success :   function(successResp) {
+            let webhookData = successResp.message;
+            if(!webhookData.length) {
+                self.populateNoDataFoundHTML();
+                return;
+            }
+            
+            let tableHeadCell = "";
+            whiteListedProperties.forEach((property, index) => {
+                tableHeadCell +=  self.templates.tableCell.replace(/{table_cell_content}/g, Resource[property])
+                                                            .replace(/{tooltip_content}/g, Resource[property])
+                                                            .replace(/{disable_status}/, index === 0 ? "actions-table-cell" : "");
+            });
+            let tableHeadRow = self.templates.tableRow.replace(/{table_row_contents}/g, tableHeadCell);
+            
+            let eachConfigurationRow = "";
+            webhookData.forEach((key, index) => {
+                let currentConfiguration = webhookData[index];
+                let configuration = currentConfiguration.index_name;
+                let configurationObject = currentConfiguration;
+                let disableStatus = configurationObject["disable"];
+                let actionsHtml = self.templates.actionsHtml.replace(/{start_button}/g, self.getStartIndexButton())
+                                                            .replace(/{stop_button}/g, self.getStopIndexButton())
+                                                            .replace(/{exit_button}/g, self.getExitButton())
+                                                            .replace(/{edit_button}/g, self.getEditButton());
+                                                            
+                actionsHtml = actionsHtml.replace(/{index}/g, configuration)
+                                        .replace(/{module}/g, "manualOrders")
+                                        .replace(/{purpose_of_edit}/g, "editThisManualOrder")
+                                        .replace(/{trigger_source}/g, "manualOrders");
+
+                let eachConfigurationCell = self.templates.tableCell.replace(/{table_cell_content}/g, actionsHtml)
+                                                                    .replace(/{tooltip_content}/g, "")
+                                                                    .replace(/{disable_status}/g, disableStatus ? "disabled actions-table-cell" : "actions-table-cell");
+
+                eachConfigurationCell += self.templates.tableCell.replace(/{table_cell_content}/g, Resource[configuration])
+                                                                    .replace(/{tooltip_content}/g, Resource[configuration])
+                                                                    .replace(/{disable_status}/g, disableStatus ? "disabled" : "");
+
+                whiteListedProperties.forEach(property => {
+                    if(property !== "index_name" && property !== "actions") {
+                        let valueFromResponse = configurationObject[property];
+                        let tableCellContent = (property === "status") ? (Resource[valueFromResponse] ? Resource[valueFromResponse] : valueFromResponse) : valueFromResponse;
+                        eachConfigurationCell += self.templates.tableCell.replace(/{table_cell_content}/g, tableCellContent ? tableCellContent : "-")
+                                                                         .replace(/{tooltip_content}/g, tableCellContent ? tableCellContent : "")
+                                                                         .replace(/{disable_status}/g, disableStatus ? "disabled" : "");
+                    }
+                });
+                eachConfigurationRow += self.templates.tableRow.replace(/{table_row_contents}/g, eachConfigurationCell);
+            });
+
+            let dataTableForConfiguration = self.templates.dataTableHtml.replace(/{module}/g, "manualOrders")
+                                                                        .replace(/{table_head_row}/g, tableHeadRow)
+                                                                        .replace(/{table_body}/g, eachConfigurationRow);
+
+            let manualOrdersHtml = self.templates.manualOrdersHtml.replace(/{manual_orders_table}/g, dataTableForConfiguration)
+                                                                .replace(/{strategy_search_html}/g, self.getStrategySearchHTML())
+                                                                .replace(/{webhook_details}/g, self.getWebhookDetailsHTML(webhookData));
+
+            self.webhookData = webhookData;
+
+            $(self.DOM_SELECTORS.rhs_container).html(manualOrdersHtml);
+            
+        },
+        error   :   function(errorResp) {
+            let errorContent = (JSON.parse(errorResp.responseText).message) ? self.checkAndGetResponseMessageFromResourceObject(JSON.parse(errorResp.responseText).message) : errorResp.statusText;
+            self.updateBanner({ type : "failure", content : errorContent });
+        }
+    }
+    this.makeAjaxRequest(url, {}, additionalAjaxOptions);
+};
+
+MadaraConstructor.prototype.getStrategySearchHTML = function() {
+    let strategySearchHtml = this.templates.strategySearchHtml.replace(/{strategy_name_text}/g, Resource.strategy_name_text)
+                                                            .replace(/{strategy_search_placeholder}/g, Resource.default_strategy)
+                                                            .replace(/{strategy_search_value}/g, "default_strategy");
+
+    return strategySearchHtml;
+};
+
+MadaraConstructor.prototype.getBuyUrl = function() {
+    return this.getWindowLocationOrigin() + this.API.placeOrderViaWebhook;
+};
+
+MadaraConstructor.prototype.getSellUrl = function() {
+    return this.getWindowLocationOrigin() + this.API.sellOrderViaWebhook;
+};
+
+MadaraConstructor.prototype.getExitUrl = function() {
+    return this.getWindowLocationOrigin() + this.API.exitOrderViaWebhook;
+};
+
+MadaraConstructor.prototype.getWebhookDetailsHTML = function(webhookData, strategyName) {
+    let whiteListedProperties = this.whiteListedProperties.getWebhookDetails;
+    let tableHeadCell = "";
+    let self = this;
+    whiteListedProperties.forEach((property, index) => {
+        tableHeadCell +=  self.templates.tableCell.replace(/{table_cell_content}/g, Resource[property])
+                                                    .replace(/{tooltip_content}/g, Resource[property])
+                                                    .replace(/{disable_status}/, "");
+    });
+    let tableHeadRow = self.templates.tableRow.replace(/{table_row_contents}/g, tableHeadCell);
+    
+    let eachConfigurationRow = "";
+
+    let neededDetailsObject = {
+        buy_url         :   this.getBuyUrl(),
+        sell_url        :   this.getSellUrl(),
+        exit_url        :   this.getExitUrl(),
+        input_data      :   { }
+    };
+
+    webhookData.forEach((key, index) => {
+        let currentConfiguration = webhookData[index];
+        let configurationObject = currentConfiguration;
+        configurationObject = $.extend(configurationObject, neededDetailsObject);
+
+        let indexName = configurationObject.index_name;
+        configurationObject.input_data.index_name = indexName;
+        configurationObject.input_data.strategy = strategyName ? strategyName : (indexName + "_" + "default_strategy");
+
+        let eachConfigurationCell = "";
+        whiteListedProperties.forEach(property => {
+            if(property !== "actions") {
+                let valueFromResponse = configurationObject[property];
+                let tableCellContent = (property === "status") ? (Resource[valueFromResponse] ? Resource[valueFromResponse] : valueFromResponse) : valueFromResponse;
+                if(property === "input_data") {
+                    tableCellContent = JSON.stringify(configurationObject.input_data);
+                }
+                eachConfigurationCell += self.templates.tableCell.replace(/{table_cell_content}/g, tableCellContent ? tableCellContent : "-")
+                                                                    .replace(/{tooltip_content}/g, "")
+                                                                    .replace(/{disable_status}/g, "webhook-details-table-cell can-be-copied");
+            } 
+        });
+        eachConfigurationRow += self.templates.tableRow.replace(/{table_row_contents}/g, eachConfigurationCell);
+    });
+
+    let dataTableForConfiguration = self.templates.dataTableHtml.replace(/{module}/g, "webhookDetails")
+                                                                .replace(/{purpose}/g, "copyTheContentOfTheWebhookDetails")
+                                                                .replace(/{table_head_row}/g, tableHeadRow)
+                                                                .replace(/{table_body}/g, eachConfigurationRow);
+
+    let webhookDetailsHtml = self.templates.webhookDetailsHtml.replace(/{webhook_details_table}/g, dataTableForConfiguration)
+                                                                .replace(/{webhook_details_header}/g, Resource.webhook_details_header);
+
+    return webhookDetailsHtml;
+};
+
+MadaraConstructor.prototype.updateWebhookDataTableWithThisStrategy = function() {
+    let currentTarget = this.getCurrentTarget();
+    let val = currentTarget.val();
+    let updatedWebhookDetailsHtml = this.getWebhookDetailsHTML(this.webhookData, val);
+    let webhookDetailsContainer = $(this.DOM_SELECTORS.rhs_container).find("#webhook-details-container");
+    webhookDetailsContainer.replaceWith(updatedWebhookDetailsHtml);
+};
+
+MadaraConstructor.prototype.copyTheContentOfTheWebhookDetails = function() {
+    let self = this;
+    let target = this.EVENT_AND_DOM_CACHE.event.target;
+    let canBeCopied = target.classList.contains("can-be-copied");
+    if(canBeCopied) {
+        const text = $(target).text();
+        const tempTextarea = $('<textarea>');
+        $(this.DOM_SELECTORS.rhs_container).append(tempTextarea);
+        tempTextarea.val(text).select();
+        const successful = document.execCommand('copy');
+        tempTextarea.remove();
+        if (successful) {
+            self.updateBanner({ type : "success", content : Resource.copy_success });
+        } else {
+            self.updateBanner({ type : "failure", content : Resource.copy_failed });
+        }
+    }
 };
 
 MadaraConstructor.prototype.getChartHTML = function() {
@@ -700,20 +928,23 @@ MadaraConstructor.prototype.calculateTotalPNL = function(currentDaySummary) {
 
     return totalPNL;
 }
-MadaraConstructor.prototype.getPositionsAndOrdersHTML = function(currentDaySummary, needOrderDetails) {
+MadaraConstructor.prototype.getPositionsAndOrdersHTML = function(currentDaySummary, need) {
     let positionsHtml = "";
     let self = this;
     if(!currentDaySummary.length) {
-        positionsHtml = this.templates.noDataFoundHtml.replace(/{no_data_text}/g, Resource["no_live_positions"]);
+        positionsHtml = this.templates.noDataFoundHtml.replace(/{no_data_text}/g, (need === "needOpenOrders") ? Resource.no_open_orders : Resource.no_live_positions);
         return positionsHtml;
     }
 
     let headerPropeties = ["strategy_header", "profit_header"];
-    if(needOrderDetails) {
+    if(need === "needOrders") {
         headerPropeties = ["strategy_header", "order_count_header"];
-    } else {
+    } else if(need === "needPositions"){
         headerPropeties = ["strategy_header", "profit_header"];
+    } else if(need === "needOpenOrders") {
+        return this.templates.noDataFoundHtml.replace(/{no_data_text}/g, Resource.no_open_orders);
     }
+
     let tableHeadCell = "";
     headerPropeties.forEach((property, index) => {
         tableHeadCell +=  self.templates.tableCell.replace(/{table_cell_content}/g, Resource[property])
@@ -727,7 +958,7 @@ MadaraConstructor.prototype.getPositionsAndOrdersHTML = function(currentDaySumma
         indexName = indexName.toUpperCase();
         let orderCount = position.order_count;
         let totalProfit = position.total_profit;
-        totalProfit = totalProfit.toLocaleString('en-IN', { minimumFractionDigits : 2, maximumFractionDigits : 2 });
+        totalProfit = totalProfit ? totalProfit.toLocaleString('en-IN', { minimumFractionDigits : 2, maximumFractionDigits : 2 }) : "";
         let strategy = position.strategy;
 
         let totalProfitHtml = self.templates.htmlForCellContentHightlighter.replace(/{class_for_highlighting}/g, (totalProfit > 0) ? "positive" : "negative")
@@ -737,8 +968,8 @@ MadaraConstructor.prototype.getPositionsAndOrdersHTML = function(currentDaySumma
                                                                             
         let eachConfigurationCell = "";
         headerPropeties.forEach(property => {
-            let tableCellContent = (property === "strategy_header") ? (strategy + " (" + indexName + ")") : (property === "profit_header" && !needOrderDetails) ? totalProfitHtml : totalOrderHtml;
-            let contentForTooltip = (property === "strategy_header") ? (strategy + " (" + indexName + ")") : (property === "profit_header" && !needOrderDetails) ? totalProfit : orderCount;
+            let tableCellContent = (property === "strategy_header") ? (strategy + " (" + indexName + ")") : (property === "profit_header" && (need === "needPositions")) ? totalProfitHtml : totalOrderHtml;
+            let contentForTooltip = (property === "strategy_header") ? (strategy + " (" + indexName + ")") : (property === "profit_header" && (need === "needPositions")) ? totalProfit : orderCount;
             eachConfigurationCell += self.templates.tableCell.replace(/{table_cell_content}/g, tableCellContent ? tableCellContent : "-")
                                                                 .replace(/{tooltip_content}/g, contentForTooltip ? contentForTooltip : "")
                                                                 .replace(/{disable_status}/g, "");
@@ -746,7 +977,7 @@ MadaraConstructor.prototype.getPositionsAndOrdersHTML = function(currentDaySumma
         eachConfigurationRow += self.templates.tableRow.replace(/{table_row_contents}/g, eachConfigurationCell);
     });
 
-    let dataTable = self.templates.dataTableHtml.replace(/{module}/g, needOrderDetails ? "orders" : "positions")
+    let dataTable = self.templates.dataTableHtml.replace(/{module}/g, (need === "needOrders") ? "orders" : "positions")
                                                 .replace(/{table_head_row}/g, tableHeadRow)
                                                 .replace(/{table_body}/g, eachConfigurationRow);
 
@@ -769,7 +1000,11 @@ MadaraConstructor.prototype.startIndex = function() {
     if(triggerSource === "scalper") {
         data.strategy = triggerSource;
         url = this.getWindowLocationOrigin() + this.API.startScalper;
-    }
+    } 
+    // else if(triggerSource === "manualOrders") {
+    //     data.strategy = triggerSource;
+    //     url = this.getWindowLocationOrigin() + this.API.placeManualOrder;
+    // }
 
     let additionalAjaxOptions = {
         type    :   "POST",
@@ -799,6 +1034,11 @@ MadaraConstructor.prototype.stopIndex = function() {
     if(triggerSource === "scalper") {
         data.strategy = triggerSource;
     }
+    // else if(triggerSource === "manualOrders") {
+    //     data.strategy = triggerSource;
+    //     url = this.getWindowLocationOrigin() + this.API.placeManualOrder;
+    // }
+
     let url = this.getWindowLocationOrigin() + this.API.stopIndex;
     let additionalAjaxOptions = {
         type    :   "POST",
@@ -1046,8 +1286,31 @@ MadaraConstructor.prototype.editThisIndexScalper = function() {
     this.makeAjaxRequest(url, data, additionalAjaxOptions);
 };
 
+MadaraConstructor.prototype.editThisManualOrder = function() {
+    let self = this;
+    let currentTarget = this.EVENT_AND_DOM_CACHE.currentTarget;
+    let data = {
+        index_name : currentTarget.attr("index")
+    };
+    this.addLoaderInThisButton(currentTarget);
+    let url = this.getWindowLocationOrigin() + this.API.getManualDetails;
+    let additionalAjaxOptions = {
+        type    :   "GET",
+        success :   function(successResp) {
+            self.removeLoaderInThisButton(currentTarget);
+            self.populateFormForEditingIndexConfiguration(successResp, { isFromScalper : true });
+        },
+        error   :   function(errorResp) {
+            self.removeLoaderInThisButton(currentTarget);
+            self.updateBanner({ type : "failure", content : self.checkAndGetResponseMessageFromResourceObject(JSON.parse(errorResp.responseText).message) });
+        }
+    }
+    this.makeAjaxRequest(url, data, additionalAjaxOptions);
+};
+
 MadaraConstructor.prototype.bindEvents = function() {
     this.bindClickEvent();
+    this.bindKeyUpEvent();
 };
 
 MadaraConstructor.prototype.bindClickEvent = function() {
@@ -1062,8 +1325,40 @@ MadaraConstructor.prototype.bindClickEvent = function() {
             self[purpose]();
             self.removeEventCache();
         }
-    })
+    });
 };
+
+MadaraConstructor.prototype.bindKeyUpEvent = function() {
+    let self = this;
+    let mainContainer = $(this.DOM_SELECTORS.main_container);
+    mainContainer.on("keyup", "[home-page-buttons]", 
+        self.debounce(function(event) {
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+            let purpose = mainContainer.find(event.currentTarget).attr("purpose");
+            if(typeof self[purpose] === "function") {
+                self.addEventAndDomCache(event);
+                self[purpose]();
+                self.removeEventCache();
+            }
+        }, "", 200)
+    );
+};
+
+MadaraConstructor.prototype.getCurrentTarget = function() {
+    return this.EVENT_AND_DOM_CACHE.currentTarget;
+};
+
+MadaraConstructor.prototype.debounce = function(func, scope, delay) {
+    let timer;
+    return function() {
+        clearTimeout( timer );
+        let args = arguments;
+        timer = setTimeout(function(scope, args) {
+            func.apply(scope, args);
+        }, delay, scope, args);
+    };
+}
 
 MadaraConstructor.prototype.addEventAndDomCache = function(event) {
     let self = this;

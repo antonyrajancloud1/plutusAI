@@ -29,21 +29,22 @@
 
 .tbl { display: table; width: 100%; table-layout: fixed; }
 .tblRow { display: table-row;background: var(--table-header); }
+.tblRow:hover { background-color: var(--table-cell-hover-clr); }
 .tblCel { display: table-cell; vertical-align: middle;padding: 15px 10px;text-align: center; }
 
 .tblHead { position: sticky;top: 0px;color: var(--table-header-clr); }
-.tblHead .tblCel { background-color: var(--table-header); border: 1px solid var(--border-clr); border-right: none; font-size: 15px; font-weight: bold; } 
+.tblHead .tblCel { background-color: var(--table-header); /* border: 1px solid var(--border-clr);*/ border-right: none; font-size: 15px; font-weight: bold; } 
 .tblHead .tblCel:first-child{ border-radius: 6px 0 0 0; } 
-.tblHead .tblCel:last-child  { border-radius: 0 6px 0 0; border-right: 1px solid var(--border-clr); }
+.tblHead .tblCel:last-child  { border-radius: 0 6px 0 0; /* border-right: 1px solid var(--border-clr);*/ }
 .tbl.tblMain { border-top: none; }
-.tblHead .tblCel:last-child { border-right: 1px solid var(--border-clr) !important; }
-.tblMain .tblCel:last-child { border-right: 1px solid var(--border-clr); }
-.tblMain .tblCel { border-left: 1px solid var(--border-clr); }
+/* .tblHead .tblCel:last-child { border-right: 1px solid var(--border-clr) !important; } */
+/* .tblMain .tblCel:last-child { border-right: 1px solid var(--border-clr); } */
+/* .tblMain .tblCel { border-left: 1px solid var(--border-clr); } */
 /* .tblMain .tblRow .tblCel { background-color: #03254b; } */
-.tblMain .tblRow:last-child .tblCel { border-bottom: 1px solid var(--border-clr); }
+/* .tblMain .tblRow:last-child .tblCel { border-bottom: 1px solid var(--border-clr); } */
+/* .tblMain .tblCel:not(.tblMain .tblRow:first-child .tblCel) { border-top: 1px solid var(--border-clr); } */
 .tblMain .tblRow:last-child .tblCel:first-child { border-bottom-left-radius:6px; }
 .tblMain .tblRow:last-child .tblCel:last-child { border-bottom-right-radius:6px; }
-.tblMain .tblCel:not(.tblMain .tblRow:first-child .tblCel) { border-top: 1px solid var(--border-clr); }
 
 .diB { display: inline-block; }
 .dibM { display: inline-block; vertical-align: middle; }
@@ -69,6 +70,7 @@
 .clrB { color: #2695f6; }
 .clrB-lite { color: #54a2ee; }
 .clrR { color: #f06c66; }
+.clrY { color: #f6c23e; } 
 .clr-link { color: #117fd1; }
 
 /*Font Properties in px */
@@ -383,7 +385,7 @@
 .disabled { pointer-events: none; cursor: default; opacity: 0.5; }
 
 /* Input Related CSS */
-input.txt:focus, input[type="text"]:focus, input[type="checkbox"]:focus, input[type="password"]:focus-visible { outline:none; border: 1px solid var(--border-clr); box-shadow: none; }
+input.txt:focus, input[type="text"]:focus, input[type="checkbox"]:focus, input[type="password"]:focus-visible { outline:none; border: 1px solid var(--lhs-bg-hover); box-shadow: none; }
 ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     color: var(--color-placeholder);
 }

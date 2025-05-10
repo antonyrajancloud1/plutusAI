@@ -28,8 +28,9 @@
     --hover-bg              : #555;
     --table-header          : #1E1E1E;
     --table-header-clr      : #4779D4;
-    --color-placeholder     : #555;
-    --success-bg            : #050606;
+    --table-cell-hover-clr  : #2C2C2C;
+    --color-placeholder     : #999999;
+    --success-bg            : #2E7D32;
     --error-bg              : #730707;
     --top-bar-height        : 60px;
     --lhs-width             : 190px;
@@ -46,6 +47,7 @@ body { font-family: Lato, sans-serif !important;margin: 0;box-sizing: border-box
 .main-container { left: 0;top: 0;transform: translateZ(0); }
 .positive { color: var(--positive-value-clr); }
 .negative { color: var(--negative-value-clr); }
+.rhs-bg-container:has(.dashboard-container) { display: block; }
 
 /**** Header Styles Starts ****/
 .header-container { height:var(--top-bar-height);border-bottom: 2px solid var(--border-clr); }
@@ -68,27 +70,28 @@ body { font-family: Lato, sans-serif !important;margin: 0;box-sizing: border-box
 
 /**** RHS Styles Starts****/
 .rhs-bg-container { background-color: var(--body-bg);width: calc(100% - var(--lhs-width)); }
-.start-index-button, .stop-index-button, .edit-config-button { border: 1px solid; }
+.start-index-button, .stop-index-button, .edit-config-button, .exit-config-button { border: 1px solid; }
 .start-index-button:hover { background-color: rgb(80 174 66 / 15%); }
 .stop-index-button:hover { background-color: rgb(240 109 102 / 15%); }
 .edit-config-button:hover { background-color: rgb(38 149 246 / 15%); }
 .actions-table-cell { width: 120px; }
 .dashboard-container { display: grid;grid-template-columns: repeat(3, 1fr);grid-template-rows: repeat(2, 1fr);;gap: 10px; }
-/* .pnl-chart { height: 385px; } */
 .item-4 { grid-column: 1 / span 3; }
 .pnl, .positions, .orders, .open-orders { border: 1px solid var(--button-bg-clr);padding: 10px;box-shadow: 0px 2px 4px rgb(38 149 246 / 43%);border-radius: 5px; }
-
+.strategy-name-input { width: 250px; }
 /**** RHS Styles Ends****/
 
 /**** Footer Styles Starts ****/
 /**** Footer Styles Ends ****/
 
 /**** Login Page Styles Starts ****/
-.login-bg-image:before { background-image: url(images/login-bg.jpeg);height: 100%;width: 100%;content: "";position: absolute;left: 0;top: 0;background-repeat: no-repeat;background-blend-mode: overlay;background-size: 100% 100%;z-index: -1; }
-.login-wrapper { width: 50%;height: 50%;box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.4); }
-.login-input-element { width: 300px;height: 30px;border: 1px solid var(--border-clr);border-radius: 5px;padding: 5px 10px 5px 10px; }
+/* .login-bg-image:before { background-image: url(images/login-bg.jpeg);height: 100%;width: 100%;content: "";position: absolute;left: 0;top: 0;background-repeat: no-repeat;background-blend-mode: overlay;background-size: 100% 100%;z-index: -1; } */
+.login-bg-image { background-color: var(--theme-clr);position: relative;z-index: 0;color: var(--default-text-clr); }
+.login-wrapper { width: 50%;height: 50%;box-shadow: 0px 2px 8px rgb(0 0 0 / 84%);background: var(--body-bg); }
+.login-input-element { height: 40px;border: 1px solid var(--border-clr);border-radius: 5px;padding: 5px 10px 5px 10px; }
 .login-inputs-container { width: 320px; }
-.login-submit-button { width: 100%;height: 40px;background-color: #0B2943;border-radius: 20px; }
+.login-submit-button { width: 100%;height: 50px;background-color: var(--button-bg-clr);border-radius: 20px; }
+.login-submit-button:hover { background-color: var(--button-bg-hover); }
 /**** Login Page Styles Ends ****/
 
 /**** Edit Configuration Form Styles Starts ****/
@@ -118,4 +121,9 @@ input:checked[type="checkbox"]::after { left: 52%; }
 .orderBook-container .tblCel:first-child, .orderBook-container .tblCel:last-child { min-width: 10%; }
 .orderBook-container .tblCel:nth-child(2) { min-width: 20%; }
 .configurations-container .tblCel:nth-child(3) { word-wrap: break-word;white-space: wrap;text-align: left; }
+.manualOrders-container .actions-table-cell { width: 150px; }
+.webhook-details-table-cell.ellips { white-space: normal;word-wrap: break-word; }
+.webhookDetails-container .tblCel:first-child { width: 130px; }
+.manualOrders-container { height: fit-content !important;flex-grow: 0 !important; }
+.positions-container .tblCel:last-child,.orders-container .tblCel:last-child { width: 120px; }
 /**** Data Table Styles Ends ****/
