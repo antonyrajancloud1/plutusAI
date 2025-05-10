@@ -689,10 +689,18 @@ def getAllManualOrderDetails(request):
 @require_http_methods([POST])
 def placeBuyOrderManual(request):
     if check_user_session(request):
-        user_email = get_user_email(request)
-        data = json.loads(request.body)
-        data = remove_spaces_from_json(data)
-        return placeManualOrder(user_email,data,CE)
+        try:
+            user_email = get_user_email(request)
+            data = json.loads(request.body)
+            index = data[INDEX_NAME]
+            strategy = data.get(STRATEGY, "DefaultStrategy")
+            if index:
+                user_manual_details = ManualOrders.objects.filter(user_id=user_email, index_name=index)
+                data = list(user_manual_details.values())[0]
+            data = remove_spaces_from_json(data)
+            return triggerOrder(user_email, data, strategy, BUY)
+        except Exception as e:
+            print(e)
     else:
         return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
 
@@ -702,8 +710,25 @@ def placeSellOrderManual(request):
     if check_user_session(request):
         user_email = get_user_email(request)
         data = json.loads(request.body)
+        index = data[INDEX_NAME]
+        strategy = data.get(STRATEGY, "DefaultStrategy")
+        if index:
+            user_manual_details = ManualOrders.objects.filter(user_id=user_email, index_name=index)
+            data = list(user_manual_details.values())[0]
         data = remove_spaces_from_json(data)
-        return placeManualOrder(user_email,data,PE)
+        return triggerOrder(user_email, data, strategy, SELL)
+    else:
+        return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+
+@csrf_exempt
+@require_http_methods([POST])
+def placeExitOrderManual(request):
+    if check_user_session(request):
+        user_email = get_user_email(request)
+        data = json.loads(request.body)
+        # index = data[INDEX_NAME]
+        strategy = data.get(STRATEGY, "DefaultStrategy")
+        return exitOrderWebhook(strategy, data, user_email)
     else:
         return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
 

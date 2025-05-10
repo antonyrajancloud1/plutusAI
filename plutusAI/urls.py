@@ -40,6 +40,7 @@ urlpatterns = [
     path(MANUAL_DETAILS, views.getAllManualOrderDetails, name=MANUAL_DETAILS),
     path(PLACE_ORDER_BUY, views.placeBuyOrderManual, name=PLACE_ORDER_BUY),
     path(PLACE_ORDER_SELL, views.placeSellOrderManual, name=PLACE_ORDER_SELL),
+    path(PLACE_ORDER_EXIT, views.placeExitOrderManual, name=PLACE_ORDER_EXIT),
     path(TRIGGER_BUY, views.placeBuyOrderWebHook, name=TRIGGER_BUY),
     path(TRIGGER_SELL, views.placeSellOrderWebHook, name=TRIGGER_SELL),
     path(TRIGGER_EXIT, views.placeExitOrderWebHook, name=TRIGGER_EXIT),
