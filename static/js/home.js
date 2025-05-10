@@ -26,9 +26,10 @@ MadaraConstructor.prototype.templates = {
                 `<div id="home-container" class="wh100 home-bg-container">
                     <div id="banner-container"></div>
                     <div id="header-container" class="flexC header-container pL15 pT5 pB5 pR20">
-                        {profile_html}
-                        <div class="flexG font1_5 fontB textC">{project_name}</div>
+                        <div class="flexG font1_5 fontB">{project_name}</div>
+                        <div id="today-orders" class="primary-button today-orders flexM bdrR5 pT10 pB10 pL15 pR15"></div>
                         {logout}
+                        {profile_html}
                     </div>
                     <div id="body-container" class="flex w100 flexG body-container">
                         <div id="lhs-container" class="ovrflwH lhs-container-main p15">
@@ -80,14 +81,18 @@ MadaraConstructor.prototype.templates = {
 
     editButton : `<div id="edit-{module}" purpose="{purpose_of_edit}" home-page-buttons index="{index}" class="action-button fa xs fa-pencil curP clrB edit-config-button p5 bdrR4" title="{edit_module_title}"></div>`,
 
-    exitButton : `<div id="exit-{module}" purpose="{purpose_of_exit}" home-page-buttons index="{index}" class="action-button fa xs fa-remove curP clrY exit-config-button p5 bdrR4" title="{exit_module_title}"></div>`,
+    buyButton : `<div id="buy-{module}" purpose="buyManualOrders" home-page-buttons index="{index}" class="action-button xs curP clrG exit-config-button p5 bdrR4 fontB" title="{buy_title}">B</div>`,
+
+    sellButton : `<div id="sell-{module}" purpose="sellManualOrders" home-page-buttons index="{index}" class="action-button xs curP clrR exit-config-button p5 bdrR4 fontB" title="{sell_title}">S</div>`,
+
+    exitButton : `<div id="exit-{module}" purpose="exitManualOrders" home-page-buttons index="{index}" class="action-button xs curP clrY exit-config-button p5 bdrR4 fontB" title="{exit_title}">E</div>`,
 
     logoutHtml : 
-                `<div id="logout-button" home-page-buttons class="primary-button logout-button curP flexM bdrR5 sm" purpose="logoutUser" userId>
+                `<div id="logout-button" home-page-buttons class="primary-button logout-button curP flexM bdrR5 sm mL20" purpose="logoutUser" userId>
                     {logout_text}
                 </div>`,
 
-    profileHtml :   `<div id="profile-region" class="profile-region flexC gap10">
+    profileHtml :   `<div id="profile-region" class="profile-region flex-col gap5 flexM mL20">
                         <div id="profile-container" class="profile-container bdrR100">
                             <div class="profile-wrapper wh100">
                                 <img id="profile-image" src="{profile_image}" class="profile-image wh100 bdrR100" alt="Profile Image">
@@ -183,7 +188,13 @@ MadaraConstructor.prototype.templates = {
 
     webhookDetailsHtml : 
                     `<div id="webhook-details-container" class="webhook-details-container flex-col ovrflwH">
-                        <div class="font18 fontB mT30 mB20">{webhook_details_header}</div>
+                        <div class="mT30 mB20 flexC justifySB">
+                            <div class="font18 fontB">{webhook_details_header}</div>
+                            <div id="token-details" class="token-details flexC gap10">
+                                <div id="regenerate-token-button" class="regenerate-token-button bdrR5 flexC curP" home-page-buttons purpose="regenerateAuthToken">{regenerate_token}</div>
+                                <div id="auth-token" class="auth-token pT10 pB10 pL15 pR15 bdrR5">{token}</div>
+                            </div>
+                        </div>
                         <div class="flex-col gap10 ovrflwA">
                             {webhook_details_table}
                         </div>
@@ -219,7 +230,8 @@ MadaraConstructor.prototype.API = {
     exitManualOrder         :   "/place_order_exit",
     exitOrderViaWebhook     :   "/trigger_exit",
     getPlans                :   "/plans",
-    editPlans               :   "/edit_plans"
+    editPlans               :   "/edit_plans",
+    getTokenData            :   "/get_auth_token"
 };
 
 MadaraConstructor.prototype.getLHSModulesList = function() {
@@ -291,8 +303,16 @@ MadaraConstructor.prototype.getEditButton = function() {
     return this.templates.editButton.replace(/{edit_module_title}/g, Resource.edit_config);
 };
 
+MadaraConstructor.prototype.getBuyButton = function() {
+    return this.templates.buyButton.replace(/{buy_title}/g, Resource.buy);
+};
+
+MadaraConstructor.prototype.getSellButton = function() {
+    return this.templates.sellButton.replace(/{sell_title}/g, Resource.sell);
+};
+
 MadaraConstructor.prototype.getExitButton = function() {
-    return this.templates.exitButton.replace(/{edit_module_title}/g, Resource.exit_config);
+    return this.templates.exitButton.replace(/{exit_title}/g, Resource.exit);
 };
 
 MadaraConstructor.prototype.updateBanner = function(bannerObject) {
@@ -613,6 +633,7 @@ MadaraConstructor.prototype.viewDashboard = function() {
             $(self.DOM_SELECTORS.profile_name).text(userName).attr("title", Resource.hello + " " + userName);
             
             let totalOrdersForToday = summary.total_orders_today;
+            $(self.DOM_SELECTORS.main_container).find("#today-orders").text(Resource.total_orders_today + " : " + totalOrdersForToday);
             let currentDaySummary = summary.current_day_summary;
             let fullSummary = summary.full_summary;
             let dashBoardHtml = self.templates.dashboardHtml.replace(/{pnl_header}/g, Resource.todays_pandl)
@@ -643,7 +664,7 @@ MadaraConstructor.prototype.viewManualOrders = function() {
     let url = this.getWindowLocationOrigin() + this.API.getManualDetails;
     let additionalAjaxOptions = {
         type    :   "GET",
-        success :   function(successResp) {
+        success :   async function(successResp) {
             let webhookData = successResp.message;
             if(!webhookData.length) {
                 self.populateNoDataFoundHTML();
@@ -664,8 +685,8 @@ MadaraConstructor.prototype.viewManualOrders = function() {
                 let configuration = currentConfiguration.index_name;
                 let configurationObject = currentConfiguration;
                 let disableStatus = configurationObject["disable"];
-                let actionsHtml = self.templates.actionsHtml.replace(/{start_button}/g, self.getStartIndexButton())
-                                                            .replace(/{stop_button}/g, self.getStopIndexButton())
+                let actionsHtml = self.templates.actionsHtml.replace(/{start_button}/g, self.getBuyButton())
+                                                            .replace(/{stop_button}/g, self.getSellButton())
                                                             .replace(/{exit_button}/g, self.getExitButton())
                                                             .replace(/{edit_button}/g, self.getEditButton());
                                                             
@@ -700,7 +721,7 @@ MadaraConstructor.prototype.viewManualOrders = function() {
 
             let manualOrdersHtml = self.templates.manualOrdersHtml.replace(/{manual_orders_table}/g, dataTableForConfiguration)
                                                                 .replace(/{strategy_search_html}/g, self.getStrategySearchHTML())
-                                                                .replace(/{webhook_details}/g, self.getWebhookDetailsHTML(webhookData));
+                                                                .replace(/{webhook_details}/g, await self.getWebhookDetailsHTML(webhookData));
 
             self.webhookData = webhookData;
 
@@ -724,79 +745,138 @@ MadaraConstructor.prototype.getStrategySearchHTML = function() {
 };
 
 MadaraConstructor.prototype.getBuyUrl = function() {
-    return this.getWindowLocationOrigin() + this.API.placeOrderViaWebhook;
+    return this.getWindowLocationOrigin() + this.API.placeOrderViaWebhook + "?token=" + this.tokenData.message;
 };
 
 MadaraConstructor.prototype.getSellUrl = function() {
-    return this.getWindowLocationOrigin() + this.API.sellOrderViaWebhook;
+    return this.getWindowLocationOrigin() + this.API.sellOrderViaWebhook + "?token=" + this.tokenData.message;
 };
 
 MadaraConstructor.prototype.getExitUrl = function() {
-    return this.getWindowLocationOrigin() + this.API.exitOrderViaWebhook;
+    return this.getWindowLocationOrigin() + this.API.exitOrderViaWebhook + "?token=" + this.tokenData.message;
 };
 
-MadaraConstructor.prototype.getWebhookDetailsHTML = function(webhookData, strategyName) {
-    let whiteListedProperties = this.whiteListedProperties.getWebhookDetails;
-    let tableHeadCell = "";
+MadaraConstructor.prototype.getWebhookDetailsHTML = async function(webhookData, strategyName) {
     let self = this;
-    whiteListedProperties.forEach((property, index) => {
-        tableHeadCell +=  self.templates.tableCell.replace(/{table_cell_content}/g, Resource[property])
-                                                    .replace(/{tooltip_content}/g, Resource[property])
-                                                    .replace(/{disable_status}/, "");
-    });
-    let tableHeadRow = self.templates.tableRow.replace(/{table_row_contents}/g, tableHeadCell);
-    
-    let eachConfigurationRow = "";
-
-    let neededDetailsObject = {
-        buy_url         :   this.getBuyUrl(),
-        sell_url        :   this.getSellUrl(),
-        exit_url        :   this.getExitUrl(),
-        input_data      :   { }
-    };
-
-    webhookData.forEach((key, index) => {
-        let currentConfiguration = webhookData[index];
-        let configurationObject = currentConfiguration;
-        configurationObject = $.extend(configurationObject, neededDetailsObject);
-
-        let indexName = configurationObject.index_name;
-        configurationObject.input_data.index_name = indexName;
-        configurationObject.input_data.strategy = strategyName ? strategyName : (indexName + "_" + "default_strategy");
-
-        let eachConfigurationCell = "";
-        whiteListedProperties.forEach(property => {
-            if(property !== "actions") {
-                let valueFromResponse = configurationObject[property];
-                let tableCellContent = (property === "status") ? (Resource[valueFromResponse] ? Resource[valueFromResponse] : valueFromResponse) : valueFromResponse;
-                if(property === "input_data") {
-                    tableCellContent = JSON.stringify(configurationObject.input_data);
-                }
-                eachConfigurationCell += self.templates.tableCell.replace(/{table_cell_content}/g, tableCellContent ? tableCellContent : "-")
-                                                                    .replace(/{tooltip_content}/g, "")
-                                                                    .replace(/{disable_status}/g, "webhook-details-table-cell can-be-copied");
-            } 
+    let tokenData = "";
+    try {
+        if(!self.tokenData) {
+            tokenData = await this.getTokenData();
+            self.tokenData = tokenData;
+        } else {
+            tokenData = self.tokenData;
+        }
+        let whiteListedProperties = this.whiteListedProperties.getWebhookDetails;
+        let tableHeadCell = "";
+        whiteListedProperties.forEach((property, index) => {
+            tableHeadCell +=  self.templates.tableCell.replace(/{table_cell_content}/g, Resource[property])
+                                                        .replace(/{tooltip_content}/g, Resource[property])
+                                                        .replace(/{disable_status}/, "");
         });
-        eachConfigurationRow += self.templates.tableRow.replace(/{table_row_contents}/g, eachConfigurationCell);
-    });
+        let tableHeadRow = self.templates.tableRow.replace(/{table_row_contents}/g, tableHeadCell);
+        
+        let eachConfigurationRow = "";
 
-    let dataTableForConfiguration = self.templates.dataTableHtml.replace(/{module}/g, "webhookDetails")
-                                                                .replace(/{purpose}/g, "copyTheContentOfTheWebhookDetails")
-                                                                .replace(/{table_head_row}/g, tableHeadRow)
-                                                                .replace(/{table_body}/g, eachConfigurationRow);
+        let neededDetailsObject = {
+            buy_url         :   this.getBuyUrl(),
+            sell_url        :   this.getSellUrl(),
+            exit_url        :   this.getExitUrl(),
+            input_data      :   { }
+        };
 
-    let webhookDetailsHtml = self.templates.webhookDetailsHtml.replace(/{webhook_details_table}/g, dataTableForConfiguration)
-                                                                .replace(/{webhook_details_header}/g, Resource.webhook_details_header);
+        webhookData.forEach((key, index) => {
+            let currentConfiguration = webhookData[index];
+            let configurationObject = currentConfiguration;
+            configurationObject = $.extend(configurationObject, neededDetailsObject);
 
-    return webhookDetailsHtml;
+            let indexName = configurationObject.index_name;
+            configurationObject.input_data.index_name = indexName;
+            let strategy = indexName + "_" + "default_strategy";
+            if(strategyName) {
+                strategy = (strategyName === "default_strategy") ? (indexName + "_" + "default_strategy") : strategyName;
+            }
+            configurationObject.input_data.strategy = strategy;
+
+            let eachConfigurationCell = "";
+            whiteListedProperties.forEach(property => {
+                if(property !== "actions") {
+                    let valueFromResponse = configurationObject[property];
+                    let tableCellContent = (property === "status") ? (Resource[valueFromResponse] ? Resource[valueFromResponse] : valueFromResponse) : valueFromResponse;
+                    if(property === "input_data") {
+                        tableCellContent = JSON.stringify(configurationObject.input_data);
+                    }
+                    eachConfigurationCell += self.templates.tableCell.replace(/{table_cell_content}/g, tableCellContent ? tableCellContent : "-")
+                                                                        .replace(/{tooltip_content}/g, "")
+                                                                        .replace(/{disable_status}/g, "webhook-details-table-cell can-be-copied");
+                } 
+            });
+            eachConfigurationRow += self.templates.tableRow.replace(/{table_row_contents}/g, eachConfigurationCell);
+        });
+
+        let dataTableForConfiguration = self.templates.dataTableHtml.replace(/{module}/g, "webhookDetails")
+                                                                    .replace(/{purpose}/g, "copyTheContentOfTheWebhookDetails")
+                                                                    .replace(/{table_head_row}/g, tableHeadRow)
+                                                                    .replace(/{table_body}/g, eachConfigurationRow);
+
+        
+        
+        let token = tokenData.message ? tokenData.message : "";
+        let webhookDetailsHtml = this.templates.webhookDetailsHtml.replace(/{webhook_details_table}/g, dataTableForConfiguration)
+                                                                .replace(/{webhook_details_header}/g, Resource.webhook_details_header)
+                                                                .replace(/{token}/g, token)
+                                                                .replace(/{regenerate_token}/g, Resource.regenerate_token);
+
+        return webhookDetailsHtml;
+    } catch(error) {
+        console.log("Error in getting Auth Token --> ", error.statusText);
+        let webhookDetailsHtml = this.templates.webhookDetailsHtml.replace(/{webhook_details_table}/g, self.templates.noDataFoundHtml.replace(/{no_data_text}/g, error.statusText))
+                                                                .replace(/{webhook_details_header}/g, Resource.webhook_details_header)
+                                                                .replace(/{token}/g, tokenData)
+                                                                .replace(/{regenerate_token}/g, Resource.regenerate_token);
+        return webhookDetailsHtml;
+    }
 };
 
-MadaraConstructor.prototype.updateWebhookDataTableWithThisStrategy = function() {
+MadaraConstructor.prototype.getTokenData = function() {
+    let url = this.getWindowLocationOrigin() + this.API.getTokenData;
+    return new Promise((resolve, reject) => {
+        let additionalAjaxOptions = {
+            type    :   "POST",
+            success : function(response) {  
+                resolve(response);                      // Resolving the promise on success
+            }, 
+            error   : function(errorResponse) {
+                reject(errorResponse);                  //Rejecting the promise on error
+            }
+        };
+        this.makeAjaxRequest(url, {}, additionalAjaxOptions);
+    });
+};
+
+MadaraConstructor.prototype.updateWebhookDataTableWithThisStrategy = async function() {
     let currentTarget = this.getCurrentTarget();
     let val = currentTarget.val();
-    let updatedWebhookDetailsHtml = this.getWebhookDetailsHTML(this.webhookData, val);
+    let updatedWebhookDetailsHtml = await this.getWebhookDetailsHTML(this.webhookData, val);
     let webhookDetailsContainer = $(this.DOM_SELECTORS.rhs_container).find("#webhook-details-container");
     webhookDetailsContainer.replaceWith(updatedWebhookDetailsHtml);
+};
+
+MadaraConstructor.prototype.regenerateAuthToken = function() {
+    let self = this;
+    let url = this.getWindowLocationOrigin() + this.API.regenerateToken;
+    let additionalAjaxOptions = {
+        type    :   "GET",
+        success :   function(successResp) {
+            let tokenData = successResp.message ? successResp.message : "";
+            $(self.DOM_SELECTORS.rhs_container).find("#auth-token").text(tokenData);
+            self.updateBanner({ type : "success", content : Resource.token_regenerated });
+        },
+        error   :   function(errorResp) {
+            let errorContent = (JSON.parse(errorResp.responseText).message) ? self.checkAndGetResponseMessageFromResourceObject(JSON.parse(errorResp.responseText).message) : errorResp.statusText;
+            self.updateBanner({ type : "failure", content : errorContent });
+        }
+    }
+    this.makeAjaxRequest(url, {}, additionalAjaxOptions);
 };
 
 MadaraConstructor.prototype.copyTheContentOfTheWebhookDetails = function() {
@@ -812,6 +892,18 @@ MadaraConstructor.prototype.copyTheContentOfTheWebhookDetails = function() {
         tempTextarea.remove();
         if (successful) {
             self.updateBanner({ type : "success", content : Resource.copy_success });
+
+            //Highlight the copied text
+            target.classList.add("highlight");
+            setTimeout(() => {
+                target.classList.remove("highlight");
+                selection.removeAllRanges(); //Clear existing selections
+            }, 500);
+            const selection = window.getSelection();
+            const range = document.createRange();
+            range.selectNodeContents(target);
+            selection.removeAllRanges(); //Clear existing selections
+            selection.addRange(range);
         } else {
             self.updateBanner({ type : "failure", content : Resource.copy_failed });
         }

@@ -108,5 +108,11 @@ Resource = {
     webhook_details_header  :   "Webhook Details",
     default_strategy        :   "default_strategy",
     copy_success            :   "Successfully Copied!",
-    copy_failed             :   "Failed to copy the content!"
+    copy_failed             :   "Failed to copy the content!",
+    buy                     :   "Buy",
+    sell                    :   "Sell",
+    exit                    :   "Exit",
+    regenerate_token        :   "Regenerate Token",
+    token_regenerated       :   "Token Regenerated Successfully",
+    total_orders_today      :   "Total Orders"
 }   
