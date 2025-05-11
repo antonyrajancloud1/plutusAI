@@ -48,6 +48,7 @@ Resource = {
     target_for_safe_sl  :   "Target for Safe Stop Loss",
     trailing_points     :   "Trailing Points",
     index_config        :   "Index Configuration for ",
+    manual_order_config :   "Order Configuration for ",
     broker_detail       :   "Broker details for ",
     update_config       :   "Update Configuration",
     update_broker       :   "Update Broker details",
@@ -112,7 +113,9 @@ Resource = {
     buy                     :   "Buy",
     sell                    :   "Sell",
     exit                    :   "Exit",
+    edit                    :   "Edit",
     regenerate_token        :   "Regenerate Token",
     token_regenerated       :   "Token Regenerated Successfully",
-    total_orders_today      :   "Total Orders"
+    total_orders_today      :   "Total Orders",
+    update_manual_orders    :   "Update Orders"
 }   

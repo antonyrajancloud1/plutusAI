@@ -11,6 +11,9 @@ let MadaraConstructor = function() {
     };
     this.project_name   =   "Madara";
     this.EVENT_AND_DOM_CACHE = {};
+    this.default_strategy = "default_strategy";
+    this.tokenData = null;
+    this.currentStrategy = null;
     this.whiteListedProperties = {
         getConfigurations   : [ "actions", "index_name", "levels", "trend_check_points", "strike", "safe_sl", "status" ],
         getScalperDetails   : [ "actions", "index_name", "strike", "target", "is_demo_trading_enabled", "use_full_capital", "lots" ,"status","on_candle_close"],
@@ -81,11 +84,13 @@ MadaraConstructor.prototype.templates = {
 
     editButton : `<div id="edit-{module}" purpose="{purpose_of_edit}" home-page-buttons index="{index}" class="action-button fa xs fa-pencil curP clrB edit-config-button p5 bdrR4" title="{edit_module_title}"></div>`,
 
-    buyButton : `<div id="buy-{module}" purpose="buyManualOrders" home-page-buttons index="{index}" class="action-button xs curP clrG exit-config-button p5 bdrR4 fontB" title="{buy_title}">B</div>`,
+    buyButton : `<div id="buy-{module}" purpose="buyManualOrders" home-page-buttons index="{index}" class="action-button xs curP clrG exit-config-button p5 bdrR4 fontB font10" title="{buy_title}">{buy_title}</div>`,
 
-    sellButton : `<div id="sell-{module}" purpose="sellManualOrders" home-page-buttons index="{index}" class="action-button xs curP clrR exit-config-button p5 bdrR4 fontB" title="{sell_title}">S</div>`,
+    sellButton : `<div id="sell-{module}" purpose="sellManualOrders" home-page-buttons index="{index}" class="action-button xs curP clrR exit-config-button p5 bdrR4 fontB font10" title="{sell_title}">{sell_title}</div>`,
 
-    exitButton : `<div id="exit-{module}" purpose="exitManualOrders" home-page-buttons index="{index}" class="action-button xs curP clrY exit-config-button p5 bdrR4 fontB" title="{exit_title}">E</div>`,
+    exitButton : `<div id="exit-{module}" purpose="exitManualOrders" home-page-buttons index="{index}" class="action-button xs curP clrY exit-config-button p5 bdrR4 fontB font10" title="{exit_title}">{exit_title}</div>`,
+
+    editButtonForManualOrders : `<div id="edit-{module}" purpose="editManualOrders" home-page-buttons index="{index}" class="action-button xs curP clrB exit-config-button p5 bdrR4 fontB font10" title="{edit_title}">{edit_title}</div>`,
 
     logoutHtml : 
                 `<div id="logout-button" home-page-buttons class="primary-button logout-button curP flexM bdrR5 sm mL20" purpose="logoutUser" userId>
@@ -111,7 +116,7 @@ MadaraConstructor.prototype.templates = {
                     <div id="form-main-container" class="form-main-container flex-col flexG">
                         <div id="form-header" class="flexM pB15 pL15 pR15 fontB fontItalic form-header justifySB">
                             <div class="font24">{index_configuration}</div>
-                            <div class="fa fa-close close-icon font14 curP clrW" purpose="closeEditConfigurationForm" home-page-buttons title="{close}"></div>
+                            <div class="fa fa-close close-icon font14 curP clrW flexM" purpose="closeEditConfigurationForm" home-page-buttons title="{close}"></div>
                         </div>
                         <div id="form-body" class="flexM">
                             <div id="form-input-elements" class="form-input-elements flex-col flexG gap20 p15" {main_key}="{index_name}">
@@ -211,7 +216,8 @@ MadaraConstructor.prototype.API = {
     logout                  :   "/logout",
     getConfigValues         :   "/get_config_values",
     getSummary              :   "/get_strategy_summary",
-    getManualDetails        :   "/manual_details",    
+    getManualDetails        :   "/manual_details",  
+    updateManualDetails     :   "/update_manual_details",  
     updateConfigValues      :   "/update_config_values",
     addUser                 :   "/add_user",
     getBrokerDetails        :   "/get_broker_details",
@@ -231,7 +237,8 @@ MadaraConstructor.prototype.API = {
     exitOrderViaWebhook     :   "/trigger_exit",
     getPlans                :   "/plans",
     editPlans               :   "/edit_plans",
-    getTokenData            :   "/get_auth_token"
+    getTokenData            :   "/get_auth_token",
+    generateAuthToken       :   "/generate_auth_token"
 };
 
 MadaraConstructor.prototype.getLHSModulesList = function() {
@@ -313,6 +320,10 @@ MadaraConstructor.prototype.getSellButton = function() {
 
 MadaraConstructor.prototype.getExitButton = function() {
     return this.templates.exitButton.replace(/{exit_title}/g, Resource.exit);
+};
+
+MadaraConstructor.prototype.getEditButtonForManualOrders = function() {
+    return this.templates.editButtonForManualOrders.replace(/{edit_title}/g, Resource.edit);
 };
 
 MadaraConstructor.prototype.updateBanner = function(bannerObject) {
@@ -688,7 +699,7 @@ MadaraConstructor.prototype.viewManualOrders = function() {
                 let actionsHtml = self.templates.actionsHtml.replace(/{start_button}/g, self.getBuyButton())
                                                             .replace(/{stop_button}/g, self.getSellButton())
                                                             .replace(/{exit_button}/g, self.getExitButton())
-                                                            .replace(/{edit_button}/g, self.getEditButton());
+                                                            .replace(/{edit_button}/g, self.getEditButtonForManualOrders());
                                                             
                 actionsHtml = actionsHtml.replace(/{index}/g, configuration)
                                         .replace(/{module}/g, "manualOrders")
@@ -739,7 +750,7 @@ MadaraConstructor.prototype.viewManualOrders = function() {
 MadaraConstructor.prototype.getStrategySearchHTML = function() {
     let strategySearchHtml = this.templates.strategySearchHtml.replace(/{strategy_name_text}/g, Resource.strategy_name_text)
                                                             .replace(/{strategy_search_placeholder}/g, Resource.default_strategy)
-                                                            .replace(/{strategy_search_value}/g, "default_strategy");
+                                                            .replace(/{strategy_search_value}/g, this.default_strategy);
 
     return strategySearchHtml;
 };
@@ -791,17 +802,19 @@ MadaraConstructor.prototype.getWebhookDetailsHTML = async function(webhookData, 
 
             let indexName = configurationObject.index_name;
             configurationObject.input_data.index_name = indexName;
-            let strategy = indexName + "_" + "default_strategy";
+            let strategy = (indexName + "_" + self.default_strategy);
+            self.currentStrategy = self.default_strategy;
             if(strategyName) {
-                strategy = (strategyName === "default_strategy") ? (indexName + "_" + "default_strategy") : strategyName;
+                strategy = (strategyName === self.default_strategy) ? (indexName + "_" + self.default_strategy) : (indexName + "_" + strategyName);
+                self.currentStrategy = (strategyName !== "") ? strategyName : self.currentStrategy;
             }
+            self.currentStrategy = strategyName ? strategyName : self.default_strategy;
             configurationObject.input_data.strategy = strategy;
-
             let eachConfigurationCell = "";
             whiteListedProperties.forEach(property => {
                 if(property !== "actions") {
                     let valueFromResponse = configurationObject[property];
-                    let tableCellContent = (property === "status") ? (Resource[valueFromResponse] ? Resource[valueFromResponse] : valueFromResponse) : valueFromResponse;
+                    let tableCellContent = (property === "index_name") ? (Resource[valueFromResponse] ? Resource[valueFromResponse] : valueFromResponse) : valueFromResponse;
                     if(property === "input_data") {
                         tableCellContent = JSON.stringify(configurationObject.input_data);
                     }
@@ -863,9 +876,9 @@ MadaraConstructor.prototype.updateWebhookDataTableWithThisStrategy = async funct
 
 MadaraConstructor.prototype.regenerateAuthToken = function() {
     let self = this;
-    let url = this.getWindowLocationOrigin() + this.API.regenerateToken;
+    let url = this.getWindowLocationOrigin() + this.API.generateAuthToken;
     let additionalAjaxOptions = {
-        type    :   "GET",
+        type    :   "POST",
         success :   function(successResp) {
             let tokenData = successResp.message ? successResp.message : "";
             $(self.DOM_SELECTORS.rhs_container).find("#auth-token").text(tokenData);
@@ -877,6 +890,162 @@ MadaraConstructor.prototype.regenerateAuthToken = function() {
         }
     }
     this.makeAjaxRequest(url, {}, additionalAjaxOptions);
+};
+
+MadaraConstructor.prototype.updateTheManualOrderContainerForThisIndex = function(data) {
+    let indexName = data.index_name;
+    let actionContainerWithThisIndex = $(this.DOM_SELECTORS.rhs_container).find("#buy-manualOrders[index='" + indexName + "']");
+    let rowOfTheRequiredCell = actionContainerWithThisIndex.parents(".tblRow");
+    let allCellsInRow = rowOfTheRequiredCell.children();
+    let whiteListedProperties = this.whiteListedProperties.getManualDetails;
+    for(let i = 0; i < allCellsInRow.length; i++) {
+        let element = allCellsInRow[i];
+        let valueToBeUpdated = data[whiteListedProperties[i]];
+        if(element.classList.contains("actions-table-cell")) {
+            continue;
+        }
+        element.innerText = valueToBeUpdated ? valueToBeUpdated : "-";
+    };
+};
+
+MadaraConstructor.prototype.getManualOrderDetails = function() {
+    let currentTarget = this.getCurrentTarget();
+    let rowOfTheClickedButton = currentTarget.parents(".tblRow");
+    let allCellsInRow = rowOfTheClickedButton.children();
+    let payload = {};
+    let whiteListedProperties = this.whiteListedProperties.getManualDetails;
+    for(let i = 0; i < allCellsInRow.length; i++) {
+        let element = allCellsInRow[i];
+        let valueOfTheElement = element.textContent.trim();
+        if(element.classList.contains("actions-table-cell") || (whiteListedProperties[i] === "current_premium")) {
+            continue;
+        }
+        payload[whiteListedProperties[i]] = valueOfTheElement;
+    };
+    return payload;
+};
+
+MadaraConstructor.prototype.buyManualOrders = function() {
+    let self = this;
+    let currentTarget = this.EVENT_AND_DOM_CACHE.currentTarget;
+    this.addLoaderInThisButton(currentTarget);
+    let data = this.getManualOrderDetails();
+    let url = this.getWindowLocationOrigin() + this.API.placeManualOrder;
+    if(self.currentStrategy !== this.default_strategy) {
+        url = this.getWindowLocationOrigin() + this.API.placeOrderViaWebhook + "?token=" + this.tokenData.message;
+    }
+
+    let additionalAjaxOptions = {
+        type    :   "POST",
+        success :   function(successResp) {
+            self.removeLoaderInThisButton(currentTarget);
+            self.updateBanner({ type : "success", content : self.checkAndGetResponseMessageFromResourceObject(successResp.message) });
+        },
+        error   :   function(errorResp) {
+            self.removeLoaderInThisButton(currentTarget);
+            let errorContent = (JSON.parse(errorResp.responseText).message) ? self.checkAndGetResponseMessageFromResourceObject(JSON.parse(errorResp.responseText).message) : errorResp.statusText;
+            self.updateBanner({ type : "failure", content : errorContent });
+        }
+    }
+    this.makeAjaxRequest(url, data, additionalAjaxOptions);
+};
+
+MadaraConstructor.prototype.sellManualOrders = function() {
+    let self = this;
+    let currentTarget = this.EVENT_AND_DOM_CACHE.currentTarget;
+    this.addLoaderInThisButton(currentTarget);
+    let data = this.getManualOrderDetails();
+    let url = this.getWindowLocationOrigin() + this.API.sellManualOrder;
+    if(self.currentStrategy !== this.default_strategy) {
+        url = this.getWindowLocationOrigin() + this.API.sellOrderViaWebhook + "?token=" + this.tokenData.message;
+    }
+
+    let additionalAjaxOptions = {
+        type    :   "POST",
+        success :   function(successResp) {
+            self.removeLoaderInThisButton(currentTarget);
+            self.updateBanner({ type : "success", content : self.checkAndGetResponseMessageFromResourceObject(successResp.message) });
+        },
+        error   :   function(errorResp) {
+            self.removeLoaderInThisButton(currentTarget);
+            let errorContent = (JSON.parse(errorResp.responseText).message) ? self.checkAndGetResponseMessageFromResourceObject(JSON.parse(errorResp.responseText).message) : errorResp.statusText;
+            self.updateBanner({ type : "failure", content : errorContent });
+        }
+    }
+    this.makeAjaxRequest(url, data, additionalAjaxOptions);
+};
+
+MadaraConstructor.prototype.exitManualOrders = function() {
+    let self = this;
+    let currentTarget = this.EVENT_AND_DOM_CACHE.currentTarget;
+    this.addLoaderInThisButton(currentTarget);
+    let data = this.getManualOrderDetails();
+    let url = this.getWindowLocationOrigin() + this.API.exitManualOrder;
+    if(self.currentStrategy !== this.default_strategy) {
+        url = this.getWindowLocationOrigin() + this.API.exitOrderViaWebhook + "?token=" + this.tokenData.message;
+    }
+
+    let additionalAjaxOptions = {
+        type    :   "POST",
+        success :   function(successResp) {
+            self.removeLoaderInThisButton(currentTarget);
+            self.updateBanner({ type : "success", content : self.checkAndGetResponseMessageFromResourceObject(successResp.message) });
+        },
+        error   :   function(errorResp) {
+            self.removeLoaderInThisButton(currentTarget);
+            let errorContent = (JSON.parse(errorResp.responseText).message) ? self.checkAndGetResponseMessageFromResourceObject(JSON.parse(errorResp.responseText).message) : errorResp.statusText;
+            self.updateBanner({ type : "failure", content : errorContent });
+        }
+    }
+    this.makeAjaxRequest(url, data, additionalAjaxOptions);
+};
+
+MadaraConstructor.prototype.editManualOrders = function() {
+    let self = this;
+    let currentTarget = this.EVENT_AND_DOM_CACHE.currentTarget;
+    let data = {
+        index_name : currentTarget.attr("index")
+    };
+    this.addLoaderInThisButton(currentTarget);
+    let url = this.getWindowLocationOrigin() + this.API.getManualDetails;
+    let additionalAjaxOptions = {
+        type    :   "GET",
+        success :   function(successResp) {
+            self.removeLoaderInThisButton(currentTarget);
+            self.populateFormForEditingIndexConfiguration(successResp.message[0], { isFromManualOrders : true });
+        },
+        error   :   function(errorResp) {
+            self.removeLoaderInThisButton(currentTarget);
+            self.updateBanner({ type : "failure", content : self.checkAndGetResponseMessageFromResourceObject(JSON.parse(errorResp.responseText).message) });
+        }
+    }
+    this.makeAjaxRequest(url, data, additionalAjaxOptions);
+};
+
+MadaraConstructor.prototype.updateManualOrders = function() {
+    let inputData = this.validateAndGetInputs();
+    if(inputData) {
+        let self = this;
+        let currentTarget = this.EVENT_AND_DOM_CACHE.currentTarget;
+        this.addLoaderInThisButton(currentTarget);
+        let data = inputData;
+        let url = this.getWindowLocationOrigin() + this.API.updateManualDetails;
+        let additionalAjaxOptions = {
+            type    :   "PUT",
+            success :   function(successResp) {
+                self.removeLoaderInThisButton(currentTarget);
+                self.closeEditForm("#index-edit-configuration-form");
+                self.updateBanner({ type : "success", content : self.checkAndGetResponseMessageFromResourceObject(successResp.message) });
+                self.updateTheManualOrderContainerForThisIndex(successResp.data);
+            },
+            error   :   function(errorResp) {
+                self.removeLoaderInThisButton(currentTarget);
+                let errorContent = (JSON.parse(errorResp.responseText).message) ? self.checkAndGetResponseMessageFromResourceObject(JSON.parse(errorResp.responseText).message) : errorResp.statusText;
+                self.updateBanner({ type : "failure", content : errorContent });
+            }
+        }
+        this.makeAjaxRequest(url, data, additionalAjaxOptions);
+    }
 };
 
 MadaraConstructor.prototype.copyTheContentOfTheWebhookDetails = function() {
@@ -1093,10 +1262,6 @@ MadaraConstructor.prototype.startIndex = function() {
         data.strategy = triggerSource;
         url = this.getWindowLocationOrigin() + this.API.startScalper;
     } 
-    // else if(triggerSource === "manualOrders") {
-    //     data.strategy = triggerSource;
-    //     url = this.getWindowLocationOrigin() + this.API.placeManualOrder;
-    // }
 
     let additionalAjaxOptions = {
         type    :   "POST",
@@ -1126,10 +1291,6 @@ MadaraConstructor.prototype.stopIndex = function() {
     if(triggerSource === "scalper") {
         data.strategy = triggerSource;
     }
-    // else if(triggerSource === "manualOrders") {
-    //     data.strategy = triggerSource;
-    //     url = this.getWindowLocationOrigin() + this.API.placeManualOrder;
-    // }
 
     let url = this.getWindowLocationOrigin() + this.API.stopIndex;
     let additionalAjaxOptions = {
@@ -1287,7 +1448,7 @@ MadaraConstructor.prototype.populateFormForEditingBrokerDetail = function(broker
 
 MadaraConstructor.prototype.populateFormForEditingIndexConfiguration = function(indexData, additionalData) {
     let inputHtml = "";
-    let blackListedProperties = ["index_name", "status"];
+    let blackListedProperties = ["index_name", "status", "current_premium", "id", "order_id", "order_status", "time", "unique_order_id", "user_id"];            //These properties (properties from the response of respective edit request) are not needed in the form
     Object.keys(indexData).forEach(property => {
         if(!blackListedProperties.includes(property)) {
             if(typeof indexData[property] === "boolean") {
@@ -1301,12 +1462,32 @@ MadaraConstructor.prototype.populateFormForEditingIndexConfiguration = function(
             }
         }
     });
+
+    let updateConfigLabel = Resource.update_config;
+    if(additionalData && additionalData.isFromScalper) {
+        updateConfigLabel = Resource.update_scalper_details;
+    } else if(additionalData && additionalData.isFromManualOrders) {
+        updateConfigLabel = Resource.update_manual_orders;
+    }
+
+    let purposeOfSubmit = "updateConfigurations";
+    if(additionalData && additionalData.isFromScalper) {
+        purposeOfSubmit = "updateScalperDetails";
+    } else if(additionalData && additionalData.isFromManualOrders) {
+        purposeOfSubmit = "updateManualOrders";
+    }
+
+    let configText = Resource.index_configuration;
+    if(additionalData && additionalData.isFromManualOrders) {
+        configText = Resource.manual_order_config;
+    }
+
     let formHtml = this.templates.formHtml.replace(/{input_elements}/g, inputHtml)
-                                            .replace(/{index_configuration}/g, Resource["index_config"] + Resource[indexData.index_name])
+                                            .replace(/{index_configuration}/g, configText + Resource[indexData.index_name])
                                             .replace(/{index_name}/g, indexData.index_name)
                                             .replace(/{main_key}/g, "index_name")
-                                            .replace(/{update_config}/g, (additionalData && additionalData.isFromScalper) ? Resource["update_scalper_details"] : Resource["update_config"])
-                                            .replace(/{purpose_of_submit}/g, (additionalData && additionalData.isFromScalper) ? "updateScalperDetails" : "updateConfigurations")
+                                            .replace(/{update_config}/g, updateConfigLabel)
+                                            .replace(/{purpose_of_submit}/g, purposeOfSubmit)
                                             .replace(/{close}/g, Resource["close"]);
 
     $(this.DOM_SELECTORS.home_container).prepend(formHtml);
@@ -1523,14 +1704,14 @@ MadaraConstructor.prototype.makeAjaxRequest = function(url, data, additionalAjax
             url += this.serialize(data);
         }
     } else {
-        data = JSON.stringify(data)
+        data = JSON.stringify(data);
     }
 	let options = {
 		url 		: url,
+        contentType : 'application/json',
 		headers		: { 
-            Accept          :   "*/*",
-            ContentType     :   "application/json"
-        }			
+            Accept          :   "*/*"
+        }
 	};
     if(additionalAjaxOptions.type !== "GET") {
         options.data = data;

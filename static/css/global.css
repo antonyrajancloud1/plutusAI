@@ -108,7 +108,7 @@ body { font-family: Lato, sans-serif !important;margin: 0;box-sizing: border-box
 .label-container { width: 350px; }
 .edit-config-input-elements { height: 40px;border: 1px solid var(--border-clr);border-radius: 5px;padding: 10px;font-size: 14px; }
 .form-input-elements { max-height: 500px;overflow-y: auto; }
-.close-icon { padding: 10px;background-color: var(--border-clr);border-radius: 100%; }
+.close-icon {padding: 10px;background-color: var(--border-clr);border-radius: 100%;width: 36px;height: 36px;display: flex !important;font-size: 20px !important;}
 input[type="checkbox"] { position: relative;appearance: none;width: 60px;height: 30px;background: #CCC;border-radius: 50px;box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);cursor: pointer;border: 1px solid var(--border-clr);transition: 0.4s; }
 input:checked[type="checkbox"] { background: #7DA6FF; }
 input[type="checkbox"]::after { position: absolute;content: "";width: 28px;height: 28px;top: 0;left: 0;background: #FFF;border-radius: 50%;box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);transform: scale(1.1);transition: 0.4s; }
