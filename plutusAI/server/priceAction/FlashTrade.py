@@ -49,6 +49,7 @@ class IndexPriceActionChecker:
     def updateIndex(self):
         try:
             self.IndexLTP = round(getCurrentIndexValue(self.index_name))
+            print(self.IndexLTP)
             addLogDetails(INFO, f"[updateIndex] Updated IndexLTP: {self.IndexLTP}")
         except Exception as e:
             addLogDetails(ERROR, f"[updateIndex] Error: {e}")
@@ -90,20 +91,88 @@ class IndexPriceActionChecker:
         )
         addLogDetails(INFO, f"[checkAndSetPivot] Pivot set to {self.pivotPoint}")
 
+    # def evaluatePriceAction(self):
+    #     try:
+    #         while True:
+    #             time.sleep(1)
+    #             if not self.isPivotDecided:
+    #                 self.checkAndSetPivot()
+    #             elif self.isPivotDecided:
+    #                 self.updateIndex()
+    #                 if self.IndexLTP >= self.pivotPoint + self.index_trend_check:
+    #                     self.startCE()
+    #                 elif self.IndexLTP <= self.pivotPoint - self.index_trend_check:
+    #                     self.startPE()
+    #                 else:
+    #                     addLogDetails(INFO, f"[evaluatePriceAction] Index {self.index_name} holding near pivot {self.pivotPoint}, no action taken.")
+    #     except Exception as e:
+    #         addLogDetails(ERROR, f"[evaluatePriceAction] Error: {e}")
     def evaluatePriceAction(self):
         try:
+            current_order = None  # 'CE' or 'PE'
+            entry_price = None
+            stop_loss = None
+
             while True:
                 time.sleep(1)
                 if not self.isPivotDecided:
                     self.checkAndSetPivot()
-                elif self.isPivotDecided:
+                else:
                     self.updateIndex()
-                    if self.IndexLTP >= self.pivotPoint + self.index_trend_check:
-                        self.startCE()
-                    elif self.IndexLTP <= self.pivotPoint - self.index_trend_check:
-                        self.startPE()
-                    else:
-                        addLogDetails(INFO, f"[evaluatePriceAction] Index {self.index_name} holding near pivot {self.pivotPoint}, no action taken.")
+
+                    # No active order yet
+                    if current_order is None:
+                        if self.IndexLTP >= self.pivotPoint + self.index_trend_check:
+                            current_order = 'CE'
+                            entry_price = self.IndexLTP
+                            stop_loss = entry_price - self.index_trend_check
+                            self.startCE()
+                            addLogDetails(INFO,
+                                          f"[evaluatePriceAction] CE started at {entry_price} with SL {stop_loss}")
+
+                        elif self.IndexLTP <= self.pivotPoint - self.index_trend_check:
+                            current_order = 'PE'
+                            entry_price = self.IndexLTP
+                            stop_loss = entry_price + self.index_trend_check
+                            self.startPE()
+                            addLogDetails(INFO,
+                                          f"[evaluatePriceAction] PE started at {entry_price} with SL {stop_loss}")
+
+                    # CE active
+                    elif current_order == 'CE':
+                        if self.IndexLTP >= entry_price + self.index_trend_check:
+                            entry_price = self.IndexLTP
+                            stop_loss = entry_price - self.index_trend_check
+                            addLogDetails(INFO,
+                                          f"[evaluatePriceAction] CE SL trailed to: {stop_loss} | New Entry Base: {entry_price}")
+
+                        elif self.IndexLTP <= stop_loss:
+                            addLogDetails(INFO, f"[evaluatePriceAction] CE SL hit at {self.IndexLTP}, switching to PE")
+                            self.exitBasedOnCondition(self.IndexLTP, reason="SL hit")
+                            current_order = 'PE'
+                            entry_price = self.IndexLTP
+                            stop_loss = entry_price + self.index_trend_check
+                            self.startPE()
+                            addLogDetails(INFO,
+                                          f"[evaluatePriceAction] PE started at {entry_price} with SL {stop_loss}")
+
+                    # PE active
+                    elif current_order == 'PE':
+                        if self.IndexLTP <= entry_price - self.index_trend_check:
+                            entry_price = self.IndexLTP
+                            stop_loss = entry_price + self.index_trend_check
+                            addLogDetails(INFO,
+                                          f"[evaluatePriceAction] PE SL trailed to: {stop_loss} | New Entry Base: {entry_price}")
+
+                        elif self.IndexLTP >= stop_loss:
+                            addLogDetails(INFO, f"[evaluatePriceAction] PE SL hit at {self.IndexLTP}, switching to CE")
+                            self.exitBasedOnCondition(self.IndexLTP, reason="SL hit")
+                            current_order = 'CE'
+                            entry_price = self.IndexLTP
+                            stop_loss = entry_price - self.index_trend_check
+                            self.startCE()
+                            addLogDetails(INFO,
+                                          f"[evaluatePriceAction] CE started at {entry_price} with SL {stop_loss}")
         except Exception as e:
             addLogDetails(ERROR, f"[evaluatePriceAction] Error: {e}")
 
@@ -275,3 +344,77 @@ class IndexPriceActionChecker:
             addLogDetails(ERROR, f"User: {self.user_email} exception in placeDummyOrder ----- {e}")
             return {'message': 'ERROR', 'error': str(e)}
 
+    def exitBasedOnCondition(self, fromOptionPrice, reason):
+        addLogDetails(INFO,
+                      f"Index Name: {self.index_name} | User: {self.user_email} | Exit triggered due to: {reason}")
+        try:
+            if self.is_demo_enabled:
+                self.revertDummyOrder(fromOptionPrice)
+            else:
+                if self.isStoplossPlaced and self.currentOrderID:
+                    addLogDetails(INFO,
+                                  f"Index Name: {self.index_name} | User: {self.user_email} | OrderID: {self.currentOrderID}")
+                    # self.revertOrderChecks(fromOptionPrice)
+
+                    if self.BrokerObject.checkIfOrderExists(self.currentOrderID):
+                        modify_order_details = {
+                            EXCHANGE: NFO,
+                            TRADING_SYMBOL: self.currentPremiumPlaced,
+                            SYMBOL_TOKEN: self.BrokerObject.getTokenForSymbol(self.currentPremiumPlaced),
+                            ORDERID: self.currentExitOrderID,
+                            ORDER_TYPE: MARKET,
+                            QUANTITY: self.user_qty,
+                            VARIETY: NORMAL,
+                            DURATION: DAY
+                        }
+
+                        modify_order_response = self.BrokerObject.modifyOrder(modify_order_details)
+                        addLogDetails(INFO,
+                                      f"Index Name: {self.index_name} | User: {self.user_email} | ExitOrder: {modify_order_response}")
+                        addLogDetails(INFO, "Order exited successfully")
+
+                        # Try to get actual exit price
+                        self.optionExitPrice = self.BrokerObject.getPrice(self.currentOrderID)
+                        if not self.optionExitPrice:
+                            self.optionExitPrice = fromOptionPrice  # Fallback
+                        addLogDetails(INFO,
+                                      f"Index Name: {self.index_name} | User: {self.user_email} | Exit price = {self.optionExitPrice}")
+                    else:
+                        addLogDetails(INFO,
+                                      f"Index Name: {self.index_name} | User: {self.user_email} | Order no longer exists")
+
+            # Record exit in OrderBook
+            data = {
+                USER_ID: self.user_email,
+                SCRIPT_NAME: self.currentPremiumPlaced,
+                QTY: self.user_qty,
+                EXIT_PRICE: self.optionExitPrice,
+                STATUS: ORDER_EXITED
+            }
+            addOrderBookDetails(data, False)
+
+            # Reset strategy-related state here if needed
+            self.currentOrderID = ""
+            self.currentExitOrderID = ""
+            self.optionExitPrice = None
+            self.isStoplossPlaced = False
+            self.entry_price = None
+            self.stop_loss = None
+            self.current_order = None
+
+            addLogDetails(INFO,
+                          f"Index Name: {self.index_name} | User: {self.user_email} | Exit conditions: {self.exitConditions}")
+
+        except Exception as e:
+            addLogDetails(ERROR, f"{self.index_name} | Exception in exitBasedOnCondition: {e}")
+
+    def revertDummyOrder(self, fromOptionPrice):
+        addLogDetails(INFO, "Index Name: " + self.index_name + " User :" + self.user_email + " revertDummyOrder")
+        order_response = {'message': 'SUCCESS', 'data': {'order_id': 'exit_dummy_id'}}
+        self.optionDetails = self.BrokerObject.getCurrentPremiumDetails(NFO, self.currentPremiumPlaced)
+        data = {USER_ID: self.user_email, SCRIPT_NAME: self.currentPremiumPlaced, QTY: self.user_qty,
+                EXIT_PRICE: self.BrokerObject.getLtpForPremium(self.optionDetails), STATUS: ORDER_EXITED}
+        addLogDetails(INFO, "Index Name: " + self.index_name + " User :" + self.user_email + " " + str(data))
+        addOrderBookDetails(data, False)
+        # self.revertOrderChecks(fromOptionPrice)
+        return order_response
