@@ -156,7 +156,7 @@ PLAN_DETAILS = "plan_details"
 NSE_OPEN_TIME = "09:15"
 START_SCALPER = "start_scalper"
 STOP_SCALPER = "stop_scalper"
-BANKNIFTY_FUTURES = 'BANKNIFTY30OCT24FUT'
+BANKNIFTY_FUTURES = 'BANKNIFTY29MAY25FUT'
 SCALPER='scalper'
 
 ### STAGE STATUSES ###
@@ -287,7 +287,7 @@ broker_sample_data_json = {
 
 # ----- Scalper Config -----
 scalper_data_json = {
-    "index_name": "nifty",
+    "index_name": "bank_nifty",
     "strike": 100,
     "is_demo_trading_enabled": 1,
     "use_full_capital": 0,

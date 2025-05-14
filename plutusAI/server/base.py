@@ -351,7 +351,12 @@ def updateFlashConfiguration(user_email, index, data):
 def updateIndexDetails(token, data):
     try:
         index_data = IndexDetails.objects.filter(index_token=token)
-        if index_data.update(**data) != 1:
+        if len(index_data.values()) ==0:
+            print("no Data in table")
+            print(data)
+            index_data = IndexDetails.objects.filter(index_name=data[INDEX_NAME])
+            index_data.update(**data)
+        elif index_data.update(**data) != 1:
             addLogDetails(INFO, "Error in db update")
 
     except Exception as e:
@@ -414,60 +419,168 @@ def convertDateList(allExpiry):
     return sorted_date_strings
 
 
-def getnsedata(index_name):
+# def getnsedata(index_name):
+#     try:
+#         option_data = {}
+#         url = "https://margincalculator.angelbroking.com/OpenAPI_File/files/OpenAPIScripMaster.json"
+#         df = pd.DataFrame.from_dict(requests.get(url).json())
+#         df = df[(df.name == index_name)]
+#         expiry_list = sorted(df.expiry.unique())
+#         expiry_list = [item for item in expiry_list if item != ""]
+#         expiry_list = convertDateList(expiry_list)
+#         option_data[0] = convertDateString(expiry_list[0])
+#         option_data[1] = convertDateString(expiry_list[1])
+#         return option_data
+#     except Exception as e:
+#         addLogDetails(ERROR, str(e))
+
+def getnsedata(index_names):
     try:
-        option_data = {}
         url = "https://margincalculator.angelbroking.com/OpenAPI_File/files/OpenAPIScripMaster.json"
-        df = pd.DataFrame.from_dict(requests.get(url).json())
-        df = df[(df.name == index_name)]
-        expiry_list = sorted(df.expiry.unique())
-        expiry_list = [item for item in expiry_list if item != ""]
-        expiry_list = convertDateList(expiry_list)
-        option_data[0] = convertDateString(expiry_list[0])
-        option_data[1] = convertDateString(expiry_list[1])
-        return option_data
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
+        df = pd.DataFrame.from_dict(response.json())
+        result = {}
+        for index_name in index_names:
+            index_df = df[df.name == index_name]
+            expiry_list = sorted(filter(None, index_df.expiry.unique()))
+            expiry_list = convertDateList(expiry_list)
+            if len(expiry_list) < 2:
+                addLogDetails(ERROR, f"Insufficient expiry data for index: {index_name}")
+                continue
+            result[index_name] = {
+                "current_expiry": convertDateString(expiry_list[0]),
+                "next_expiry": convertDateString(expiry_list[1]),
+            }
+        return result
     except Exception as e:
-        addLogDetails(ERROR, str(e))
+        addLogDetails(ERROR, f"getnsedata error: {str(e)}")
+        return {}
+
+
+def get_last_thursday(year: int, month: int) -> str:
+    """Return the last Thursday of a given month in 'DDMMMYYYY' format."""
+    if month == 12:
+        last_day = datetime(year, 12, 31)
+    else:
+        last_day = datetime(year, month + 1, 1) - timedelta(days=1)
+
+    while last_day.weekday() != 3:  # 3 = Thursday
+        last_day -= timedelta(days=1)
+
+    return last_day.strftime("%d%b%Y").upper()  # e.g., 29MAY2025
+
+def get_futures_expiry_json(index_name, instrumenttype, exch_seg):
+    try:
+        url = "https://margincalculator.angelbroking.com/OpenAPI_File/files/OpenAPIScripMaster.json"
+        df = pd.DataFrame(requests.get(url).json())
+
+        # Filter for index
+        df_filtered = df[
+            (df["name"] == index_name) &
+            (df["instrumenttype"] == instrumenttype) &
+            (df["exch_seg"] == exch_seg)
+        ].copy()
+
+        # Dates for current and next month expiry
+        today = datetime.now()
+        current_expiry_str = get_last_thursday(today.year, today.month)
+        next_month = today.month + 1 if today.month < 12 else 1
+        next_year = today.year if today.month < 12 else today.year + 1
+        next_expiry_str = get_last_thursday(next_year, next_month)
+
+        current_row = df_filtered[df_filtered["expiry"].str.upper() == current_expiry_str]
+        next_row = df_filtered[df_filtered["expiry"].str.upper() == next_expiry_str]
+
+        if current_row.empty or next_row.empty:
+            return {"error": f"Futures data not found for {index_name}"}
+
+        current_data = current_row.iloc[0]
+        next_data = next_row.iloc[0]
+
+        return {
+            "current_expiry": datetime.strptime(current_data["expiry"], "%d%b%Y").strftime("%d-%b-%Y"),
+            "next_expiry": datetime.strptime(next_data["expiry"], "%d%b%Y").strftime("%d-%b-%Y"),
+            "index_token": str(current_data["token"]),
+            "symbol": current_data["symbol"],
+            "name": current_data["name"],
+            "lotsize": str(current_data["lotsize"])
+        }
+
+    except Exception as e:
+        return {"error": str(e)}
+
+
+
+
 
 
 @shared_task
 def updateExpiryDetails():
-    nifty = (
-        str(NIFTY_DEFAULT_VALUES["index_name"])
-        .replace("_", " ")
-        .title()
-        .replace(" ", "")
-        .upper()
-    )
-    bank_nifty = (
-        str(BANK_NIFTY_DEFAULT_VALUES["index_name"])
-        .replace("_", " ")
-        .title()
-        .replace(" ", "")
-        .upper()
-    )
-    fin_nifty = (
-        str(FINNIFTY_DEFAULT_VALUES["index_name"])
-        .replace("_", " ")
-        .title()
-        .replace(" ", "")
-        .upper()
-    )
-    indexes = [nifty, bank_nifty, fin_nifty]
-    for index in indexes:
-        option_data = getnsedata(index)
-        dataJson = {
-            "current_expiry": str(option_data[0]).upper(),
-            "next_expiry": str(option_data[1]).upper(),
-        }
-        addLogDetails(INFO, str(dataJson))
-        if index == nifty:
-            updateIndexDetails("99926000", dataJson)
-        elif index == bank_nifty:
-            updateIndexDetails("99926009", dataJson)
-        elif index == fin_nifty:
-            updateIndexDetails("99926037", dataJson)
+    name = "BANKNIFTY"
+    instrumenttype = "FUTIDX"
+    exch_seg = "NFO"
+    bank_nifty_fut_data = get_futures_expiry_json(name, instrumenttype, exch_seg)
+    nifty = str(NIFTY_DEFAULT_VALUES["index_name"]).replace("_", " ").title().replace(" ", "").upper()
+    bank_nifty = str(BANK_NIFTY_DEFAULT_VALUES["index_name"]).replace("_", " ").title().replace(" ", "").upper()
+    fin_nifty = str(FINNIFTY_DEFAULT_VALUES["index_name"]).replace("_", " ").title().replace(" ", "").upper()
+
+    print(bank_nifty_fut_data)
+    bank_nifty_fut_data_json = {"current_expiry": str(bank_nifty_fut_data["current_expiry"]).upper(),
+                           "next_expiry": str(bank_nifty_fut_data["next_expiry"]).upper(), INDEX_NAME:'bank_nifty_fut',"index_token":bank_nifty_fut_data["index_token"],"qty":bank_nifty_fut_data["lotsize"]}
+    updateIndexDetails(bank_nifty_fut_data['index_token'], bank_nifty_fut_data_json)
+
+    index_map = {
+        nifty: "26000",
+        bank_nifty: "26009",
+        fin_nifty: "26037",
+    }
+    expiry_data = getnsedata(list(index_map.keys()))
+
+    for index_name, data in expiry_data.items():
+        addLogDetails(INFO, f"{index_name} Expiry: {data}")
+        updateIndexDetails(index_map[index_name], data)
+
     addLogDetails(INFO, "Expiry Updated")
+
+
+# def updateExpiryDetails():
+#     nifty = (
+#         str(NIFTY_DEFAULT_VALUES["index_name"])
+#         .replace("_", " ")
+#         .title()
+#         .replace(" ", "")
+#         .upper()
+#     )
+#     bank_nifty = (
+#         str(BANK_NIFTY_DEFAULT_VALUES["index_name"])
+#         .replace("_", " ")
+#         .title()
+#         .replace(" ", "")
+#         .upper()
+#     )
+#     fin_nifty = (
+#         str(FINNIFTY_DEFAULT_VALUES["index_name"])
+#         .replace("_", " ")
+#         .title()
+#         .replace(" ", "")
+#         .upper()
+#     )
+#     indexes = [nifty, bank_nifty, fin_nifty]
+#     for index in indexes:
+#         option_data = getnsedata(index)
+#         dataJson = {
+#             "current_expiry": str(option_data[0]).upper(),
+#             "next_expiry": str(option_data[1]).upper(),
+#         }
+#         addLogDetails(INFO, str(dataJson))
+#         if index == nifty:
+#             updateIndexDetails("99926000", dataJson)
+#         elif index == bank_nifty:
+#             updateIndexDetails("99926009", dataJson)
+#         elif index == fin_nifty:
+#             updateIndexDetails("99926037", dataJson)
+#     addLogDetails(INFO, "Expiry Updated")
 
 
 def getExpiryList(index_name):
