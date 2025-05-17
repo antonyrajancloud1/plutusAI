@@ -14,7 +14,7 @@ class IndexPriceActionChecker:
             self.levels = list(map(int, levels_raw.split(','))) if isinstance(levels_raw, str) else levels_raw
             self.strike = int(config.get("strike", 0))
             self.index_trend_check = int(config.get("trend_check_points", 20))
-            self.user_qty = int(config.get("user_qty", 50))
+            self.user_qty = int(config.get("user_qty", 75))
             self.is_demo_enabled = self.BrokerObject.is_demo_enabled
             self.is_place_sl_required = config.get("is_place_sl_required", False)
             self.initialSL = int(config.get("initialSL", 10))
@@ -40,7 +40,7 @@ class IndexPriceActionChecker:
             self.indexValueAfterTrendDecided = None
             self.stoplossExit = None
             self.priceActionTarget = None
-
+            self.optionExitPrice= None
             addLogDetails(INFO, "[__init__] Initialized IndexPriceActionChecker")
             updateIndexConfiguration(user_email=self.user_email, index=self.index_name, data={'status': 'running'})
         except Exception as e:
@@ -351,11 +351,11 @@ class IndexPriceActionChecker:
             if self.is_demo_enabled:
                 self.revertDummyOrder(fromOptionPrice)
             else:
-                if self.isStoplossPlaced and self.currentOrderID:
-                    addLogDetails(INFO,
-                                  f"Index Name: {self.index_name} | User: {self.user_email} | OrderID: {self.currentOrderID}")
-                    # self.revertOrderChecks(fromOptionPrice)
 
+                addLogDetails(INFO,
+                              f"Index Name: {self.index_name} | User: {self.user_email} | OrderID: {self.currentOrderID}")
+                # self.revertOrderChecks(fromOptionPrice)
+                if self.is_place_sl_required  and self.isStoplossPlaced and self.currentOrderID:
                     if self.BrokerObject.checkIfOrderExists(self.currentOrderID):
                         modify_order_details = {
                             EXCHANGE: NFO,
@@ -379,9 +379,26 @@ class IndexPriceActionChecker:
                             self.optionExitPrice = fromOptionPrice  # Fallback
                         addLogDetails(INFO,
                                       f"Index Name: {self.index_name} | User: {self.user_email} | Exit price = {self.optionExitPrice}")
+
                     else:
                         addLogDetails(INFO,
                                       f"Index Name: {self.index_name} | User: {self.user_email} | Order no longer exists")
+                else:
+                    order_details = self._prepareOrderDetails(self.currentPremiumPlaced, SELL, MARKET)
+                    addLogDetails(INFO,
+                                  f"Index Name: {self.index_name} User: {self.user_email} {order_details}")
+
+                    order_response =  self.BrokerObject.placeOrder(order_details)
+                    print(order_response)
+                    self.optionExitPrice = self.BrokerObject.getLtpForPremium(self.optionDetails)
+                    data = {USER_ID: self.user_email, SCRIPT_NAME: self.currentPremiumPlaced,
+                            QTY: self.user_qty,
+                            EXIT_PRICE: self.BrokerObject.getLtpForPremium(self.optionDetails),
+                            STATUS: ORDER_EXITED}
+                    addLogDetails(INFO,
+                                  "Index Name: " + self.index_name + " User :" + self.user_email + " " + str(
+                                      data))
+                    addOrderBookDetails(data, False)
 
             # Record exit in OrderBook
             data = {

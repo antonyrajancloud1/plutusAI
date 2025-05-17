@@ -123,7 +123,7 @@ def createHttpData():
     while True:
         for data in allData:
             value = {TOKEN: data[SYMBOL_TOKEN], LTP: str(BrokerObject.getLtpForPremium(data))}
-            print(value)
+            # print(value)
             if value[LTP] is not None:
                 update_ltp_to_table(value)
                 time.sleep(1)
@@ -368,8 +368,9 @@ def createAngleOneCandle():
                 tokens_ltp_only.append(token)
 
         all_tokens = tokens_for_candle + tokens_ltp_only
+        #{"exchangeType": 1, "tokens": ['26000', '26009', '26037']},
         all_token_list = [
-            {"exchangeType": 1, "tokens": ['26000','26009','26037']},
+            
             {"exchangeType": 2, "tokens": tokens_for_candle}
         ]
         # all_token_list = [{"exchangeType": 2, "tokens": all_tokens}]
