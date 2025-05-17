@@ -5,6 +5,9 @@ ADMIN_USER_ID = 'madara@plutus.com'
 SOCKET_JOB = "socket_job"
 HTTP_JOB = "http_job"
 SOCKET_JOB_TYPE = '3'
+GET_CELERY_STATUS = "get_celery_status"
+STOP_CELERY = "stop_celery"
+RESTART_CELERY = "restart_celery"
 
 ### STRATEGIES ###
 STRATEGY_HUNTER = 'hunter'

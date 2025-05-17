@@ -59,5 +59,9 @@ urlpatterns = [
     path(START_FLASH, views.start_flash, name=START_FLASH),
     path(STOP_INDEX, views.stop_index, name=STOP_INDEX),
 
+    path(GET_CELERY_STATUS, views.check_celery_status, name=GET_CELERY_STATUS),
+    path(STOP_CELERY, views.stop_celery, name=STOP_CELERY),
+    path(RESTART_CELERY, views.restart_celery, name=RESTART_CELERY),
+
     path("test", tests.tester, name="test"),
 ]

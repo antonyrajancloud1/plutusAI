@@ -16,6 +16,7 @@ from .server.authentication.authentication import QueryParamTokenAuthentication
 from .server.manualOrder import *
 from .server.websocket.WebsocketAngelOne import WebsocketAngelOne
 
+import subprocess
 
 def invaid_url(request, exception):
     return render(request, "invaid_url.html", status=404)
@@ -1029,3 +1030,68 @@ def stop_flash(request):
     except Exception as e:
         addLogDetails(ERROR, str(e))
         return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
+
+
+def is_celery_running():
+    try:
+        app_name = "plutus.celery"
+        result = subprocess.run(['ps', 'aux'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        lines = result.stdout.splitlines()
+
+        for line in lines:
+            if 'celery' in line and app_name in line:
+                return True
+        return False
+
+    except Exception as e:
+        print(f"Error checking Celery status: {e}")
+
+@csrf_exempt  # need to remove
+@require_http_methods([GET])
+def check_celery_status(request):
+    if not admin_check(request.user):
+        return JsonResponse({STATUS: FAILED, MESSAGE: "UNAUTHORISED"})
+    try:
+        if is_celery_running():
+            return JsonResponse({"celery_running": True, "details": "Celery is running."})
+        else:
+            return JsonResponse({"celery_running": False, "details": "Celery is NOT running."})
+    except Exception as e:
+        return JsonResponse({"celery_running": False, "error": str(e)}, status=500)
+
+@csrf_exempt  # need to remove
+@require_http_methods([POST])
+def stop_celery(request):
+    if not admin_check(request.user):
+        return JsonResponse({STATUS: FAILED, MESSAGE: "UNAUTHORISED"})
+    else:
+        return JsonResponse(stopCelery(request))
+
+def stopCelery(request):
+    try:
+        if is_celery_running():
+            subprocess.run(["pkill", "-f", "celery -A plutus.celery"], check=True)
+            return {"success": True, "message": "Celery stopped successfully.","task_status":True}
+        else:
+            return {"success": False, "message": "Celery is not running.","task_status":False}
+    except subprocess.CalledProcessError as e:
+        return {"success": False, "message": f"Failed to stop Celery: {e}"}
+
+@csrf_exempt  # need to remove
+@require_http_methods([POST])
+def restart_celery(request):
+    if not admin_check(request.user):
+        return JsonResponse({STATUS: FAILED, MESSAGE: "UNAUTHORISED"})
+    if is_celery_running():
+        stop_result = stopCelery(request)
+        if not stop_result["success"]:
+            return JsonResponse({"success": False, "message": "Failed to stop Celery. Restart aborted."})
+
+        time.sleep(2)
+
+    try:
+        command = "celery -A plutus.celery worker --loglevel=info --autoscale=100,3"
+        subprocess.Popen(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        return JsonResponse({"success": True, "message": "Celery restarted successfully." ,"task_status":True})
+    except Exception as e:
+        return JsonResponse({"success": False, "message": f"Failed to restart Celery: {e}"})
