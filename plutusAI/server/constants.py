@@ -64,6 +64,7 @@ PLACE_ORDER_BUY = "place_order_buy"
 PLACE_ORDER_SELL = "place_order_sell"
 PLACE_ORDER_EXIT = "place_order_exit"
 
+TRIGGER_ORDER_TO_MARKET = "trigger_order_to_market"
 TRIGGER_BUY = "trigger_buy"
 TRIGGER_SELL = "trigger_sell"
 TRIGGER_EXIT = "trigger_exit"

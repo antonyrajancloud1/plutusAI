@@ -234,7 +234,7 @@ def get_order_book_details(request):
             # sample_data={"user_id":"antonyasp12@gmail.com","script_name":"NIFTY21000CE","qty":"100","entry_price":"150","exit_price":"250","status":"order_exited"}
             # add_order_book_details(sample_data)
             user_email = get_user_email(request)
-            user_data = OrderBook.objects.filter(user_id=user_email)
+            user_data = OrderBook.objects.filter(user_id=user_email).order_by("-entry_time")
             order_book_list = list(user_data.values())
             for data in order_book_list:
                 data.pop(ID)
@@ -787,6 +787,29 @@ def placeBuyOrderWebHook(request):
                 data = list(user_manual_details.values())[0]
             data = remove_spaces_from_json(data)
             return triggerOrder(user_email, data, strategy, BUY)
+        except Exception as e:
+            print(e)
+    else:
+        return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+
+@csrf_exempt
+@require_http_methods([POST])
+@api_view([POST])
+@authentication_classes([QueryParamTokenAuthentication])
+@permission_classes([IsAuthenticated])
+def modifyToMarketOrderWebHook(request):
+
+    if check_user_session(request):
+        try:
+            user_email = get_user_email(request)
+            data = json.loads(request.body)
+            index=data[INDEX_NAME]
+            strategy = data.get(STRATEGY, "DefaultStrategy")
+            if index:
+                user_manual_details = ManualOrders.objects.filter(user_id=user_email, index_name=index)
+                data = list(user_manual_details.values())[0]
+            data = remove_spaces_from_json(data)
+            return modifyToMarketOrder(user_email, data, strategy, BUY)
         except Exception as e:
             print(e)
     else:
