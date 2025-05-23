@@ -531,9 +531,9 @@ def updateExpiryDetails():
     updateIndexDetails(bank_nifty_fut_data['index_token'], bank_nifty_fut_data_json)
 
     index_map = {
-        nifty: "26000",
-        bank_nifty: "26009",
-        fin_nifty: "26037",
+        nifty: "99926000",
+        bank_nifty: "99926009",
+        fin_nifty: "99926037",
     }
     expiry_data = getnsedata(list(index_map.keys()))
 
