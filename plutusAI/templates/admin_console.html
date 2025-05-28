@@ -57,6 +57,19 @@
             </tbody>
         </table>
     </div>
+<!-- Celery Status Monitor -->
+<div class="container">
+    <h2>Celery Worker Status</h2>
+    <div class="celery-status-section">
+        <div id="celery-status-indicator">
+            Status:
+            <span id="celery-status-dot" class="status-dot disconnected"></span>
+            <span id="celery-status-text">Checking...</span>
+        </div>
+        <button id="restartCelery" type="button" class="restart-btn">Restart Celery</button>
+        <button id="stopCelery" type="button" class="stop-btn">Stop Celery</button>
+    </div>
+</div>
 
      <script src="{% static 'js/admin.js'%}" type="text/javascript"></script>
 

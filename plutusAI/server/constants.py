@@ -5,6 +5,9 @@ ADMIN_USER_ID = 'madara@plutus.com'
 SOCKET_JOB = "socket_job"
 HTTP_JOB = "http_job"
 SOCKET_JOB_TYPE = '3'
+GET_CELERY_STATUS = "get_celery_status"
+STOP_CELERY = "stop_celery"
+RESTART_CELERY = "restart_celery"
 
 ### STRATEGIES ###
 STRATEGY_HUNTER = 'hunter'
@@ -61,6 +64,7 @@ PLACE_ORDER_BUY = "place_order_buy"
 PLACE_ORDER_SELL = "place_order_sell"
 PLACE_ORDER_EXIT = "place_order_exit"
 
+TRIGGER_ORDER_TO_MARKET = "trigger_order_to_market"
 TRIGGER_BUY = "trigger_buy"
 TRIGGER_SELL = "trigger_sell"
 TRIGGER_EXIT = "trigger_exit"
@@ -156,7 +160,7 @@ PLAN_DETAILS = "plan_details"
 NSE_OPEN_TIME = "09:15"
 START_SCALPER = "start_scalper"
 STOP_SCALPER = "stop_scalper"
-BANKNIFTY_FUTURES = 'BANKNIFTY30OCT24FUT'
+BANKNIFTY_FUTURES = 'BANKNIFTY29MAY25FUT'
 SCALPER='scalper'
 
 ### STAGE STATUSES ###
@@ -287,7 +291,7 @@ broker_sample_data_json = {
 
 # ----- Scalper Config -----
 scalper_data_json = {
-    "index_name": "nifty",
+    "index_name": "bank_nifty",
     "strike": 100,
     "is_demo_trading_enabled": 1,
     "use_full_capital": 0,

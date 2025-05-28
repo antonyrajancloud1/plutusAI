@@ -45,6 +45,7 @@ urlpatterns = [
     path(TRIGGER_SELL, views.placeSellOrderWebHook, name=TRIGGER_SELL),
     path(TRIGGER_EXIT, views.placeExitOrderWebHook, name=TRIGGER_EXIT),
     path(EXIT_ALL, views.exitAllOrdersWebHook, name=EXIT_ALL),
+    path(TRIGGER_ORDER_TO_MARKET, views.modifyToMarketOrderWebHook, name=TRIGGER_ORDER_TO_MARKET),
 
     path(UPDATE_MANUAL_DETAILS, views.update_manual_order_values, name=UPDATE_MANUAL_DETAILS),
     path(MANUAL, views.html_test, name=MANUAL),
@@ -58,6 +59,10 @@ urlpatterns = [
     path(GET_FLASH_DETAILS, views.get_flash_values, name=GET_FLASH_DETAILS),
     path(START_FLASH, views.start_flash, name=START_FLASH),
     path(STOP_INDEX, views.stop_index, name=STOP_INDEX),
+
+    path(GET_CELERY_STATUS, views.check_celery_status, name=GET_CELERY_STATUS),
+    path(STOP_CELERY, views.stop_celery, name=STOP_CELERY),
+    path(RESTART_CELERY, views.restart_celery, name=RESTART_CELERY),
 
     path("test", tests.tester, name="test"),
 ]
