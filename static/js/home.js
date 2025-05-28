@@ -16,12 +16,18 @@ let MadaraConstructor = function() {
     this.currentStrategy = null;
     this.whiteListedProperties = {
         getConfigurations   : [ "actions", "index_name", "levels", "trend_check_points", "strike", "safe_sl", "status" ],
-        getScalperDetails   : [ "actions", "index_name", "strike", "target", "is_demo_trading_enabled", "use_full_capital", "lots" ,"status","on_candle_close"],
+        getScalperDetails   : [ "actions", "index_name", "strike", "target", "is_demo_trading_enabled", "use_full_capital", "lots" ,"status", "on_candle_close" ],
         getManualDetails    : [ "actions", "index_name", "lots", "trigger", "stop_loss", "target", "strike", "current_premium" ],
         getWebhookDetails   : [ "index_name", "buy_url", "sell_url", "exit_url", "input_data" ],
-        getOrderBook        : [ "entry_time", "script_name", "qty", "entry_price", "exit_price", "status", "exit_time","strategy" ],
+        getOrderBook        : [ "entry_time", "script_name", "qty", "entry_price", "exit_price", "status", "exit_time", "strategy", "total" ],
         getBrokerInfo       : [ "actions", "broker_name", "broker_user_id", "broker_user_name", "broker_mpin", "broker_api_token" ]
     };
+    this.statusVsColorCodeClass = {
+        initiated   :   "clrB",
+        started     :   "clrY",
+        running     :   "clrG",
+        stopped     :   "clrR"
+    }
 };
 
 MadaraConstructor.prototype.templates = {
@@ -196,7 +202,7 @@ MadaraConstructor.prototype.templates = {
                         <div class="mT30 mB20 flexC justifySB">
                             <div class="font18 fontB">{webhook_details_header}</div>
                             <div id="token-details" class="token-details flexC gap10">
-                                <div id="regenerate-token-button" class="regenerate-token-button bdrR5 flexC curP" home-page-buttons purpose="regenerateAuthToken">{regenerate_token}</div>
+                                <div id="regenerate-token-button" class="regenerate-token-button bdrR5 flexC curP sm" home-page-buttons purpose="regenerateAuthToken">{regenerate_token}</div>
                                 <div id="auth-token" class="auth-token pT10 pB10 pL15 pR15 bdrR5">{token}</div>
                             </div>
                         </div>
@@ -238,11 +244,12 @@ MadaraConstructor.prototype.API = {
     getPlans                :   "/plans",
     editPlans               :   "/edit_plans",
     getTokenData            :   "/get_auth_token",
-    generateAuthToken       :   "/generate_auth_token"
+    generateAuthToken       :   "/generate_auth_token",
+    brokerToken             :   "/regenrate_token"
 };
 
 MadaraConstructor.prototype.getLHSModulesList = function() {
-    return [ "dashboard", "configurations", "manualOrders", "scalper","orderBook", "brokerInfo" ];
+    return [ "dashboard", "orderBook", "configurations", "manualOrders", "scalper", "brokerInfo" ];
 };
 
 MadaraConstructor.prototype.addLoaderForTheRHS = function() {
@@ -392,8 +399,17 @@ MadaraConstructor.prototype.viewOrderBook = function() {
                 whiteListedProperties.forEach(property => {
                     if(property !== "index_name") {
                         let tableCellContent = (property === "status") ? Resource[configurationObject[property]] : property.includes("time") ? self.getFormattedTime(configurationObject[property]) : configurationObject[property];
+                        let tooltipContent = tableCellContent;
+                        if(property === "total") {
+                            let total = configurationObject[property] ? configurationObject[property] : 0;
+                            total = parseFloat(total);
+                            let totalInLocale = parseFloat(configurationObject[property]).toLocaleString('en-IN', { minimumFractionDigits : 2, maximumFractionDigits : 2 });
+                            tooltipContent = totalInLocale;
+                            tableCellContent = self.templates.htmlForCellContentHightlighter.replace(/{class_for_highlighting}/g, (total > 0) ? "positive" : ((total == 0) ? "neutral" : "negative"))
+                                                                            .replace(/{cell_content}/g, totalInLocale);
+                        }
                         eachConfigurationCell += self.templates.tableCell.replace(/{table_cell_content}/g, tableCellContent ? tableCellContent : "-")
-                                                                            .replace(/{tooltip_content}/g, tableCellContent ? tableCellContent : "")
+                                                                            .replace(/{tooltip_content}/g, tooltipContent ? tooltipContent : "")
                                                                             .replace(/{disable_status}/g, disableStatus ? "disabled" : "");
                     }
                 });
@@ -608,8 +624,13 @@ MadaraConstructor.prototype.viewConfigurations = function() {
                     if(property !== "index_name" && property !== "actions") {
                         let valueFromResponse = configurationObject[property];
                         let tableCellContent = (property === "status") ? (Resource[valueFromResponse] ? Resource[valueFromResponse] : valueFromResponse) : valueFromResponse;
+                        let tooltipContent = tableCellContent;
+                        if(property === "status") {
+                            tableCellContent = self.templates.htmlForCellContentHightlighter.replace(/{class_for_highlighting}/g, self.statusVsColorCodeClass[valueFromResponse] ? self.statusVsColorCodeClass[valueFromResponse] : "neutral")
+                                                                            .replace(/{cell_content}/g, tooltipContent);
+                        }
                         eachConfigurationCell += self.templates.tableCell.replace(/{table_cell_content}/g, tableCellContent ? tableCellContent : "-")
-                                                                         .replace(/{tooltip_content}/g, tableCellContent ? tableCellContent : "")
+                                                                         .replace(/{tooltip_content}/g, tooltipContent ? tooltipContent : "")
                                                                          .replace(/{disable_status}/g, disableStatus ? "disabled" : "");
                     }
                 });
@@ -874,14 +895,25 @@ MadaraConstructor.prototype.updateWebhookDataTableWithThisStrategy = async funct
     webhookDetailsContainer.replaceWith(updatedWebhookDetailsHtml);
 };
 
+MadaraConstructor.prototype.updateWebhookDataTableWithThisToken = async function(tokenResponse) {
+    let val = this.currentStrategy;
+    this.tokenData = tokenResponse;
+    let updatedWebhookDetailsHtml = await this.getWebhookDetailsHTML(this.webhookData, val);
+    let webhookDetailsContainer = $(this.DOM_SELECTORS.rhs_container).find("#webhook-details-container");
+    webhookDetailsContainer.replaceWith(updatedWebhookDetailsHtml);
+};
+
 MadaraConstructor.prototype.regenerateAuthToken = function() {
     let self = this;
     let url = this.getWindowLocationOrigin() + this.API.generateAuthToken;
+    let currentTarget = this.EVENT_AND_DOM_CACHE.currentTarget;
+    this.addLoaderInThisButton(currentTarget);
     let additionalAjaxOptions = {
         type    :   "POST",
         success :   function(successResp) {
-            let tokenData = successResp.message ? successResp.message : "";
-            $(self.DOM_SELECTORS.rhs_container).find("#auth-token").text(tokenData);
+            // let tokenData = successResp.message ? successResp.message : "";
+            // $(self.DOM_SELECTORS.rhs_container).find("#auth-token").text(tokenData);
+            self.updateWebhookDataTableWithThisToken(successResp);
             self.updateBanner({ type : "success", content : Resource.token_regenerated });
         },
         error   :   function(errorResp) {
@@ -900,11 +932,13 @@ MadaraConstructor.prototype.updateTheManualOrderContainerForThisIndex = function
     let whiteListedProperties = this.whiteListedProperties.getManualDetails;
     for(let i = 0; i < allCellsInRow.length; i++) {
         let element = allCellsInRow[i];
-        let valueToBeUpdated = data[whiteListedProperties[i]];
+        let valueFromResponse = data[whiteListedProperties[i]];
+        let valueToBeUpdated = Resource[valueFromResponse] ? Resource[valueFromResponse] : valueFromResponse;
         if(element.classList.contains("actions-table-cell")) {
             continue;
         }
         element.innerText = valueToBeUpdated ? valueToBeUpdated : "-";
+        element.setAttribute("title", valueToBeUpdated ? valueToBeUpdated : "-");
     };
 };
 
@@ -916,7 +950,12 @@ MadaraConstructor.prototype.getManualOrderDetails = function() {
     let whiteListedProperties = this.whiteListedProperties.getManualDetails;
     for(let i = 0; i < allCellsInRow.length; i++) {
         let element = allCellsInRow[i];
-        let valueOfTheElement = element.textContent.trim();
+        let valueOfTheElement = "";
+        if(whiteListedProperties[i] === "index_name") {
+            valueOfTheElement = currentTarget.attr("index");
+        } else {
+            valueOfTheElement = element.textContent.trim();
+        }
         if(element.classList.contains("actions-table-cell") || (whiteListedProperties[i] === "current_premium")) {
             continue;
         }
@@ -933,6 +972,7 @@ MadaraConstructor.prototype.buyManualOrders = function() {
     let url = this.getWindowLocationOrigin() + this.API.placeManualOrder;
     if(self.currentStrategy !== this.default_strategy) {
         url = this.getWindowLocationOrigin() + this.API.placeOrderViaWebhook + "?token=" + this.tokenData.message;
+        data.strategy_name = self.currentStrategy;
     }
 
     let additionalAjaxOptions = {
@@ -958,6 +998,7 @@ MadaraConstructor.prototype.sellManualOrders = function() {
     let url = this.getWindowLocationOrigin() + this.API.sellManualOrder;
     if(self.currentStrategy !== this.default_strategy) {
         url = this.getWindowLocationOrigin() + this.API.sellOrderViaWebhook + "?token=" + this.tokenData.message;
+        data.strategy_name = self.currentStrategy;
     }
 
     let additionalAjaxOptions = {
@@ -983,6 +1024,7 @@ MadaraConstructor.prototype.exitManualOrders = function() {
     let url = this.getWindowLocationOrigin() + this.API.exitManualOrder;
     if(self.currentStrategy !== this.default_strategy) {
         url = this.getWindowLocationOrigin() + this.API.exitOrderViaWebhook + "?token=" + this.tokenData.message;
+        data.strategy_name = self.currentStrategy;
     }
 
     let additionalAjaxOptions = {
@@ -1170,7 +1212,7 @@ MadaraConstructor.prototype.renderChartForPNL = function(currentDaySummary) {
     const totalPNL = this.calculateTotalPNL(currentDaySummary);
 
     let pnlInfoHtml = this.templates.pnlInfoHtml.replace(/{pnl_info_header}/g, Resource.overall_pandl)
-                            .replace(/{class_for_total_pnl}/g, (totalPNL >= 0) ? "positive" : "negative")
+                            .replace(/{class_for_total_pnl}/g, (totalPNL > 0) ? "positive" : ((totalPNL == 0) ? "neutral" : "negative"))
                             .replace(/{total_pnl_cost_in_rupees}/g, "₹" + totalPNL.toLocaleString('en-IN', { minimumFractionDigits : 2, maximumFractionDigits : 2 }));
 
     document.getElementById("pnlInfo").innerHTML = pnlInfoHtml;
@@ -1219,18 +1261,19 @@ MadaraConstructor.prototype.getPositionsAndOrdersHTML = function(currentDaySumma
         indexName = indexName.toUpperCase();
         let orderCount = position.order_count;
         let totalProfit = position.total_profit;
-        totalProfit = totalProfit ? totalProfit.toLocaleString('en-IN', { minimumFractionDigits : 2, maximumFractionDigits : 2 }) : "";
+        totalProfit = parseFloat(totalProfit);
+        totalProfitInLocale = totalProfit ? totalProfit.toLocaleString('en-IN', { minimumFractionDigits : 2, maximumFractionDigits : 2 }) : 0;
         let strategy = position.strategy;
 
-        let totalProfitHtml = self.templates.htmlForCellContentHightlighter.replace(/{class_for_highlighting}/g, (totalProfit > 0) ? "positive" : "negative")
-                                                                            .replace(/{cell_content}/g, totalProfit);
-        let totalOrderHtml = self.templates.htmlForCellContentHightlighter.replace(/{class_for_highlighting}/g, (orderCount > 0) ? "positive" : "negative")
+        let totalProfitHtml = self.templates.htmlForCellContentHightlighter.replace(/{class_for_highlighting}/g, (totalProfit > 0) ? "positive" : ((totalProfit == 0) ? "neutral" : "negative"))
+                                                                            .replace(/{cell_content}/g, totalProfitInLocale);
+        let totalOrderHtml = self.templates.htmlForCellContentHightlighter.replace(/{class_for_highlighting}/g, (orderCount > 0) ? "positive" : ((orderCount == 0) ? "neutral" : "negative"))
                                                                             .replace(/{cell_content}/g, orderCount);
                                                                             
         let eachConfigurationCell = "";
         headerPropeties.forEach(property => {
             let tableCellContent = (property === "strategy_header") ? (strategy + " (" + indexName + ")") : (property === "profit_header" && (need === "needPositions")) ? totalProfitHtml : totalOrderHtml;
-            let contentForTooltip = (property === "strategy_header") ? (strategy + " (" + indexName + ")") : (property === "profit_header" && (need === "needPositions")) ? totalProfit : orderCount;
+            let contentForTooltip = (property === "strategy_header") ? (strategy + " (" + indexName + ")") : (property === "profit_header" && (need === "needPositions")) ? totalProfitInLocale : orderCount;
             eachConfigurationCell += self.templates.tableCell.replace(/{table_cell_content}/g, tableCellContent ? tableCellContent : "-")
                                                                 .replace(/{tooltip_content}/g, contentForTooltip ? contentForTooltip : "")
                                                                 .replace(/{disable_status}/g, "");

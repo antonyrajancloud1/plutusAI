@@ -39,6 +39,7 @@
     --button-bg-positive    : #4CAF50;
     --positive-value-clr    : #4CAF50;
     --negative-value-clr    : #F44336;
+    --neutral-value-clr     : #F6C23E;
     --highlighter-clr       : #FFFF00;
 
 }
@@ -48,6 +49,7 @@ body { font-family: Lato, sans-serif !important;margin: 0;box-sizing: border-box
 .main-container { left: 0;top: 0;transform: translateZ(0); }
 .positive { color: var(--positive-value-clr); }
 .negative { color: var(--negative-value-clr); }
+.neutral { color: var(--neutral-value-clr); }
 .rhs-bg-container:has(.dashboard-container) { display: block; }
 
 /**** Header Styles Starts ****/
@@ -123,7 +125,9 @@ input:checked[type="checkbox"]::after { left: 52%; }
 
 /**** Data Table Styles Starts ****/
 .orderBook-container .tblCel:first-child, .orderBook-container .tblCel:last-child { min-width: 10%; }
-.orderBook-container .tblCel:nth-child(2) { min-width: 20%; }
+.orderBook-container .tblCel:nth-child(2) { min-width: 20%;width: 250px; }
+.orderBook-container .tblCel:nth-child(3), .orderBook-container .tblCel:nth-child(4), .orderBook-container .tblCel:nth-child(5) { width: 100px;}
+.orderBook-container .tblCel:nth-child(6) {width: 130px;}
 .configurations-container .tblCel:nth-child(3) { word-wrap: break-word;white-space: wrap;text-align: left; }
 .manualOrders-container .actions-table-cell { width: 160px; }
 .webhook-details-table-cell.ellips { white-space: normal;word-wrap: break-word; }

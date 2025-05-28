@@ -389,7 +389,7 @@ input.txt:focus, input[type="text"]:focus, input[type="checkbox"]:focus, input[t
 .rloader.xs:after { width: 18px; height: 18px; }
 .rloader.xs:after, .rloader.sm:after { border-width: 3px; }
 .rloader.sm:after { width: 26px; height: 26px; } 
-.action-button.rloader:before, .primary-button.rloader { color: transparent; }
+.action-button.rloader:before, .primary-button.rloader, .regenerate-token-button.rloader { color: transparent; }
 .start-index-button.action-button.rloader:after { border-right: 4px solid #50AE42 }
 .edit-config-button.action-button.rloader:after { border-right: 4px solid #2695F6 }
 .stop-index-button.action-button.rloader:after { border-right: 4px solid #F06C66 }
