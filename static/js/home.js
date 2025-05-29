@@ -972,7 +972,7 @@ MadaraConstructor.prototype.buyManualOrders = function() {
     let url = this.getWindowLocationOrigin() + this.API.placeManualOrder;
     if(self.currentStrategy !== this.default_strategy) {
         url = this.getWindowLocationOrigin() + this.API.placeOrderViaWebhook + "?token=" + this.tokenData.message;
-        data.strategy_name = self.currentStrategy;
+        data.strategy = self.currentStrategy;
     }
 
     let additionalAjaxOptions = {
@@ -998,7 +998,7 @@ MadaraConstructor.prototype.sellManualOrders = function() {
     let url = this.getWindowLocationOrigin() + this.API.sellManualOrder;
     if(self.currentStrategy !== this.default_strategy) {
         url = this.getWindowLocationOrigin() + this.API.sellOrderViaWebhook + "?token=" + this.tokenData.message;
-        data.strategy_name = self.currentStrategy;
+        data.strategy = self.currentStrategy;
     }
 
     let additionalAjaxOptions = {
@@ -1024,7 +1024,7 @@ MadaraConstructor.prototype.exitManualOrders = function() {
     let url = this.getWindowLocationOrigin() + this.API.exitManualOrder;
     if(self.currentStrategy !== this.default_strategy) {
         url = this.getWindowLocationOrigin() + this.API.exitOrderViaWebhook + "?token=" + this.tokenData.message;
-        data.strategy_name = self.currentStrategy;
+        data.strategy = self.currentStrategy;
     }
 
     let additionalAjaxOptions = {
