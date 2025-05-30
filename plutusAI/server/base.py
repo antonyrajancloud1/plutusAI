@@ -459,7 +459,13 @@ def getnsedata(index_names):
 
 
 def get_last_thursday(year: int, month: int) -> str:
-    """Return the last Thursday of a given month in 'DDMMMYYYY' format."""
+    """
+    Returns the last Thursday of the given month as a string in 'DDMMMYYYY' format.
+    If today's date is after the last Thursday, returns the last Thursday of next month.
+    """
+    today = datetime.now()
+
+    # Find last Thursday of the given month
     if month == 12:
         last_day = datetime(year, 12, 31)
     else:
@@ -468,7 +474,24 @@ def get_last_thursday(year: int, month: int) -> str:
     while last_day.weekday() != 3:  # 3 = Thursday
         last_day -= timedelta(days=1)
 
-    return last_day.strftime("%d%b%Y").upper()  # e.g., 29MAY2025
+    # If today is after last Thursday, get next month's last Thursday
+    if today > last_day:
+        if month == 12:
+            year += 1
+            month = 1
+        else:
+            month += 1
+
+        # Find last Thursday of next month
+        if month == 12:
+            last_day = datetime(year, 12, 31)
+        else:
+            last_day = datetime(year, month + 1, 1) - timedelta(days=1)
+
+        while last_day.weekday() != 3:
+            last_day -= timedelta(days=1)
+
+    return last_day.strftime("%d%b%Y").upper()
 
 def get_futures_expiry_json(index_name, instrumenttype, exch_seg):
     try:
@@ -484,14 +507,16 @@ def get_futures_expiry_json(index_name, instrumenttype, exch_seg):
 
         # Dates for current and next month expiry
         today = datetime.now()
+        print(df_filtered)
         current_expiry_str = get_last_thursday(today.year, today.month)
+        print(current_expiry_str)
         next_month = today.month + 1 if today.month < 12 else 1
         next_year = today.year if today.month < 12 else today.year + 1
         next_expiry_str = get_last_thursday(next_year, next_month)
 
         current_row = df_filtered[df_filtered["expiry"].str.upper() == current_expiry_str]
         next_row = df_filtered[df_filtered["expiry"].str.upper() == next_expiry_str]
-
+        print(current_row)
         if current_row.empty or next_row.empty:
             return {"error": f"Futures data not found for {index_name}"}
 
