@@ -493,39 +493,80 @@ def get_last_thursday(year: int, month: int) -> str:
 
     return last_day.strftime("%d%b%Y").upper()
 
-def get_futures_expiry_json(index_name, instrumenttype, exch_seg):
+# def get_futures_expiry_json(index_name, instrumenttype, exch_seg):
+#     try:
+#         url = "https://margincalculator.angelbroking.com/OpenAPI_File/files/OpenAPIScripMaster.json"
+#         df = pd.DataFrame(requests.get(url).json())
+#
+#         # Filter for index
+#         df_filtered = df[
+#             (df["name"] == index_name) &
+#             (df["instrumenttype"] == instrumenttype) &
+#             (df["exch_seg"] == exch_seg)
+#         ].copy()
+#
+#         # Dates for current and next month expiry
+#         today = datetime.now()
+#         print(df_filtered)
+#         current_expiry_str = get_last_thursday(today.year, today.month)
+#         print(current_expiry_str)
+#         next_month = today.month + 1 if today.month < 12 else 1
+#         next_year = today.year if today.month < 12 else today.year + 1
+#         next_expiry_str = get_last_thursday(next_year, next_month)
+#
+#         current_row = df_filtered[df_filtered["expiry"].str.upper() == current_expiry_str]
+#         next_row = df_filtered[df_filtered["expiry"].str.upper() == next_expiry_str]
+#         print(current_row)
+#         if current_row.empty or next_row.empty:
+#             return {"error": f"Futures data not found for {index_name}"}
+#
+#         current_data = current_row.iloc[0]
+#         next_data = next_row.iloc[0]
+#
+#         return {
+#             "current_expiry": datetime.strptime(current_data["expiry"], "%d%b%Y").strftime("%d-%b-%Y"),
+#             "next_expiry": datetime.strptime(next_data["expiry"], "%d%b%Y").strftime("%d-%b-%Y"),
+#             "index_token": str(current_data["token"]),
+#             "symbol": current_data["symbol"],
+#             "name": current_data["name"],
+#             "lotsize": str(current_data["lotsize"])
+#         }
+#
+#     except Exception as e:
+#         return {"error": str(e)}
+
+
+def get_next_futures_expiry(index_name: str, instrumenttype: str, exch_seg: str) -> str:
+    """
+    Uses the actual expiry dates from AngelOne's OpenAPIScripMaster.json to find the next expiry.
+    """
     try:
         url = "https://margincalculator.angelbroking.com/OpenAPI_File/files/OpenAPIScripMaster.json"
         df = pd.DataFrame(requests.get(url).json())
 
-        # Filter for index
         df_filtered = df[
             (df["name"] == index_name) &
             (df["instrumenttype"] == instrumenttype) &
             (df["exch_seg"] == exch_seg)
-        ].copy()
+            ].copy()
 
-        # Dates for current and next month expiry
+        # Convert expiry strings to datetime
+        df_filtered["expiry_date"] = pd.to_datetime(df_filtered["expiry"], format="%d%b%Y", errors="coerce")
+        df_filtered = df_filtered.dropna(subset=["expiry_date"])
+
+        # Get current and next expiry after today
         today = datetime.now()
-        print(df_filtered)
-        current_expiry_str = get_last_thursday(today.year, today.month)
-        print(current_expiry_str)
-        next_month = today.month + 1 if today.month < 12 else 1
-        next_year = today.year if today.month < 12 else today.year + 1
-        next_expiry_str = get_last_thursday(next_year, next_month)
+        future_expiries = df_filtered[df_filtered["expiry_date"] >= today].sort_values("expiry_date")
 
-        current_row = df_filtered[df_filtered["expiry"].str.upper() == current_expiry_str]
-        next_row = df_filtered[df_filtered["expiry"].str.upper() == next_expiry_str]
-        print(current_row)
-        if current_row.empty or next_row.empty:
-            return {"error": f"Futures data not found for {index_name}"}
+        if len(future_expiries) < 2:
+            return {"error": f"Not enough expiry data for {index_name}"}
 
-        current_data = current_row.iloc[0]
-        next_data = next_row.iloc[0]
+        current_data = future_expiries.iloc[0]
+        next_data = future_expiries.iloc[1]
 
         return {
-            "current_expiry": datetime.strptime(current_data["expiry"], "%d%b%Y").strftime("%d-%b-%Y"),
-            "next_expiry": datetime.strptime(next_data["expiry"], "%d%b%Y").strftime("%d-%b-%Y"),
+            "current_expiry": current_data["expiry_date"].strftime("%d-%b-%Y"),
+            "next_expiry": next_data["expiry_date"].strftime("%d-%b-%Y"),
             "index_token": str(current_data["token"]),
             "symbol": current_data["symbol"],
             "name": current_data["name"],
@@ -533,9 +574,7 @@ def get_futures_expiry_json(index_name, instrumenttype, exch_seg):
         }
 
     except Exception as e:
-        return {"error": str(e)}
-
-
+        return f"Error: {e}"
 
 
 
@@ -562,7 +601,7 @@ def updateExpiryDetails():
         addLogDetails(INFO, f"{index_name} Expiry: {data}")
         updateIndexDetails(index_map[index_name], data)
         #####
-    bank_nifty_fut_data = get_futures_expiry_json(name, instrumenttype, exch_seg)
+    bank_nifty_fut_data = get_next_futures_expiry(name, instrumenttype, exch_seg)
     print(bank_nifty_fut_data)
     bank_nifty_fut_data_json = {"current_expiry": str(bank_nifty_fut_data["current_expiry"]).upper(),
                                 "next_expiry": str(bank_nifty_fut_data["next_expiry"]).upper(),
