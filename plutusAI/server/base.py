@@ -520,15 +520,11 @@ def updateExpiryDetails():
     name = "BANKNIFTY"
     instrumenttype = "FUTIDX"
     exch_seg = "NFO"
-    bank_nifty_fut_data = get_futures_expiry_json(name, instrumenttype, exch_seg)
+
     nifty = str(NIFTY_DEFAULT_VALUES["index_name"]).replace("_", " ").title().replace(" ", "").upper()
     bank_nifty = str(BANK_NIFTY_DEFAULT_VALUES["index_name"]).replace("_", " ").title().replace(" ", "").upper()
     fin_nifty = str(FINNIFTY_DEFAULT_VALUES["index_name"]).replace("_", " ").title().replace(" ", "").upper()
 
-    print(bank_nifty_fut_data)
-    bank_nifty_fut_data_json = {"current_expiry": str(bank_nifty_fut_data["current_expiry"]).upper(),
-                           "next_expiry": str(bank_nifty_fut_data["next_expiry"]).upper(), INDEX_NAME:'bank_nifty_fut',"index_token":bank_nifty_fut_data["index_token"],"qty":bank_nifty_fut_data["lotsize"]}
-    updateIndexDetails(bank_nifty_fut_data['index_token'], bank_nifty_fut_data_json)
 
     index_map = {
         nifty: "99926000",
@@ -540,6 +536,15 @@ def updateExpiryDetails():
     for index_name, data in expiry_data.items():
         addLogDetails(INFO, f"{index_name} Expiry: {data}")
         updateIndexDetails(index_map[index_name], data)
+        #####
+    bank_nifty_fut_data = get_futures_expiry_json(name, instrumenttype, exch_seg)
+    print(bank_nifty_fut_data)
+    bank_nifty_fut_data_json = {"current_expiry": str(bank_nifty_fut_data["current_expiry"]).upper(),
+                                "next_expiry": str(bank_nifty_fut_data["next_expiry"]).upper(),
+                                INDEX_NAME: 'bank_nifty_fut', "index_token": bank_nifty_fut_data["index_token"],
+                                "qty": bank_nifty_fut_data["lotsize"]}
+
+    updateIndexDetails(bank_nifty_fut_data['index_token'], bank_nifty_fut_data_json)
 
     addLogDetails(INFO, "Expiry Updated")
 
