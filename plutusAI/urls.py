@@ -29,6 +29,7 @@ urlpatterns = [
     path(DASHBOARD, views.getDashboardDetails, name=DASHBOARD),
     path(STOP_WS, views.stop_ws, name=STOP_WS),
     path(START_SCALPER, views.start_scalper, name=START_SCALPER),
+    path(ALL_OPEN_ORDERS, views.getOpenOrders, name=ALL_OPEN_ORDERS),
 
     path(UPDATE_SCALPER, views.update_scalper_values, name=UPDATE_SCALPER),
     path(GET_SCALPER_VALUES, views.get_scalper_values, name=GET_SCALPER_VALUES),

@@ -1118,3 +1118,15 @@ def restart_celery(request):
         return JsonResponse({"success": True, "message": "Celery restarted successfully." ,"task_status":True})
     except Exception as e:
         return JsonResponse({"success": False, "message": f"Failed to restart Celery: {e}"})
+
+@csrf_exempt
+@require_http_methods([GET])
+def getOpenOrders(request):
+    if check_user_session(request):
+        user_email = get_user_email(request)
+        # data = json.loads(request.body)
+        broker = Broker(user_email, INDIAN_INDEX).BrokerObject
+
+        return getOpenOrdersUsingEmail(user_email,broker)
+    else:
+        return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
