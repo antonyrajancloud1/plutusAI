@@ -1201,4 +1201,4 @@ def getOpenOrdersUsingEmail(user_email,broker):
         for future in as_completed(futures):
             orders_with_ltp.append(future.result())
 
-    return JsonResponse(orders_with_ltp, safe=False)
+    return JsonResponse({OPEN_ORDERS:orders_with_ltp}, safe=False)
