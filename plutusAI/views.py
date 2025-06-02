@@ -663,7 +663,19 @@ def reGenerateAccessToken(request):
     else:
         return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
 
-
+@csrf_exempt
+@require_http_methods([GET])
+def checkBrokerTokenStatus(request):
+    if check_user_session(request):
+        user_email = get_user_email(request)
+        broker = Broker(user_email, INDIAN_INDEX).BrokerObject
+        profile_details = broker.checkProfile()
+        if profile_details[MESSAGE]=="SUCCESS":
+            return JsonResponse({STATUS: SUCCESS, MESSAGE: "token_is_valid",TASK_STATUS:	True })
+        else:
+            return JsonResponse({STATUS: FAILED, MESSAGE: profile_details["errorcode"], TASK_STATUS: False})
+    else:
+        return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
 @csrf_exempt
 @require_http_methods([GET])
 def getAllManualOrderDetails(request):

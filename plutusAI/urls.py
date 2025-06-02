@@ -36,6 +36,7 @@ urlpatterns = [
     path(ADMIN_CONSOLE, views.admin_console, name=ADMIN_CONSOLE),
     path(CHECK_TASK_STATUS, views.check_task_status, name=CHECK_TASK_STATUS),
     path(REGENERATE_TOKEN, views.reGenerateAccessToken, name=REGENERATE_TOKEN),
+    path(CHECK_BROKER_STATUS, views.checkBrokerTokenStatus, name=CHECK_BROKER_STATUS),
 
     path(BUY_MANUAL, views.buy_manual_order, name=BUY_MANUAL),
     path(MANUAL_DETAILS, views.getAllManualOrderDetails, name=MANUAL_DETAILS),
