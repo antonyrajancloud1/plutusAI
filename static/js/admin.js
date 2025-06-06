@@ -10,6 +10,7 @@ const statusDot = document.getElementById("celery-status-dot");
 const statusText = document.getElementById("celery-status-text");
 const restartCeleryBtn = document.getElementById("restartCelery");
 const stopCeleryBtn = document.getElementById("stopCelery");
+const apiBanner = document.getElementById('apiBanner');
 
 // Function to make an API call and update status
 function makeAPICall(method, api_url, payload_data) {
@@ -21,8 +22,10 @@ function makeAPICall(method, api_url, payload_data) {
     fetch(api_url, options)
         .then(response => response.json())
         .then(data => {
-            statusDiv.textContent = data.message || 'Action completed successfully!';
-            statusDiv.className = data.task_status ? 'status true' : 'status false';
+//            statusDiv.textContent = data.message || 'Action completed successfully!';
+//            statusDiv.className = data.task_status ? 'status true' : 'status false';
+        alert(data.message || 'Action completed successfully!');
+
         })
         .catch(error => {
             console.error('Error making API call:', error);
@@ -39,7 +42,7 @@ stopWSButton.addEventListener("click", () => {
     makeAPICall('POST', 'stop_ws', { ws_type: wsTypeInput.value });
 });
 reGenerateTokenButton.addEventListener("click", () => {
-    makeAPICall('POST', 'regenrate_token', null);
+    makeAPICall('POST', 'regenerate_token', null);
 });
 updateExpiryButton.addEventListener("click", () => {
     const expiryDetails = {
@@ -121,7 +124,8 @@ stopCeleryBtn.addEventListener("click", async () => {
     fetchCeleryStatus();
 });
 
+
 // Initial data fetch
 fetchIndexData();
 fetchCeleryStatus();
-setInterval(fetchCeleryStatus, 10000);
+// setInterval(fetchCeleryStatus, 10000);

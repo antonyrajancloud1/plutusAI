@@ -1,50 +1,123 @@
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 50px;
-        }
-        .container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 900px;
-            width: 100%;
-            margin-bottom: 20px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #007BFF;
-            color: white;
-        }
-        .status {
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        .status.true {
-            background-color: #28a745; /* Green for success */
-            color: white;
-        }
-        .status.false {
-            background-color: #dc3545; /* Red for failure */
-            color: white;
-        }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0b0c28;
+  color: #d4d4d4;
+}
+
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  color: #00bfff;
+}
+
+section {
+  margin-bottom: 30px;
+  padding: 15px;
+  background: #1b1e3c;
+  border-radius: 8px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  border-radius: 4px;
+  background: #2c2f4d;
+  color: #d4d4d4;
+}
+
+button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button.start { background: #00a651; color: #fff; }
+button.stop { background: #d9534f; color: #fff; }
+button.regenerate { background: #f0ad4e; color: #000; }
+button.update { background: #5bc0de; color: #000; }
+button#add-user-btn { background: #007bff; color: #fff; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #2c2f4d;
+  font-size: 14px;
+}
+
+table th,
+table td {
+  padding: 10px;
+  border: 1px solid #3b3f5c;
+  text-align: center;
+}
+
+.celery-status .stopped { color: #d9534f; }
+.celery-status .running { color: #00a651; }
+
+button.restart { background: #00a651; color: #fff; }
+button.stop-celery { background: #d9534f; color: #fff; }
+
+/* ✅ Responsive design for mobile view */
+@media (max-width: 768px) {
+  .row {
+    flex-direction: column;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  button {
+    width: 100%;
+  }
+
+  table, thead, tbody, th, td, tr {
+    display: block;
+    width: 100%;
+  }
+
+  table thead {
+    display: none;
+  }
+
+  table tr {
+    margin-bottom: 15px;
+    border-bottom: 2px solid #3b3f5c;
+    display: flex;
+    flex-direction: column;
+    background: #2c2f4d;
+    border-radius: 6px;
+    padding: 10px;
+  }
+
+  table td {
+    text-align: right;
+    position: relative;
+    padding-left: 50%;
+  }
+
+  table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 10px;
+    font-weight: bold;
+    text-align: left;
+  }
 .status-dot {
     height: 10px;
     width: 10px;
@@ -58,9 +131,34 @@
 .status-dot.disconnected {
     background-color: red;
 }
-.celery-status-section {
-    margin-top: 10px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
+
+.api-banner {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 90%;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  z-index: 9999;
+  opacity: 1;
+  border-radius: 6px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  transition: opacity 0.5s ease-in-out;
+}
+
+
+.api-banner.success {
+  background-color: #28a745;
+  color: white;
+}
+
+.api-banner.failed {
+  background-color: #dc3545;
+  color: white;
+}
+
+
 }
