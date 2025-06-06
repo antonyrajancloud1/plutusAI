@@ -2,68 +2,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Admin Console Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Console Dashboard</title>
 </head>
 <body>
-  <div class="container">
+    <div id="bannerMessage" class="banner"></div> <div class="container">
+        <h1>Admin Console Dashboard</h1>
 
-    <h1>Admin Console Dashboard</h1>
+        <div class="card">
+            <h2>WebSocket Control</h2>
+            <div class="websocket-control">
+                <input type="text" placeholder="1 for candle Data 2 for HTTP Data" id="ws-input">
+                <button class="btn btn-green" id="startWS">▶ Start WebSocket</button>
+                <button class="btn btn-red" id="stopWS">■ Stop WebSocket</button>
+                <button class="btn btn-orange" id="regenerateToken">Regenerate Token</button>
+                <button class="btn btn-blue" id="updateExpiry">↻ Update Expiry</button>
+            </div>
+        </div>
 
+        <div class="card">
+            <h2>Add New User</h2>
+            <div class="add-user">
+                <input type="email" id="email" placeholder="user@example.com">
+                <input type="text" id="name" placeholder="Name">
+                <input type="password" id="password" placeholder="Password">
+                <button class="btn btn-blue add-btn"  >Add User</button>
+            </div>
+        </div>
 
-    <!-- WebSocket Control -->
-    <section class="control-panel">
-      <h2>WebSocket Control</h2>
-      <div class="row">
-        <input type="text" placeholder="1 for candleData 2 for HTTP Data" id="ws-input" />
-        <button class="start" id="startWS">▶ Start WebSocket</button>
-        <button class="stop" id="stopWS">■ Stop WebSocket</button>
-        <button class="regenerate" id="regenerateToken">🔑 Regenerate Token</button>
-        <button class="update" id="updateExpiry">⟳ Update Expiry</button>
-          <div class="status" id="ws-status"></div>
+        <div class="card">
+            <h2>Index Data</h2>
+            <div class="table-responsive">
+                <table id="indexTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Index Name</th>
+                            <th>Group</th>
+                            <th>Token</th>
+                            <th>LTP</th>
+                            <th>Last Updated</th>
+                            <th>Qty</th>
+                            <th>Current Expiry</th>
+                            <th>Next Expiry</th>
+                        </tr>
+                    </thead>
+                    <tbody id="indexDataTableBody">
+                        </tbody>
+                </table>
+            </div>
+            <p id="loadingMessage" style="text-align: center; margin-top: 15px; color: #bb86fc;">Loading Index Data...</p>
+        </div>
 
+        <div class="card">
+            <h2>Celery Worker Status: <span class="status-stopped" id="celery-status-text"> Stopped</span></h2>
+            <div class="celery-control">
+                <button class="btn btn-green" id="restartCelery">Restart Celery</button>
+                <button class="btn btn-red" id="stopCelery">Stop Celery</button>
+                            <span id="celery-status-dot" class="status-dot disconnected"></span>
 
-      </div>
-    </section>
+            </div>
+        </div>
+    </div>
 
-    <!-- Add New User -->
-    <section class="add-user">
-      <h2>Add New User</h2>
-      <input type="email" placeholder="user@example.com" id="email" />
-      <input type="text" placeholder="Name" id="name" />
-      <input type="password" placeholder="Password" id="password" />
-      <button id="add-user-btn" class="add-btn">Add User</button>
-    </section>
-
-    <!-- Index Data -->
-    <section class="index-data">
-      <h2>Index Data</h2>
-      <table id="indexTable">
-        <thead>
-          <tr>
-            <th>ID</th><th>Index Name</th><th>Group</th><th>Token</th><th>LTP</th><th>Last Updated</th><th>Qty</th><th>Current Expiry</th><th>Next Expiry</th>
-          </tr>
-        </thead>
-        <tbody id="index-table-body">
-          <!-- Rows dynamically populated -->
-        </tbody>
-      </table>
-    </section>
-
-    <!-- Celery Worker Status -->
-    <section class="celery-status">
-        <span id="celery-status-dot" class="status-dot disconnected"></span>
-      <h2>Celery Worker Status: <span id="celery-status-text" class="stopped">Stopped</span></h2>
-      <button class="restart" id="restartCelery">Restart Celery</button>
-      <button class="stop-celery" id="stopCelery">Stop Celery</button>
-    </section>
-
-  </div>
-
-  <script src="{% static 'js/admin.js'%}" type="text/javascript"></script>
+    <script src="{% static 'js/admin.js'%}" type="text/javascript"></script>
 
     <link rel="stylesheet" href="{% static 'css/admin.css'%}">
 </body>
 </html>
-
