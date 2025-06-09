@@ -204,7 +204,21 @@ table tr:hover {
     color: #f44336; /* Red for stopped status */
     font-weight: bold;
 }
+/* New CSS for expiry status */
+.expired-row {
+    background-color: rgba(244, 67, 54, 0.2); /* Light red background for expired rows */
+}
 
+.expired-text {
+    color: #f44336; /* Red text for expired values */
+    font-weight: bold;
+}
+
+.current-text {
+    color: #4CAF50; /* Green text for current values */
+    font-weight: bold;
+}
+}
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .websocket-control,

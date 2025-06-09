@@ -100,26 +100,142 @@ document.querySelector(".add-btn").addEventListener("click", () => {
     makeAPICall('POST', 'add_user', userData);
 });
 
+//// Fetch Index Data
+//async function fetchIndexData() {
+//    try {
+//        const response = await fetch('get_index_data');
+//        const data = await response.json();
+//        if (data.status === "success") {
+//            populateTable(data.message.index_data);
+//            loadingMessage.style.display = 'none';
+//        }
+//    } catch (error) {
+//        console.error("Error fetching index data:", error);
+//    }
+//}
+//
+//// Populate Index Table
+//function populateTable(indexData) {
+//    const tableBody = document.getElementById("indexTable").querySelector("tbody");
+//    tableBody.innerHTML = "";
+//    indexData.forEach(item => {
+//        const row = `<tr>
+//            <td>${item.id}</td>
+//            <td>${item.index_name}</td>
+//            <td>${item.index_group}</td>
+//            <td>${item.index_token}</td>
+//            <td>${item.ltp}</td>
+//            <td>${item.last_updated_time}</td>
+//            <td>${item.qty}</td>
+//            <td>${item.current_expiry}</td>
+//            <td>${item.next_expiry}</td>
+//        </tr>`;
+//        tableBody.innerHTML += row;
+//    });
+//}
+// Assume this is at the top of your script.js or within your DOMContentLoaded listener
+
+// Helper for parsing DD-Mon-YYYY format reliably
+// This function needs to be accessible within populateTable
+const parseDDMonYYYY = (dateString) => {
+    if (!dateString) return null; // Handle cases where dateString might be empty or null
+    const parts = dateString.split('-');
+    if (parts.length !== 3) return null; // Basic validation
+
+    const day = parseInt(parts[0], 10);
+    const monthNames = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+    const month = monthNames.indexOf(parts[1]);
+    const year = parseInt(parts[2], 10);
+
+    // Basic validation for parsed values
+    if (isNaN(day) || isNaN(month) || isNaN(year) || month === -1) {
+        return null;
+    }
+
+    const date = new Date(year, month, day);
+    date.setHours(0, 0, 0, 0); // Normalize to start of day
+    return date;
+};
+
+
 // Fetch Index Data
 async function fetchIndexData() {
+    // Assuming loadingMessage is defined globally or passed into this scope
+    const loadingMessage = document.getElementById('loadingMessage'); // Ensure this element exists in your HTML
+    if (loadingMessage) {
+        loadingMessage.style.display = 'block'; // Show loading message before fetch
+        loadingMessage.textContent = 'Loading Index Data...'; // Reset text
+        loadingMessage.style.color = '#bb86fc'; // Reset color
+    }
+
     try {
-        const response = await fetch('get_index_data');
+        const response = await fetch('get_index_data'); // This will hit your Flask/backend endpoint
         const data = await response.json();
+
         if (data.status === "success") {
             populateTable(data.message.index_data);
-            loadingMessage.style.display = 'none';
+            if (loadingMessage) {
+                loadingMessage.style.display = 'none'; // Hide loading message on success
+            }
+            // Assuming showBanner is defined globally or accessible here
+            showBanner('Index data loaded successfully!', 'success');
+        } else {
+            console.error("Error fetching index data:", data.message);
+            if (loadingMessage) {
+                loadingMessage.textContent = `Failed to load data: ${data.message}`;
+                loadingMessage.style.color = '#f44336';
+            }
+            showBanner(`Failed to load index data: ${data.message}`, 'error');
         }
     } catch (error) {
         console.error("Error fetching index data:", error);
+        if (loadingMessage) {
+            loadingMessage.textContent = 'Failed to load data. Please check network.';
+            loadingMessage.style.color = '#f44336';
+        }
+        // Assuming showBanner is defined globally or accessible here
+        showBanner('Failed to load index data!', 'error');
     }
 }
 
 // Populate Index Table
 function populateTable(indexData) {
-    const tableBody = document.getElementById("indexTable").querySelector("tbody");
-    tableBody.innerHTML = "";
+    const tableBody = document.getElementById("indexDataTableBody"); // Ensure this ID matches your HTML
+    if (!tableBody) {
+        console.error("Error: Table body element with ID 'indexDataTableBody' not found.");
+        return;
+    }
+    tableBody.innerHTML = ""; // Clear existing rows
+
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0); // Normalize current date to the start of the day
+
     indexData.forEach(item => {
-        const row = `<tr>
+    console.log(item.current_expiry);
+    console.log(item.current_expiry.toLowerCase());
+        const currentExpiryDate = parseDDMonYYYY(item.current_expiry.toLowerCase());
+        const nextExpiryDate = parseDDMonYYYY(item.next_expiry.toLowerCase());
+
+        let rowClass = '';
+        let currentExpiryClass = '';
+        let nextExpiryClass = '';
+
+        if (currentExpiryDate && currentExpiryDate < currentDate) {
+            rowClass = 'expired-row'; // Apply to the whole row
+            currentExpiryClass = 'expired-text'; // Apply to current expiry cell
+        } else if (currentExpiryDate) { // If not expired and date is valid
+            currentExpiryClass = 'current-text'; // Apply green to current expiry cell
+        }
+
+        // Check next expiry independently for its text color
+        if (nextExpiryDate && nextExpiryDate < currentDate) {
+            nextExpiryClass = 'expired-text';
+        } else if (nextExpiryDate) { // If not expired and date is valid
+            nextExpiryClass = 'current-text';
+        }
+
+
+        const row = `<tr class="${rowClass}">
             <td>${item.id}</td>
             <td>${item.index_name}</td>
             <td>${item.index_group}</td>
@@ -127,13 +243,18 @@ function populateTable(indexData) {
             <td>${item.ltp}</td>
             <td>${item.last_updated_time}</td>
             <td>${item.qty}</td>
-            <td>${item.current_expiry}</td>
-            <td>${item.next_expiry}</td>
+            <td class="${currentExpiryClass}">${item.current_expiry}</td>
+            <td class="${nextExpiryClass}">${item.next_expiry}</td>
         </tr>`;
         tableBody.innerHTML += row;
     });
 }
 
+// You would call fetchIndexData when your page loads, e.g., in DOMContentLoaded
+// document.addEventListener('DOMContentLoaded', () => {
+//     fetchIndexData();
+//     // ... other event listeners and setup
+// });
 // Celery Status Monitoring
 async function fetchCeleryStatus() {
     try {
