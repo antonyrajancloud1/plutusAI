@@ -178,7 +178,7 @@ async function fetchIndexData() {
                 loadingMessage.style.display = 'none'; // Hide loading message on success
             }
             // Assuming showBanner is defined globally or accessible here
-            showBanner('Index data loaded successfully!', 'success');
+            //showBanner('Index data loaded successfully!', 'success');
         } else {
             console.error("Error fetching index data:", data.message);
             if (loadingMessage) {
