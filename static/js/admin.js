@@ -211,8 +211,6 @@ function populateTable(indexData) {
     currentDate.setHours(0, 0, 0, 0); // Normalize current date to the start of the day
 
     indexData.forEach(item => {
-    console.log(item.current_expiry);
-    console.log(item.current_expiry.toLowerCase());
         const currentExpiryDate = parseDDMonYYYY(item.current_expiry.toLowerCase());
         const nextExpiryDate = parseDDMonYYYY(item.next_expiry.toLowerCase());
 
