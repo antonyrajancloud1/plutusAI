@@ -1,0 +1,6 @@
+{
+  "name": "Madara Dashboard",
+  "description": "A dashboard to display trading strategy performance summaries, including full and current day metrics.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}

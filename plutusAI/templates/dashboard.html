@@ -1,42 +1,84 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Plutus Dashboard</title>
-    <link rel="stylesheet" href="{% static 'css/dashboard.css'%}">
+  <title>Madara Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class', // Enable class-based dark mode
+      theme: {
+        extend: {
+          colors: {
+            'primary': '#3B82F6', // Blue-500
+            'primary-dark': '#2563EB', // Blue-600
+            'secondary': '#10B981', // Emerald-500
+            'danger': '#EF4444', // Red-500
+            'warning': '#F59E0B', // Amber-500
+            'light-bg': '#F3F4F6', // Gray-100
+            'dark-text': '#1F2937', // Gray-800
+            'medium-text': '#4B5563', // Gray-600
+            'light-text': '#F9FAFB', // Gray-50
 
-
+            // Dark Theme Colors
+            'dark-mode-bg': '#111827', // Gray-900 (Page background)
+            'dark-mode-card': '#1F2937', // Gray-800 (Card/modal backgrounds)
+            'dark-mode-border': '#374151', // Gray-700 (Borders)
+            'dark-mode-text-primary': '#F3F4F6', // Gray-100 (Primary text)
+            'dark-mode-text-secondary': '#9CA3AF', // Gray-400 (Secondary text)
+            'dark-mode-primary-accent': '#60A5FA', // Blue-400 (Lighter primary for dark)
+            'dark-mode-primary-accent-dark': '#3B82F6', // Blue-500
+            'dark-mode-input-bg': '#374151',      // Gray-700
+            'dark-mode-input-border': '#4B5563',  // Gray-600
+            'dark-mode-hover-bg': '#374151',    // Gray-700
+            'dark-mode-hover-text': '#E5E7EB',  // Gray-200
+            'dark-mode-table-header': '#374151', // Gray-700
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      /* bg-light-bg will be handled by App component for theme toggling */
+    }
+    /* Basic scrollbar styling for dark mode */
+    .dark ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    .dark ::-webkit-scrollbar-track {
+      background: #1f2937; /* dark-mode-card */
+    }
+    .dark ::-webkit-scrollbar-thumb {
+      background-color: #4b5563; /* medium-text or dark-mode-input-border */
+      border-radius: 4px;
+      border: 2px solid #1f2937; /* dark-mode-card */
+    }
+    .dark ::-webkit-scrollbar-thumb:hover {
+      background-color: #6b7280; /* gray-500 */
+    }
+  </style>
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.1.0/",
+    "react": "https://esm.sh/react@^19.1.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.1.0/"
+  }
+}
+</script>
 </head>
-
 <body>
-  <div class="container">
-    <header>
-      <div class="logo">PLUTUS</div>
-      <div class="welcome"><div id ="userName"></div></div>
-      <div class="status" id = "today_orders">Today's Orders: 10</div>
-      <div class="status connected">Status: Connected</div>
-      <div class="logout">Logout</div>
-    </header>
-    <aside>
-      <div class="nav-item active" id="dashboard">Dashboard</div>
-      <div class="nav-item" id="order">Order</div>
-      <div class="nav-item" id="webhook">Webhook</div>
-      <div class="nav-item">Manual Orders</div>
-      <div class="nav-item">Strategy</div>
-      <div class="nav-item">Broker</div>
-      <div class="nav-item">Position</div>
-      <div class="nav-item">Help</div>
-    </aside>
-    <main>
+  <div id="root"></div>
+  <script type="module" src="{% static 'js/ui/index.js'%}" type="text/javascript"></script>
 
-
-    </main>
-  </div>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
- <script src="{% static 'js/dashboard.js'%}" type="text/javascript"></script></body>
-
-
+</body>
 </html>
