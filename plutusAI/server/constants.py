@@ -205,7 +205,7 @@ STOP_LOSS = "stop_loss"
 CURRENT_PREMIUM = "current_premium"
 UNIQUE_ORDER_ID = "unique_order_id"
 ORDER_ID = "order_id"
-
+TIMEFRAME="timeframe"
 ### OTHER ###
 INFO = 'info'
 ERROR = 'error'

@@ -122,5 +122,7 @@ Resource = {
     regenerate_token        :   "Regenerate Token",
     token_regenerated       :   "Token Regenerated Successfully",
     total_orders_today      :   "Total Orders",
-    update_manual_orders    :   "Update Orders"
+    update_manual_orders    :   "Update Orders",
+    producttype             :   "Product Type",
+    timeframe	            :    "Time Frame"
 }   

@@ -10,6 +10,10 @@ def triggerOrder(user_email, user_index_data, strategy, order_type):
         index_name = user_index_data.get(INDEX_NAME)
         strike = int(user_index_data.get(STRIKE, 0))
         qty = int(user_index_data.get(LOTS, 0))
+        on_candle_close = bool(user_index_data.get(ON_CANDLE_CLOSE))
+        product_type = user_index_data.get(PRODUCT_TYPE)
+        timeframe = user_index_data.get(TIMEFRAME)
+
 
         index_data = IndexDetails.objects.filter(index_name=index_name).values().first()
         if not index_data:
@@ -21,7 +25,6 @@ def triggerOrder(user_email, user_index_data, strategy, order_type):
         user_qty = qty * index_qty
         broker = Broker(user_email, INDIAN_INDEX).BrokerObject
         atm = broker.getCurrentAtm(index_name)
-
         # Exit order handling
         user_data = OrderBook.objects.filter(
             user_id=user_email, strategy=strategy, exit_price=None
@@ -54,11 +57,13 @@ def triggerOrder(user_email, user_index_data, strategy, order_type):
                 addLogDetails(INFO,f"{order_type.capitalize()} order already exists")
                 return JsonResponse({STATUS: SUCCESS, MESSAGE: "Message Exists" , TASK_STATUS: True})
 
+
+
+
         # Determine option type and strike logic
         option_type = CE if order_type.upper() == BUY else PE
         strike_price = atm - strike if order_type.upper() == BUY else atm + strike
         trading_symbol = f"{getTradingSymbol(index_name)}{strike_price}{option_type}"
-
         # Fetch current premium details
         option_details = broker.getCurrentPremiumDetails(NFO, trading_symbol)
         ltp = broker.getLtpForPremium(option_details)
@@ -66,41 +71,76 @@ def triggerOrder(user_email, user_index_data, strategy, order_type):
         if broker.is_demo_enabled:
             option_buy_price = ltp
         else:
-            # Get Candle Data
+            if on_candle_close:
+                TIMEFRAME_TO_MINUTES = {
+                    "ONE_MINUTE": 1,
+                    "THREE_MINUTE": 3,
+                    "FIVE_MINUTE": 5,
+                    "TEN_MINUTE": 10,
+                    "FIFTEEN_MINUTE": 15,
+                    "THIRTY_MINUTE": 30,
+                    "ONE_HOUR": 60,
+                    "ONE_DAY": 1440
+                }
+                minutes = TIMEFRAME_TO_MINUTES.get(timeframe, 6)
+                from_time = str(get_previous_n_minute_start(get_current_minute_start(), False, minutes+1))
+                to_time = str(get_next_minute_start_ms(get_current_minute_start(), False))
+                addLogDetails(INFO, "Get Candle Details")
+                addLogDetails(INFO, f"from_time: {from_time}")
+                addLogDetails(INFO, f"to_time: {to_time}")
+                try:
+                    candle_data_df = broker.getCandleData(NFO,option_details[SYMBOL_TOKEN],from_time,to_time,timeframe)
+                    if not candle_data_df.empty and HIGH in candle_data_df.columns:
+                        high_price = float(candle_data_df.loc[0, HIGH])
+                        addLogDetails(INFO, f"High Price: {high_price}")
 
-            # from_time = str(get_previous_minute_start(get_current_minute_start(), False))
-            from_time = str(get_previous_n_minute_start(get_current_minute_start(), False,6))
-            to_time = str(get_next_minute_start_ms(get_current_minute_start(), False))
-            # print(from_time,to_time)
-            # from_time = "2025-04-03 14:05"
-            # to_time="2025-04-03 14:11"
-            addLogDetails(INFO,"Get Candle Details")
-            addLogDetails(INFO,f"from_time {str(from_time)}")
-            addLogDetails(INFO, f"to_time {str(to_time)}")
-            candle_data_df = broker.getCandleData(NFO, option_details[SYMBOL_TOKEN], from_time, to_time, "FIVE_MINUTE")
-            high_price = float(candle_data_df.loc[0, HIGH])
-            # print(candle_data_df)
+                        if float(ltp) < high_price:
+                            trigger = round(high_price * 1.001, 1)  # slight buffer
+                            order_details = {
+                                VARIETY: STOPLOSS, EXCHANGE: NFO, TRADING_SYMBOL: trading_symbol,
+                                SYMBOL_TOKEN: broker.getTokenForSymbol(trading_symbol),
+                                TRANSACTION_TYPE: BUY,
+                                ORDER_TYPE: ORDER_TYPE_SL, PRODUCT_TYPE: product_type,
+                                DURATION: DAY, QUANTITY: user_qty,
+                                TRIGGER_PRICE: trigger, PRICE: trigger
+                            }
+                        else:
+                            order_details = {
+                                VARIETY: NORMAL, EXCHANGE: NFO, TRADING_SYMBOL: trading_symbol,
+                                SYMBOL_TOKEN: broker.getTokenForSymbol(trading_symbol),
+                                TRANSACTION_TYPE: BUY,
+                                ORDER_TYPE: MARKET, PRODUCT_TYPE: product_type,
+                                DURATION: DAY, QUANTITY: user_qty
+                            }
+                    else:
+                        addLogDetails(ERROR, "Candle data missing or HIGH column not found. Using market order.")
+                        order_details = {
+                            VARIETY: NORMAL, EXCHANGE: NFO, TRADING_SYMBOL: trading_symbol,
+                            SYMBOL_TOKEN: broker.getTokenForSymbol(trading_symbol),
+                            TRANSACTION_TYPE: BUY,
+                            ORDER_TYPE: MARKET, PRODUCT_TYPE: product_type,
+                            DURATION: DAY, QUANTITY: user_qty
+                        }
 
-            addLogDetails(INFO,high_price)
-            # order_details=None
-            if high_price is None or float(ltp) > high_price:
+                except Exception as e:
+                    addLogDetails(ERROR, f"Error fetching candle data: {str(e)}. Using market order.")
+                    order_details = {
+                        VARIETY: NORMAL, EXCHANGE: NFO, TRADING_SYMBOL: trading_symbol,
+                        SYMBOL_TOKEN: broker.getTokenForSymbol(trading_symbol),
+                        TRANSACTION_TYPE: BUY,
+                        ORDER_TYPE: MARKET, PRODUCT_TYPE: product_type,
+                        DURATION: DAY, QUANTITY: user_qty
+                    }
 
-                ## Option Buying ##
+            else:
                 order_details = {
                     VARIETY: NORMAL, EXCHANGE: NFO, TRADING_SYMBOL: trading_symbol,
                     SYMBOL_TOKEN: broker.getTokenForSymbol(trading_symbol),
-                    TRANSACTION_TYPE: BUY ,
-                    ORDER_TYPE: MARKET, PRODUCT_TYPE: INTRADAY,
+                    TRANSACTION_TYPE: BUY,
+                    ORDER_TYPE: MARKET, PRODUCT_TYPE: product_type,
                     DURATION: DAY, QUANTITY: user_qty
                 }
-            else:
-                order_details= {
-                    VARIETY: STOPLOSS, EXCHANGE: NFO, TRADING_SYMBOL: trading_symbol,
-                    SYMBOL_TOKEN: broker.getTokenForSymbol(trading_symbol),
-                    TRANSACTION_TYPE: BUY,
-                    ORDER_TYPE: ORDER_TYPE_SL, PRODUCT_TYPE: INTRADAY,
-                    DURATION: DAY, QUANTITY: user_qty,TRIGGER_PRICE:high_price,PRICE:high_price
-                }
+
             addLogDetails(INFO, f"Placing {order_type.lower()} order for {trading_symbol}")
             order_response = broker.placeOrder(order_details)
             addLogDetails(INFO, f"{order_type.capitalize()} order response: {order_response}")
@@ -147,6 +187,9 @@ def exitOrderWebhook(strategy, data, user_email):
             addLogDetails(INFO, f"No Pending orders for strategy {strategy}")
             return JsonResponse({STATUS: FAILED, MESSAGE: "No pending Messages", TASK_STATUS: False})
 
+        index_name = data.get(INDEX_NAME)
+        user_manual_details = ManualOrders.objects.filter(user_id=user_email, index_name=index_name)
+        product_type = user_manual_details.values().first()[PRODUCT_TYPE]
         order_info = user_data.values().first()
         entry_price = order_info.get(ENTRY_PRICE)
         qty = order_info.get(QTY)
@@ -179,7 +222,7 @@ def exitOrderWebhook(strategy, data, user_email):
                 order_details = {
                     VARIETY: NORMAL, EXCHANGE: NFO, TRADING_SYMBOL: trading_symbol,
                     SYMBOL_TOKEN: broker.getTokenForSymbol(trading_symbol),
-                    TRANSACTION_TYPE: SELL, ORDER_TYPE: MARKET, PRODUCT_TYPE: INTRADAY,
+                    TRANSACTION_TYPE: SELL, ORDER_TYPE: MARKET, PRODUCT_TYPE: product_type,
                     DURATION: DAY, QUANTITY: qty
                 }
 
@@ -213,8 +256,12 @@ def exitOrderWebhook(strategy, data, user_email):
 def modifyToMarketOrder(user_email, user_index_data, strategy, order_type):
     try:
         broker = Broker(user_email, INDIAN_INDEX).BrokerObject
+        index_name = user_index_data.get(INDEX_NAME)
+        user_manual_details = ManualOrders.objects.filter(user_id=user_email, index_name=index_name)
+        product_type = user_manual_details.values().first()[PRODUCT_TYPE]
+
         if not  broker.is_demo_enabled:
-            index_name = user_index_data.get(INDEX_NAME)
+
             user_data = OrderBook.objects.filter(
                 user_id=user_email, strategy=strategy, exit_price=None
             )
@@ -255,7 +302,7 @@ def modifyToMarketOrder(user_email, user_index_data, strategy, order_type):
             order_details = {
                 VARIETY: NORMAL, EXCHANGE: NFO, TRADING_SYMBOL: trading_symbol,
                 SYMBOL_TOKEN: broker.getTokenForSymbol(trading_symbol),
-                TRANSACTION_TYPE: BUY, ORDER_TYPE: MARKET, PRODUCT_TYPE: INTRADAY,
+                TRANSACTION_TYPE: BUY, ORDER_TYPE: MARKET, PRODUCT_TYPE: product_type,
                 DURATION: DAY, QUANTITY: user_qty
             }
 

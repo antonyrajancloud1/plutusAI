@@ -1,3 +1,6 @@
+import json
+import os
+from datetime import datetime, timedelta
 from SmartApi import SmartConnect
 import pandas as pd
 import pyotp
@@ -59,11 +62,35 @@ class AngelOneBroker:
             self.headers = {"Authorization": "Bearer " + self.auth_token}
             self.session = requests.session()
             self.root_url = 'https://apiconnect.angelbroking.com/rest/secure/angelbroking/order/v1'
+            # self.margin_url = 'https://margincalculator.angelbroking.com/OpenAPI_File/files/OpenAPIScripMaster.json'
+            # self.df = pd.DataFrame.from_dict(requests.get(self.margin_url).json())
             self.margin_url = 'https://margincalculator.angelbroking.com/OpenAPI_File/files/OpenAPIScripMaster.json'
-            self.df = pd.DataFrame.from_dict(requests.get(self.margin_url).json())
+            self.cache_file = 'scrip_master.json'
+            self.df = self.load_scrip_master()
             addLogDetails(INFO, "initisuccess for angleone")
         except Exception as e:
             addLogDetails(ERROR, str(e))
+
+    def is_today_file(self, file_path):
+        """Returns True if the file was modified today (date only)."""
+        file_mod_date = datetime.fromtimestamp(os.path.getmtime(file_path)).date()
+        today = datetime.today().date()
+        return file_mod_date == today
+
+    def load_scrip_master(self):
+        # If file missing or not from yesterday, re-download
+        if not os.path.exists(self.cache_file) or not self.is_today_file(self.cache_file):
+            try:
+                data = requests.get(self.margin_url).json()
+                with open(self.cache_file, 'w') as f:
+                    json.dump(data, f)
+            except Exception as e:
+                addLogDetails(ERROR,"Failed to download or save scrip master: " + str(e))
+
+        # Load from local file
+        with open(self.cache_file, 'r') as f:
+            data = json.load(f)
+        return pd.DataFrame.from_dict(data)
 
     def setUserTokenData(self):
         self.user_token_data_query = UserAuthTokens.objects.filter(user_id=self.user_id)
@@ -88,7 +115,6 @@ class AngelOneBroker:
         try:
             df = self.df
             df = df[(df.symbol == symbol)]
-            # print(df)
             token = df.iloc[0]['token']
             return token
         except Exception as e:
@@ -96,24 +122,20 @@ class AngelOneBroker:
 
     def getCurrentAtm(self, index_name):
         try:
-            # print(index_name)
             match index_name:
                 case "nifty":
                     indexValue = 50
                     index_ltp = self.smartApi.ltpData("NSE", index_name, "99926000")["data"]['ltp']
-                    # print(index_ltp)
                     index_spot = indexValue * round(index_ltp / indexValue)
                     return index_spot
                 case "bank_nifty":
                     indexValue = 100
                     index_ltp = self.smartApi.ltpData("NSE", index_name, "99926009")["data"]['ltp']
-                    # print(index_ltp)
                     index_spot = indexValue * round(index_ltp / indexValue)
                     return index_spot
                 case "fin_nifty":
                     indexValue = 50
                     index_ltp = self.smartApi.ltpData("NSE", index_name, "99926037")["data"]['ltp']
-                    # print(index_ltp)
                     index_spot = indexValue * round(index_ltp / indexValue)
                     return index_spot
         except Exception as e:
@@ -125,7 +147,6 @@ class AngelOneBroker:
 
     def getOrderDetails(self, unique_order_id):
         order_details = self.smartApi.individual_order_details(unique_order_id)
-        # print("getOrderDetails")
         addLogDetails(INFO,order_details)
         return order_details['data']
 
@@ -136,14 +157,11 @@ class AngelOneBroker:
 
     def getLtpForPremium(self, optionDetails):
         try:
-            # print(optionDetails)
             ltpInfo = self.smartApi.ltpData(optionDetails[EXCHANGE], optionDetails[TRADING_SYMBOL],
                                             optionDetails[SYMBOL_TOKEN])
             data = str(ltpInfo['data']['ltp'])
-            # print(data)
             return data
         except Exception as e:
-            # print("exception in getltpForPremium")
             addLogDetails(ERROR, "exception in getltpForPremium " + str(e))
             return CONNECTION_ERROR
 
@@ -152,7 +170,6 @@ class AngelOneBroker:
             orderid = self.smartApi.modifyOrder(order_details)
             return orderid
         except Exception as e:
-            # print("exception in modifyOrder")
             addLogDetails(ERROR, "exception in modifyOrder" + str(e))
 
     def cancelOrder(self, order_id,variety):
@@ -160,7 +177,6 @@ class AngelOneBroker:
             orderid = self.smartApi.cancelOrder(order_id,variety)
             return orderid
         except Exception as e:
-            # print("exception in modifyOrder")
             addLogDetails(ERROR, "exception in cancelOrder" + str(e))
 
     def checkIfOrderExists(self, order_details):
@@ -200,12 +216,10 @@ class AngelOneBroker:
                 "fromdate": from_time,
                 "todate": to_time
             }
-            # print(dataParam)
             historic_data = self.smartApi.getCandleData(dataParam)
             candle_data = historic_data["data"]
             if historic_data["message"] == "SUCCESS":
                 df = pd.DataFrame(candle_data, columns=column)
-                # print(df)
                 return df
         except Exception as e:
             addLogDetails(ERROR, "exception in getCandleData" + str(e))

@@ -161,6 +161,20 @@ class UserAuthTokens(models.Model):
 
 
 class ManualOrders(models.Model):
+    PRODUCT_TYPE_CHOICES = [
+        ('INTRADAY', 'INTRADAY'),
+        ('CARRYFORWARD', 'CARRYFORWARD'),
+    ]
+    TIMEFRAME_CHOICES = [
+        ('ONE_MINUTE', 'ONE_MINUTE'),
+        ('THREE_MINUTE', 'THREE_MINUTE'),
+        ('FIVE_MINUTE', 'FIVE_MINUTE'),
+        ('TEN_MINUTE', 'TEN_MINUTE'),
+        ('FIFTEEN_MINUTE', 'FIFTEEN_MINUTE'),
+        ('THIRTY_MINUTE', 'THIRTY_MINUTE'),
+        ('ONE_HOUR', 'ONE_HOUR'),
+        ('ONE_DAY', 'ONE_DAY'),
+    ]
     user_id = models.CharField(max_length=100, default=None)
     index_name = models.CharField(max_length=100, default=None)
     target = models.CharField(max_length=100, default=None)
@@ -173,6 +187,10 @@ class ManualOrders(models.Model):
     order_id = models.CharField(max_length=100, default=None ,blank=True, null=True)
     unique_order_id = models.CharField(max_length=100, default=None,blank=True, null=True)
     current_premium = models.CharField(max_length=100, default=None,blank=True, null=True)
+    on_candle_close = models.BooleanField(default=False)
+    producttype = models.CharField(max_length=20, choices=PRODUCT_TYPE_CHOICES, default='INTRADAY')
+    timeframe = models.CharField(max_length=20, choices=TIMEFRAME_CHOICES, default='FIVE_MINUTE')
+
     def __str__(self):
         return f"{self.user_id} - {self.index_name} - {self.target} - {self.stop_loss} - {self.order_status} - {self.time}"
 
