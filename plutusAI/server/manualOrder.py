@@ -147,7 +147,7 @@ def triggerOrder(user_email, user_index_data, strategy, order_type):
             unique_order_id = order_response.get("data", {}).get("uniqueorderid")
             order_response_details = broker.getOrderDetails(unique_order_id)
             if str(order_details.get(ORDER_TYPE)).__eq__(MARKET):
-                option_buy_price = order_response_details.get("averageprice", ltp)  # Fallback to LTP
+                option_buy_price = order_response_details.get("price", ltp)  # Fallback to LTP
             else:
                 option_buy_price = order_response_details.get("triggerprice", ltp)
             addWebhookOrderDetails(user_email, index_name, strategy,{
@@ -229,7 +229,7 @@ def exitOrderWebhook(strategy, data, user_email):
                 order_response_details = broker.placeOrder(order_details)
                 addLogDetails(INFO, f"Order placed: {order_response_details}")
 
-                option_exit_price = order_response_details.get("averageprice") or ltp
+                option_exit_price = order_response_details.get("price") or ltp
                 exit_data.update({
                     TOTAL: str((float(option_exit_price) - float(entry_price)) * int(qty)),
                     EXIT_PRICE: option_exit_price,
