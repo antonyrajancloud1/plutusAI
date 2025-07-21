@@ -8,7 +8,7 @@ const NavigationBar = ({ activePage, userName, theme }) => {
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
           <div class="flex items-center">
-            <span class="font-bold text-xl text-primary dark:text-dark-mode-primary-accent">Madara</span>
+            <span class="font-bold text-xl text-primary dark:text-dark-mode-primary-accent">Plutuz</span>
           </div>
           
           <div class="hidden md:flex flex-grow items-center justify-center space-x-2 lg:space-x-4">
@@ -19,8 +19,8 @@ const NavigationBar = ({ activePage, userName, theme }) => {
                   data-page="${item.name}"
                   aria-current="${isActive ? 'page' : 'false'}"
                   class="nav-button flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors duration-150 ease-in-out
-                    ${isActive 
-                      ? 'bg-primary text-white dark:bg-dark-mode-primary-accent dark:text-dark-mode-card' 
+                    ${isActive
+                      ? 'bg-primary text-white dark:bg-dark-mode-primary-accent dark:text-dark-mode-card'
                       : 'text-dark-text dark:text-dark-mode-text-secondary hover:bg-gray-100 dark:hover:bg-dark-mode-hover-bg hover:text-primary-dark dark:hover:text-dark-mode-primary-accent'
                     }"
                 >
@@ -47,7 +47,7 @@ const NavigationBar = ({ activePage, userName, theme }) => {
               </div>
             `: ''}
           </div>
-          
+
           <div class="md:hidden ml-2">
             <select
               id="mobile-nav-select"

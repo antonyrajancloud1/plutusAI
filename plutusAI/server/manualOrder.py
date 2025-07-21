@@ -1,7 +1,25 @@
+import threading
+
 from plutusAI.server.base import *
 from plutusAI.server.broker.Broker import Broker
 from plutusAI.server.constants import *
+from threading import Lock
 
+executor = ThreadPoolExecutor(max_workers=150)
+user_locks = {}
+def get_user_lock(user_email, strategy):
+    key = f"{user_email}_{strategy}"
+    if key not in user_locks:
+        user_locks[key] = Lock()
+    return user_locks[key]
+def submit_triggerOrder(user_email, user_index_data, strategy, order_type):
+    # print(f"[{threading.current_thread().name}] Executing submit_triggerOrder")
+    executor.submit(triggerOrder,user_email, user_index_data, strategy, order_type)
+
+def submit_exitOrderWebhook(strategy, data, user_email):
+    executor.submit(exitOrderWebhook,strategy, data, user_email)
+def submit_modifyToMarketOrder(user_email, user_index_data, strategy, order_type):
+    executor.submit(modifyToMarketOrder,user_email, user_index_data, strategy, order_type)
 
 def triggerOrder(user_email, user_index_data, strategy, order_type):
     try:
@@ -18,7 +36,7 @@ def triggerOrder(user_email, user_index_data, strategy, order_type):
         index_data = IndexDetails.objects.filter(index_name=index_name).values().first()
         if not index_data:
             error_msg = f"Index data not found for {index_name}"
-            addLogDetails(ERROR, error_msg)
+            addLogDetails(ERROR, f"{user_email} :: {str(error_msg)}")
             return JsonResponse({STATUS: FAILED, MESSAGE: "error_msg", TASK_STATUS: False})
 
         index_qty = int(index_data.get(QTY, 0))
@@ -48,13 +66,13 @@ def triggerOrder(user_email, user_index_data, strategy, order_type):
                     })
                     user_data.update(**order_info)
                 else:
-                    addLogDetails(INFO, "Sell order")
+                    addLogDetails(INFO, f"{user_email} ::Sell order")
                     exit_data = {INDEX_NAME: index_name,STRATEGY:strategy}
 
                     exitOrderWebhook(strategy, exit_data, user_email)
                 # user_data.update(**order_info)
             else:
-                addLogDetails(INFO,f"{order_type.capitalize()} order already exists")
+                addLogDetails(INFO,f" {user_email}  :: {order_type.capitalize()} order already exists")
                 return JsonResponse({STATUS: SUCCESS, MESSAGE: "Message Exists" , TASK_STATUS: True})
 
 
@@ -67,7 +85,7 @@ def triggerOrder(user_email, user_index_data, strategy, order_type):
         # Fetch current premium details
         option_details = broker.getCurrentPremiumDetails(NFO, trading_symbol)
         ltp = broker.getLtpForPremium(option_details)
-        addLogDetails(INFO,option_details)
+        addLogDetails(INFO,f"{user_email} :: {str(option_details)}")
         if broker.is_demo_enabled:
             option_buy_price = ltp
         else:
@@ -85,14 +103,14 @@ def triggerOrder(user_email, user_index_data, strategy, order_type):
                 minutes = TIMEFRAME_TO_MINUTES.get(timeframe, 6)
                 from_time = str(get_previous_n_minute_start(get_current_minute_start(), False, minutes+1))
                 to_time = str(get_next_minute_start_ms(get_current_minute_start(), False))
-                addLogDetails(INFO, "Get Candle Details")
-                addLogDetails(INFO, f"from_time: {from_time}")
-                addLogDetails(INFO, f"to_time: {to_time}")
+                addLogDetails(INFO, f"{user_email} :: Get Candle Details")
+                addLogDetails(INFO, f"{user_email} :: from_time: {from_time}")
+                addLogDetails(INFO, f"{user_email} :: to_time: {to_time}")
                 try:
                     candle_data_df = broker.getCandleData(NFO,option_details[SYMBOL_TOKEN],from_time,to_time,timeframe)
                     if not candle_data_df.empty and HIGH in candle_data_df.columns:
                         high_price = float(candle_data_df.loc[0, HIGH])
-                        addLogDetails(INFO, f"High Price: {high_price}")
+                        addLogDetails(INFO, f"{user_email} :: High Price: {high_price}")
 
                         if float(ltp) < high_price:
                             trigger = round(high_price * 1.001, 1)  # slight buffer
@@ -113,7 +131,7 @@ def triggerOrder(user_email, user_index_data, strategy, order_type):
                                 DURATION: DAY, QUANTITY: user_qty
                             }
                     else:
-                        addLogDetails(ERROR, "Candle data missing or HIGH column not found. Using market order.")
+                        addLogDetails(ERROR, f"{user_email} :: Candle data missing or HIGH column not found. Using market order.")
                         order_details = {
                             VARIETY: NORMAL, EXCHANGE: NFO, TRADING_SYMBOL: trading_symbol,
                             SYMBOL_TOKEN: broker.getTokenForSymbol(trading_symbol),
@@ -123,7 +141,7 @@ def triggerOrder(user_email, user_index_data, strategy, order_type):
                         }
 
                 except Exception as e:
-                    addLogDetails(ERROR, f"Error fetching candle data: {str(e)}. Using market order.")
+                    addLogDetails(ERROR, f"{user_email} :: Error fetching candle data: {str(e)}. Using market order.")
                     order_details = {
                         VARIETY: NORMAL, EXCHANGE: NFO, TRADING_SYMBOL: trading_symbol,
                         SYMBOL_TOKEN: broker.getTokenForSymbol(trading_symbol),
@@ -141,9 +159,9 @@ def triggerOrder(user_email, user_index_data, strategy, order_type):
                     DURATION: DAY, QUANTITY: user_qty
                 }
 
-            addLogDetails(INFO, f"Placing {order_type.lower()} order for {trading_symbol}")
+            addLogDetails(INFO, f"{user_email} :: Placing {order_type.lower()} order for {trading_symbol}")
             order_response = broker.placeOrder(order_details)
-            addLogDetails(INFO, f"{order_type.capitalize()} order response: {order_response}")
+            addLogDetails(INFO, f"{user_email} :: {order_type.capitalize()} order response: {order_response}")
             unique_order_id = order_response.get("data", {}).get("uniqueorderid")
             order_response_details = broker.getOrderDetails(unique_order_id)
             if str(order_details.get(ORDER_TYPE)).__eq__(MARKET):
@@ -163,13 +181,13 @@ def triggerOrder(user_email, user_index_data, strategy, order_type):
         }
 
         addOrderBookDetails(data, True)
-        addLogDetails(INFO,f"{order_type.capitalize()} order placed successfully")
+        addLogDetails(INFO,f"{user_email} :: {order_type.capitalize()} order placed successfully")
         return JsonResponse(
             {STATUS: SUCCESS, MESSAGE: "Message Exits", TASK_STATUS: True})
 
     except Exception as e:
         error_msg = f"Unexpected error in trigger_order: {str(e)}"
-        addLogDetails(ERROR, error_msg)
+        addLogDetails(ERROR, f"{user_email} :: {str(error_msg)}")
         return JsonResponse({STATUS: FAILED, MESSAGE: "Unexpected error Check logs", TASK_STATUS: False})
 
 
@@ -184,7 +202,7 @@ def exitOrderWebhook(strategy, data, user_email):
             user_id=user_email, strategy=strategy, exit_price=None
         )
         if not user_data.exists():
-            addLogDetails(INFO, f"No Pending orders for strategy {strategy}")
+            addLogDetails(INFO, f"{user_email} :: No Pending orders for strategy {strategy}")
             return JsonResponse({STATUS: FAILED, MESSAGE: "No pending Messages", TASK_STATUS: False})
 
         index_name = data.get(INDEX_NAME)
@@ -211,7 +229,7 @@ def exitOrderWebhook(strategy, data, user_email):
             )
 
             if not user_webhook_data.exists():
-                addLogDetails(INFO, f"No webhook data found for {strategy}")
+                addLogDetails(INFO, f"{user_email} :: No webhook data found for {strategy}")
                 return JsonResponse({STATUS: FAILED, MESSAGE: "No webhook data found", TASK_STATUS: False})
 
             user_webhook_data = user_webhook_data.values().first()
@@ -227,7 +245,7 @@ def exitOrderWebhook(strategy, data, user_email):
                 }
 
                 order_response_details = broker.placeOrder(order_details)
-                addLogDetails(INFO, f"Order placed: {order_response_details}")
+                addLogDetails(INFO, f"{user_email} :: Order placed: {order_response_details}")
 
                 option_exit_price = order_response_details.get("price") or ltp
                 exit_data.update({
@@ -238,18 +256,18 @@ def exitOrderWebhook(strategy, data, user_email):
                 user_data.update(**exit_data)
             elif broker.checkIfOrderExists(unique_order_id):
                 broker.cancelOrder(user_webhook_data.get(ORDER_ID), NORMAL)
-                addLogDetails(INFO, "Existing order cancelled.")
+                addLogDetails(INFO, f"{user_email} :: Existing order cancelled.")
                 user_data.delete()
             else:
-                addLogDetails(INFO, "Order status not found so deleting entry.")
+                addLogDetails(INFO, f"{user_email} :: Order status not found so deleting entry.")
                 user_data.delete()
         # user_data.update(**data)
-        addLogDetails(INFO, "Order exited successfully.")
+        addLogDetails(INFO, f"{user_email} :: Order exited successfully.")
         return JsonResponse({STATUS: SUCCESS, MESSAGE: "Message Done", TASK_STATUS: True})
 
     except Exception as e:
         error_msg = f"Unexpected error in exit_order_webhook: {repr(e)}"
-        addLogDetails(ERROR, error_msg)
+        addLogDetails(ERROR, f"{user_email} :: {str(error_msg)}")
         return JsonResponse({STATUS: FAILED, MESSAGE: "Unexpected error. Check logs.", TASK_STATUS: False})
 
 
@@ -266,7 +284,7 @@ def modifyToMarketOrder(user_email, user_index_data, strategy, order_type):
                 user_id=user_email, strategy=strategy, exit_price=None
             )
             if not user_data.exists():
-                addLogDetails(INFO, f"No Pending orders for strategy {strategy}")
+                addLogDetails(INFO, f"{user_email} :: No Pending orders for strategy {strategy}")
                 return JsonResponse({STATUS: FAILED, MESSAGE: "No pending Messages", TASK_STATUS: False})
 
             order_info = user_data.values().first()
@@ -279,13 +297,13 @@ def modifyToMarketOrder(user_email, user_index_data, strategy, order_type):
 
             if not user_webhook_data:
                 error_msg = f"Webhook details not found for {user_email}, strategy: {strategy}"
-                addLogDetails(ERROR, error_msg)
+                addLogDetails(ERROR, f"{user_email} :: {str(error_msg)}")
                 return JsonResponse({STATUS: FAILED, MESSAGE: error_msg, TASK_STATUS: False})
 
             index_data = IndexDetails.objects.filter(index_name=index_name).values()
             if not index_data:
                 error_msg = f"Index data not found for {index_name}"
-                addLogDetails(ERROR, error_msg)
+                addLogDetails(ERROR, f"{user_email} :: {str(error_msg)}")
                 return JsonResponse({STATUS: FAILED, MESSAGE: error_msg, TASK_STATUS: False})
 
             index_qty = int(index_data[0].get(QTY, 0))
@@ -296,7 +314,7 @@ def modifyToMarketOrder(user_email, user_index_data, strategy, order_type):
 
             if broker.checkIfOrderPlaced(unique_order_id):
                 msg = f"Order already placed for ID {unique_order_id}"
-                addLogDetails(INFO, msg)
+                addLogDetails(INFO, f"{user_email} :: {msg}")
                 return JsonResponse({STATUS: SUCCESS, MESSAGE: msg, TASK_STATUS: True})
 
             order_details = {
@@ -307,7 +325,7 @@ def modifyToMarketOrder(user_email, user_index_data, strategy, order_type):
             }
 
             order_response_details = broker.placeOrder(order_details)
-            addLogDetails(INFO, f"Order placed: {order_response_details}")
+            addLogDetails(INFO, f"{user_email} :: Order placed: {order_response_details}")
 
             option_buy_price = order_response_details.get("averageprice")
             data = {
@@ -324,5 +342,5 @@ def modifyToMarketOrder(user_email, user_index_data, strategy, order_type):
 
     except Exception as e:
         error_msg = f"Unexpected error in modifyToMarketOrder: {str(e)}"
-        addLogDetails(ERROR, error_msg)
+        addLogDetails(ERROR, f"{user_email} :: {str(error_msg)}")
         return JsonResponse({STATUS: FAILED, MESSAGE: "Unexpected error. Check logs.", TASK_STATUS: False})

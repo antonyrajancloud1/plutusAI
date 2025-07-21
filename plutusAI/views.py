@@ -715,7 +715,8 @@ def placeBuyOrderManual(request):
                 user_manual_details = ManualOrders.objects.filter(user_id=user_email, index_name=index)
                 data = list(user_manual_details.values())[0]
             data = remove_spaces_from_json(data)
-            return triggerOrder(user_email, data, strategy, BUY)
+            submit_triggerOrder(user_email, data, strategy, BUY)
+            return JsonResponse({STATUS: SUCCESS, MESSAGE: "Message Exists BUY"})
         except Exception as e:
             print(e)
     else:
@@ -733,7 +734,8 @@ def placeSellOrderManual(request):
             user_manual_details = ManualOrders.objects.filter(user_id=user_email, index_name=index)
             data = list(user_manual_details.values())[0]
         data = remove_spaces_from_json(data)
-        return triggerOrder(user_email, data, strategy, SELL)
+        submit_triggerOrder(user_email, data, strategy, SELL)
+        return JsonResponse({STATUS: SUCCESS, MESSAGE: "Message Exists SELL"})
     else:
         return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
 
@@ -745,7 +747,8 @@ def placeExitOrderManual(request):
         data = json.loads(request.body)
         # index = data[INDEX_NAME]
         strategy = data.get(STRATEGY, "DefaultStrategy")
-        return exitOrderWebhook(strategy, data, user_email)
+        submit_exitOrderWebhook(strategy, data, user_email)
+        return JsonResponse({STATUS: SUCCESS, MESSAGE: "Message Done"})
     else:
         return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
 
@@ -825,7 +828,8 @@ def modifyToMarketOrderWebHook(request):
                 user_manual_details = ManualOrders.objects.filter(user_id=user_email, index_name=index)
                 data = list(user_manual_details.values())[0]
             data = remove_spaces_from_json(data)
-            return modifyToMarketOrder(user_email, data, strategy, BUY)
+            submit_modifyToMarketOrder(user_email, data, strategy, BUY)
+            return JsonResponse({STATUS: SUCCESS, MESSAGE: "Modified"})
         except Exception as e:
             print(e)
     else:
