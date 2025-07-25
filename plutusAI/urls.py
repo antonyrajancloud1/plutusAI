@@ -66,5 +66,9 @@ urlpatterns = [
     path(STOP_CELERY, views.stop_celery, name=STOP_CELERY),
     path(RESTART_CELERY, views.restart_celery, name=RESTART_CELERY),
 
+##Forex
+    path("forex_buy_order", views.placeForexBuy, name="forex_buy_order"),
+    path("forex_sell_order", views.placeForexSell, name="forex_sell_order"),
+    path("forex_close_order", views.closeForexSell, name="forex_close_order"),
     path("test", tests.tester, name="test"),
 ]

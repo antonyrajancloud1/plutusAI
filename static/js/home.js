@@ -1464,7 +1464,7 @@ MadaraConstructor.prototype.closeEditForm = function(domId) {               // C
 
 MadaraConstructor.prototype.populateFormForEditingBrokerDetail = function(brokerDetails) {
     let inputHtml = "";
-    let blackListedProperties = ["broker_name", "index_group", "token_status"];
+    let blackListedProperties = [ "token_status"];
     Object.keys(brokerDetails).forEach(property => {
         if(!blackListedProperties.includes(property)) {
             if(typeof brokerDetails[property] === "boolean") {

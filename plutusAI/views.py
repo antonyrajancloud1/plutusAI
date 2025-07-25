@@ -5,6 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
+from django.core.exceptions import ValidationError
+from django.db import IntegrityError
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -165,28 +167,41 @@ def get_broker_details(request):
 @csrf_exempt  # need to remove
 def add_broker_details(request):
     try:
-        if check_user_session(request):
-            data_json = json.loads(request.body)
-            user_email = get_user_email(request)
-            broker_name = data_json.get(BROKER_NAME)
-            current_index = get_index_group_by_broker(AVAILABLE_BROKERS, broker_name)
-            BrokerDetails.objects.create(
-                user_id=user_email,
-                broker_user_id=data_json.get(BROKER_USER_ID),
-                broker_user_name=data_json.get(BROKER_USER_NAME),
-                broker_mpin=data_json.get(BROKER_MPIN),
-                broker_api_token=data_json.get(BROKER_API_TOKEN),
-                broker_qr=data_json.get(BROKER_QR),
-                broker_name=data_json.get(BROKER_NAME),
-                is_demo_trading_enabled=data_json.get(IS_DEMO_TRADING_ENABLED),
-                token_status="added",
-                index_group=current_index[0],
-            )
-            return JsonResponse({STATUS: SUCCESS, MESSAGE: BROKER_DETAILS_ADDED})
-        else:
+        REQUIRED_FIELDS = [
+            "user_id", "broker_name", "broker_user_id",
+            "is_demo_trading_enabled", "broker_password", "broker_forex_server"
+        ]
+        if not check_user_session(request):
             return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
-    except json.JSONDecodeError as e:
+
+        data_json = json.loads(request.body)
+
+        # Validate required fields
+        missing_fields = [field for field in REQUIRED_FIELDS if field not in data_json]
+        if missing_fields:
+            return JsonResponse({STATUS: FAILED, MESSAGE: f"Missing fields: {', '.join(missing_fields)}"})
+
+        # Set index_group using broker_name
+        broker_name = data_json.get("broker_name")
+        current_index = get_index_group_by_broker(AVAILABLE_BROKERS, broker_name)
+
+        # Only use model fields from input
+        model_fields = {f.name for f in BrokerDetails._meta.fields}
+        filtered_data = {key: data_json[key] for key in data_json if key in model_fields}
+
+        # Add required calculated fields
+        filtered_data["index_group"] = current_index[0]
+        filtered_data["token_status"] = "added"
+
+        # Create the object
+        BrokerDetails.objects.create(**filtered_data)
+
+        return JsonResponse({STATUS: SUCCESS, MESSAGE: BROKER_DETAILS_ADDED})
+
+    except json.JSONDecodeError:
         return JsonResponse({STATUS: FAILED, MESSAGE: INVALID_JSON})
+    except (ValidationError, IntegrityError) as e:
+        return JsonResponse({STATUS: FAILED, MESSAGE: str(e)})
     except Exception as e:
         addLogDetails(ERROR, str(e))
         return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
@@ -200,14 +215,18 @@ def update_broker_details(request):
         if check_user_session(request):
             user_email = get_user_email(request)
             data = json.loads(request.body)
-            broker_user_id = data.get(BROKER_USER_ID)
+            # broker_user_id = data.get(BROKER_USER_ID)
+            index_group=data.get(INDEX_GROUP)
+            print(index_group)
             validate_char_fields(data)
+            print(data)
             user_data = BrokerDetails.objects.filter(
-                user_id=user_email
+                user_id=user_email,index_group=index_group
             )
+            print(user_data)
             user_data.update(**data)
             updated_data = BrokerDetails.objects.filter(
-                user_id=user_email
+                user_id=user_email,index_group=index_group
             )
             updated_list = list(updated_data.values())
             for data in updated_list:
@@ -1148,5 +1167,40 @@ def getOpenOrders(request):
         broker = Broker(user_email, INDIAN_INDEX).BrokerObject
 
         return getOpenOrdersUsingEmail(user_email,broker)
+    else:
+        return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+
+@csrf_exempt
+@require_http_methods([POST])
+def placeForexBuy(request):
+    if check_user_session(request):
+        user_email = get_user_email(request)
+        data_json = json.loads(request.body)
+        broker = Broker(user_email, FOREX_INDEX).BrokerObject
+        broker.placeOrderForex(0,data_json)
+        return JsonResponse({STATUS: SUCCESS, MESSAGE: "Buy Completed"})
+    else:
+        return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+@csrf_exempt
+@require_http_methods([POST])
+def placeForexSell(request):
+    if check_user_session(request):
+        user_email = get_user_email(request)
+        data_json = json.loads(request.body)
+        broker = Broker(user_email, FOREX_INDEX).BrokerObject
+        broker_response = broker.placeOrderForex(1,data_json)
+        return JsonResponse({STATUS: SUCCESS, MESSAGE: broker_response})
+    else:
+        return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+
+@csrf_exempt
+@require_http_methods([POST])
+def closeForexSell(request):
+    if check_user_session(request):
+        user_email = get_user_email(request)
+        data_json = json.loads(request.body)
+        broker = Broker(user_email, FOREX_INDEX).BrokerObject
+        broker_response = broker.exitOrderForex(data_json)
+        return JsonResponse({STATUS: SUCCESS, MESSAGE: broker_response})
     else:
         return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})

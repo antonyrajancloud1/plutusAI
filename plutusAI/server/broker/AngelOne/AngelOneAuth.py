@@ -102,9 +102,9 @@ class AngelOneAuth:
                 del user_token_data["state"]
                 # print(user_token_data)
                 user_data = UserAuthTokens.objects.filter(
-                    user_id=self.user_id
+                    user_id=self.user_id,index_group="indian_index"
                 )
-
+                print(user_data)
                 if list(user_data.values()).__len__() > 0:
                     user_data.update(**user_token_data)
                 else:

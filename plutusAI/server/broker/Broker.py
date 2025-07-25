@@ -1,5 +1,6 @@
 from plutusAI.server.base import *
 from plutusAI.server.broker.AngelOneBroker import AngelOneBroker
+from plutusAI.server.broker.exness.ExnessBroker import ExnessBroker
 from plutusAI.server.constants import *
 
 
@@ -16,3 +17,5 @@ class Broker:
                     self.BrokerObject = AngelOneBroker(self.user_broker_data)
                 case "kite":
                     addLogDetails(INFO, "kite")
+                case "exness":
+                    self.BrokerObject =ExnessBroker(user_email)

@@ -755,7 +755,7 @@ def validate_float_field(data):
 
 
 def validate_char_fields(data):
-    char_fields = [BROKER_QR, BROKER_USER_ID, BROKER_USER_NAME, BROKER_MPIN, BROKER_API_TOKEN]
+    char_fields = [BROKER_QR, BROKER_USER_NAME, BROKER_MPIN, BROKER_API_TOKEN]
     for field in char_fields:
         if field in data:
             pattern = re.compile(r'^[A-Za-z0-9 ]+$')

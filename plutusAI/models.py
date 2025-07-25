@@ -1,3 +1,5 @@
+import json
+
 from django.db import models
 
 
@@ -38,7 +40,9 @@ class OrderBook(models.Model):
     total = models.CharField(max_length=250, default=None, blank=True, null=True)
     strategy = models.CharField(max_length=250, default=None, blank=True, null=True)
     index_name = models.CharField(max_length=50, default=None)
-
+    index_group = models.CharField(max_length=20, default="indian_index", null=True)
+    order_id = models.CharField(max_length=20, default=None, null=True)
+    position_id = models.CharField(max_length=20, default=None, null=True)
     def __str__(self):
         return "{" + f"user_id:{self.user_id}, script_name:{self.script_name}, entry_time:{self.entry_time}, strategy:{self.strategy} ,exit_time:{self.exit_time},total:{self.total},index_name:{self.index_name}" + "}"
 
@@ -48,19 +52,21 @@ class OrderBook(models.Model):
 
 
 class BrokerDetails(models.Model):
-    user_id = models.CharField(max_length=500, default=None)
-    broker_name = models.CharField(max_length=250, default=None)
-    broker_user_id = models.CharField(max_length=250, default=None)
-    broker_user_name = models.CharField(max_length=250, default=None, blank=True)
-    broker_mpin = models.CharField(max_length=250, default=None, blank=True)
-    broker_api_token = models.CharField(max_length=250, default=None)
-    broker_qr = models.CharField(max_length=250, default=None, blank=True)
-    token_status = models.CharField(max_length=250, default=None)
-    is_demo_trading_enabled = models.BooleanField(default=False)
-    index_group = models.CharField(max_length=20, default=None)
+    user_id = models.CharField(max_length=500, default=None,null=True)
+    broker_name = models.CharField(max_length=250, default=None,null=True)
+    broker_user_id = models.CharField(max_length=250, default=None,null=True)
+    broker_user_name = models.CharField(max_length=250, default=None, blank=True,null=True)
+    broker_mpin = models.CharField(max_length=250, default=None, blank=True ,null=True)
+    broker_api_token = models.CharField(max_length=250, default=None,null=True)
+    broker_qr = models.CharField(max_length=250, default=None, blank=True,null=True)
+    token_status = models.CharField(max_length=250, default=None,null=True)
+    is_demo_trading_enabled = models.BooleanField(default=False,null=True)
+    index_group = models.CharField(max_length=20, default="indian_index",null=True)
+    broker_password = models.CharField(max_length=250, default=None,null=True)
+    broker_forex_server = models.CharField(max_length=250, default=None,null=True)
 
     def __str__(self):
-        return self.index_name
+        return self.broker_name
 
     @classmethod
     def search_by_name(cls, query):
@@ -69,7 +75,7 @@ class BrokerDetails(models.Model):
 
 class IndexDetails(models.Model):
     index_name = models.CharField(max_length=50, default=None)
-    index_group = models.CharField(max_length=50, default=None)
+    index_group = models.CharField(max_length=20, default="indian_index")
     index_token = models.CharField(max_length=50, default=None)
     ltp = models.CharField(max_length=50, default=None)
     last_updated_time = models.CharField(max_length=250, default=None)
@@ -151,10 +157,14 @@ class UserAuthTokens(models.Model):
     jwtToken = models.CharField(max_length=2000, default=None)
     feedToken = models.CharField(max_length=2000, default=None)
     last_updated_time = models.CharField(max_length=500, default=None)
-
+    index_group = models.CharField(max_length=20, default="indian_index")
     def __str__(self):
-        return f"{self.user_id} - {self.refreshToken} - {self.jwt_token} - {self.feedToken}"
-
+        # return str({"user_id": self.user_id,"jwtToken": self.jwtToken,"feedToken": self.feedToken})
+        return json.dumps({
+            "user_id": self.user_id,
+            "jwtToken": self.jwtToken,
+            "feedToken": self.feedToken
+        })
     @classmethod
     def search_by_name(cls, query):
         return cls.objects.filter(name__icontains=query)
@@ -190,6 +200,7 @@ class ManualOrders(models.Model):
     on_candle_close = models.BooleanField(default=False)
     producttype = models.CharField(max_length=20, choices=PRODUCT_TYPE_CHOICES, default='INTRADAY')
     timeframe = models.CharField(max_length=20, choices=TIMEFRAME_CHOICES, default='FIVE_MINUTE')
+    index_group = models.CharField(max_length=20, default="indian_index")
 
     def __str__(self):
         return f"{self.user_id} - {self.index_name} - {self.target} - {self.stop_loss} - {self.order_status} - {self.time}"

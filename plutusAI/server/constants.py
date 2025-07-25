@@ -21,7 +21,7 @@ NIFTY_50 = 'Nifty 50'
 NIFTY_BANK = 'Nifty Bank'
 NIFTY_FIN_SERVICE = 'Nifty Fin Service'
 INDIAN_INDEX = "indian_index"
-FOREX_INDEX = "forex_index"
+FOREX_INDEX = "forex"
 INDECES = ["nifty", "bank_nifty", "fin_nifty"]
 
 ### HTTP METHODS ###
