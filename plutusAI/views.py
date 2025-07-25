@@ -1172,6 +1172,9 @@ def getOpenOrders(request):
 
 @csrf_exempt
 @require_http_methods([POST])
+@api_view([POST])
+@authentication_classes([QueryParamTokenAuthentication])
+@permission_classes([IsAuthenticated])
 def placeForexBuy(request):
     if check_user_session(request):
         user_email = get_user_email(request)
@@ -1183,6 +1186,9 @@ def placeForexBuy(request):
         return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
 @csrf_exempt
 @require_http_methods([POST])
+@api_view([POST])
+@authentication_classes([QueryParamTokenAuthentication])
+@permission_classes([IsAuthenticated])
 def placeForexSell(request):
     if check_user_session(request):
         user_email = get_user_email(request)
@@ -1195,6 +1201,9 @@ def placeForexSell(request):
 
 @csrf_exempt
 @require_http_methods([POST])
+@api_view([POST])
+@authentication_classes([QueryParamTokenAuthentication])
+@permission_classes([IsAuthenticated])
 def closeForexSell(request):
     if check_user_session(request):
         user_email = get_user_email(request)
