@@ -104,9 +104,9 @@ class ExnessBroker:
         self.exitOrderForex(data_json)
         # Set default values
         instrument = data_json.get("ticker", "XAUUSD")+"m"
-        price = data_json.get("price", 3360)
-        sl = data_json.get("sl", 0)
-        tp = data_json.get("tp", 0)
+        price = float(data_json.get("price", 3360))
+        sl = float(data_json.get("sl", 0))
+        tp = float(data_json.get("tp", 0))
         user_strategy = data_json.get("strategy", "Forex_strategy")
         print(user_strategy)
         # Fetch user data
@@ -205,7 +205,7 @@ class ExnessBroker:
         exit_data[EXIT_TIME] = getCurrentTimestamp()
         # Set default values
         instrument = data_json.get("ticker", "XAUUSD")+"m"
-        price = data_json.get("price", 3360)
+        price = float(data_json.get("price", 3360))
         user_strategy = data_json.get("strategy", "Forex_strategy")
         user_orderbook_data = OrderBook.objects.filter(user_id=self.email, index_group="forex", script_name=instrument,
                                                        strategy=user_strategy,exit_price=None)
