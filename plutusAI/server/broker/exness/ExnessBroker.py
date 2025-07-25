@@ -1,4 +1,5 @@
 import json
+from concurrent.futures import ThreadPoolExecutor
 
 import requests
 from playwright.sync_api import sync_playwright
@@ -7,12 +8,15 @@ from plutusAI.server.base import getCurrentTimestamp, addOrderBookDetails
 import re
 
 from plutusAI.server.constants import *
+from threading import Lock
+
 
 
 class ExnessBroker:
     LOGIN_URL = "https://my.exness.com/v4/wta-api/signin?captchaVersion=3"
 
     def __init__(self, user_id: str):
+        self.access_token = None
         self.email = user_id
         user_token_data = UserAuthTokens.objects.filter(
             user_id=user_id, index_group="forex"
@@ -26,7 +30,8 @@ class ExnessBroker:
             self.broker_user_id = user_broker_data["broker_user_id"]
             self.broker_forex_server = user_broker_data["broker_forex_server"]
             self.broker_user_name = user_broker_data["broker_user_name"]
-
+        self.executor = ThreadPoolExecutor(max_workers=50)
+        self.user_locks = {}
 
     def get_token(self) -> dict:
         with sync_playwright() as p:
@@ -65,7 +70,7 @@ class ExnessBroker:
         # Validate expected keys
         if "token" not in token_details or "refresh" not in token_details or "user_uid" not in token_details:
             raise ValueError(f"Invalid token response: {token_details}")
-
+        self.access_token = token_details["token"]
         user_token_data = {
             "feedToken": token_details["token"],
             "refreshToken": token_details["refresh"],
@@ -126,14 +131,14 @@ class ExnessBroker:
         user_data = user_data.first()
         print(user_data)
         # print(json.loads(user_data))
-        access_token = user_data.feedToken
-        print(access_token)
+        self.access_token = user_data.feedToken
+        print(self.access_token)
         # Construct order URL
         url = f"https://rtapi-sg.eccweb.mobi/rtapi/{self.construct_server_path(self.broker_forex_server)}/v1/accounts/{self.broker_user_name}/orders"
         print("URL:", url)
 
         headers = {
-            "Authorization": f"Bearer {access_token}",
+            "Authorization": f"Bearer {self.access_token}",
             "Accept": "application/json",
             "Content-Type": "application/json"
         }
@@ -150,14 +155,20 @@ class ExnessBroker:
                 "oneClick": True
             }
         }
-
         # Make the POST request
         self.response = requests.post(url, headers=headers, json=payload)
-        print("Status:", self.response.status_code)
+        print("Status:", self.response)
 
         # Retry if token expired
-        if self.response.status_code == 401:
+        if self.response.status_code == 401 or self.response.status_code == 400:
             self.update_token_in_db()
+            print("Reposne BS 2")
+            print(self.access_token)
+            headers = {
+                "Authorization": f"Bearer {self.access_token}",
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
             self.response = requests.post(url, headers=headers, json=payload)
             print( self.response )
 
@@ -218,9 +229,9 @@ class ExnessBroker:
                 user_lot_size = str(getattr(user_manual_data.first(), "lots", "0.01"))
 
             print(user_data)
-            access_token = user_data.feedToken
+            self.access_token = user_data.feedToken
             headers = {
-                "Authorization": f"Bearer {access_token}",
+                "Authorization": f"Bearer {self.access_token}",
                 "Accept": "application/json",
                 "Content-Type": "application/json"
             }
@@ -231,6 +242,11 @@ class ExnessBroker:
             self.response = requests.put(url, headers=headers, json=payload)
             self.res_json = self.response.json()
             print(self.res_json)
+            if self.response.status_code == 401 or self.response.status_code == 400:
+                self.update_token_in_db()
+                self.response = requests.put(url, headers=headers, json=payload)
+                print("Reponse 2")
+                print(self.response.json())
             exit_price = self.res_json["position"]["price"]
             order_info = user_orderbook_data.values().first()
             entry_price = order_info.get(ENTRY_PRICE)
@@ -244,3 +260,20 @@ class ExnessBroker:
             return "Order Exited"
         else:
             return "No Orders Present"
+
+
+
+    def get_user_lock(self,user_email, strategy):
+        key = f"{user_email}_{strategy}"
+        if key not in self.user_locks:
+           self.user_locks[key] = Lock()
+        return self.user_locks[key]
+
+    def submit_exitOrderForex(self, data_json):
+        # self.exitOrderForex(self, data_json)
+        self.executor.submit(self.exitOrderForex, data_json)
+
+    def submit_placeOrderForex(self, order_type, data_json):
+        # self.placeOrderForex(self, order_type, data_json)
+        self.executor.submit(self.placeOrderForex, order_type, data_json)
+        return "Order placed"
