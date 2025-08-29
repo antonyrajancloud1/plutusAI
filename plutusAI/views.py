@@ -727,14 +727,14 @@ def placeBuyOrderManual(request):
     if check_user_session(request):
         try:
             user_email = get_user_email(request)
-            data = json.loads(request.body)
-            index = data[INDEX_NAME]
-            strategy = data.get(STRATEGY, "DefaultStrategy")
+            signal_data = json.loads(request.body)
+            index = signal_data[INDEX_NAME]
+            # strategy = data.get(STRATEGY, "DefaultStrategy")
             if index:
                 user_manual_details = ManualOrders.objects.filter(user_id=user_email, index_name=index)
                 data = list(user_manual_details.values())[0]
             data = remove_spaces_from_json(data)
-            submit_triggerOrder(user_email, data, strategy, BUY)
+            triggerOrder(user_email, data, signal_data, BUY)
             return JsonResponse({STATUS: SUCCESS, MESSAGE: "Message Exists BUY"})
         except Exception as e:
             print(e)
@@ -746,14 +746,14 @@ def placeBuyOrderManual(request):
 def placeSellOrderManual(request):
     if check_user_session(request):
         user_email = get_user_email(request)
-        data = json.loads(request.body)
-        index = data[INDEX_NAME]
-        strategy = data.get(STRATEGY, "DefaultStrategy")
+        signal_data = json.loads(request.body)
+        index = signal_data[INDEX_NAME]
+        # strategy = data.get(STRATEGY, "DefaultStrategy")
         if index:
             user_manual_details = ManualOrders.objects.filter(user_id=user_email, index_name=index)
             data = list(user_manual_details.values())[0]
         data = remove_spaces_from_json(data)
-        submit_triggerOrder(user_email, data, strategy, SELL)
+        triggerOrder(user_email, data, signal_data, SELL)
         return JsonResponse({STATUS: SUCCESS, MESSAGE: "Message Exists SELL"})
     else:
         return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
@@ -766,7 +766,7 @@ def placeExitOrderManual(request):
         data = json.loads(request.body)
         # index = data[INDEX_NAME]
         strategy = data.get(STRATEGY, "DefaultStrategy")
-        submit_exitOrderWebhook(strategy, data, user_email)
+        exitOrderWebhook(strategy, data, user_email)
         return JsonResponse({STATUS: SUCCESS, MESSAGE: "Message Done"})
     else:
         return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
@@ -817,14 +817,15 @@ def placeBuyOrderWebHook(request):
     if check_user_session(request):
         try:
             user_email = get_user_email(request)
-            data = json.loads(request.body)
-            index=data[INDEX_NAME]
-            strategy = data.get(STRATEGY, "DefaultStrategy")
+            signal_data = json.loads(request.body)
+            index=signal_data[INDEX_NAME]
+            # strategy = signal_data.get(STRATEGY, "DefaultStrategy")
             if index:
                 user_manual_details = ManualOrders.objects.filter(user_id=user_email, index_name=index)
                 data = list(user_manual_details.values())[0]
             data = remove_spaces_from_json(data)
-            return triggerOrder(user_email, data, strategy, BUY)
+            submit_triggerOrder(user_email, data, signal_data, BUY)
+            return JsonResponse({STATUS: SUCCESS, MESSAGE: "Message Done"})
         except Exception as e:
             print(e)
     else:
@@ -863,14 +864,15 @@ def placeSellOrderWebHook(request):
     #@authentication_classes([TokenAuthentication])
     if check_user_session(request):
         user_email = get_user_email(request)
-        data = json.loads(request.body)
-        index = data[INDEX_NAME]
-        strategy = data.get(STRATEGY, "DefaultStrategy")
+        signal_data = json.loads(request.body)
+        index = signal_data[INDEX_NAME]
+        # strategy = data.get(STRATEGY, "DefaultStrategy")
         if index:
             user_manual_details = ManualOrders.objects.filter(user_id=user_email, index_name=index)
             data = list(user_manual_details.values())[0]
         data = remove_spaces_from_json(data)
-        return triggerOrder(user_email, data, strategy, SELL)
+        submit_triggerOrder(user_email, data, signal_data, SELL)
+        return JsonResponse({STATUS: SUCCESS, MESSAGE: "Message Done"})
     else:
         return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
 
@@ -942,7 +944,8 @@ def placeExitOrderWebHook(request):
         data = json.loads(request.body)
         # index = data[INDEX_NAME]
         strategy = data.get(STRATEGY, "DefaultStrategy")
-        return exitOrderWebhook(strategy,data,user_email)
+        submit_exitOrderWebhook(strategy,data,user_email)
+        return JsonResponse({STATUS: SUCCESS, MESSAGE: "Message Exists SELL"})
     else:
         return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
 

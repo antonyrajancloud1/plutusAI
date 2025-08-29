@@ -375,7 +375,9 @@ def addOrderBookDetails(data, is_entry):
             user_data = OrderBook.objects.filter(
                 user_id=data[USER_ID], script_name=data[SCRIPT_NAME], exit_price=None
             )
+            print(user_data)
             order_info = list(user_data.values())[0]
+            print(order_info)
             entry_price = order_info[ENTRY_PRICE]
             exit_price = data[EXIT_PRICE]
             qty = order_info[QTY]
@@ -810,7 +812,7 @@ logging.basicConfig(
 
 
 def addLogDetails(log_type, logDetails):
-    print(logDetails)
+    # print(logDetails)
     if log_type == "info":
         logging.info(logDetails)
     elif log_type == "error":

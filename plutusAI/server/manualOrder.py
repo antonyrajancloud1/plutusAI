@@ -13,7 +13,6 @@ def get_user_lock(user_email, strategy):
         user_locks[key] = Lock()
     return user_locks[key]
 def submit_triggerOrder(user_email, user_index_data, strategy, order_type):
-    # print(f"[{threading.current_thread().name}] Executing submit_triggerOrder")
     executor.submit(triggerOrder,user_email, user_index_data, strategy, order_type)
 
 def submit_exitOrderWebhook(strategy, data, user_email):
@@ -21,13 +20,14 @@ def submit_exitOrderWebhook(strategy, data, user_email):
 def submit_modifyToMarketOrder(user_email, user_index_data, strategy, order_type):
     executor.submit(modifyToMarketOrder,user_email, user_index_data, strategy, order_type)
 
-def triggerOrder(user_email, user_index_data, strategy, order_type):
+def triggerOrder(user_email, user_index_data, signal_data, order_type):
     try:
-        strategy = strategy or "DefaultStrategy"
+        strategy = signal_data.get(STRATEGY, "DefaultStrategy")
+        qty = int(signal_data.get(LOTS, user_index_data.get(LOTS, 1)))
 
         index_name = user_index_data.get(INDEX_NAME)
         strike = int(user_index_data.get(STRIKE, 0))
-        qty = int(user_index_data.get(LOTS, 0))
+
         on_candle_close = bool(user_index_data.get(ON_CANDLE_CLOSE))
         product_type = user_index_data.get(PRODUCT_TYPE)
         timeframe = user_index_data.get(TIMEFRAME)
