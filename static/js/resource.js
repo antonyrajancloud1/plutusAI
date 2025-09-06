@@ -46,6 +46,8 @@ Resource = {
     running             :   "Running",
     initiated           :   "Initiated",
     order_exited        :   "Order Exited",
+    order_placed        :   "Order Placed",
+    ltp                 :   "LTP",       
     initial_sl          :   "Initial Stop Loss",
     is_place_sl_required:   "Place Stop Loss required",
     start_scheduler     :   "Start Scheduler",
@@ -124,5 +126,7 @@ Resource = {
     total_orders_today      :   "Total Orders",
     update_manual_orders    :   "Update Orders",
     producttype             :   "Product Type",
-    timeframe	            :    "Time Frame"
+    timeframe	            :    "Time Frame",
+    exit_all_orders         :   "Exit All Orders",
+    all_open_orders_exited  :   "All open orders exited successfully"
 }   

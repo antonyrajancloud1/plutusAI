@@ -94,7 +94,7 @@ MadaraConstructor.prototype.templates = {
 
     sellButton : `<div id="sell-{module}" purpose="sellManualOrders" home-page-buttons index="{index}" class="action-button xs curP clrR exit-config-button p5 bdrR4 fontB font10" title="{sell_title}">{sell_title}</div>`,
 
-    exitButton : `<div id="exit-{module}" purpose="exitManualOrders" home-page-buttons index="{index}" class="action-button xs curP clrY exit-config-button p5 bdrR4 fontB font10" title="{exit_title}">{exit_title}</div>`,
+    exitButton : `<div id="exit-{module}" purpose="{purpose_of_exit}" strategy="{strategy}" home-page-buttons index="{index}" class="action-button xs curP clrY exit-config-button p5 bdrR4 fontB font10" title="{exit_title}">{exit_title}</div>`,
 
     editButtonForManualOrders : `<div id="edit-{module}" purpose="editManualOrders" home-page-buttons index="{index}" class="action-button xs curP clrB exit-config-button p5 bdrR4 fontB font10" title="{edit_title}">{edit_title}</div>`,
 
@@ -171,11 +171,15 @@ MadaraConstructor.prototype.templates = {
                             <div class="font18 fontB">{orders_header}</div>
                             {orders_html}
                         </div>
-                        <div class="item-4 open-orders">
-                            <div class="font18 fontB">{open_orders_header}</div>
-                            {open_orders_html}
+                        <div class="item-4 open-orders ovrflwAuto">
+                            <div id="open-orders-header" class="flexC justifySB open-orders-header">
+                                <div class="font18 fontB">{open_orders_header}</div>
+                            </div>
+                            <div id="open-orders-list" class="wh100 mT10 open-orders-list ovrflwAuto">{open_orders_html}</div>
                         </div>
                     </div>`,
+
+    exitAllOpenOrdersButton : `<div id="exit-all-button" class="exit-all-button bdrR5 flexC curP sm" home-page-buttons purpose="exitAllOpenOrders">{exit_all_orders}</div>`,
 
     htmlForCellContentHightlighter : `<span class="{class_for_highlighting}">{cell_content}</span>`,
 
@@ -222,6 +226,7 @@ MadaraConstructor.prototype.API = {
     logout                  :   "/logout",
     getConfigValues         :   "/get_config_values",
     getSummary              :   "/get_strategy_summary",
+    getOpenOrders           :   "/all_open_orders",
     getManualDetails        :   "/manual_details",  
     updateManualDetails     :   "/update_manual_details",  
     updateConfigValues      :   "/update_config_values",
@@ -249,7 +254,8 @@ MadaraConstructor.prototype.API = {
 };
 
 MadaraConstructor.prototype.getLHSModulesList = function() {
-    return [ "dashboard", "orderBook", "configurations", "manualOrders", "scalper", "brokerInfo" ];
+    // return [ "dashboard", "orderBook", "configurations", "manualOrders", "scalper", "brokerInfo" ];
+    return [ "dashboard", "orderBook", "manualOrders", "brokerInfo" ];
 };
 
 MadaraConstructor.prototype.addLoaderForTheRHS = function() {
@@ -325,8 +331,10 @@ MadaraConstructor.prototype.getSellButton = function() {
     return this.templates.sellButton.replace(/{sell_title}/g, Resource.sell);
 };
 
-MadaraConstructor.prototype.getExitButton = function() {
-    return this.templates.exitButton.replace(/{exit_title}/g, Resource.exit);
+MadaraConstructor.prototype.getExitButton = function(purpose, strategy) {
+    return this.templates.exitButton.replace(/{exit_title}/g, Resource.exit)
+                                    .replace(/{purpose_of_exit}/g, purpose)
+                                    .replace(/{strategy}/g, strategy);
 };
 
 MadaraConstructor.prototype.getEditButtonForManualOrders = function() {
@@ -403,7 +411,7 @@ MadaraConstructor.prototype.viewOrderBook = function() {
                         if(property === "total") {
                             let total = configurationObject[property] ? configurationObject[property] : 0;
                             total = parseFloat(total);
-                            let totalInLocale = parseFloat(configurationObject[property]).toLocaleString('en-IN', { minimumFractionDigits : 2, maximumFractionDigits : 2 });
+                            let totalInLocale = total.toLocaleString('en-IN', { minimumFractionDigits : 2, maximumFractionDigits : 2 });
                             tooltipContent = totalInLocale;
                             tableCellContent = self.templates.htmlForCellContentHightlighter.replace(/{class_for_highlighting}/g, (total > 0) ? "positive" : ((total == 0) ? "neutral" : "negative"))
                                                                             .replace(/{cell_content}/g, totalInLocale);
@@ -675,10 +683,39 @@ MadaraConstructor.prototype.viewDashboard = function() {
                                                             .replace(/{chart_html}/g, self.getChartHTML())
                                                             .replace(/{positions_html}/g, self.getPositionsAndOrdersHTML(currentDaySummary, "needPositions"))
                                                             .replace(/{orders_html}/g, self.getPositionsAndOrdersHTML(currentDaySummary, "needOrders"))
-                                                            .replace(/{open_orders_html}/g, self.getPositionsAndOrdersHTML(currentDaySummary, "needOpenOrders"))
+                                                            .replace(/{open_orders_html}/g, self.templates.loaderHtml)
 
             $(self.DOM_SELECTORS.rhs_container).html(dashBoardHtml);
             self.renderChartForPNL(currentDaySummary);
+        },
+        error   :   function(errorResp) {
+            let errorContent = (JSON.parse(errorResp.responseText).message) ? self.checkAndGetResponseMessageFromResourceObject(JSON.parse(errorResp.responseText).message) : errorResp.statusText;
+            self.updateBanner({ type : "failure", content : errorContent });
+        }
+    }
+    this.makeAjaxRequest(url, {}, additionalAjaxOptions);
+    this.makeOpenOrderRequestAndUpdateTheViewOfOpenOrders();
+};
+
+MadaraConstructor.prototype.makeOpenOrderRequestAndUpdateTheViewOfOpenOrders = function(isForDeletingAllTheOpenOrders, successCallBack) {
+    let self = this;
+    let url = this.getWindowLocationOrigin() + this.API.getOpenOrders;
+    let additionalAjaxOptions = {
+        type    :   "GET",
+        success :   function(successResp) {
+            let openOrders = successResp.open_orders;
+            if(openOrders.length) {
+                if(!isForDeletingAllTheOpenOrders) {
+                    let allOpenOrdersHtml = self.getOpenOrdersTableHTML(openOrders);
+                    $("#open-orders-list").html(allOpenOrdersHtml);
+                    $("#open-orders-header").append(self.templates.exitAllOpenOrdersButton.replace(/{exit_all_orders}/g, Resource.exit_all_orders));
+                } else {
+                    successCallBack(openOrders);
+                }
+            } else {
+                let allOpenOrdersHtml = self.getOpenOrdersTableHTML(openOrders);
+                $("#open-orders-list").html(allOpenOrdersHtml);
+            }
         },
         error   :   function(errorResp) {
             let errorContent = (JSON.parse(errorResp.responseText).message) ? self.checkAndGetResponseMessageFromResourceObject(JSON.parse(errorResp.responseText).message) : errorResp.statusText;
@@ -719,7 +756,7 @@ MadaraConstructor.prototype.viewManualOrders = function() {
                 let disableStatus = configurationObject["disable"];
                 let actionsHtml = self.templates.actionsHtml.replace(/{start_button}/g, self.getBuyButton())
                                                             .replace(/{stop_button}/g, self.getSellButton())
-                                                            .replace(/{exit_button}/g, self.getExitButton())
+                                                            .replace(/{exit_button}/g, self.getExitButton("exitManualOrders", ""))
                                                             .replace(/{edit_button}/g, self.getEditButtonForManualOrders());
                                                             
                 actionsHtml = actionsHtml.replace(/{index}/g, configuration)
@@ -964,16 +1001,62 @@ MadaraConstructor.prototype.getManualOrderDetails = function() {
     return payload;
 };
 
+MadaraConstructor.prototype.getOpenOrderDetails = function(order) {
+    let payload = {};
+    if(!order) {
+        let currentTarget = this.getCurrentTarget();
+        let rowOfTheClickedButton = currentTarget.parents(".tblRow");
+        let allCellsInRow = rowOfTheClickedButton.children();
+        let whiteListedProperties = [ "actions", "entry_time", "script_name", "qty", "entry_price", "status", "index_name", "ltp", "strategy", "total" ];
+        let propertiesToBeChosenForOpenOrder = [ 3, 6, 8 ];             //qty, index_name, strategy
+        for(let i = 0; i < allCellsInRow.length; i++) {
+            if(!propertiesToBeChosenForOpenOrder.includes(i)) {
+                continue;
+            }
+            let element = allCellsInRow[i];
+            if(element.classList.contains("actions-table-cell")) {
+                continue;
+            }
+            let valueOfTheElement = "";
+            if(whiteListedProperties[i] === "strategy") {
+                valueOfTheElement = currentTarget.attr("strategy");
+            } else if(whiteListedProperties[i] === "index_name") {
+                valueOfTheElement = currentTarget.attr("index");
+            } else {
+                valueOfTheElement = element.textContent.trim();
+            }
+            payload[whiteListedProperties[i]] = valueOfTheElement;
+        };
+    } else {
+        payload = {
+            qty         :   order.qty,
+            index_name  :   order.index_name,
+            strategy    :   order.strategy
+        }
+    }
+    return payload;
+};
+
+MadaraConstructor.prototype.removeTheRowOfThisOpenOrderFromTheTable = function(currentTarget) {
+    let rowOfTheClickedButton = currentTarget.parents(".tblRow");
+    if(rowOfTheClickedButton.length) {
+        rowOfTheClickedButton.remove();
+    }
+    let tableContainer = $(this.DOM_SELECTORS.rhs_container).find("#openOrders-container");
+    let mainRowElem = tableContainer.find(".tblMain");
+    if(!mainRowElem.children().length ) {
+       tableContainer.replaceWith(this.templates.noDataFoundHtml.replace(/{no_data_text}/g, Resource.no_open_orders));
+       $(this.DOM_SELECTORS.rhs_container).find("#exit-all-button").remove();
+    }
+};
+
 MadaraConstructor.prototype.buyManualOrders = function() {
     let self = this;
     let currentTarget = this.EVENT_AND_DOM_CACHE.currentTarget;
     this.addLoaderInThisButton(currentTarget);
     let data = this.getManualOrderDetails();
-    let url = this.getWindowLocationOrigin() + this.API.placeManualOrder;
-    if(self.currentStrategy !== this.default_strategy) {
-        url = this.getWindowLocationOrigin() + this.API.placeOrderViaWebhook + "?token=" + this.tokenData.message;
-        data.strategy = self.currentStrategy;
-    }
+    let url = this.getWindowLocationOrigin() + this.API.placeOrderViaWebhook + "?token=" + this.tokenData.message;
+    data.strategy = self.currentStrategy;
 
     let additionalAjaxOptions = {
         type    :   "POST",
@@ -995,11 +1078,8 @@ MadaraConstructor.prototype.sellManualOrders = function() {
     let currentTarget = this.EVENT_AND_DOM_CACHE.currentTarget;
     this.addLoaderInThisButton(currentTarget);
     let data = this.getManualOrderDetails();
-    let url = this.getWindowLocationOrigin() + this.API.sellManualOrder;
-    if(self.currentStrategy !== this.default_strategy) {
-        url = this.getWindowLocationOrigin() + this.API.sellOrderViaWebhook + "?token=" + this.tokenData.message;
-        data.strategy = self.currentStrategy;
-    }
+    let url = this.getWindowLocationOrigin() + this.API.sellOrderViaWebhook + "?token=" + this.tokenData.message;
+    data.strategy = self.currentStrategy;
 
     let additionalAjaxOptions = {
         type    :   "POST",
@@ -1021,11 +1101,8 @@ MadaraConstructor.prototype.exitManualOrders = function() {
     let currentTarget = this.EVENT_AND_DOM_CACHE.currentTarget;
     this.addLoaderInThisButton(currentTarget);
     let data = this.getManualOrderDetails();
-    let url = this.getWindowLocationOrigin() + this.API.exitManualOrder;
-    if(self.currentStrategy !== this.default_strategy) {
-        url = this.getWindowLocationOrigin() + this.API.exitOrderViaWebhook + "?token=" + this.tokenData.message;
-        data.strategy = self.currentStrategy;
-    }
+    let url = this.getWindowLocationOrigin() + this.API.exitOrderViaWebhook + "?token=" + this.tokenData.message;
+    data.strategy = self.currentStrategy;
 
     let additionalAjaxOptions = {
         type    :   "POST",
@@ -1040,6 +1117,75 @@ MadaraConstructor.prototype.exitManualOrders = function() {
         }
     }
     this.makeAjaxRequest(url, data, additionalAjaxOptions);
+};
+
+MadaraConstructor.prototype.exitOpenOrders = async function() {
+    let self = this;
+    let currentTarget = this.EVENT_AND_DOM_CACHE.currentTarget;
+    this.addLoaderInThisButton(currentTarget);
+    let data = this.getOpenOrderDetails();
+    let tokenData = this.tokenData;
+    if(!tokenData) {
+        tokenData = await this.getTokenData();
+        this.tokenData = tokenData;
+    } else {
+        tokenData = this.tokenData;
+    }
+    let url = this.getWindowLocationOrigin() + this.API.exitOrderViaWebhook + "?token=" + tokenData.message;
+
+    let additionalAjaxOptions = {
+        type    :   "POST",
+        success :   function(successResp) {
+            self.removeLoaderInThisButton(currentTarget);
+            self.updateBanner({ type : "success", content : self.checkAndGetResponseMessageFromResourceObject(successResp.message) });
+            self.removeTheRowOfThisOpenOrderFromTheTable(currentTarget);
+        },
+        error   :   function(errorResp) {
+            self.removeLoaderInThisButton(currentTarget);
+            let errorContent = (JSON.parse(errorResp.responseText).message) ? self.checkAndGetResponseMessageFromResourceObject(JSON.parse(errorResp.responseText).message) : errorResp.statusText;
+            self.updateBanner({ type : "failure", content : errorContent });
+        }
+    };
+    this.makeAjaxRequest(url, data, additionalAjaxOptions);
+};
+
+MadaraConstructor.prototype.exitAllOpenOrders = async function() {
+    let self = this;
+    let currentTarget = this.EVENT_AND_DOM_CACHE.currentTarget;
+    this.addLoaderInThisButton(currentTarget);
+    this.makeOpenOrderRequestAndUpdateTheViewOfOpenOrders(true, self.exitAllOpenOrdersCallBack.bind(this));
+};
+
+MadaraConstructor.prototype.exitAllOpenOrdersCallBack = async function(openOrders) {
+    if(openOrders.length) {
+        let tokenData = this.tokenData;
+        if(!tokenData) {
+            tokenData = await this.getTokenData();
+            this.tokenData = tokenData;
+        } else {
+            tokenData = this.tokenData;
+        }
+        let url = this.getWindowLocationOrigin() + this.API.exitOrderViaWebhook + "?token=" + tokenData.message;
+        for(const order of openOrders) {
+            let data = this.getOpenOrderDetails(order);
+            await new Promise((resolve, reject) => {
+                let additionalAjaxOptions = {
+                    type    :   "POST",
+                    success :   function(successResp) {
+                        resolve(successResp);
+                    },
+                    error   :   function(errorResp) {
+                        reject(errorResp);
+                    }
+                };
+                this.makeAjaxRequest(url, data, additionalAjaxOptions);
+            });
+        }
+        let rhsContainer = $(this.DOM_SELECTORS.rhs_container);
+        rhsContainer.find("#openOrders-container").replaceWith(this.templates.noDataFoundHtml.replace(/{no_data_text}/g, Resource.no_open_orders));
+        rhsContainer.find("#exit-all-button").remove();
+        this.updateBanner({ type : "success", content : Resource.all_open_orders_exited });
+    }
 };
 
 MadaraConstructor.prototype.editManualOrders = function() {
@@ -1216,7 +1362,7 @@ MadaraConstructor.prototype.renderChartForPNL = function(currentDaySummary) {
                             .replace(/{total_pnl_cost_in_rupees}/g, "₹" + totalPNL.toLocaleString('en-IN', { minimumFractionDigits : 2, maximumFractionDigits : 2 }));
 
     document.getElementById("pnlInfo").innerHTML = pnlInfoHtml;
-}
+};
 
 MadaraConstructor.prototype.calculateTotalPNL = function(currentDaySummary) {
     let totalPNL = 0;
@@ -1230,7 +1376,8 @@ MadaraConstructor.prototype.calculateTotalPNL = function(currentDaySummary) {
     }
 
     return totalPNL;
-}
+};
+
 MadaraConstructor.prototype.getPositionsAndOrdersHTML = function(currentDaySummary, need) {
     let positionsHtml = "";
     let self = this;
@@ -1245,7 +1392,8 @@ MadaraConstructor.prototype.getPositionsAndOrdersHTML = function(currentDaySumma
     } else if(need === "needPositions"){
         headerPropeties = ["strategy_header", "profit_header"];
     } else if(need === "needOpenOrders") {
-        return this.templates.noDataFoundHtml.replace(/{no_data_text}/g, Resource.no_open_orders);
+        headerPropeties = [ "entry_time", "script_name", "qty", "entry_price", "status", "index_name", "ltp", "strategy", "total" ];
+        // return this.templates.noDataFoundHtml.replace(/{no_data_text}/g, Resource.no_open_orders);
     }
 
     let tableHeadCell = "";
@@ -1282,6 +1430,87 @@ MadaraConstructor.prototype.getPositionsAndOrdersHTML = function(currentDaySumma
     });
 
     let dataTable = self.templates.dataTableHtml.replace(/{module}/g, (need === "needOrders") ? "orders" : "positions")
+                                                .replace(/{table_head_row}/g, tableHeadRow)
+                                                .replace(/{table_body}/g, eachConfigurationRow);
+
+    return dataTable;
+};
+
+MadaraConstructor.prototype.getOpenOrdersTableHTML = function(currentOpenOrders) {
+    let positionsHtml = "";
+    let self = this;
+    if(!currentOpenOrders.length) {
+        positionsHtml = this.templates.noDataFoundHtml.replace(/{no_data_text}/g, Resource.no_open_orders);
+        return positionsHtml;
+    }
+
+    let headerPropeties = [ "actions", "entry_time", "script_name", "qty", "entry_price", "status", "index_name", "ltp", "strategy", "total" ];
+
+    let tableHeadCell = "";
+    headerPropeties.forEach((property, index) => {
+        tableHeadCell +=  self.templates.tableCell.replace(/{table_cell_content}/g, Resource[property])
+                                                    .replace(/{tooltip_content}/g, Resource[property])
+                                                    .replace(/{disable_status}/, "");
+    });
+    let tableHeadRow = self.templates.tableRow.replace(/{table_row_contents}/g, tableHeadCell);
+    let eachConfigurationRow = "";
+    currentOpenOrders.forEach((position, index) => {
+        let indexName = position.index_name;
+        indexName = indexName.toUpperCase();
+        let qty = position.qty;
+        let entryPrice = position.entry_price;
+        let status = position.status;
+        let ltp = position.ltp;
+        let totalProfit = (ltp - entryPrice) * qty;
+        totalProfit = parseFloat(totalProfit);
+        totalProfitInLocale = totalProfit ? totalProfit.toLocaleString('en-IN', { minimumFractionDigits : 2, maximumFractionDigits : 2 }) : 0;
+
+        let totalProfitHtml = self.templates.htmlForCellContentHightlighter.replace(/{class_for_highlighting}/g, (totalProfit > 0) ? "positive" : ((totalProfit == 0) ? "neutral" : "negative"))
+                                                                            .replace(/{cell_content}/g, totalProfitInLocale);
+
+        let statusHtml = self.templates.htmlForCellContentHightlighter.replace(/{class_for_highlighting}/g, (status === "order_placed") ? "positive" : "negative")
+                                                                        .replace(/{cell_content}/g, self.checkAndGetResponseMessageFromResourceObject(status));
+
+        let actionsHtml = self.templates.actionsHtml.replace(/{start_button}/g, "")
+                                                    .replace(/{stop_button}/g, "")
+                                                    .replace(/{exit_button}/g, self.getExitButton("exitOpenOrders", position.strategy))
+                                                    .replace(/{edit_button}/g, "");
+                                                                                            
+        actionsHtml = actionsHtml.replace(/{index}/g, position.index_name)
+                                .replace(/{module}/g, "exitOpenOrder")
+                                .replace(/{purpose_of_edit}/g, "exitOpenOrder")
+                                .replace(/{trigger_source}/g, "exitOpenOrder");
+
+        let eachConfigurationCell = self.templates.tableCell.replace(/{table_cell_content}/g, actionsHtml)
+                                                            .replace(/{tooltip_content}/g, "")
+                                                            .replace(/{disable_status}/g, "actions-table-cell");
+
+        headerPropeties.forEach(property => {
+            if(property !== "actions") {
+                let tableCellContent = position[property];
+                let contentForTooltip = tableCellContent;
+                if(property === "status") {
+                    tableCellContent = statusHtml;
+                    contentForTooltip = self.checkAndGetResponseMessageFromResourceObject(status);
+                } else if(property === "index_name") {
+                    tableCellContent = indexName;
+                    contentForTooltip = indexName;
+                } else if(property === "total") {
+                    tableCellContent = totalProfitHtml;
+                    contentForTooltip = totalProfitInLocale;
+                } else if(property === "entry_time") {
+                    tableCellContent = contentForTooltip = self.getFormattedTime(position[property])
+                }
+
+                eachConfigurationCell += self.templates.tableCell.replace(/{table_cell_content}/g, tableCellContent ? tableCellContent : "-")
+                                                                .replace(/{tooltip_content}/g, contentForTooltip ? contentForTooltip : "")
+                                                                .replace(/{disable_status}/g, "");
+            }
+        });
+        eachConfigurationRow += self.templates.tableRow.replace(/{table_row_contents}/g, eachConfigurationCell);
+    });
+
+    let dataTable = self.templates.dataTableHtml.replace(/{module}/g, "openOrders")
                                                 .replace(/{table_head_row}/g, tableHeadRow)
                                                 .replace(/{table_body}/g, eachConfigurationRow);
 
