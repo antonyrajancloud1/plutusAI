@@ -588,12 +588,14 @@ def updateExpiryDetails():
     nifty = str(NIFTY_DEFAULT_VALUES["index_name"]).replace("_", " ").title().replace(" ", "").upper()
     bank_nifty = str(BANK_NIFTY_DEFAULT_VALUES["index_name"]).replace("_", " ").title().replace(" ", "").upper()
     fin_nifty = str(FINNIFTY_DEFAULT_VALUES["index_name"]).replace("_", " ").title().replace(" ", "").upper()
+    sensex = str(SENSEX_DEFAULT_VALUES["index_name"]).replace("_", " ").title().replace(" ", "").upper()
 
 
     index_map = {
         nifty: "99926000",
         bank_nifty: "99926009",
         fin_nifty: "99926037",
+        sensex: "99919000",
     }
     expiry_data = getnsedata(list(index_map.keys()))
 
@@ -683,9 +685,13 @@ def getTradingSymbol(index_name):
         year = str(today.year)[2:4]
         month = str(current_expiry.split("-")[1])
         index_name = str(index_name).replace("_", "").upper()
-        symbol = str(
-            index_name + current_expiry.split("-")[0] + str(month) + year
-        ).upper()
+        if index_name.__eq__("SENSEX"):
+            symbol = str(
+                index_name + current_expiry.split("-")[0] + str(month) ).upper()
+        else:
+            symbol = str(
+                index_name + current_expiry.split("-")[0] + str(month) + year
+            ).upper()
         return symbol
     except Exception as e:
         addLogDetails(INFO, "exception in getTradingSymbol  -----  " + str(e))
@@ -1192,7 +1198,10 @@ def getOpenOrdersUsingEmail(user_email,broker):
 
     # Worker function: do NOT modify broker.getLtpForPremium itself
     def get_ltp_for_order(order):
-        option_details = broker.getCurrentPremiumDetails(NFO, order["script_name"])
+        if str(order["script_name"]).__contains__("SENSEX"):
+            option_details = broker.getCurrentPremiumDetails(BFO, order["script_name"])
+        else:
+            option_details = broker.getCurrentPremiumDetails(NFO, order["script_name"])
         ltp = broker.getLtpForPremium(option_details)  # using the same call
         order["ltp"] = ltp
         return order

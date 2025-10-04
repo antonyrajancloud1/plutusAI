@@ -187,12 +187,12 @@ class ManualOrders(models.Model):
     ]
     user_id = models.CharField(max_length=100, default=None)
     index_name = models.CharField(max_length=100, default=None)
-    target = models.CharField(max_length=100, default=None)
-    stop_loss = models.CharField(max_length=100, default=None)
-    order_status = models.CharField(max_length=100, default=None)
+    target = models.CharField(max_length=100, default=None,blank=True, null=True)
+    stop_loss = models.CharField(max_length=100, default=None,blank=True, null=True)
+    order_status = models.CharField(max_length=100, default=None,blank=True, null=True)
     strike = models.CharField(max_length=100, default=None)
-    lots = models.CharField(max_length=100, default=None)
-    trigger = models.CharField(max_length=100, default=None)
+    lots = models.CharField(max_length=100, default=None,)
+    trigger = models.CharField(max_length=100, default=None,blank=True, null=True)
     time = models.CharField(max_length=100, default=None,blank=True, null=True)
     order_id = models.CharField(max_length=100, default=None ,blank=True, null=True)
     unique_order_id = models.CharField(max_length=100, default=None,blank=True, null=True)
@@ -201,6 +201,8 @@ class ManualOrders(models.Model):
     producttype = models.CharField(max_length=20, choices=PRODUCT_TYPE_CHOICES, default='INTRADAY')
     timeframe = models.CharField(max_length=20, choices=TIMEFRAME_CHOICES, default='FIVE_MINUTE')
     index_group = models.CharField(max_length=20, default="indian_index")
+    strategy_name = models.CharField(max_length=225, default=None, blank=True, null=True,unique=True)
+    strategy_type = models.CharField(max_length=100, default="default", blank=True, null=True)
 
     def __str__(self):
         return f"{self.user_id} - {self.index_name} - {self.target} - {self.stop_loss} - {self.order_status} - {self.time}"

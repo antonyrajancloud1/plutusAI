@@ -66,6 +66,10 @@ PLACE_ORDER_EXIT = "place_order_exit"
 ALL_OPEN_ORDERS = "all_open_orders"
 OPEN_ORDERS = "open_orders"
 CHECK_BROKER_STATUS = "check_broker_status"
+GET_STRATEGY_DETAILS = "get_strategy_details"
+ADD_STRATEGY_DETAILS = "add_strategy_details"
+UPDATE_STRATEGY_DETAILS = "update_strategy_details"
+DELETE_STRATEGY_DETAILS = "delete_strategy_details"
 
 TRIGGER_ORDER_TO_MARKET = "trigger_order_to_market"
 TRIGGER_BUY = "trigger_buy"
@@ -192,6 +196,8 @@ BUY = "BUY"
 SELL = "SELL"
 NSE = "NSE"
 NFO = "NFO"
+BFO = "BFO"
+
 MARKET = "MARKET"
 INTRADAY = "INTRADAY"
 DAY = "DAY"
@@ -262,7 +268,21 @@ FINNIFTY_DEFAULT_VALUES = {
     "strike": "100",
     "lots": "10",
 }
-
+SENSEX_DEFAULT_VALUES = {
+    "index_name": "sensex",
+    "initial_sl": "10",
+    "is_place_sl_required": True,
+    "safe_sl": "10",
+    "target_for_safe_sl": "10",
+    "trailing_points": "10",
+    "trend_check_points": "15",
+    "levels": "update levels",
+    "user_id": "replace_user_id",
+    "start_scheduler": False,
+    "stage": "stopped",
+    "strike": "100",
+    "lots": "10",
+}
 MIDCAP_DEFAULT_VALUES = {
     "index_name": "midcap_nifty",
     "initial_sl": "10",

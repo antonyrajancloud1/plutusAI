@@ -138,6 +138,13 @@ class AngelOneBroker:
                     index_ltp = self.smartApi.ltpData("NSE", index_name, "99926037")["data"]['ltp']
                     index_spot = indexValue * round(index_ltp / indexValue)
                     return index_spot
+                case "sensex":
+                    indexValue = 100
+                    print(index_name)
+                    index_ltp = self.smartApi.ltpData("BSE", index_name, "99919000")["data"]['ltp']
+                    print(index_ltp)
+                    index_spot = indexValue * round(index_ltp / indexValue)
+                    return index_spot
         except Exception as e:
             addLogDetails(ERROR, "Error in getCurrentAtm " + str(e))
 

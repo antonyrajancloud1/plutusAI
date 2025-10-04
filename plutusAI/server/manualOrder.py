@@ -23,9 +23,16 @@ def submit_modifyToMarketOrder(user_email, user_index_data, strategy, order_type
 def triggerOrder(user_email, user_index_data, signal_data, order_type):
     try:
         strategy = signal_data.get(STRATEGY, "DefaultStrategy")
-        qty = int(signal_data.get(LOTS, user_index_data.get(LOTS, 1)))
-
         index_name = user_index_data.get(INDEX_NAME)
+
+        user_strategy_details = ManualOrders.objects.filter(user_id=user_email, index_name=index_name,strategy_name=strategy)
+        if user_strategy_details.exists():
+            user_strategy_details_list = list(user_strategy_details.values())[0]
+            qty=int(user_strategy_details_list.get(LOTS))
+        else:
+            qty = int(signal_data.get(LOTS, user_index_data.get(LOTS, 1)))
+
+
         strike = int(user_index_data.get(STRIKE, 0))
 
         on_candle_close = bool(user_index_data.get(ON_CANDLE_CLOSE))
@@ -43,11 +50,12 @@ def triggerOrder(user_email, user_index_data, signal_data, order_type):
         user_qty = qty * index_qty
         broker = Broker(user_email, INDIAN_INDEX).BrokerObject
         atm = broker.getCurrentAtm(index_name)
+        print(atm)
         # Exit order handling
         user_data = OrderBook.objects.filter(
             user_id=user_email, strategy=strategy, exit_price=None
         )
-
+        print("ABC")
         if user_data.exists():
             order_info = user_data.values().first()
             script_name = order_info[SCRIPT_NAME]
@@ -80,10 +88,17 @@ def triggerOrder(user_email, user_index_data, signal_data, order_type):
 
         # Determine option type and strike logic
         option_type = CE if order_type.upper() == BUY else PE
+        print(option_type)
         strike_price = atm - strike if order_type.upper() == BUY else atm + strike
+        print(strike_price)
+        print(getTradingSymbol(index_name))
         trading_symbol = f"{getTradingSymbol(index_name)}{strike_price}{option_type}"
+        print(trading_symbol)
         # Fetch current premium details
-        option_details = broker.getCurrentPremiumDetails(NFO, trading_symbol)
+        if index_name=="sensex":
+            option_details = broker.getCurrentPremiumDetails(BFO, trading_symbol)
+        else:
+            option_details = broker.getCurrentPremiumDetails(NFO, trading_symbol)
         ltp = broker.getLtpForPremium(option_details)
         addLogDetails(INFO,f"{user_email} :: {str(option_details)}")
         if broker.is_demo_enabled:

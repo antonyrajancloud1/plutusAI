@@ -65,6 +65,11 @@ urlpatterns = [
     path(GET_CELERY_STATUS, views.check_celery_status, name=GET_CELERY_STATUS),
     path(STOP_CELERY, views.stop_celery, name=STOP_CELERY),
     path(RESTART_CELERY, views.restart_celery, name=RESTART_CELERY),
+path(GET_STRATEGY_DETAILS, views.getStrategyDetails, name=GET_STRATEGY_DETAILS),
+path(UPDATE_STRATEGY_DETAILS, views.updateStrategy, name=UPDATE_STRATEGY_DETAILS),
+path(DELETE_STRATEGY_DETAILS, views.deleteStrategy, name=DELETE_STRATEGY_DETAILS),
+path(ADD_STRATEGY_DETAILS, views.addStrategy, name=ADD_STRATEGY_DETAILS),
+
 
 ##Forex
     path("forex_buy_order", views.placeForexBuy, name="forex_buy_order"),
