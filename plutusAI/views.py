@@ -824,7 +824,8 @@ def placeBuyOrderWebHook(request):
                 user_manual_details = ManualOrders.objects.filter(user_id=user_email, index_name=index)
                 data = list(user_manual_details.values())[0]
             data = remove_spaces_from_json(data)
-            submit_triggerOrder(user_email, data, signal_data, BUY)
+            # submit_triggerOrder(user_email, data, signal_data, BUY)
+            triggerOrder(user_email, data, signal_data, BUY)
             return JsonResponse({STATUS: SUCCESS, MESSAGE: "Message Done"})
         except Exception as e:
             print(e)
@@ -848,7 +849,8 @@ def modifyToMarketOrderWebHook(request):
                 user_manual_details = ManualOrders.objects.filter(user_id=user_email, index_name=index)
                 data = list(user_manual_details.values())[0]
             data = remove_spaces_from_json(data)
-            submit_modifyToMarketOrder(user_email, data, strategy, BUY)
+            # submit_modifyToMarketOrder(user_email, data, strategy, BUY)
+            modifyToMarketOrder(user_email, data, strategy, BUY)
             return JsonResponse({STATUS: SUCCESS, MESSAGE: "Modified"})
         except Exception as e:
             print(e)
@@ -871,7 +873,8 @@ def placeSellOrderWebHook(request):
             user_manual_details = ManualOrders.objects.filter(user_id=user_email, index_name=index)
             data = list(user_manual_details.values())[0]
         data = remove_spaces_from_json(data)
-        submit_triggerOrder(user_email, data, signal_data, SELL)
+        # submit_triggerOrder(user_email, data, signal_data, SELL)
+        triggerOrder(user_email, data, signal_data, SELL)
         return JsonResponse({STATUS: SUCCESS, MESSAGE: "Message Done"})
     else:
         return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
@@ -944,7 +947,8 @@ def placeExitOrderWebHook(request):
         data = json.loads(request.body)
         # index = data[INDEX_NAME]
         strategy = data.get(STRATEGY, "DefaultStrategy")
-        submit_exitOrderWebhook(strategy,data,user_email)
+        # submit_exitOrderWebhook(strategy,data,user_email)
+        exitOrderWebhook(strategy,data,user_email)
         return JsonResponse({STATUS: SUCCESS, MESSAGE: "Message Exists SELL"})
     else:
         return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
@@ -1214,5 +1218,116 @@ def closeForexSell(request):
         broker = Broker(user_email, FOREX_INDEX).BrokerObject
         broker_response = broker.exitOrderForex(data_json)
         return JsonResponse({STATUS: SUCCESS, MESSAGE: broker_response})
+    else:
+        return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+
+def safe_json_body(request):
+    """Helper to safely parse JSON body from request"""
+    try:
+        if request.body:
+            return json.loads(request.body.decode("utf-8"))
+    except json.JSONDecodeError:
+        pass
+    return {}
+@csrf_exempt
+@require_http_methods([GET])
+def getStrategyDetails(request):
+    if check_user_session(request):
+        user_email = get_user_email(request)
+        data = safe_json_body(request)
+        index_name = data.get(INDEX_NAME)
+        user_strategy_details = ManualOrders.objects.filter(user_id=user_email)
+        if index_name:
+            user_strategy_details = user_strategy_details.filter(index_name=index_name)
+        strategy_details = list(user_strategy_details.values())
+        print(strategy_details)
+
+        return JsonResponse({STATUS: SUCCESS, "data": strategy_details})
+    else:
+        return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+
+
+
+
+
+@csrf_exempt
+@require_http_methods([PUT])
+def updateStrategy(request):
+    if check_user_session(request):
+        user_email = get_user_email(request)
+        data = safe_json_body(request)
+
+        strategy_name = data.get("strategy_name")
+        update_fields = data.get("fields", {})  # {field: value}
+
+        if not strategy_name or not update_fields:
+            return JsonResponse({STATUS: FAILED, MESSAGE: "Invalid request"})
+
+        try:
+            updated = ManualOrders.objects.filter(user_id=user_email, strategy_name=strategy_name).update(**update_fields)
+            if updated:
+                return JsonResponse({STATUS: SUCCESS, MESSAGE: "Updated successfully"})
+            else:
+                return JsonResponse({STATUS: FAILED, MESSAGE: "No record found"})
+        except Exception as e:
+            return JsonResponse({STATUS: FAILED, MESSAGE: str(e)})
+    else:
+        return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+
+@csrf_exempt
+@require_http_methods([POST])
+def deleteStrategy(request):
+    if check_user_session(request):
+        user_email = get_user_email(request)
+        data = safe_json_body(request)
+
+        strategy_name = data.get("strategy_name")
+
+        if not strategy_name:
+            return JsonResponse({STATUS: FAILED, MESSAGE: "Strategy name required"})
+
+        try:
+            deleted, _ = ManualOrders.objects.filter(user_id=user_email, strategy_name=strategy_name).delete()
+            if deleted:
+                return JsonResponse({STATUS: SUCCESS, MESSAGE: "Deleted successfully"})
+            else:
+                return JsonResponse({STATUS: FAILED, MESSAGE: "No record found"})
+        except Exception as e:
+            return JsonResponse({STATUS: FAILED, MESSAGE: str(e)})
+    else:
+        return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+
+@csrf_exempt
+@require_http_methods([POST])
+def addStrategy(request):
+    if check_user_session(request):
+        user_email = get_user_email(request)
+        data = safe_json_body(request)
+        strategy_name = data.get("strategy_name")
+        index_name = data.get("index_name")
+        if not strategy_name or not index_name:
+            return JsonResponse({STATUS: FAILED, "MESSAGE": "strategy_name and index_name are mandatory"})
+
+        # Check if strategy already exists for this user
+        if ManualOrders.objects.filter(user_id=user_email, strategy_name=strategy_name).exists():
+            return JsonResponse({STATUS: FAILED, "MESSAGE": f"Strategy '{strategy_name}' already exists"})
+
+        try:
+            strategy = ManualOrders.objects.create(
+                user_id=user_email,
+                strategy_name=data.get("strategy_name"),
+                index_name=data.get("index_name"),
+                strike=data.get("strike"),
+                lots=data.get("lots"),
+                on_candle_close=data.get("on_candle_close", False),
+                producttype=data.get("producttype", "INTRADAY"),
+                timeframe=data.get("timeframe", "FIVE_MINUTE"),
+                index_group=data.get("index_group", "indian_index"),
+                strategy_type="custom"
+            )
+
+            return JsonResponse({STATUS: SUCCESS, "message": "Strategy added", "strategy_name": strategy.strategy_name})
+        except Exception as e:
+            return JsonResponse({STATUS: FAILED, MESSAGE: str(e)})
     else:
         return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
