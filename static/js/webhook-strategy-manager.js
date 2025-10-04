@@ -1,10 +1,10 @@
-// Fix: Declare jQuery's global `$` to resolve TypeScript errors.
 const StrategyType = {
   DEFAULT: 'default',
   CUSTOM: 'custom',
 };
 
-const TOKEN = 'dc43c8dd7ac43be69c19139a8b0ff1530f85c9ef';
+let TOKEN = null;
+
 const indices = [
     { key: 'nifty', name: 'Nifty' },
     { key: 'bank_nifty', name: 'BankNifty' },
@@ -158,21 +158,26 @@ function createWebhookTableHTML(strategies) {
     let actionHTML;
 
     if (strategy.strategy_type === StrategyType.DEFAULT) {
-        actionHTML = toggleHTML;
+        actionHTML = `<div class="flex items-center justify-center gap-4">
+                        ${toggleHTML}
+                        <div class="flex items-center gap-2">
+                            <button class="btn-icon btn-edit" data-id="${strategy.id}" aria-label="Edit Strategy">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M13.586 3.586a2 2 0 1 1 2.828 2.828l-.793.793-2.828-2.828.793-.793ZM11.379 5.793l2.828 2.828L5.657 17.172a1 1 0 0 1-.707.293H3.75a1 1 0 0 1-1-1v-1.207a1 1 0 0 1 .293-.707l8.485-8.485Z" /></svg>
+                            </button>
+                        </div>
+                    </div>`;
     } else { // CUSTOM
-        actionHTML = `
-            <div class="flex items-center justify-center gap-4">
-                ${toggleHTML}
-                <div class="flex items-center gap-2">
-                    <button class="btn-icon btn-edit" data-id="${strategy.id}" aria-label="Edit Strategy">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M13.586 3.586a2 2 0 1 1 2.828 2.828l-.793.793-2.828-2.828.793-.793ZM11.379 5.793l2.828 2.828L5.657 17.172a1 1 0 0 1-.707.293H3.75a1 1 0 0 1-1-1v-1.207a1 1 0 0 1 .293-.707l8.485-8.485Z" /></svg>
-                    </button>
-                    <button class="btn-icon btn-delete" data-id="${strategy.id}" aria-label="Delete Strategy">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 0 0 6 3.75v.443c-.795.077-1.58.22-2.365.468a.75.75 0 1 0 .23 1.482l.149-.022.841 10.518A2.75 2.75 0 0 0 7.596 19h4.807a2.75 2.75 0 0 0 2.742-2.53l.841-10.52.149.023a.75.75 0 0 0 .23-1.482A41.03 41.03 0 0 0 14 4.193V3.75A2.75 2.75 0 0 0 11.25 1h-2.5ZM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4ZM8.58 7.72a.75.75 0 0 0-1.5.06l.3 7.5a.75.75 0 1 0 1.5-.06l-.3-7.5Zm4.34.06a.75.75 0 1 0-1.5-.06l-.3 7.5a.75.75 0 1 0 1.5.06l.3-7.5Z" clip-rule="evenodd"></path></svg>
-                    </button>
-                </div>
-            </div>
-        `;
+        actionHTML = `<div class="flex items-center justify-center gap-4">
+                        ${toggleHTML}
+                        <div class="flex items-center gap-2">
+                            <button class="btn-icon btn-edit" data-id="${strategy.id}" aria-label="Edit Strategy">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M13.586 3.586a2 2 0 1 1 2.828 2.828l-.793.793-2.828-2.828.793-.793ZM11.379 5.793l2.828 2.828L5.657 17.172a1 1 0 0 1-.707.293H3.75a1 1 0 0 1-1-1v-1.207a1 1 0 0 1 .293-.707l8.485-8.485Z" /></svg>
+                            </button>
+                            <button class="btn-icon btn-delete" data-id="${strategy.id}" aria-label="Delete Strategy">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 0 0 6 3.75v.443c-.795.077-1.58.22-2.365.468a.75.75 0 1 0 .23 1.482l.149-.022.841 10.518A2.75 2.75 0 0 0 7.596 19h4.807a2.75 2.75 0 0 0 2.742-2.53l.841-10.52.149.023a.75.75 0 0 0 .23-1.482A41.03 41.03 0 0 0 14 4.193V3.75A2.75 2.75 0 0 0 11.25 1h-2.5ZM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4ZM8.58 7.72a.75.75 0 0 0-1.5.06l.3 7.5a.75.75 0 1 0 1.5-.06l-.3-7.5Zm4.34.06a.75.75 0 1 0-1.5-.06l-.3 7.5a.75.75 0 1 0 1.5.06l.3-7.5Z" clip-rule="evenodd"></path></svg>
+                            </button>
+                        </div>
+                    </div>`;
     }
 
     const rowClass = 'cursor-pointer';
@@ -373,7 +378,10 @@ function bindEventsForStrategyManager() {
         try {
             $('#webhook-table-container').html('<p class="text-center p-8 text-theme-secondary">Loading strategies...</p>');
             const responseFromApi = await fetchAjax("/get_strategy_details", {}, { type: "GET" });
-
+            const tokenResponse = await fetchAjax("/get_auth_token", {}, { type: "POST" });
+            if (tokenResponse.status === 'success' && tokenResponse.message) {
+                TOKEN = tokenResponse.message;
+            }
             if (responseFromApi.status === 'success' && Array.isArray(responseFromApi.data)) {
                 const defaultStrategiesFromAPI = responseFromApi.data.filter(s => s.strategy_type === 'default');
 
@@ -388,7 +396,7 @@ function bindEventsForStrategyManager() {
                     };
                 });
                 
-                const customStrategies = strategies.filter(s => s.type === StrategyType.CUSTOM);
+                const customStrategies = responseFromApi.data.filter(s => s.strategy_type === StrategyType.CUSTOM);
                 strategies = [...transformedDefaults, ...customStrategies];
             } else {
                 throw new Error('Invalid API response structure');
@@ -461,7 +469,7 @@ function bindEventsForStrategyManager() {
         const method = isEditing ? 'PUT' : 'POST';
 
         if( isEditing ) {
-            const strategyToEdit = strategies.find(s => s.id === editingId);
+            const strategyToEdit = strategies.find(s => s.id == editingId);
             if (!strategyToEdit) {
                 showNotification('Error: Strategy to edit not found.', 'error');
                 submitButton.prop('disabled', false);
@@ -498,7 +506,7 @@ function bindEventsForStrategyManager() {
         try {
             const response = await fetchAjax(url, body, { type : method });
             if (isEditing) {
-                const strategyIndex = strategies.findIndex(s => s.id === editingId);
+                const strategyIndex = strategies.findIndex(s => s.id == editingId);
                 if (strategyIndex > -1) {
                     strategies[strategyIndex] = { ...strategies[strategyIndex], ...strategyDataFromForm };
                 }
@@ -533,7 +541,7 @@ function bindEventsForStrategyManager() {
     $('#webhook-table-container').on('click', '.toggle-switch', async function(e) {
         e.stopPropagation();
         const id = $(this).attr('data-id');
-        const strategy = strategies.find(s => s.id === id);
+        const strategy = strategies.find(s => s.id == id);
         if (strategy) {
             const originalEnabledState = strategy.enabled;
             // Optimistic UI update
@@ -556,7 +564,7 @@ function bindEventsForStrategyManager() {
     $('#webhook-table-container').on('click', '.btn-edit', function(e) {
         e.stopPropagation();
         const id = $(this).attr('data-id');
-        const strategyToEdit = strategies.find(s => s.id === id);
+        const strategyToEdit = strategies.find(s => s.id == id);
         if (strategyToEdit) {
             $('#modal-container').html(createAddStrategyModalHTML(strategyToEdit));
             $('#strategy-name').focus();
@@ -567,7 +575,7 @@ function bindEventsForStrategyManager() {
     $('#webhook-table-container').on('click', '.btn-delete', async function(e) {
         e.stopPropagation();
         const id = $(this).attr('data-id');
-        const strategyToDelete = strategies.find(s => s.id === id);
+        const strategyToDelete = strategies.find(s => s.id == id);
 
         if (strategyToDelete && window.confirm(`Are you sure you want to delete the "${strategyToDelete.strategy_name}" strategy?`)) {
             const rowActions = $(this).closest('td');
@@ -576,13 +584,12 @@ function bindEventsForStrategyManager() {
             try {
                 const response = await fetchAjax("/delete_strategy_details", { strategy_name : strategyToDelete.strategy_name }, { type : "POST" });
 
-                strategies = strategies.filter(s => s.id !== id);
+                strategies = strategies.filter(s => s.id != id);
                 if (expandedStrategyId === id) {
                     expandedStrategyId = null;
                 }
                 render();
                 showNotification('Strategy deleted successfully!', 'success');
-
             } catch (error) {
                 console.error("Failed to delete strategy : ", error);
                 showNotification(error.message, 'error');
