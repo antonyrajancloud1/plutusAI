@@ -216,34 +216,27 @@ MadaraConstructor.prototype.templates = {
                     </div>`,
 
     webhookStrategyManagerHtml : 
-                    `<div class="bg-gray-900 text-white min-h-screen font-sans">
-                        <div class="container mx-auto p-4 sm:p-6 lg:p-8">
-                            <header class="mb-8 text-center border-b border-gray-700 pb-6">
-                            <h1 class="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-500 tracking-tight">
-                                Webhook Strategy Manager
-                            </h1>
-                            <p class="mt-2 text-lg text-gray-400">Configure your automated strategies and webhooks.</p>
+                    `<div class="text-white w100 h100 ovrflwA">
+                        <div class="container mx-auto">
+                            <header class="mb-6 text-center border-b border-theme pb-6">
+                                <p class="text-3xl sm:text-2xl font-bold tracking-tight header-title">Configure your automated strategies and webhooks.</p>
                             </header>
-
                             <main class="max-w-4xl mx-auto">
-                            <div class="flex justify-between items-center mb-6">
-                                <h2 class="text-2xl font-semibold text-white">Your Strategies</h2>
-                                <button id="create-strategy-btn" class="bg-indigo-600 text-white font-semibold px-5 py-2.5 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 focus:ring-offset-gray-900 transition-all duration-200 ease-in-out shadow-lg hover:shadow-indigo-500/50">
-                                + Create Custom Strategy
+                                <div class="flex justify-between items-center mb-6">
+                                <h2 class="text-2xl font-semibold">Your Strategies</h2>
+                                <button id="create-strategy-btn" class="btn btn-positive shadow-lg">
+                                    + Create Custom Strategy
                                 </button>
-                            </div>
-
-                            <div id="add-strategy-form-container"></div>
-
-                            <div class="mt-4" id="webhook-table-container">
-                                <!-- WebhookTable will be rendered here by jQuery -->
-                            </div>
+                                </div>
+                                <div id="add-strategy-form-container"></div>
+                                <div class="mt-4" id="webhook-table-container"></div>
                             </main>
-                            
-                            <footer class="text-center mt-12 pt-6 border-t border-gray-800">
-                                <p class="text-gray-500 text-sm">&copy; 2024 Strategy Hub. All rights reserved.</p>
-                            </footer>
                         </div>
+                        <div id="modal-container"></div>` + 
+                        // <div id="copy-banner" class="fixed bottom-6 right-6 bg-green-600 text-white py-2 px-5 rounded-lg shadow-lg text-sm font-semibold" style="display: none; z-index: 100;">
+                        //     Webhook URL Copied!
+                        // </div>
+                        `<div id="notification-container" class="fixed bottom-6 right-6 space-y-2 z-[100]"></div>
                     </div>`
 };
 
@@ -534,7 +527,9 @@ MadaraConstructor.prototype.viewBrokerInfo = function() {
 };
 
 MadaraConstructor.prototype.viewStrategy = function() {
-
+    this.setCurrentLHSModuleAsSelected("#module-strategy");
+    $(this.DOM_SELECTORS.rhs_container).html(this.templates.webhookStrategyManagerHtml);
+    bindEventsForStrategyManager();
 };
 
 MadaraConstructor.prototype.viewScalper = function() {
