@@ -149,7 +149,7 @@ function createWebhookTableHTML(strategies) {
   
   const tableRows = strategies.map(strategy => {
     const typeClass = strategy.strategy_type === StrategyType.DEFAULT ? 'badge badge-default' : 'badge badge-custom';
-    
+    strategy.enabled = true;            //This is just a Patch until Toggle API is completed!
     const statusHTML = strategy.enabled 
         ? `<span class="flex items-center status-positive"><div class="status-dot status-dot-positive"></div>Enabled</span>`
         : `<span class="flex items-center status-negative"><div class="status-dot status-dot-negative"></div>Disabled</span>`;
