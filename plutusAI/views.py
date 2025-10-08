@@ -819,7 +819,15 @@ def placeBuyOrderWebHook(request):
             user_email = get_user_email(request)
             signal_data = json.loads(request.body)
             index=signal_data[INDEX_NAME]
-            # strategy = signal_data.get(STRATEGY, "DefaultStrategy")
+            strategy = signal_data.get(STRATEGY, "DefaultStrategy")
+            logDetails = LogDetails.objects.create(
+                user_id=user_email,
+                index_name=index,
+                log= f"Buy Order triggered for strategy {strategy}",
+                time = getCurrentTimestamp()
+            )
+
+
             if index:
                 user_manual_details = ManualOrders.objects.filter(user_id=user_email, index_name=index)
                 data = list(user_manual_details.values())[0]
@@ -868,7 +876,13 @@ def placeSellOrderWebHook(request):
         user_email = get_user_email(request)
         signal_data = json.loads(request.body)
         index = signal_data[INDEX_NAME]
-        # strategy = data.get(STRATEGY, "DefaultStrategy")
+        strategy = signal_data.get(STRATEGY, "DefaultStrategy")
+        logDetails = LogDetails.objects.create(
+            user_id=user_email,
+            index_name=index,
+            log=f"Sell Order triggered for strategy {strategy}",
+            time=getCurrentTimestamp()
+        )
         if index:
             user_manual_details = ManualOrders.objects.filter(user_id=user_email, index_name=index)
             data = list(user_manual_details.values())[0]
@@ -945,8 +959,14 @@ def placeExitOrderWebHook(request):
     if check_user_session(request):
         user_email = get_user_email(request)
         data = json.loads(request.body)
-        # index = data[INDEX_NAME]
+        index = data[INDEX_NAME]
         strategy = data.get(STRATEGY, "DefaultStrategy")
+        logDetails = LogDetails.objects.create(
+            user_id=user_email,
+            index_name=index,
+            log=f"Exit Order triggered for strategy {strategy}",
+            time=getCurrentTimestamp()
+        )
         submit_exitOrderWebhook(strategy,data,user_email)
         # exitOrderWebhook(strategy,data,user_email)
         return JsonResponse({STATUS: SUCCESS, MESSAGE: "Message Exists SELL"})
@@ -1248,8 +1268,6 @@ def getStrategyDetails(request):
 
 
 
-
-
 @csrf_exempt
 @require_http_methods([PUT])
 def updateStrategy(request):
@@ -1329,5 +1347,23 @@ def addStrategy(request):
             return JsonResponse({STATUS: SUCCESS, "message": "Strategy added", "strategy_name": strategy.strategy_name})
         except Exception as e:
             return JsonResponse({STATUS: FAILED, MESSAGE: str(e)})
+    else:
+        return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+
+
+@csrf_exempt
+@require_http_methods([GET])
+def getLogDetails(request):
+    if check_user_session(request):
+        user_email = get_user_email(request)
+        data = safe_json_body(request)
+        index_name = data.get(INDEX_NAME)
+        user_log_details = LogDetails.objects.filter(user_id=user_email)
+        if index_name:
+            user_log_details = user_log_details.filter(index_name=index_name)
+        log_details = list(user_log_details.values())
+        print(log_details)
+
+        return JsonResponse({STATUS: SUCCESS, "data": log_details})
     else:
         return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})

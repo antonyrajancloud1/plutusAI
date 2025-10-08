@@ -70,6 +70,7 @@ GET_STRATEGY_DETAILS = "get_strategy_details"
 ADD_STRATEGY_DETAILS = "add_strategy_details"
 UPDATE_STRATEGY_DETAILS = "update_strategy_details"
 DELETE_STRATEGY_DETAILS = "delete_strategy_details"
+GET_LOG_DETAILS = "get_log_details"
 
 TRIGGER_ORDER_TO_MARKET = "trigger_order_to_market"
 TRIGGER_BUY = "trigger_buy"

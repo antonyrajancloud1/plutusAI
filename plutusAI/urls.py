@@ -69,6 +69,7 @@ path(GET_STRATEGY_DETAILS, views.getStrategyDetails, name=GET_STRATEGY_DETAILS),
 path(UPDATE_STRATEGY_DETAILS, views.updateStrategy, name=UPDATE_STRATEGY_DETAILS),
 path(DELETE_STRATEGY_DETAILS, views.deleteStrategy, name=DELETE_STRATEGY_DETAILS),
 path(ADD_STRATEGY_DETAILS, views.addStrategy, name=ADD_STRATEGY_DETAILS),
+path(GET_LOG_DETAILS, views.getLogDetails, name=GET_LOG_DETAILS),
 
 
 ##Forex

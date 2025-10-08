@@ -250,3 +250,17 @@ class FlashDetails(models.Model):
     @classmethod
     def search_by_name(cls, query):
         return cls.objects.filter(name__icontains=query)
+
+class LogDetails(models.Model):
+    user_id = models.CharField(max_length=100, default=None)
+    index_name = models.CharField(max_length=100, default=None)
+    log = models.CharField(max_length=500, default=None , null=True)
+    log_type = models.CharField(max_length=10, default="trigger" , null=True)
+    time = models.CharField(max_length=100, default=None, null=True)
+
+    def __str__(self):
+        return f"{self.user_id} - {self.index_name} - {self.log_type} -  {self.log} "
+
+    @classmethod
+    def search_by_name(cls, query):
+        return cls.objects.filter(name__icontains=query)
