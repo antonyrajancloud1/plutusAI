@@ -1367,3 +1367,15 @@ def getLogDetails(request):
         return JsonResponse({STATUS: SUCCESS, "data": log_details})
     else:
         return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+
+
+@require_http_methods([GET])
+def viewLogDetails(request):
+    try:
+        if check_user_session(request):
+            return render(request, "logDetails.html")
+        else:
+            return redirect(LOGIN_URL)
+    except Exception as e:
+        addLogDetails(ERROR, str(e))
+        return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})

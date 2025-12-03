@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algo Trading Logger</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom scrollbar for table if needed */
+        .table-container {
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans min-h-screen p-6">
+
+    <div class="max-w-7xl mx-auto">
+
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">Trade Logger</h1>
+            <p class="text-gray-500 mt-1">Live execution logs and strategy monitoring</p>
+        </div>
+
+        <div class="bg-white p-5 rounded-lg shadow-sm border border-gray-200 mb-6 grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Strategy Name</label>
+                <select id="strategyFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+                    <option value="All">All Strategies</option>
+                    </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+                <input type="date" id="startDate" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">End Date</label>
+                <input type="date" id="endDate" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div>
+                <button onclick="resetFilters()" class="w-full md:w-auto px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md transition duration-150 flex items-center justify-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 12"/></svg>
+                    Reset Filters
+                </button>
+            </div>
+        </div>
+
+        <div class="bg-white shadow-sm rounded-lg border border-gray-200 overflow-hidden table-container">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Strategy</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Index</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Log Message</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                    </tr>
+                </thead>
+                <tbody id="logTableBody" class="bg-white divide-y divide-gray-200">
+                    </tbody>
+            </table>
+
+            <div id="emptyState" class="hidden p-10 text-center text-gray-500">
+                No logs found matching your criteria.
+            </div>
+        </div>
+    </div>
+
+    <script>
+    async function loadLogs() {
+        try {
+            const response = await fetch("get_log_details");
+            if (!response.ok) throw new Error("Network response failed");
+
+            const rawJson = await response.json();
+            return rawJson.data || [];
+
+        } catch (error) {
+            console.error("Error fetching logs:", error);
+            return [];
+        }
+    }
+
+    async function init() {
+
+        // --- Load logs from API ---
+        const logs = await loadLogs();
+        console.log("Fetched logs:", logs);
+
+        // Elements
+        const tableBody = document.getElementById('logTableBody');
+        const strategySelect = document.getElementById('strategyFilter');
+        const startDateInput = document.getElementById('startDate');
+        const endDateInput = document.getElementById('endDate');
+        const emptyState = document.getElementById('emptyState');
+
+        // Format timestamp
+        function formatTime(unixTime) {
+            const date = new Date(parseFloat(unixTime) * 1000);
+            return date.toLocaleString();
+        }
+
+        // Extract strategy name
+        function getStrategyName(logText) {
+            const splitKey = "strategy ";
+            if (logText.includes(splitKey)) {
+                return logText.split(splitKey)[1].trim();
+            }
+            return "Unknown";
+        }
+
+        // Initialize dropdown
+        function initStrategyDropdown() {
+            const strategies = new Set();
+
+            logs.forEach(log => {
+                strategies.add(getStrategyName(log.log));
+            });
+
+            strategies.forEach(strat => {
+                const opt = document.createElement("option");
+                opt.value = strat;
+                opt.textContent = strat;
+                strategySelect.appendChild(opt);
+            });
+        }
+
+        // Render table
+        function renderTable(data) {
+            tableBody.innerHTML = "";
+
+            if (data.length === 0) {
+                emptyState.classList.remove("hidden");
+                return;
+            }
+
+            emptyState.classList.add("hidden");
+
+            data.forEach(item => {
+                const strat = getStrategyName(item.log);
+                const time = formatTime(item.time);
+
+                const badgeClass =
+                    item.log_type === "trigger"
+                        ? "bg-green-100 text-green-800"
+                        : "bg-red-100 text-red-800";
+
+                const row = `
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 text-sm text-gray-600">${time}</td>
+                        <td class="px-6 py-4 text-sm font-medium text-blue-600">${strat}</td>
+                        <td class="px-6 py-4 text-sm text-gray-900 uppercase font-bold">${item.index_name}</td>
+                        <td class="px-6 py-4 text-sm text-gray-700">${item.log}</td>
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-1 rounded-full text-xs font-semibold ${badgeClass}">
+                                ${item.log_type}
+                            </span>
+                        </td>
+                    </tr>
+                `;
+                tableBody.insertAdjacentHTML("beforeend", row);
+            });
+        }
+
+        // Filtering
+        function filterLogs() {
+            const selected = strategySelect.value;
+            const start = startDateInput.value ? new Date(startDateInput.value) : null;
+            const end = endDateInput.value ? new Date(endDateInput.value) : null;
+
+            if (end) end.setHours(23, 59, 59);
+
+            const filtered = logs.filter(item => {
+                const itemDate = new Date(parseFloat(item.time) * 1000);
+                const itemStrat = getStrategyName(item.log);
+
+                let ok = (selected === "All" || selected === itemStrat);
+
+                if (start && itemDate < start) ok = false;
+                if (end && itemDate > end) ok = false;
+
+                return ok;
+            });
+
+            renderTable(filtered);
+        }
+
+        // Reset
+        function resetFilters() {
+            strategySelect.value = "All";
+            startDateInput.value = "";
+            endDateInput.value = "";
+            renderTable(logs);
+        }
+
+        // Expose to HTML buttons
+        window.resetFilters = resetFilters;
+
+        // Event listeners
+        strategySelect.addEventListener("change", filterLogs);
+        startDateInput.addEventListener("change", filterLogs);
+        endDateInput.addEventListener("change", filterLogs);
+
+        // Initialize UI
+        initStrategyDropdown();
+        renderTable(logs);
+    }
+
+    // Start everything
+    init();
+</script>
+
+</body>
+</html>
