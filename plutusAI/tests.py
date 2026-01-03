@@ -12,17 +12,17 @@ from .server.priceAction.hft import HighFrequencyTrading
 @require_http_methods(["GET"])
 def tester(request):
 
-    user_email = "antonyrajan.d@gmail.com"
+    user_email = "antonyrajan.d@gmail.com1"
 
-    index_data = IndexDetails.objects.filter(index_name="nifty1")
+    index_data = IndexDetails.objects.filter(index_name="nifty")
     index_group_name = get_index_group_name(index_data)
     if index_group_name == INDIAN_INDEX:
         # FlashTrade(user_email, index, INDIAN_INDEX)
         broker_obj = Broker(user_email, index_group_name).BrokerObject
-        user_data = Configuration.objects.filter(user_id=user_email, index_name="nifty1")
+        user_data = Configuration.objects.filter(user_id=user_email, index_name="nifty")
         config_dict = list(user_data.values())[0]
         print("values Generated")
         print(config_dict)
-        checker = HighFrequencyTrading(index_name="nifty1", user_email=user_email, BrokerObject=broker_obj)
+        checker = HighFrequencyTrading(index_name="nifty", user_email=user_email, BrokerObject=broker_obj)
         checker.startHFT()
     return JsonResponse({"started":"abc"}, safe=False)

@@ -33,7 +33,7 @@ class HighFrequencyTrading:
 
         # prepare symbols from your broker / DB like original code
         atm_strike = self.BrokerObject.getCurrentAtm(self.index_name)
-        strike_offset = 100  # your chosen offset
+        strike_offset = 50 #your chosen offset
         CE_option = f"{getTradingSymbol(self.index_name)}{atm_strike - strike_offset}{'CE'}"
         PE_option = f"{getTradingSymbol(self.index_name)}{atm_strike + strike_offset}{'PE'}"
 
@@ -106,7 +106,18 @@ class HighFrequencyTrading:
                 ORDER_TYPE: MARKET, PRODUCT_TYPE: self.product_type,
                 DURATION: DAY, QUANTITY: qty
             }
-            return self.BrokerObject.placeOrder(order_details)
+            order_resp= self.BrokerObject.placeOrder(order_details)
+            order_data = {
+                USER_ID: self.user_email,
+                SCRIPT_NAME: symbol,
+                QTY: qty,
+                ENTRY_PRICE: ltp,
+                STATUS: ORDER_PLACED,
+                STRATEGY: STRATEGY_HUNTER,
+                INDEX_NAME: self.index_name
+            }
+            addOrderBookDetails(order_data, True)
+            return order_resp
 
     # helper to place a single SELL of full qty (Option A)
     def _place_sell_total(self, token, qty, ltp=None):
@@ -129,7 +140,16 @@ class HighFrequencyTrading:
                 ORDER_TYPE: MARKET, PRODUCT_TYPE: self.product_type,
                 DURATION: DAY, QUANTITY: qty
             }
-            return self.BrokerObject.placeOrder(order_details)
+            order_resp= self.BrokerObject.placeOrder(order_details)
+            data = {
+                USER_ID: self.user_email,
+                SCRIPT_NAME: symbol,
+                QTY: qty,
+                EXIT_PRICE: ltp,
+                STATUS: ORDER_EXITED
+            }
+            addOrderBookDetails(data, False)
+            return order_resp
 
     # compute realized pnl for an exit and update global tally
     def _record_realized_pnl_and_check(self, token, exit_price, qty, entry_price):
@@ -292,8 +312,9 @@ class HighFrequencyTrading:
 
                 base = state["base_price"]
                 sl = state["sl"]
-
                 # ENTRY logic: only if not in position
+                if state["in_position"]:
+                    print(f"State :::: {state}")
                 if not state["in_position"]:
                     if avg_price > base and avg_buy_qty > avg_sell_qty and self.trading_active:
                         # place BUY
@@ -345,7 +366,7 @@ class HighFrequencyTrading:
                 else:
                     # IN POSITION: check EXIT or AVERAGE
                     # FIRST: EXIT conditions  ##  or avg_buy_qty < avg_sell_qty
-                    if ltp <= sl or avg_buy_qty < avg_sell_qty:
+                    if ltp <= sl or (avg_buy_qty < avg_sell_qty and state["price_window"][-1] <state["price_window"][-2]):
                         total_qty_to_exit = state["position_qty"]
                         if total_qty_to_exit > 0:
                             print(f"🛑 [EXIT] Token {token} | LTP={ltp} <= SL={sl} or imbalance detected. Exiting {total_qty_to_exit}")
