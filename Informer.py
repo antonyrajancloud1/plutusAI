@@ -1,6 +1,6 @@
 import requests
 import argparse
-TELEGRAM_IDS = ["710817544","648567264","1161672280"]
+TELEGRAM_IDS = ["710817544","648567264"]
 
 
 def sendMessageInTelegram(message):
