@@ -151,6 +151,11 @@ class AngelOneBroker:
                 addLogDetails(ERROR, msg)
                 sendMessageInTelegram(msg)
                 raise Exception(msg)
+            elif error_code == "AB1007":
+                msg = f"[AngelOne AB1007] {self.user_id} - Session token expired in {context}: {error_msg}. Re-login required."
+                addLogDetails(ERROR, msg)
+                sendMessageInTelegram(msg)
+                raise Exception(msg)
             elif error_code:
                 addLogDetails(
                     ERROR,

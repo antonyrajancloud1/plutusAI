@@ -273,6 +273,10 @@ def triggerOrder(user_email, user_index_data, signal_data, order_type):
             )
             unique_order_id = order_response.get("data", {}).get("uniqueorderid")
             order_response_details = broker.getOrderDetails(unique_order_id)
+            if order_response_details is None:
+                raise Exception(
+                    f"[getOrderDetails] trading_symbol={trading_symbol}: response is None"
+                )
             if str(order_details.get(ORDER_TYPE)).__eq__(MARKET):
                 option_buy_price = order_response_details.get("price", ltp)
             else:
