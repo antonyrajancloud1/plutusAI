@@ -21,7 +21,14 @@ from plutusAI.server.priceAction.priceActionScalper import *
 from .server.authentication.authentication import QueryParamTokenAuthentication
 from .server.manualOrder import *
 from .server.websocket.WebsocketAngelOne import WebsocketAngelOne
-from .server.telegram_notifier import sendMessageInTelegram
+
+try:
+    from .server.telegram_notifier import sendMessageInTelegram
+except ModuleNotFoundError:
+
+    def sendMessageInTelegram(message):
+        pass
+
 
 import subprocess
 

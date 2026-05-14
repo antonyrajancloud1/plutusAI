@@ -3,7 +3,15 @@ import threading
 from plutusAI.server.base import *
 from plutusAI.server.broker.Broker import Broker
 from plutusAI.server.constants import *
-from plutusAI.server.telegram_notifier import sendMessageInTelegram
+
+try:
+    from plutusAI.server.telegram_notifier import sendMessageInTelegram
+except ModuleNotFoundError:
+
+    def sendMessageInTelegram(message):
+        pass
+
+
 from threading import Lock
 
 executor = ThreadPoolExecutor(max_workers=150)
@@ -33,7 +41,6 @@ def submit_modifyToMarketOrder(user_email, user_index_data, strategy, order_type
 
 def triggerOrder(user_email, user_index_data, signal_data, order_type):
     try:
-
         strategy = signal_data.get(STRATEGY, "DefaultStrategy")
         index_name = user_index_data.get(INDEX_NAME)
 

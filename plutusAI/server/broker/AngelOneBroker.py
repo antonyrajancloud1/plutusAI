@@ -10,7 +10,15 @@ from plutusAI.models import UserAuthTokens
 from plutusAI.server.base import addLogDetails, getTokenUsingSymbol, getCurrentTimestamp
 from plutusAI.server.broker.AngelOne.AngelOneAuth import AngelOneAuth
 from plutusAI.server.constants import *
-from plutusAI.server.telegram_notifier import sendMessageInTelegram
+
+try:
+    from plutusAI.server.telegram_notifier import sendMessageInTelegram
+except ModuleNotFoundError:
+
+    def sendMessageInTelegram(message):
+        pass
+
+
 import jwt as pyjwt  # Ensure correct import
 
 
