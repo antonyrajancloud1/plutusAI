@@ -5,19 +5,20 @@ from django.db import models
 
 # Create your models here.
 
+
 class Configuration(models.Model):
     user_id = models.CharField(max_length=500, default=None)
     levels = models.CharField(max_length=5000, default=None)
-    index_name = models.CharField(max_length=50, default='nifty50')
+    index_name = models.CharField(max_length=50, default="nifty50")
     start_scheduler = models.BooleanField(default=False)
-    strike = models.CharField(max_length=5, default='10')
+    strike = models.CharField(max_length=5, default="10")
     is_place_sl_required = models.BooleanField(default=True)
-    trend_check_points = models.CharField(max_length=10, default='15')
-    trailing_points = models.CharField(max_length=10, default='10')
-    initial_sl = models.CharField(max_length=10, default='10')
-    safe_sl = models.CharField(max_length=10, default='3')
-    target_for_safe_sl = models.CharField(max_length=10, default='10')
-    status = models.CharField(max_length=250, default='stopped')
+    trend_check_points = models.CharField(max_length=10, default="15")
+    trailing_points = models.CharField(max_length=10, default="10")
+    initial_sl = models.CharField(max_length=10, default="10")
+    safe_sl = models.CharField(max_length=10, default="3")
+    target_for_safe_sl = models.CharField(max_length=10, default="10")
+    status = models.CharField(max_length=250, default="stopped")
     lots = models.CharField(max_length=50, default=None)
 
     def __str__(self):
@@ -43,8 +44,13 @@ class OrderBook(models.Model):
     index_group = models.CharField(max_length=20, default="indian_index", null=True)
     order_id = models.CharField(max_length=20, default=None, null=True)
     position_id = models.CharField(max_length=20, default=None, null=True)
+
     def __str__(self):
-        return "{" + f"user_id:{self.user_id}, script_name:{self.script_name}, entry_time:{self.entry_time}, strategy:{self.strategy} ,exit_time:{self.exit_time},total:{self.total},index_name:{self.index_name}" + "}"
+        return (
+            "{"
+            + f"user_id:{self.user_id}, script_name:{self.script_name}, entry_time:{self.entry_time}, strategy:{self.strategy} ,exit_time:{self.exit_time},total:{self.total},index_name:{self.index_name}"
+            + "}"
+        )
 
     @classmethod
     def search_by_name(cls, query):
@@ -52,18 +58,20 @@ class OrderBook(models.Model):
 
 
 class BrokerDetails(models.Model):
-    user_id = models.CharField(max_length=500, default=None,null=True)
-    broker_name = models.CharField(max_length=250, default=None,null=True)
-    broker_user_id = models.CharField(max_length=250, default=None,null=True)
-    broker_user_name = models.CharField(max_length=250, default=None, blank=True,null=True)
-    broker_mpin = models.CharField(max_length=250, default=None, blank=True ,null=True)
-    broker_api_token = models.CharField(max_length=250, default=None,null=True)
-    broker_qr = models.CharField(max_length=250, default=None, blank=True,null=True)
-    token_status = models.CharField(max_length=250, default=None,null=True)
-    is_demo_trading_enabled = models.BooleanField(default=False,null=True)
-    index_group = models.CharField(max_length=20, default="indian_index",null=True)
-    broker_password = models.CharField(max_length=250, default=None,null=True)
-    broker_forex_server = models.CharField(max_length=250, default=None,null=True)
+    user_id = models.CharField(max_length=500, default=None, null=True)
+    broker_name = models.CharField(max_length=250, default=None, null=True)
+    broker_user_id = models.CharField(max_length=250, default=None, null=True)
+    broker_user_name = models.CharField(
+        max_length=250, default=None, blank=True, null=True
+    )
+    broker_mpin = models.CharField(max_length=250, default=None, blank=True, null=True)
+    broker_api_token = models.CharField(max_length=250, default=None, null=True)
+    broker_qr = models.CharField(max_length=250, default=None, blank=True, null=True)
+    token_status = models.CharField(max_length=250, default=None, null=True)
+    is_demo_trading_enabled = models.BooleanField(default=False, null=True)
+    index_group = models.CharField(max_length=20, default="indian_index", null=True)
+    broker_password = models.CharField(max_length=250, default=None, null=True)
+    broker_forex_server = models.CharField(max_length=250, default=None, null=True)
 
     def __str__(self):
         return self.broker_name
@@ -126,6 +134,7 @@ class ScalperDetails(models.Model):
     lots = models.CharField(max_length=10, default=None)
     on_candle_close = models.BooleanField(default=False)
     status = models.CharField(max_length=250, default=None)
+
     def __str__(self):
         return self.index_name
 
@@ -158,13 +167,17 @@ class UserAuthTokens(models.Model):
     feedToken = models.CharField(max_length=2000, default=None)
     last_updated_time = models.CharField(max_length=500, default=None)
     index_group = models.CharField(max_length=20, default="indian_index")
+
     def __str__(self):
         # return str({"user_id": self.user_id,"jwtToken": self.jwtToken,"feedToken": self.feedToken})
-        return json.dumps({
-            "user_id": self.user_id,
-            "jwtToken": self.jwtToken,
-            "feedToken": self.feedToken
-        })
+        return json.dumps(
+            {
+                "user_id": self.user_id,
+                "jwtToken": self.jwtToken,
+                "feedToken": self.feedToken,
+            }
+        )
+
     @classmethod
     def search_by_name(cls, query):
         return cls.objects.filter(name__icontains=query)
@@ -172,37 +185,52 @@ class UserAuthTokens(models.Model):
 
 class ManualOrders(models.Model):
     PRODUCT_TYPE_CHOICES = [
-        ('INTRADAY', 'INTRADAY'),
-        ('CARRYFORWARD', 'CARRYFORWARD'),
+        ("INTRADAY", "INTRADAY"),
+        ("CARRYFORWARD", "CARRYFORWARD"),
     ]
     TIMEFRAME_CHOICES = [
-        ('ONE_MINUTE', 'ONE_MINUTE'),
-        ('THREE_MINUTE', 'THREE_MINUTE'),
-        ('FIVE_MINUTE', 'FIVE_MINUTE'),
-        ('TEN_MINUTE', 'TEN_MINUTE'),
-        ('FIFTEEN_MINUTE', 'FIFTEEN_MINUTE'),
-        ('THIRTY_MINUTE', 'THIRTY_MINUTE'),
-        ('ONE_HOUR', 'ONE_HOUR'),
-        ('ONE_DAY', 'ONE_DAY'),
+        ("ONE_MINUTE", "ONE_MINUTE"),
+        ("THREE_MINUTE", "THREE_MINUTE"),
+        ("FIVE_MINUTE", "FIVE_MINUTE"),
+        ("TEN_MINUTE", "TEN_MINUTE"),
+        ("FIFTEEN_MINUTE", "FIFTEEN_MINUTE"),
+        ("THIRTY_MINUTE", "THIRTY_MINUTE"),
+        ("ONE_HOUR", "ONE_HOUR"),
+        ("ONE_DAY", "ONE_DAY"),
     ]
     user_id = models.CharField(max_length=100, default=None)
     index_name = models.CharField(max_length=100, default=None)
-    target = models.CharField(max_length=100, default=None,blank=True, null=True)
-    stop_loss = models.CharField(max_length=100, default=None,blank=True, null=True)
-    order_status = models.CharField(max_length=100, default=None,blank=True, null=True)
+    target = models.CharField(max_length=100, default=None, blank=True, null=True)
+    stop_loss = models.CharField(max_length=100, default=None, blank=True, null=True)
+    order_status = models.CharField(max_length=100, default=None, blank=True, null=True)
     strike = models.CharField(max_length=100, default=None)
-    lots = models.CharField(max_length=100, default=None,)
-    trigger = models.CharField(max_length=100, default=None,blank=True, null=True)
-    time = models.CharField(max_length=100, default=None,blank=True, null=True)
-    order_id = models.CharField(max_length=100, default=None ,blank=True, null=True)
-    unique_order_id = models.CharField(max_length=100, default=None,blank=True, null=True)
-    current_premium = models.CharField(max_length=100, default=None,blank=True, null=True)
+    lots = models.CharField(
+        max_length=100,
+        default=None,
+    )
+    trigger = models.CharField(max_length=100, default=None, blank=True, null=True)
+    time = models.CharField(max_length=100, default=None, blank=True, null=True)
+    order_id = models.CharField(max_length=100, default=None, blank=True, null=True)
+    unique_order_id = models.CharField(
+        max_length=100, default=None, blank=True, null=True
+    )
+    current_premium = models.CharField(
+        max_length=100, default=None, blank=True, null=True
+    )
     on_candle_close = models.BooleanField(default=False)
-    producttype = models.CharField(max_length=20, choices=PRODUCT_TYPE_CHOICES, default='INTRADAY')
-    timeframe = models.CharField(max_length=20, choices=TIMEFRAME_CHOICES, default='FIVE_MINUTE')
+    producttype = models.CharField(
+        max_length=20, choices=PRODUCT_TYPE_CHOICES, default="INTRADAY"
+    )
+    timeframe = models.CharField(
+        max_length=20, choices=TIMEFRAME_CHOICES, default="FIVE_MINUTE"
+    )
     index_group = models.CharField(max_length=20, default="indian_index")
-    strategy_name = models.CharField(max_length=225, default=None, blank=True, null=True,unique=True)
-    strategy_type = models.CharField(max_length=100, default="default", blank=True, null=True)
+    strategy_name = models.CharField(
+        max_length=225, default=None, blank=True, null=True
+    )
+    strategy_type = models.CharField(
+        max_length=100, default="default", blank=True, null=True
+    )
 
     def __str__(self):
         return f"{self.user_id} - {self.index_name} - {self.target} - {self.stop_loss} - {self.order_status} - {self.time}"
@@ -215,7 +243,7 @@ class ManualOrders(models.Model):
 class WebhookDetails(models.Model):
     user_id = models.CharField(max_length=100, default=None)
     index_name = models.CharField(max_length=100, default=None)
-    target = models.CharField(max_length=100, default=None , null=True)
+    target = models.CharField(max_length=100, default=None, null=True)
     order_status = models.CharField(max_length=100, default=None)
     time = models.CharField(max_length=100, default=None)
     is_demo_trading_enabled = models.BooleanField(default=True)
@@ -223,6 +251,7 @@ class WebhookDetails(models.Model):
     order_id = models.CharField(max_length=100, default=None)
     unique_order_id = models.CharField(max_length=100, default=None)
     current_premium = models.CharField(max_length=100, default=None)
+
     def __str__(self):
         return f"{self.user_id} - {self.index_name} - {self.target} -  {self.order_status} - {self.time} - {self.is_demo_trading_enabled}"
 
@@ -237,8 +266,8 @@ class FlashDetails(models.Model):
     strike = models.CharField(max_length=10, default=None)
     max_profit = models.CharField(max_length=20, default=None)
     max_loss = models.CharField(max_length=20, default=None)
-    trend_check_points = models.CharField(max_length=10, default='15')
-    trailing_points = models.CharField(max_length=10, default='10')
+    trend_check_points = models.CharField(max_length=10, default="15")
+    trailing_points = models.CharField(max_length=10, default="10")
     is_demo_trading_enabled = models.BooleanField(default=True)
     lots = models.CharField(max_length=10, default=None)
     status = models.CharField(max_length=20, default=None)
@@ -251,11 +280,12 @@ class FlashDetails(models.Model):
     def search_by_name(cls, query):
         return cls.objects.filter(name__icontains=query)
 
+
 class LogDetails(models.Model):
     user_id = models.CharField(max_length=100, default=None)
     index_name = models.CharField(max_length=100, default=None)
-    log = models.CharField(max_length=500, default=None , null=True)
-    log_type = models.CharField(max_length=10, default="trigger" , null=True)
+    log = models.CharField(max_length=500, default=None, null=True)
+    log_type = models.CharField(max_length=10, default="trigger", null=True)
     time = models.CharField(max_length=100, default=None, null=True)
 
     def __str__(self):

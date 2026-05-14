@@ -33,6 +33,7 @@ def submit_modifyToMarketOrder(user_email, user_index_data, strategy, order_type
 
 def triggerOrder(user_email, user_index_data, signal_data, order_type):
     try:
+
         strategy = signal_data.get(STRATEGY, "DefaultStrategy")
         index_name = user_index_data.get(INDEX_NAME)
 
@@ -50,7 +51,6 @@ def triggerOrder(user_email, user_index_data, signal_data, order_type):
         on_candle_close = bool(user_index_data.get(ON_CANDLE_CLOSE))
         product_type = user_index_data.get(PRODUCT_TYPE)
         timeframe = user_index_data.get(TIMEFRAME)
-
         index_data = IndexDetails.objects.filter(index_name=index_name).values().first()
         if not index_data:
             error_msg = f"Index data not found for {index_name}"

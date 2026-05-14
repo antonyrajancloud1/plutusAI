@@ -958,10 +958,22 @@ def update_manual_order_values(request):
             validate_numeric_fields(data)
             validate_float_field(data)
             validate_levels(data)
+
+            NON_EDITABLE_FIELDS = {
+                "id",
+                "user_id",
+                "index_name",
+                "strategy_name",
+                "order_status",
+            }
+            filtered_data = {
+                k: v for k, v in data.items() if k not in NON_EDITABLE_FIELDS
+            }
+
             user_data = ManualOrders.objects.filter(
                 user_id=user_email, index_name=index_name
             )
-            user_data.update(**data)
+            user_data.update(**filtered_data)
             updated_data = ManualOrders.objects.filter(
                 user_id=user_email, index_name=index_name
             )
@@ -977,6 +989,7 @@ def update_manual_order_values(request):
     except ValueError as e:
         return JsonResponse({STATUS: FAILED, MESSAGE: str(e)}, status=400)
     except Exception as e:
+        addLogDetails(ERROR, str(e))
         return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
 
 
