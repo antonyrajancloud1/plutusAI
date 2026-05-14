@@ -127,6 +127,7 @@ class AngelOneBroker:
                     indexValue = 50
                     index_ltp = self.smartApi.ltpData("NSE", index_name, "99926000")["data"]['ltp']
                     index_spot = indexValue * round(index_ltp / indexValue)
+                    print(index_spot)
                     return index_spot
                 case "bank_nifty":
                     indexValue = 100
