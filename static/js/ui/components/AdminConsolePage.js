@@ -2,6 +2,7 @@ import { ShieldCheckIcon, PlayCircleIcon, StopCircleIcon, ArrowPathIcon, PlusIco
 import { makeApiCall } from '../utils/api.js';
 import Toast from './Toast.js';
 
+
 let state = {
     loading: true,
     celeryStatus: null,
