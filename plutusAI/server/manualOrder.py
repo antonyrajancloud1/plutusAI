@@ -8,7 +8,7 @@ try:
     from plutusAI.server.telegram_notifier import sendMessageInTelegram
 except ModuleNotFoundError:
 
-    def sendMessageInTelegram(message):
+    def sendMessageInTelegram(message, user_email=None):
         pass
 
 
@@ -62,7 +62,9 @@ def triggerOrder(user_email, user_index_data, signal_data, order_type):
         if not index_data:
             error_msg = f"Index data not found for {index_name}"
             addLogDetails(ERROR, f"{user_email} :: {str(error_msg)}")
-            sendMessageInTelegram(f"[triggerOrder] {user_email}: {error_msg}")
+            sendMessageInTelegram(
+                f"[triggerOrder] {user_email}: {error_msg}", user_email=user_email
+            )
             return JsonResponse(
                 {STATUS: FAILED, MESSAGE: "error_msg", TASK_STATUS: False}
             )
@@ -313,7 +315,9 @@ def triggerOrder(user_email, user_index_data, signal_data, order_type):
     except Exception as e:
         error_msg = str(e)
         addLogDetails(ERROR, f"{user_email} :: triggerOrder error: {error_msg}")
-        sendMessageInTelegram(f"[triggerOrder] {user_email}: {error_msg}")
+        sendMessageInTelegram(
+            f"[triggerOrder] {user_email}: {error_msg}", user_email=user_email
+        )
         return JsonResponse(
             {STATUS: FAILED, MESSAGE: "Unexpected error Check logs", TASK_STATUS: False}
         )
@@ -450,7 +454,9 @@ def exitOrderWebhook(strategy, data, user_email):
     except Exception as e:
         error_msg = str(e)
         addLogDetails(ERROR, f"{user_email} :: exitOrderWebhook error: {error_msg}")
-        sendMessageInTelegram(f"[exitOrderWebhook] {user_email}: {error_msg}")
+        sendMessageInTelegram(
+            f"[exitOrderWebhook] {user_email}: {error_msg}", user_email=user_email
+        )
         return JsonResponse(
             {
                 STATUS: FAILED,
@@ -498,7 +504,8 @@ def modifyToMarketOrder(user_email, user_index_data, strategy, order_type):
                 )
                 addLogDetails(ERROR, f"{user_email} :: {str(error_msg)}")
                 sendMessageInTelegram(
-                    f"[modifyToMarketOrder] {user_email}: {error_msg}"
+                    f"[modifyToMarketOrder] {user_email}: {error_msg}",
+                    user_email=user_email,
                 )
                 return JsonResponse(
                     {STATUS: FAILED, MESSAGE: error_msg, TASK_STATUS: False}
@@ -509,7 +516,8 @@ def modifyToMarketOrder(user_email, user_index_data, strategy, order_type):
                 error_msg = f"Index data not found for {index_name}"
                 addLogDetails(ERROR, f"{user_email} :: {str(error_msg)}")
                 sendMessageInTelegram(
-                    f"[modifyToMarketOrder] {user_email}: {error_msg}"
+                    f"[modifyToMarketOrder] {user_email}: {error_msg}",
+                    user_email=user_email,
                 )
                 return JsonResponse(
                     {STATUS: FAILED, MESSAGE: error_msg, TASK_STATUS: False}
@@ -584,7 +592,9 @@ def modifyToMarketOrder(user_email, user_index_data, strategy, order_type):
     except Exception as e:
         error_msg = str(e)
         addLogDetails(ERROR, f"{user_email} :: modifyToMarketOrder error: {error_msg}")
-        sendMessageInTelegram(f"[modifyToMarketOrder] {user_email}: {error_msg}")
+        sendMessageInTelegram(
+            f"[modifyToMarketOrder] {user_email}: {error_msg}", user_email=user_email
+        )
         return JsonResponse(
             {
                 STATUS: FAILED,

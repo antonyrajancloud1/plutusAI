@@ -1,25 +1,25 @@
 # Constants grouped by category
 
 ### ADMIN & JOB TYPES ###
-ADMIN_USER_ID = 'madara@plutus.com'
+ADMIN_USER_ID = "madara@plutus.com"
 SOCKET_JOB = "socket_job"
 HTTP_JOB = "http_job"
-SOCKET_JOB_TYPE = '3'
+SOCKET_JOB_TYPE = "3"
 GET_CELERY_STATUS = "get_celery_status"
 STOP_CELERY = "stop_celery"
 RESTART_CELERY = "restart_celery"
 
 ### STRATEGIES ###
-STRATEGY_HUNTER = 'hunter'
-STRATEGY_SCALPER = 'scalper'
-STRATEGY_MANUAL = 'manual'
-STRATEGY_FLASH = 'flash'
-STRATEGY = 'strategy'
+STRATEGY_HUNTER = "hunter"
+STRATEGY_SCALPER = "scalper"
+STRATEGY_MANUAL = "manual"
+STRATEGY_FLASH = "flash"
+STRATEGY = "strategy"
 
 ### INDEX NAMES & GROUPS ###
-NIFTY_50 = 'Nifty 50'
-NIFTY_BANK = 'Nifty Bank'
-NIFTY_FIN_SERVICE = 'Nifty Fin Service'
+NIFTY_50 = "Nifty 50"
+NIFTY_BANK = "Nifty Bank"
+NIFTY_FIN_SERVICE = "Nifty Fin Service"
 INDIAN_INDEX = "indian_index"
 FOREX_INDEX = "forex"
 INDECES = ["nifty", "bank_nifty", "fin_nifty"]
@@ -51,7 +51,7 @@ PLANS = "plans"
 EDIT_PLAN = "edit_plans"
 START_WS = "start_ws"
 STOP_WS = "stop_ws"
-DASHBOARD = 'dashboard'
+DASHBOARD = "dashboard"
 UPDATE_SCALPER = "update_scalper_details"
 GET_SCALPER_VALUES = "get_scalper_details"
 ADMIN_CONSOLE = "admin_console"
@@ -71,7 +71,7 @@ ADD_STRATEGY_DETAILS = "add_strategy_details"
 UPDATE_STRATEGY_DETAILS = "update_strategy_details"
 DELETE_STRATEGY_DETAILS = "delete_strategy_details"
 GET_LOG_DETAILS = "get_log_details"
-VIEW_LOG_DETAILS="view_logs"
+VIEW_LOG_DETAILS = "view_logs"
 
 TRIGGER_ORDER_TO_MARKET = "trigger_order_to_market"
 TRIGGER_BUY = "trigger_buy"
@@ -109,7 +109,7 @@ BROKER_MPIN = "broker_mpin"
 BROKER_API_TOKEN = "broker_api_token"
 BROKER_QR = "broker_qr"
 INDEX_GROUP = "index_group"
-TOKEN = 'token'
+TOKEN = "token"
 MAX_PROFIT = "max_profit"
 MAX_LOSS = "max_loss"
 SCRIPT_NAME = "script_name"
@@ -118,7 +118,7 @@ QTY = "qty"
 ENTRY_PRICE = "entry_price"
 EXIT_PRICE = "exit_price"
 EXIT_TIME = "exit_time"
-TOTAL = 'total'
+TOTAL = "total"
 LOTS = "lots"
 LTP = "ltp"
 CLOSE = "close"
@@ -169,8 +169,8 @@ PLAN_DETAILS = "plan_details"
 NSE_OPEN_TIME = "09:15"
 START_SCALPER = "start_scalper"
 STOP_SCALPER = "stop_scalper"
-BANKNIFTY_FUTURES = 'BANKNIFTY29MAY25FUT'
-SCALPER='scalper'
+BANKNIFTY_FUTURES = "BANKNIFTY29MAY25FUT"
+SCALPER = "scalper"
 
 ### STAGE STATUSES ###
 STAGE_INITIATED = {"status": "initiated"}
@@ -213,10 +213,10 @@ STOP_LOSS = "stop_loss"
 CURRENT_PREMIUM = "current_premium"
 UNIQUE_ORDER_ID = "unique_order_id"
 ORDER_ID = "order_id"
-TIMEFRAME="timeframe"
+TIMEFRAME = "timeframe"
 ### OTHER ###
-INFO = 'info'
-ERROR = 'error'
+INFO = "info"
+ERROR = "error"
 CONNECTION_ERROR = "Internet connection issue"
 INCORRECT_INPUT = "Invalid Entries Found For Field "
 ANGEL_ONE = "angel_one"
@@ -311,7 +311,7 @@ broker_sample_data_json = {
     "broker_api_token": "aBc123XyZ",
     "broker_mpin": "1234",
     "broker_qr": "QR123ABCXYZ987TOKEN456",
-    "index_group": "indian_index"
+    "index_group": "indian_index",
 }
 
 # ----- Scalper Config -----
@@ -323,9 +323,8 @@ scalper_data_json = {
     "target": 10,
     "lots": 2,
     "on_candle_close": 1,
-    "status": "running"
+    "status": "running",
 }
-
 
 
 # ----- Manual Orders List -----
@@ -338,7 +337,7 @@ manual_orders_sample_data = [
         "time": "123",
         "strike": 100,
         "lots": 1,
-        "trigger": 3
+        "trigger": 3,
     },
     {
         "index_name": "bank_nifty",
@@ -348,7 +347,7 @@ manual_orders_sample_data = [
         "time": "123",
         "strike": 100,
         "lots": 2,
-        "trigger": 5
+        "trigger": 5,
     },
     {
         "index_name": "fin_nifty",
@@ -358,8 +357,8 @@ manual_orders_sample_data = [
         "time": "123",
         "strike": 100,
         "lots": 1,
-        "trigger": 2
-    }
+        "trigger": 2,
+    },
 ]
 flash_sample_data_json = {
     "index_name": "nifty",
@@ -371,5 +370,11 @@ flash_sample_data_json = {
     "is_demo_trading_enabled": 1,
     "lots": "2",
     "status": "active",
-    "average_points": "25"
+    "average_points": "25",
 }
+
+### TELEGRAM SETTINGS ###
+GET_TELEGRAM_SETTINGS = "get_telegram_settings"
+UPDATE_TELEGRAM_SETTINGS = "update_telegram_settings"
+TELEGRAM_CHAT_ID = "chat_id"
+TELEGRAM_NOTIFY_ON_ERROR = "notify_on_error"

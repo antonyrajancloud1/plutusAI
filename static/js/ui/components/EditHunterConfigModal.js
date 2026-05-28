@@ -3,29 +3,29 @@ import { XMarkIcon, CogIcon } from './icons.js';
 const EditHunterConfigModal = ({ config }) => {
   if (!config) return '';
 
-  const formData = config; 
-  const inputClass = "mt-1 block w-full px-3 py-2 bg-white text-dark-text dark:bg-dark-mode-input-bg dark:text-dark-mode-text-primary border border-gray-300 dark:border-dark-mode-input-border rounded-md shadow-sm focus:outline-none focus:ring-primary dark:focus:ring-dark-mode-primary-accent focus:border-primary dark:focus:border-dark-mode-primary-accent sm:text-sm";
-  const labelClass = "block text-sm font-medium text-gray-700 dark:text-dark-mode-text-secondary";
+  const formData = config;
+  const inputClass = "mt-1 block w-full px-3 py-2 bg-surface-800 text-surface-50 border border-surface-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-400 sm:text-sm placeholder-surface-500";
+  const labelClass = "block text-sm font-medium text-surface-400";
 
   return `
-    <div 
-      class="fixed inset-0 bg-gray-600 bg-opacity-75 dark:bg-black dark:bg-opacity-75 flex items-center justify-center p-4 z-50 transition-opacity duration-300"
+    <div
+      class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50"
       role="dialog"
       aria-modal="true"
       aria-labelledby="editConfigModalTitle"
     >
-      <div class="bg-white dark:bg-dark-mode-card rounded-lg shadow-xl transform transition-all sm:max-w-2xl w-full max-h-[90vh] flex flex-col">
-        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-dark-mode-border">
-          <h2 id="editConfigModalTitle" class="text-xl font-semibold text-dark-text dark:text-dark-mode-text-primary flex items-center">
-            ${CogIcon({ className: "h-6 w-6 mr-2 text-primary dark:text-dark-mode-primary-accent" })}
+      <div class="bg-surface-800 border border-surface-700 rounded-xl shadow-xl transform transition-all sm:max-w-2xl w-full max-h-[90vh] flex flex-col">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-surface-700">
+          <h2 id="editConfigModalTitle" class="text-lg font-semibold text-surface-50 flex items-center gap-2">
+            ${CogIcon({ className: "h-5 w-5 text-primary-400" })}
             Edit Configuration: ${formData.index_name}
           </h2>
-          <button 
-            class="modal-close-button text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
+          <button
+            class="modal-close-button text-surface-500 hover:text-surface-300"
             data-modal="hunter"
             aria-label="Close modal"
           >
-            ${XMarkIcon({ className: "h-6 w-6" })}
+            ${XMarkIcon({ className: "h-5 w-5" })}
           </button>
         </div>
 
@@ -33,7 +33,7 @@ const EditHunterConfigModal = ({ config }) => {
           <input type="hidden" name="original_index_name" value="${formData.index_name}" />
           <div>
             <label for="index_name_display" class="${labelClass}">Index Name</label>
-            <input id="index_name_display" name="index_name" type="text" value="${formData.index_name}" readonly class="${inputClass} bg-gray-100 dark:bg-gray-700 cursor-not-allowed" />
+            <input id="index_name_display" name="index_name" type="text" value="${formData.index_name}" readonly class="${inputClass} bg-surface-700/50 cursor-not-allowed" />
           </div>
 
           <div>
@@ -51,23 +51,23 @@ const EditHunterConfigModal = ({ config }) => {
             <div><label for="target_for_safe_sl" class="${labelClass}">Target for Safe SL</label><input type="text" id="target_for_safe_sl" name="target_for_safe_sl" value="${formData.target_for_safe_sl}" class="${inputClass}" /></div>
             <div><label for="status" class="${labelClass}">Status</label><input type="text" id="status" name="status" value="${formData.status}" class="${inputClass}" /></div>
           </div>
-          
+
           <div class="space-y-2 pt-2">
             <div class="flex items-center">
-              <input id="start_scheduler" name="start_scheduler" type="checkbox" ${formData.start_scheduler ? 'checked' : ''} class="h-4 w-4 text-primary dark:accent-dark-mode-primary-accent border-gray-300 dark:border-dark-mode-input-border rounded focus:ring-primary dark:focus:ring-dark-mode-primary-accent" />
-              <label for="start_scheduler" class="ml-2 block text-sm text-gray-900 dark:text-dark-mode-text-secondary">Start Scheduler Active</label>
+              <input id="start_scheduler" name="start_scheduler" type="checkbox" ${formData.start_scheduler ? 'checked' : ''} class="h-4 w-4 text-primary-500 accent-primary-500 border-surface-700 rounded focus:ring-primary-400" />
+              <label for="start_scheduler" class="ml-2 block text-sm text-surface-400">Start Scheduler Active</label>
             </div>
             <div class="flex items-center">
-              <input id="is_place_sl_required" name="is_place_sl_required" type="checkbox" ${formData.is_place_sl_required ? 'checked' : ''} class="h-4 w-4 text-primary dark:accent-dark-mode-primary-accent border-gray-300 dark:border-dark-mode-input-border rounded focus:ring-primary dark:focus:ring-dark-mode-primary-accent" />
-              <label for="is_place_sl_required" class="ml-2 block text-sm text-gray-900 dark:text-dark-mode-text-secondary">Place SL Required</label>
+              <input id="is_place_sl_required" name="is_place_sl_required" type="checkbox" ${formData.is_place_sl_required ? 'checked' : ''} class="h-4 w-4 text-primary-500 accent-primary-500 border-surface-700 rounded focus:ring-primary-400" />
+              <label for="is_place_sl_required" class="ml-2 block text-sm text-surface-400">Place SL Required</label>
             </div>
           </div>
-        
-          <div class="px-6 py-4 border-t border-gray-200 dark:border-dark-mode-border bg-gray-50 dark:bg-dark-mode-hover-bg flex justify-end space-x-3 -mx-6 -mb-5 mt-4 rounded-b-lg">
-            <button type="button" class="modal-close-button px-4 py-2 text-sm font-medium text-gray-700 dark:text-dark-mode-text-secondary bg-white dark:bg-dark-mode-input-bg border border-gray-300 dark:border-dark-mode-input-border rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-dark-mode-primary-accent" data-modal="hunter">
+
+          <div class="px-6 py-4 border-t border-surface-700 bg-surface-800/50 flex justify-end gap-3 -mx-6 -mb-5 mt-4 rounded-b-xl">
+            <button type="button" class="modal-close-button px-4 py-2 text-sm font-medium text-surface-400 bg-surface-800 border border-surface-700 rounded-md shadow-sm hover:bg-surface-700 focus:outline-none focus:ring-2 focus:ring-primary-400" data-modal="hunter">
               Cancel
             </button>
-            <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-primary dark:bg-dark-mode-primary-accent border border-transparent rounded-md shadow-sm hover:bg-primary-dark dark:hover:bg-dark-mode-primary-accent-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-dark dark:focus:ring-dark-mode-primary-accent-dark">
+            <button type="submit" class="px-4 py-2 text-sm font-medium text-surface-50 bg-primary-500 border border-transparent rounded-md shadow-sm hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-400">
               Save Changes
             </button>
           </div>

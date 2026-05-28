@@ -294,3 +294,25 @@ class LogDetails(models.Model):
     @classmethod
     def search_by_name(cls, query):
         return cls.objects.filter(name__icontains=query)
+
+
+class TelegramSettings(models.Model):
+    user_id = models.CharField(max_length=500, unique=True, default=None)
+    chat_id = models.CharField(max_length=100, default=None, blank=True, null=True)
+    notify_on_error = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.user_id} - chat_id: {self.chat_id} - notify_on_error: {self.notify_on_error}"
+
+    @classmethod
+    def search_by_name(cls, query):
+        return cls.objects.filter(name__icontains=query)
+
+
+class TelegramBotConfig(models.Model):
+    bot_id = models.CharField(max_length=200, default="")
+    admin_bot_id = models.CharField(max_length=200, default="")
+    admin_chat_ids = models.CharField(max_length=500, default="")
+
+    def __str__(self):
+        return f"Bot: {self.bot_id[:20]}... | Admin Bot: {self.admin_bot_id[:20]}... | Admin IDs: {self.admin_chat_ids}"

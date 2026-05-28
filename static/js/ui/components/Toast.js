@@ -2,22 +2,22 @@ import { CheckCircleIcon, XCircleIcon, InformationCircleIcon, XMarkIcon } from '
 
 const toastConfig = {
   success: {
-    icon: CheckCircleIcon({ className: "h-6 w-6 text-green-500" }),
-    bg: 'bg-green-50 dark:bg-green-900 dark:bg-opacity-50',
-    border: 'border-green-400 dark:border-green-600',
-    text: 'text-green-800 dark:text-green-200'
+    icon: CheckCircleIcon({ className: "h-5 w-5 text-emerald-400" }),
+    bg: 'bg-emerald-500/10',
+    border: 'border-emerald-500/30',
+    text: 'text-emerald-300'
   },
   error: {
-    icon: XCircleIcon({ className: "h-6 w-6 text-red-500" }),
-    bg: 'bg-red-50 dark:bg-red-900 dark:bg-opacity-50',
-    border: 'border-red-400 dark:border-red-600',
-    text: 'text-red-800 dark:text-red-200'
+    icon: XCircleIcon({ className: "h-5 w-5 text-red-400" }),
+    bg: 'bg-red-500/10',
+    border: 'border-red-500/30',
+    text: 'text-red-300'
   },
   info: {
-    icon: InformationCircleIcon({ className: "h-6 w-6 text-blue-500" }),
-    bg: 'bg-blue-50 dark:bg-blue-900 dark:bg-opacity-50',
-    border: 'border-blue-400 dark:border-blue-600',
-    text: 'text-blue-800 dark:text-blue-200'
+    icon: InformationCircleIcon({ className: "h-5 w-5 text-blue-400" }),
+    bg: 'bg-blue-500/10',
+    border: 'border-blue-500/30',
+    text: 'text-blue-300'
   }
 };
 
@@ -26,7 +26,7 @@ const Toast = ({ message, type }) => {
 
   return `
     <div 
-      class="fixed top-20 right-5 max-w-sm w-full ${config.bg} shadow-lg rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 border-l-4 ${config.border} z-[200] animate-fade-in-right"
+      class="fixed top-20 right-5 max-w-sm w-full ${config.bg} backdrop-blur-sm shadow-lg rounded-lg pointer-events-auto border-l-4 ${config.border} z-[200] animate-fade-in-right"
       role="alert"
     >
       <div class="p-4">
@@ -41,22 +41,14 @@ const Toast = ({ message, type }) => {
           </div>
           <div class="ml-4 flex-shrink-0 flex">
             <button
-              class="toast-close-button inline-flex rounded-md ${config.bg} text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              class="toast-close-button inline-flex rounded-md text-surface-500 hover:text-surface-300 focus:outline-none"
               aria-label="Close toast"
             >
-              <span class="sr-only">Close</span>
-              ${XMarkIcon({ className: "h-5 w-5" })}
+              ${XMarkIcon({ className: "h-4 w-4" })}
             </button>
           </div>
         </div>
       </div>
-      <style>
-        @keyframes fade-in-right {
-          from { opacity: 0; transform: translateX(100%); }
-          to { opacity: 1; transform: translateX(0); }
-        }
-        .animate-fade-in-right { animation: fade-in-right 0.3s ease-out forwards; }
-      </style>
     </div>
   `;
 };

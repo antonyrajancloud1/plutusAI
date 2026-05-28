@@ -444,6 +444,10 @@ def start_ws(request):
             user_data = JobDetails.objects.filter(
                 user_id=ADMIN_USER_ID, index_name=HTTP_JOB, strategy=HTTP_JOB
             )
+        if user_data is None:
+            return JsonResponse(
+                {STATUS: FAILED, MESSAGE: "Invalid ws_type", TASK_STATUS: False}
+            )
         if user_data.count() > 0:
             return JsonResponse(
                 {STATUS: FAILED, MESSAGE: "Socket running", TASK_STATUS: True}
@@ -465,6 +469,10 @@ def stop_ws(request):
                 return terminate_task(ADMIN_USER_ID, SOCKET_JOB, SOCKET_JOB)
             elif ws_type == "2" or ws_type == "3":
                 return terminate_task(ADMIN_USER_ID, HTTP_JOB, HTTP_JOB)
+            else:
+                return JsonResponse(
+                    {STATUS: FAILED, MESSAGE: "Invalid ws_type", TASK_STATUS: False}
+                )
         else:
             return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
     except Exception as e:
@@ -651,7 +659,7 @@ def admin_console(request):
 @require_http_methods([GET])
 def check_task_status(request):
     try:
-        if admin_check(request.user):
+        if check_user_session(request):
             socket_data = JobDetails.objects.filter(
                 user_id=ADMIN_USER_ID, index_name=SOCKET_JOB, strategy=SOCKET_JOB
             )
@@ -765,7 +773,9 @@ def buy_manual_order(request):
             return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
     except Exception as e:
         addLogDetails(ERROR, str(e))
-        sendMessageInTelegram(f"[buy_manual_order] {str(e)}")
+        sendMessageInTelegram(
+            f"[buy_manual_order] {str(e)}", user_email=locals().get("user_email")
+        )
         return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
 
 
@@ -861,7 +871,10 @@ def placeBuyOrderManual(request):
             addLogDetails(
                 ERROR, f"{user_email} :: placeBuyOrderManual error: {error_msg}"
             )
-            sendMessageInTelegram(f"[placeBuyOrderManual] {user_email}: {error_msg}")
+            sendMessageInTelegram(
+                f"[placeBuyOrderManual] {user_email}: {error_msg}",
+                user_email=user_email,
+            )
             return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
     else:
         return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
@@ -891,7 +904,9 @@ def placeSellOrderManual(request):
         )
         error_msg = str(e)
         addLogDetails(ERROR, f"{user_email} :: placeSellOrderManual error: {error_msg}")
-        sendMessageInTelegram(f"[placeSellOrderManual] {user_email}: {error_msg}")
+        sendMessageInTelegram(
+            f"[placeSellOrderManual] {user_email}: {error_msg}", user_email=user_email
+        )
         return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
 
 
@@ -913,26 +928,10 @@ def placeExitOrderManual(request):
         )
         error_msg = str(e)
         addLogDetails(ERROR, f"{user_email} :: placeExitOrderManual error: {error_msg}")
-        sendMessageInTelegram(f"[placeExitOrderManual] {user_email}: {error_msg}")
+        sendMessageInTelegram(
+            f"[placeExitOrderManual] {user_email}: {error_msg}", user_email=user_email
+        )
         return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
-
-
-@csrf_exempt
-@require_http_methods([POST])
-def placeSellOrderManual(request):
-    if check_user_session(request):
-        user_email = get_user_email(request)
-        signal_data = json.loads(request.body)
-        index = signal_data[INDEX_NAME]
-        # strategy = data.get(STRATEGY, "DefaultStrategy")
-        if index:
-            user_manual_details = ManualOrders.objects.filter(
-                user_id=user_email, index_name=index
-            )
-            data = list(user_manual_details.values())[0]
-        data = remove_spaces_from_json(data)
-        triggerOrder(user_email, data, signal_data, SELL)
-        return JsonResponse({STATUS: SUCCESS, MESSAGE: "Message Exists SELL"})
     else:
         return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
 
@@ -1126,12 +1125,17 @@ def regenerateAuthToken(request):
 @require_http_methods([GET])
 @csrf_exempt
 def getIndexDetails(request):
-    if admin_check(request.user):
+    if check_user_session(request):
         try:
-            index_data = IndexDetails.objects.values_list(
-                "index_name", flat=True
-            ).distinct()
-            index_data_list = list(index_data.values())
+            index_data = IndexDetails.objects.values(
+                "index_name",
+                "index_token",
+                "ltp",
+                "qty",
+                "current_expiry",
+                "next_expiry",
+            )
+            index_data_list = list(index_data)
             return JsonResponse(
                 {STATUS: SUCCESS, MESSAGE: {"index_data": index_data_list}}
             )
@@ -1375,7 +1379,7 @@ def is_celery_running():
 @csrf_exempt  # need to remove
 @require_http_methods([GET])
 def check_celery_status(request):
-    if not admin_check(request.user):
+    if not check_user_session(request):
         return JsonResponse({STATUS: FAILED, MESSAGE: "UNAUTHORISED"})
     try:
         if is_celery_running():
@@ -1647,17 +1651,55 @@ def addStrategy(request):
 
 
 @csrf_exempt
-@require_http_methods([GET])
+@require_http_methods([GET, POST])
 def getLogDetails(request):
     if check_user_session(request):
         user_email = get_user_email(request)
         data = safe_json_body(request)
         index_name = data.get(INDEX_NAME)
+        start_date = data.get("start_date")
+        end_date = data.get("end_date")
+
         user_log_details = LogDetails.objects.filter(user_id=user_email)
         if index_name:
             user_log_details = user_log_details.filter(index_name=index_name)
         log_details = list(user_log_details.values())
-        print(log_details)
+
+        if start_date or end_date:
+            from datetime import datetime
+
+            def parse_timestamp(ts_str):
+                try:
+                    return float(ts_str)
+                except (ValueError, TypeError):
+                    return None
+
+            def date_to_ts(date_str, end_of_day=False):
+                try:
+                    dt = datetime.strptime(date_str, "%Y-%m-%d")
+                    if end_of_day:
+                        dt = dt.replace(hour=23, minute=59, second=59)
+                    return dt.timestamp()
+                except (ValueError, TypeError):
+                    try:
+                        return float(date_str)
+                    except (ValueError, TypeError):
+                        return None
+
+            start_ts = date_to_ts(start_date) if start_date else None
+            end_ts = date_to_ts(end_date, end_of_day=True) if end_date else None
+
+            filtered = []
+            for log in log_details:
+                log_ts = parse_timestamp(log.get("time"))
+                if log_ts is None:
+                    continue
+                if start_ts is not None and log_ts < start_ts:
+                    continue
+                if end_ts is not None and log_ts > end_ts:
+                    continue
+                filtered.append(log)
+            log_details = filtered
 
         return JsonResponse({STATUS: SUCCESS, "data": log_details})
     else:
@@ -1671,6 +1713,146 @@ def viewLogDetails(request):
             return render(request, "logDetails.html")
         else:
             return redirect(LOGIN_URL)
+    except Exception as e:
+        addLogDetails(ERROR, str(e))
+        return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
+
+
+@csrf_exempt
+@require_http_methods([GET])
+def get_telegram_settings(request):
+    try:
+        if not check_user_session(request):
+            return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+        user_email = get_user_email(request)
+        from plutusAI.models import TelegramSettings
+
+        settings = TelegramSettings.objects.filter(user_id=user_email).first()
+        if settings:
+            return JsonResponse(
+                {
+                    STATUS: SUCCESS,
+                    TELEGRAM_CHAT_ID: settings.chat_id or "",
+                    TELEGRAM_NOTIFY_ON_ERROR: settings.notify_on_error,
+                }
+            )
+        else:
+            return JsonResponse(
+                {
+                    STATUS: SUCCESS,
+                    TELEGRAM_CHAT_ID: "",
+                    TELEGRAM_NOTIFY_ON_ERROR: False,
+                }
+            )
+    except Exception as e:
+        addLogDetails(ERROR, str(e))
+        return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
+
+
+@csrf_exempt
+@require_http_methods([GET])
+def check_admin(request):
+    try:
+        if not check_user_session(request):
+            return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+        return JsonResponse(
+            {
+                STATUS: SUCCESS,
+                "is_admin": admin_check(request.user),
+            }
+        )
+    except Exception as e:
+        return JsonResponse({STATUS: FAILED, "is_admin": False})
+
+
+@csrf_exempt
+@require_http_methods([POST])
+def update_telegram_settings(request):
+    try:
+        if not check_user_session(request):
+            return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+        user_email = get_user_email(request)
+        data = json.loads(request.body)
+        from plutusAI.models import TelegramSettings
+
+        chat_id = data.get(TELEGRAM_CHAT_ID, "").strip()
+        notify_on_error = data.get(TELEGRAM_NOTIFY_ON_ERROR, False)
+        settings, created = TelegramSettings.objects.update_or_create(
+            user_id=user_email,
+            defaults={
+                TELEGRAM_CHAT_ID: chat_id,
+                TELEGRAM_NOTIFY_ON_ERROR: notify_on_error,
+            },
+        )
+        return JsonResponse(
+            {
+                STATUS: SUCCESS,
+                MESSAGE: "Telegram settings updated",
+                TELEGRAM_CHAT_ID: settings.chat_id or "",
+                TELEGRAM_NOTIFY_ON_ERROR: settings.notify_on_error,
+            }
+        )
+    except Exception as e:
+        addLogDetails(ERROR, str(e))
+        return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
+
+
+@csrf_exempt
+@require_http_methods([GET])
+def get_telegram_bot_config(request):
+    try:
+        if not check_user_session(request):
+            return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+        from plutusAI.models import TelegramBotConfig
+
+        config = TelegramBotConfig.objects.first()
+        if config:
+            return JsonResponse(
+                {
+                    STATUS: SUCCESS,
+                    "bot_id": config.bot_id or "",
+                    "admin_bot_id": config.admin_bot_id or "",
+                    "admin_chat_ids": config.admin_chat_ids or "",
+                }
+            )
+        return JsonResponse(
+            {
+                STATUS: SUCCESS,
+                "bot_id": "",
+                "admin_bot_id": "",
+                "admin_chat_ids": "",
+            }
+        )
+    except Exception as e:
+        addLogDetails(ERROR, str(e))
+        return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})
+
+
+@csrf_exempt
+@require_http_methods([POST])
+def update_telegram_bot_config(request):
+    try:
+        if not check_user_session(request):
+            return JsonResponse({STATUS: FAILED, MESSAGE: UNAUTHORISED})
+        data = json.loads(request.body)
+        from plutusAI.models import TelegramBotConfig
+
+        config = TelegramBotConfig.objects.first()
+        if not config:
+            config = TelegramBotConfig()
+        config.bot_id = data.get("bot_id", "").strip()
+        config.admin_bot_id = data.get("admin_bot_id", "").strip()
+        config.admin_chat_ids = data.get("admin_chat_ids", "").strip()
+        config.save()
+        return JsonResponse(
+            {
+                STATUS: SUCCESS,
+                MESSAGE: "Bot configuration updated",
+                "bot_id": config.bot_id or "",
+                "admin_bot_id": config.admin_bot_id or "",
+                "admin_chat_ids": config.admin_chat_ids or "",
+            }
+        )
     except Exception as e:
         addLogDetails(ERROR, str(e))
         return JsonResponse({STATUS: FAILED, MESSAGE: GLOBAL_ERROR})

@@ -1,20 +1,21 @@
-const SummaryCard = ({ title, value, icon, iconBgColor = 'bg-primary-dark dark:bg-dark-mode-primary-accent-dark', iconTextColor = 'text-light-text dark:text-dark-mode-text-primary', trend = null, trendText }) => {
+const accentMap = {
+    indigo: { bg: 'bg-primary-500/10', text: 'text-primary-400', border: 'border-primary-500/20' },
+    green: { bg: 'bg-emerald-500/10', text: 'text-emerald-400', border: 'border-emerald-500/20' },
+    red: { bg: 'bg-red-500/10', text: 'text-red-400', border: 'border-red-500/20' },
+    amber: { bg: 'bg-amber-500/10', text: 'text-amber-400', border: 'border-amber-500/20' },
+};
+
+const SummaryCard = ({ title, value, icon, accent = 'indigo' }) => {
+  const a = accentMap[accent] || accentMap.indigo;
   return `
-    <div class="bg-white dark:bg-dark-mode-card p-6 rounded-xl shadow-lg hover:shadow-xl dark:hover:shadow-primary/20 transition-shadow duration-300 flex flex-col justify-between">
-      <div class="flex items-start justify-between">
-        <div class="p-3 rounded-lg ${iconBgColor} ${iconTextColor}">
-          ${icon}
-        </div>
+    <div class="card p-4 lg:p-5 flex flex-col gap-3">
+      <div class="flex items-center justify-between">
+        <div class="p-2.5 rounded-lg ${a.bg} ${a.text}">${icon}</div>
       </div>
-      <div class="mt-4">
-        <p class="text-sm font-medium text-medium-text dark:text-dark-mode-text-secondary">${title}</p>
-        <p class="text-2xl font-semibold text-dark-text dark:text-dark-mode-text-primary mt-1">${value}</p>
+      <div>
+        <p class="text-xs font-medium text-surface-400 uppercase tracking-wider">${title}</p>
+        <p class="stat-value text-xl lg:text-2xl font-bold text-surface-50 mt-1">${value}</p>
       </div>
-      ${trend && trendText ? `
-        <div class="mt-2 text-xs flex items-center ${trend === 'up' ? 'text-secondary dark:text-green-400' : 'text-danger dark:text-red-400'}">
-          <span>${trendText}</span>
-        </div>
-      ` : ''}
     </div>
   `;
 };

@@ -15,7 +15,7 @@ try:
     from plutusAI.server.telegram_notifier import sendMessageInTelegram
 except ModuleNotFoundError:
 
-    def sendMessageInTelegram(message):
+    def sendMessageInTelegram(message, user_email=None):
         pass
 
 
@@ -149,12 +149,12 @@ class AngelOneBroker:
             if error_code == "AG8004":
                 msg = f"[AngelOne AG8004] {self.user_id} - API key '{self.broker_api_token}' in {context} is invalid. Regenerate at https://smartapi.angelbroking.com"
                 addLogDetails(ERROR, msg)
-                sendMessageInTelegram(msg)
+                sendMessageInTelegram(msg, user_email=self.user_id)
                 raise Exception(msg)
             elif error_code == "AB1007":
                 msg = f"[AngelOne AB1007] {self.user_id} - Session token expired in {context}: {error_msg}. Re-login required."
                 addLogDetails(ERROR, msg)
-                sendMessageInTelegram(msg)
+                sendMessageInTelegram(msg, user_email=self.user_id)
                 raise Exception(msg)
             elif error_code:
                 addLogDetails(

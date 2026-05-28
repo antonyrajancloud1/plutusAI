@@ -1,496 +1,709 @@
-"GET / HTTP/1.1" 302 0
-2026-01-02 22:00:57 IST - INFO - "GET / HTTP/1.1" 302 0
-"GET /login HTTP/1.1" 200 1113
-2026-01-02 22:00:57 IST - INFO - "GET /login HTTP/1.1" 200 1113
-"GET /static/js/resource.js HTTP/1.1" 304 0
-"GET /static/js/login.js HTTP/1.1" 304 0
-2026-01-02 22:00:57 IST - INFO - "GET /static/js/resource.js HTTP/1.1" 304 0
-2026-01-02 22:00:57 IST - INFO - "GET /static/js/login.js HTTP/1.1" 304 0
-"GET /static/css/common.css HTTP/1.1" 304 0
-2026-01-02 22:00:57 IST - INFO - "GET /static/css/common.css HTTP/1.1" 304 0
-"GET /static/css/global.css HTTP/1.1" 304 0
-2026-01-02 22:00:57 IST - INFO - "GET /static/css/global.css HTTP/1.1" 304 0
-"POST /login HTTP/1.1" 200 49
-2026-01-02 22:01:00 IST - INFO - "POST /login HTTP/1.1" 200 49
-"GET /home HTTP/1.1" 200 1368
-2026-01-02 22:01:00 IST - INFO - "GET /home HTTP/1.1" 200 1368
-"GET /static/js/webhook-strategy-manager.js HTTP/1.1" 304 0
-2026-01-02 22:01:00 IST - INFO - "GET /static/js/webhook-strategy-manager.js HTTP/1.1" 304 0
-"GET /static/js/home.js HTTP/1.1" 304 0
-2026-01-02 22:01:00 IST - INFO - "GET /static/js/home.js HTTP/1.1" 304 0
-"GET /static/css/webhook-strategy-manager.css HTTP/1.1" 200 6698
-2026-01-02 22:01:00 IST - INFO - "GET /static/css/webhook-strategy-manager.css HTTP/1.1" 200 6698
-2026-01-02 22:01:02 IST - INFO - into Existing token flow antonyrajan.d@gmail.com
-"GET /get_strategy_summary HTTP/1.1" 200 320
-2026-01-02 22:01:02 IST - INFO - "GET /get_strategy_summary HTTP/1.1" 200 320
-2026-01-02 22:01:03 IST - INFO - SmartAPI token is invalid or expired.
-2026-01-02 22:01:03 IST - INFO - user_broker_details
-2026-01-02 22:01:03 IST - INFO - {'id': 1, 'user_id': 'antonyrajan.d@gmail.com', 'broker_name': 'angel_one', 'broker_user_id': 'AAAJ478685', 'broker_user_name': 'DANIEL VIJAYAMARY', 'broker_mpin': '1005', 'broker_api_token': '0BunmJLW', 'broker_qr': 'ECKSFSRCFC6LIVJX7L5TOONR3A', 'token_status': 'generated', 'is_demo_trading_enabled': False, 'index_group': 'indian_index', 'broker_password': '1', 'broker_forex_server': '1'}
-2026-01-02 22:01:03 IST - INFO - Into GenerateAuthToken
-2026-01-02 22:01:03 IST - INFO - API Response: {'status': True, 'message': 'SUCCESS', 'errorcode': '', 'data': {'jwtToken': 'eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6IkFBQUo0Nzg2ODUiLCJyb2xlcyI6MCwidXNlcnR5cGUiOiJVU0VSIiwidG9rZW4iOiJleUpoYkdjaU9pSlNVekkxTmlJc0luUjVjQ0k2SWtwWFZDSjkuZXlKMWMyVnlYM1I1Y0dVaU9pSmpiR2xsYm5RaUxDSjBiMnRsYmw5MGVYQmxJam9pZEhKaFpHVmZZV05qWlhOelgzUnZhMlZ1SWl3aVoyMWZhV1FpT2pnc0luTnZkWEpqWlNJNklqTWlMQ0prWlhacFkyVmZhV1FpT2lJMVpXSTBOelUwTnkwek56a3lMVE5sWW1VdFltTmpNaTB6WkRkbE9HVXlNemN4T0RnaUxDSnJhV1FpT2lKMGNtRmtaVjlyWlhsZmRqSWlMQ0p2Ylc1bGJXRnVZV2RsY21sa0lqbzRMQ0p3Y205a2RXTjBjeUk2ZXlKa1pXMWhkQ0k2ZXlKemRHRjBkWE1pT2lKaFkzUnBkbVVpZlN3aWJXWWlPbnNpYzNSaGRIVnpJam9pWVdOMGFYWmxJbjE5TENKcGMzTWlPaUowY21Ga1pWOXNiMmRwYmw5elpYSjJhV05sSWl3aWMzVmlJam9pUVVGQlNqUTNPRFk0TlNJc0ltVjRjQ0k2TVRjMk56UTFOemcyTXl3aWJtSm1Jam94TnpZM016Y3hNamd6TENKcFlYUWlPakUzTmpjek56RXlPRE1zSW1wMGFTSTZJalEwTmpZNU5UaGtMV0U0WlRRdE5EZ3lOeTA0TXpobExUbG1PV0UwTmpNNE1HTTJOQ0lzSWxSdmEyVnVJam9pSW4wLnFMbmlFUERuV2VjMlFSQ20xWkNzcE9haV80MnZBcGdlVGxWNkI1Q3hReXVEQjlMQkl3RHdNd2ZiRWxLZTZpODBkb2wwejlYM19LekZqUWhMQnJIeFNCQmZHblFjSHB0Uk5udlNWeTNzaGh4dXNoa1JFM29vUjB3Xzl4SWxtLUZVMzVWQm1fbThLaTUwdksxMTBKbHR3WHp1Rk5WMzFxNDdhXzdUQzYwN1JWVSIsIkFQSS1LRVkiOiIwQnVubUpMVyIsIlgtT0xELUFQSS1LRVkiOnRydWUsImlhdCI6MTc2NzM3MTQ2MywiZXhwIjoxNzY3Mzc4NjAwfQ.9IPxjGTYR-Y-s8knf8Fez14WTJo6l9XOGD3V026nmS_FuM_YwPx_5OXO1Owi8rqoXlq9xKYsE_BIlDfwG3mF4Q', 'refreshToken': 'eyJhbGciOiJIUzUxMiJ9.eyJ0b2tlbiI6IlJFRlJFU0gtVE9LRU4iLCJSRUZSRVNILVRPS0VOIjoiZXlKaGJHY2lPaUpTVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SjFjMlZ5WDNSNWNHVWlPaUpqYkdsbGJuUWlMQ0owYjJ0bGJsOTBlWEJsSWpvaWRISmhaR1ZmY21WbWNtVnphRjkwYjJ0bGJpSXNJbWR0WDJsa0lqb3dMQ0p6YjNWeVkyVWlPaUl6SWl3aVpHVjJhV05sWDJsa0lqb2lOV1ZpTkRjMU5EY3RNemM1TWkwelpXSmxMV0pqWXpJdE0yUTNaVGhsTWpNM01UZzRJaXdpYTJsa0lqb2lkSEpoWkdWZmEyVjVYM1l5SWl3aWIyMXVaVzFoYm1GblpYSnBaQ0k2TUN3aWFYTnpJam9pYkc5bmFXNWZjMlZ5ZG1salpTSXNJbk4xWWlJNklrRkJRVW8wTnpnMk9EVWlMQ0psZUhBaU9qRTNOamMwTlRjNE5qTXNJbTVpWmlJNk1UYzJOek0zTVRJNE15d2lhV0YwSWpveE56WTNNemN4TWpnekxDSnFkR2tpT2lJeFpEVm1ZamRpWWkxalpUZzJMVFF5TjJVdFlXSmlPUzB5WlRneU9EY3pZalZqT0dRaUxDSlViMnRsYmlJNklpSjkueG52aU1naG1uRmdiTmN3RTl6TzdYOXRHalplY2l2Q3RST01yM2oweVM2TVVPejVEOTNGOHRuRWR6RWs4QTE4MHhHTUMzTV9kQnJSaExRV09MUl9CXzVjVS1NZkpjclg1X0FaV1QybUdYNGFOZUFUNFJUVTB4Tk5rTU4wbTJDV2UwOXZtWnRyZnd3VHFwTnpXYmJvWlFZbk5HYjZLVGdpcHNhdlhTTl9TalNVIiwiaWF0IjoxNzY3MzcxNDYzfQ.MNEOGF2HOxcDZcQb0hGhgifq_NbZsGjvzoQmAhUkOUSQzsbgsJAHsWgsTgz2ykcZHXyyRzv7AT_tQuppgolyVw', 'feedToken': 'eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6IkFBQUo0Nzg2ODUiLCJpYXQiOjE3NjczNzE0NjMsImV4cCI6MTc2NzQ1Nzg2M30.MmU5ICnZF98JDtLP-nueSwkn7AsZ2lhJ-uNqAPhT45AHNq-CEkJ5yaXJmIj5RgXeFzaKDEzvdO4-HDlnC1youQ', 'state': None}}
-2026-01-02 22:01:03 IST - INFO - New Token generated antonyrajan.d@gmail.com
-"GET /admin_console HTTP/1.1" 200 2912
-2026-01-02 22:01:05 IST - INFO - "GET /admin_console HTTP/1.1" 200 2912
-"GET /static/css/admin.css HTTP/1.1" 304 0
-2026-01-02 22:01:05 IST - INFO - "GET /static/css/admin.css HTTP/1.1" 304 0
-"GET /static/js/admin.js HTTP/1.1" 304 0
-2026-01-02 22:01:05 IST - INFO - "GET /static/js/admin.js HTTP/1.1" 304 0
-"GET /get_index_data HTTP/1.1" 200 1251
-2026-01-02 22:01:05 IST - INFO - "GET /get_index_data HTTP/1.1" 200 1251
+2026-05-28 12:57:07 IST - INFO - "GET /check_task_status HTTP/1.1" 200 79
+2026-05-28 12:57:07 IST - INFO - "GET /get_index_data HTTP/1.1" 200 846
+2026-05-28 12:57:07 IST - INFO - "GET /get_telegram_bot_config HTTP/1.1" 200 178
+2026-05-28 12:57:07 IST - INFO - "GET /get_celery_status HTTP/1.1" 200 62
+2026-05-28 12:57:50 IST - INFO - "GET /get_strategy_details HTTP/1.1" 200 3995
+2026-05-28 12:57:50 IST - INFO - "POST /get_auth_token HTTP/1.1" 200 76
+2026-05-28 12:58:11 IST - INFO - "GET /get_strategy_details HTTP/1.1" 200 3995
+2026-05-28 12:58:11 IST - INFO - "POST /get_auth_token HTTP/1.1" 200 76
+2026-05-28 12:58:44 IST - INFO - "GET /get_log_details HTTP/1.1" 200 391050
+2026-05-28 12:58:48 IST - INFO - "GET /get_telegram_settings HTTP/1.1" 200 81
+2026-05-28 12:59:22 IST - INFO - "GET /check_task_status HTTP/1.1" 200 79
+2026-05-28 12:59:22 IST - INFO - "GET /get_index_data HTTP/1.1" 200 846
+2026-05-28 12:59:22 IST - INFO - "GET /get_telegram_bot_config HTTP/1.1" 200 178
+2026-05-28 12:59:22 IST - INFO - "GET /get_celery_status HTTP/1.1" 200 62
+2026-05-28 12:59:28 IST - INFO - "GET /get_index_data HTTP/1.1" 200 846
+2026-05-28 12:59:28 IST - INFO - "GET /get_telegram_bot_config HTTP/1.1" 200 178
+2026-05-28 12:59:28 IST - INFO - "GET /check_task_status HTTP/1.1" 200 79
+2026-05-28 12:59:28 IST - INFO - "GET /get_celery_status HTTP/1.1" 200 62
+2026-05-28 12:59:42 IST - INFO - "GET /get_log_details HTTP/1.1" 200 391050
+Watching for file changes with StatReloader
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+2026-05-28 13:03:00 IST - WARNING - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+2026-05-28 13:03:00 IST - WARNING - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+2026-05-28 13:03:00 IST - WARNING - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+2026-05-28 13:03:00 IST - WARNING - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+"GET /dashboard HTTP/1.1" 200 5214
+2026-05-28 13:03:01 IST - INFO - "GET /dashboard HTTP/1.1" 200 5214
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+2026-05-28 13:03:01 IST - WARNING - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+2026-05-28 13:03:01 IST - WARNING - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+"GET /static/js/ui/index.js HTTP/1.1" 200 154
+2026-05-28 13:03:01 IST - INFO - "GET /static/js/ui/index.js HTTP/1.1" 200 154
+"GET /static/js/ui/App.js HTTP/1.1" 200 28300
+2026-05-28 13:03:02 IST - INFO - "GET /static/js/ui/App.js HTTP/1.1" 200 28300
+"GET /static/js/ui/utils/api.js HTTP/1.1" 200 1488
+2026-05-28 13:03:02 IST - INFO - "GET /static/js/ui/utils/api.js HTTP/1.1" 200 1488
+"GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 200 983
+2026-05-28 13:03:02 IST - INFO - "GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 200 983
+"GET /static/js/ui/components/icons.js HTTP/1.1" 200 7279
+2026-05-28 13:03:02 IST - INFO - "GET /static/js/ui/components/icons.js HTTP/1.1" 200 7279
+"GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 200 4132
+2026-05-28 13:03:02 IST - INFO - "GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 200 4132
+"GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 200 5524
+2026-05-28 13:03:02 IST - INFO - "GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 200 5524
+"GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 200 5884
+2026-05-28 13:03:02 IST - INFO - "GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 200 5884
+"GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 200 3350
+2026-05-28 13:03:02 IST - INFO - "GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 200 3350
+"GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 200 2227
+2026-05-28 13:03:02 IST - INFO - "GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 200 2227
+"GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 200 3909
+2026-05-28 13:03:02 IST - INFO - "GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 200 3909
+"GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 200 9333
+2026-05-28 13:03:02 IST - INFO - "GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 200 9333
+"GET /static/js/ui/components/Toast.js HTTP/1.1" 200 1654
+2026-05-28 13:03:02 IST - INFO - "GET /static/js/ui/components/Toast.js HTTP/1.1" 200 1654
+"GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 200 4438
+2026-05-28 13:03:02 IST - INFO - "GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 200 4438
+"GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 200 4881
+2026-05-28 13:03:02 IST - INFO - "GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 200 4881
+"GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 200 4377
+2026-05-28 13:03:02 IST - INFO - "GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 200 4377
+"GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 200 6595
+2026-05-28 13:03:02 IST - INFO - "GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 200 6595
+"GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16904
+2026-05-28 13:03:02 IST - INFO - "GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16904
+"GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 200 7299
+2026-05-28 13:03:02 IST - INFO - "GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 200 7299
+"GET /static/js/ui/components/StrategiesPage.js HTTP/1.1" 200 26378
+2026-05-28 13:03:02 IST - INFO - "GET /static/js/ui/components/StrategiesPage.js HTTP/1.1" 200 26378
+"GET /get_scalper_details HTTP/1.1" 200 206
+2026-05-28 13:03:02 IST - INFO - "GET /get_scalper_details HTTP/1.1" 200 206
+"GET /get_broker_details HTTP/1.1" 200 367
+2026-05-28 13:03:02 IST - INFO - "GET /get_broker_details HTTP/1.1" 200 367
+"GET /get_config_values HTTP/1.1" 200 902
+2026-05-28 13:03:02 IST - INFO - "GET /get_config_values HTTP/1.1" 200 902
+"POST /get_auth_token HTTP/1.1" 200 76
+2026-05-28 13:03:02 IST - INFO - "POST /get_auth_token HTTP/1.1" 200 76
+"GET /get_order_book_details HTTP/1.1" 200 100027
+2026-05-28 13:03:02 IST - INFO - "GET /get_order_book_details HTTP/1.1" 200 100027
+"GET /get_strategy_summary HTTP/1.1" 200 869
+2026-05-28 13:03:02 IST - INFO - "GET /get_strategy_summary HTTP/1.1" 200 869
+"GET /manual_details HTTP/1.1" 200 4019
+2026-05-28 13:03:02 IST - INFO - "GET /manual_details HTTP/1.1" 200 4019
+"GET /check_admin HTTP/1.1" 200 39
+2026-05-28 13:03:02 IST - INFO - "GET /check_admin HTTP/1.1" 200 39
+Watching for file changes with StatReloader
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+2026-05-28 13:06:55 IST - WARNING - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+2026-05-28 13:06:55 IST - WARNING - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+2026-05-28 13:06:55 IST - WARNING - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+2026-05-28 13:06:55 IST - WARNING - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+"GET /dashboard HTTP/1.1" 200 5214
+2026-05-28 13:06:58 IST - INFO - "GET /dashboard HTTP/1.1" 200 5214
+"GET /static/js/ui/index.js HTTP/1.1" 304 0
+2026-05-28 13:06:58 IST - INFO - "GET /static/js/ui/index.js HTTP/1.1" 304 0
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+2026-05-28 13:06:58 IST - WARNING - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+2026-05-28 13:06:58 IST - WARNING - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+"GET /static/js/ui/App.js HTTP/1.1" 200 28781
+2026-05-28 13:06:59 IST - INFO - "GET /static/js/ui/App.js HTTP/1.1" 200 28781
+"GET /static/js/ui/utils/api.js HTTP/1.1" 304 0
+2026-05-28 13:06:59 IST - INFO - "GET /static/js/ui/utils/api.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 304 0
+2026-05-28 13:06:59 IST - INFO - "GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 304 0
+2026-05-28 13:06:59 IST - INFO - "GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 304 0
+2026-05-28 13:06:59 IST - INFO - "GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/icons.js HTTP/1.1" 304 0
+2026-05-28 13:06:59 IST - INFO - "GET /static/js/ui/components/icons.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 304 0
+2026-05-28 13:06:59 IST - INFO - "GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 304 0
+2026-05-28 13:06:59 IST - INFO - "GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 304 0
+2026-05-28 13:06:59 IST - INFO - "GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 304 0
+2026-05-28 13:06:59 IST - INFO - "GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 304 0
+2026-05-28 13:06:59 IST - INFO - "GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 304 0
+2026-05-28 13:06:59 IST - INFO - "GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 304 0
+2026-05-28 13:06:59 IST - INFO - "GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/Toast.js HTTP/1.1" 304 0
+2026-05-28 13:06:59 IST - INFO - "GET /static/js/ui/components/Toast.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 200 4972
+2026-05-28 13:06:59 IST - INFO - "GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 200 4972
+"GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 304 0
+2026-05-28 13:06:59 IST - INFO - "GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 304 0
+2026-05-28 13:06:59 IST - INFO - "GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 304 0
+2026-05-28 13:06:59 IST - INFO - "GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/StrategiesPage.js HTTP/1.1" 304 0
+2026-05-28 13:06:59 IST - INFO - "GET /static/js/ui/components/StrategiesPage.js HTTP/1.1" 304 0
+"GET /get_scalper_details HTTP/1.1" 200 206
+2026-05-28 13:06:59 IST - INFO - "GET /get_scalper_details HTTP/1.1" 200 206
+"GET /get_config_values HTTP/1.1" 200 902
+2026-05-28 13:06:59 IST - INFO - "GET /get_config_values HTTP/1.1" 200 902
+"GET /get_broker_details HTTP/1.1" 200 367
+2026-05-28 13:06:59 IST - INFO - "GET /get_broker_details HTTP/1.1" 200 367
+"POST /get_auth_token HTTP/1.1" 200 76
+2026-05-28 13:06:59 IST - INFO - "POST /get_auth_token HTTP/1.1" 200 76
+"GET /get_order_book_details HTTP/1.1" 200 100027
+2026-05-28 13:06:59 IST - INFO - "GET /get_order_book_details HTTP/1.1" 200 100027
+"GET /manual_details HTTP/1.1" 200 4019
+2026-05-28 13:06:59 IST - INFO - "GET /manual_details HTTP/1.1" 200 4019
+"GET /get_strategy_summary HTTP/1.1" 200 869
+2026-05-28 13:06:59 IST - INFO - "GET /get_strategy_summary HTTP/1.1" 200 869
+"GET /check_admin HTTP/1.1" 200 39
+2026-05-28 13:06:59 IST - INFO - "GET /check_admin HTTP/1.1" 200 39
+Method Not Allowed (POST): /edit_broker_details
+2026-05-28 13:07:07 IST - WARNING - Method Not Allowed (POST): /edit_broker_details
+"POST /edit_broker_details HTTP/1.1" 405 0
+2026-05-28 13:07:07 IST - WARNING - "POST /edit_broker_details HTTP/1.1" 405 0
+Method Not Allowed (POST): /edit_broker_details
+2026-05-28 13:07:17 IST - WARNING - Method Not Allowed (POST): /edit_broker_details
+"POST /edit_broker_details HTTP/1.1" 405 0
+2026-05-28 13:07:17 IST - WARNING - "POST /edit_broker_details HTTP/1.1" 405 0
+Watching for file changes with StatReloader
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+2026-05-28 13:09:05 IST - WARNING - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+2026-05-28 13:09:05 IST - WARNING - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+"GET /dashboard HTTP/1.1" 200 5214
+2026-05-28 13:09:05 IST - INFO - "GET /dashboard HTTP/1.1" 200 5214
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+2026-05-28 13:09:05 IST - WARNING - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+2026-05-28 13:09:05 IST - WARNING - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+"GET /static/js/ui/index.js HTTP/1.1" 200 154
+2026-05-28 13:09:05 IST - INFO - "GET /static/js/ui/index.js HTTP/1.1" 200 154
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+2026-05-28 13:09:05 IST - WARNING - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+2026-05-28 13:09:05 IST - WARNING - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+"GET /static/js/ui/App.js HTTP/1.1" 200 28780
+2026-05-28 13:09:06 IST - INFO - "GET /static/js/ui/App.js HTTP/1.1" 200 28780
+"GET /static/js/ui/utils/api.js HTTP/1.1" 200 1488
+2026-05-28 13:09:06 IST - INFO - "GET /static/js/ui/utils/api.js HTTP/1.1" 200 1488
+"GET /static/js/ui/components/icons.js HTTP/1.1" 200 7279
+2026-05-28 13:09:06 IST - INFO - "GET /static/js/ui/components/icons.js HTTP/1.1" 200 7279
+"GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 200 3350
+2026-05-28 13:09:06 IST - INFO - "GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 200 3350
+"GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 200 983
+2026-05-28 13:09:06 IST - INFO - "GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 200 983
+"GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 200 2227
+2026-05-28 13:09:06 IST - INFO - "GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 200 2227
+"GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 200 5884
+2026-05-28 13:09:06 IST - INFO - "GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 200 5884
+"GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 200 4132
+2026-05-28 13:09:06 IST - INFO - "GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 200 4132
+"GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 200 3909
+2026-05-28 13:09:06 IST - INFO - "GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 200 3909
+"GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 200 5524
+2026-05-28 13:09:06 IST - INFO - "GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 200 5524
+"GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 200 4438
+2026-05-28 13:09:06 IST - INFO - "GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 200 4438
+"GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 200 9333
+2026-05-28 13:09:06 IST - INFO - "GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 200 9333
+"GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 200 4377
+2026-05-28 13:09:06 IST - INFO - "GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 200 4377
+"GET /static/js/ui/components/Toast.js HTTP/1.1" 200 1654
+2026-05-28 13:09:06 IST - INFO - "GET /static/js/ui/components/Toast.js HTTP/1.1" 200 1654
+"GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 200 7299
+2026-05-28 13:09:06 IST - INFO - "GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 200 7299
+"GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 200 4972
+"GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 200 6595
+2026-05-28 13:09:06 IST - INFO - "GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 200 4972
+2026-05-28 13:09:06 IST - INFO - "GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 200 6595
+"GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16904
+2026-05-28 13:09:06 IST - INFO - "GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16904
+"GET /static/js/ui/components/StrategiesPage.js HTTP/1.1" 200 26378
+2026-05-28 13:09:06 IST - INFO - "GET /static/js/ui/components/StrategiesPage.js HTTP/1.1" 200 26378
+"GET /get_scalper_details HTTP/1.1" 200 206
+2026-05-28 13:09:06 IST - INFO - "GET /get_scalper_details HTTP/1.1" 200 206
+"POST /get_auth_token HTTP/1.1" 200 76
+2026-05-28 13:09:06 IST - INFO - "POST /get_auth_token HTTP/1.1" 200 76
+"GET /get_order_book_details HTTP/1.1" 200 100027
+2026-05-28 13:09:06 IST - INFO - "GET /get_order_book_details HTTP/1.1" 200 100027
+"GET /get_config_values HTTP/1.1" 200 902
+2026-05-28 13:09:06 IST - INFO - "GET /get_config_values HTTP/1.1" 200 902
+"GET /get_strategy_summary HTTP/1.1" 200 869
+2026-05-28 13:09:06 IST - INFO - "GET /get_strategy_summary HTTP/1.1" 200 869
+"GET /get_broker_details HTTP/1.1" 200 367
+2026-05-28 13:09:06 IST - INFO - "GET /get_broker_details HTTP/1.1" 200 367
+"GET /manual_details HTTP/1.1" 200 4019
+2026-05-28 13:09:06 IST - INFO - "GET /manual_details HTTP/1.1" 200 4019
+"GET /check_admin HTTP/1.1" 200 39
+2026-05-28 13:09:06 IST - INFO - "GET /check_admin HTTP/1.1" 200 39
+"PUT /edit_broker_details HTTP/1.1" 200 58
+2026-05-28 13:09:14 IST - INFO - "PUT /edit_broker_details HTTP/1.1" 200 58
+"PUT /edit_broker_details HTTP/1.1" 200 58
+2026-05-28 13:09:24 IST - INFO - "PUT /edit_broker_details HTTP/1.1" 200 58
+"GET /dashboard HTTP/1.1" 200 5214
+2026-05-28 13:09:29 IST - INFO - "GET /dashboard HTTP/1.1" 200 5214
+"GET /static/js/ui/index.js HTTP/1.1" 200 154
+2026-05-28 13:09:29 IST - INFO - "GET /static/js/ui/index.js HTTP/1.1" 200 154
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+2026-05-28 13:09:29 IST - WARNING - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+2026-05-28 13:09:29 IST - WARNING - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+"GET /static/js/ui/App.js HTTP/1.1" 200 28780
+2026-05-28 13:09:29 IST - INFO - "GET /static/js/ui/App.js HTTP/1.1" 200 28780
+"GET /static/js/ui/components/icons.js HTTP/1.1" 200 7279
+2026-05-28 13:09:29 IST - INFO - "GET /static/js/ui/components/icons.js HTTP/1.1" 200 7279
+"GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 200 2227
+2026-05-28 13:09:29 IST - INFO - "GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 200 2227
+"GET /static/js/ui/utils/api.js HTTP/1.1" 200 1488
+2026-05-28 13:09:29 IST - INFO - "GET /static/js/ui/utils/api.js HTTP/1.1" 200 1488
+"GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 200 5884
+2026-05-28 13:09:29 IST - INFO - "GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 200 5884
+"GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 200 983
+2026-05-28 13:09:29 IST - INFO - "GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 200 983
+"GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 200 3350
+2026-05-28 13:09:29 IST - INFO - "GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 200 3350
+"GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 200 3909
+2026-05-28 13:09:29 IST - INFO - "GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 200 3909
+"GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 200 4132
+2026-05-28 13:09:29 IST - INFO - "GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 200 4132
+"GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 200 4438
+2026-05-28 13:09:29 IST - INFO - "GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 200 4438
+"GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 200 5524
+2026-05-28 13:09:29 IST - INFO - "GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 200 5524
+"GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 200 9333
+2026-05-28 13:09:29 IST - INFO - "GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 200 9333
+"GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 200 4377
+2026-05-28 13:09:29 IST - INFO - "GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 200 4377
+"GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 200 4972
+2026-05-28 13:09:29 IST - INFO - "GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 200 4972
+"GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 200 6595
+2026-05-28 13:09:29 IST - INFO - "GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 200 6595
+"GET /static/js/ui/components/Toast.js HTTP/1.1" 200 1654
+2026-05-28 13:09:29 IST - INFO - "GET /static/js/ui/components/Toast.js HTTP/1.1" 200 1654
+"GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 200 7299
+2026-05-28 13:09:29 IST - INFO - "GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 200 7299
+"GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16904
+2026-05-28 13:09:29 IST - INFO - "GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16904
+"GET /static/js/ui/components/StrategiesPage.js HTTP/1.1" 200 26378
+2026-05-28 13:09:29 IST - INFO - "GET /static/js/ui/components/StrategiesPage.js HTTP/1.1" 200 26378
+"GET /get_broker_details HTTP/1.1" 200 366
+2026-05-28 13:09:30 IST - INFO - "GET /get_broker_details HTTP/1.1" 200 366
+"GET /get_config_values HTTP/1.1" 200 902
+2026-05-28 13:09:30 IST - INFO - "GET /get_config_values HTTP/1.1" 200 902
+"POST /get_auth_token HTTP/1.1" 200 76
+2026-05-28 13:09:30 IST - INFO - "POST /get_auth_token HTTP/1.1" 200 76
+"GET /get_order_book_details HTTP/1.1" 200 100027
+2026-05-28 13:09:30 IST - INFO - "GET /get_order_book_details HTTP/1.1" 200 100027
+"GET /get_scalper_details HTTP/1.1" 200 206
+2026-05-28 13:09:30 IST - INFO - "GET /get_scalper_details HTTP/1.1" 200 206
+"GET /get_strategy_summary HTTP/1.1" 200 869
+2026-05-28 13:09:30 IST - INFO - "GET /get_strategy_summary HTTP/1.1" 200 869
+"GET /check_admin HTTP/1.1" 200 39
+2026-05-28 13:09:30 IST - INFO - "GET /check_admin HTTP/1.1" 200 39
+"GET /manual_details HTTP/1.1" 200 4019
+2026-05-28 13:09:30 IST - INFO - "GET /manual_details HTTP/1.1" 200 4019
+"PUT /edit_broker_details HTTP/1.1" 200 58
+2026-05-28 13:09:45 IST - INFO - "PUT /edit_broker_details HTTP/1.1" 200 58
+Watching for file changes with StatReloader
+"GET /dashboard HTTP/1.1" 200 5214
+2026-05-28 13:11:36 IST - INFO - "GET /dashboard HTTP/1.1" 200 5214
+"GET /static/js/ui/index.js HTTP/1.1" 200 154
+2026-05-28 13:11:36 IST - INFO - "GET /static/js/ui/index.js HTTP/1.1" 200 154
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+2026-05-28 13:11:36 IST - WARNING - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+2026-05-28 13:11:36 IST - WARNING - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+"GET /static/js/ui/App.js HTTP/1.1" 200 28761
+2026-05-28 13:11:36 IST - INFO - "GET /static/js/ui/App.js HTTP/1.1" 200 28761
+"GET /static/js/ui/components/icons.js HTTP/1.1" 200 7279
+2026-05-28 13:11:36 IST - INFO - "GET /static/js/ui/components/icons.js HTTP/1.1" 200 7279
+"GET /static/js/ui/utils/api.js HTTP/1.1" 200 1488
+2026-05-28 13:11:36 IST - INFO - "GET /static/js/ui/utils/api.js HTTP/1.1" 200 1488
+"GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 200 983
+2026-05-28 13:11:36 IST - INFO - "GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 200 983
+"GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 200 2227
+2026-05-28 13:11:37 IST - INFO - "GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 200 2227
+"GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 200 4132
+2026-05-28 13:11:37 IST - INFO - "GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 200 4132
+"GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 200 5884
+2026-05-28 13:11:37 IST - INFO - "GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 200 5884
+"GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 200 9333
+2026-05-28 13:11:37 IST - INFO - "GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 200 9333
+"GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 200 3909
+2026-05-28 13:11:37 IST - INFO - "GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 200 3909
+"GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 200 3350
+2026-05-28 13:11:37 IST - INFO - "GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 200 3350
+"GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 200 4377
+2026-05-28 13:11:37 IST - INFO - "GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 200 4377
+"GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 200 5524
+2026-05-28 13:11:37 IST - INFO - "GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 200 5524
+"GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 200 4438
+2026-05-28 13:11:37 IST - INFO - "GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 200 4438
+"GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 200 4972
+2026-05-28 13:11:37 IST - INFO - "GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 200 4972
+"GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 200 6595
+2026-05-28 13:11:37 IST - INFO - "GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 200 6595
+"GET /static/js/ui/components/Toast.js HTTP/1.1" 200 1654
+2026-05-28 13:11:37 IST - INFO - "GET /static/js/ui/components/Toast.js HTTP/1.1" 200 1654
+"GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16904
+2026-05-28 13:11:37 IST - INFO - "GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16904
+"GET /static/js/ui/components/StrategiesPage.js HTTP/1.1" 200 26378
+2026-05-28 13:11:37 IST - INFO - "GET /static/js/ui/components/StrategiesPage.js HTTP/1.1" 200 26378
+"GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 200 7299
+2026-05-28 13:11:37 IST - INFO - "GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 200 7299
+"GET /manual_details HTTP/1.1" 200 4019
+2026-05-28 13:11:37 IST - INFO - "GET /manual_details HTTP/1.1" 200 4019
+"GET /get_config_values HTTP/1.1" 200 902
+2026-05-28 13:11:37 IST - INFO - "GET /get_config_values HTTP/1.1" 200 902
+"GET /get_scalper_details HTTP/1.1" 200 206
+2026-05-28 13:11:37 IST - INFO - "GET /get_scalper_details HTTP/1.1" 200 206
+"GET /get_order_book_details HTTP/1.1" 200 100027
+2026-05-28 13:11:37 IST - INFO - "GET /get_order_book_details HTTP/1.1" 200 100027
+"GET /get_broker_details HTTP/1.1" 200 368
+2026-05-28 13:11:37 IST - INFO - "GET /get_broker_details HTTP/1.1" 200 368
+"GET /check_admin HTTP/1.1" 200 39
+2026-05-28 13:11:37 IST - INFO - "GET /check_admin HTTP/1.1" 200 39
+"GET /get_strategy_summary HTTP/1.1" 200 869
+2026-05-28 13:11:37 IST - INFO - "GET /get_strategy_summary HTTP/1.1" 200 869
+"POST /get_auth_token HTTP/1.1" 200 76
+2026-05-28 13:11:37 IST - INFO - "POST /get_auth_token HTTP/1.1" 200 76
+"PUT /edit_broker_details HTTP/1.1" 200 58
+2026-05-28 13:11:48 IST - INFO - "PUT /edit_broker_details HTTP/1.1" 200 58
+"GET /dashboard HTTP/1.1" 200 5214
+2026-05-28 13:12:04 IST - INFO - "GET /dashboard HTTP/1.1" 200 5214
+"GET /static/js/ui/index.js HTTP/1.1" 200 154
+2026-05-28 13:12:04 IST - INFO - "GET /static/js/ui/index.js HTTP/1.1" 200 154
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+2026-05-28 13:12:04 IST - WARNING - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+2026-05-28 13:12:04 IST - WARNING - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+"GET /static/js/ui/App.js HTTP/1.1" 200 28761
+2026-05-28 13:12:05 IST - INFO - "GET /static/js/ui/App.js HTTP/1.1" 200 28761
+"GET /static/js/ui/utils/api.js HTTP/1.1" 200 1488
+2026-05-28 13:12:05 IST - INFO - "GET /static/js/ui/utils/api.js HTTP/1.1" 200 1488
+"GET /static/js/ui/components/icons.js HTTP/1.1" 200 7279
+2026-05-28 13:12:05 IST - INFO - "GET /static/js/ui/components/icons.js HTTP/1.1" 200 7279
+"GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 200 983
+2026-05-28 13:12:05 IST - INFO - "GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 200 983
+"GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 200 2227
+2026-05-28 13:12:05 IST - INFO - "GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 200 2227
+"GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 200 3350
+2026-05-28 13:12:05 IST - INFO - "GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 200 3350
+"GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 200 5524
+2026-05-28 13:12:05 IST - INFO - "GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 200 5524
+"GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 200 5884
+2026-05-28 13:12:05 IST - INFO - "GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 200 5884
+"GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 200 4132
+2026-05-28 13:12:05 IST - INFO - "GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 200 4132
+"GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 200 9333
+2026-05-28 13:12:05 IST - INFO - "GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 200 9333
+"GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 200 3909
+2026-05-28 13:12:05 IST - INFO - "GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 200 3909
+"GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 200 4438
+2026-05-28 13:12:05 IST - INFO - "GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 200 4438
+"GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 200 4377
+2026-05-28 13:12:05 IST - INFO - "GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 200 4377
+"GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 200 4972
+2026-05-28 13:12:05 IST - INFO - "GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 200 4972
+"GET /static/js/ui/components/Toast.js HTTP/1.1" 200 1654
+2026-05-28 13:12:05 IST - INFO - "GET /static/js/ui/components/Toast.js HTTP/1.1" 200 1654
+"GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 200 6595
+2026-05-28 13:12:05 IST - INFO - "GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 200 6595
+"GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 200 7299
+2026-05-28 13:12:05 IST - INFO - "GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 200 7299
+"GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16904
+2026-05-28 13:12:05 IST - INFO - "GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16904
+"GET /static/js/ui/components/StrategiesPage.js HTTP/1.1" 200 26378
+2026-05-28 13:12:05 IST - INFO - "GET /static/js/ui/components/StrategiesPage.js HTTP/1.1" 200 26378
+"GET /get_broker_details HTTP/1.1" 200 366
+2026-05-28 13:12:05 IST - INFO - "GET /get_broker_details HTTP/1.1" 200 366
+"GET /get_order_book_details HTTP/1.1" 200 100027
+2026-05-28 13:12:05 IST - INFO - "GET /get_order_book_details HTTP/1.1" 200 100027
+"GET /get_scalper_details HTTP/1.1" 200 206
+2026-05-28 13:12:05 IST - INFO - "GET /get_scalper_details HTTP/1.1" 200 206
+"GET /get_strategy_summary HTTP/1.1" 200 869
+2026-05-28 13:12:05 IST - INFO - "GET /get_strategy_summary HTTP/1.1" 200 869
+"GET /manual_details HTTP/1.1" 200 4019
+2026-05-28 13:12:05 IST - INFO - "GET /manual_details HTTP/1.1" 200 4019
+"GET /get_config_values HTTP/1.1" 200 902
+2026-05-28 13:12:05 IST - INFO - "GET /get_config_values HTTP/1.1" 200 902
+"GET /check_admin HTTP/1.1" 200 39
+2026-05-28 13:12:05 IST - INFO - "GET /check_admin HTTP/1.1" 200 39
+"POST /get_auth_token HTTP/1.1" 200 76
+2026-05-28 13:12:05 IST - INFO - "POST /get_auth_token HTTP/1.1" 200 76
+"PUT /edit_broker_details HTTP/1.1" 200 58
+2026-05-28 13:12:14 IST - INFO - "PUT /edit_broker_details HTTP/1.1" 200 58
+"PUT /edit_broker_details HTTP/1.1" 200 58
+2026-05-28 13:12:50 IST - INFO - "PUT /edit_broker_details HTTP/1.1" 200 58
+"PUT /edit_broker_details HTTP/1.1" 200 58
+2026-05-28 13:12:57 IST - INFO - "PUT /edit_broker_details HTTP/1.1" 200 58
+Watching for file changes with StatReloader
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+2026-05-28 13:14:41 IST - WARNING - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+2026-05-28 13:14:41 IST - WARNING - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+2026-05-28 13:14:41 IST - WARNING - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+2026-05-28 13:14:41 IST - WARNING - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+"GET /dashboard HTTP/1.1" 200 5214
+2026-05-28 13:14:41 IST - INFO - "GET /dashboard HTTP/1.1" 200 5214
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+2026-05-28 13:14:41 IST - WARNING - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /static/js/ui/index.js HTTP/1.1" 200 154
+2026-05-28 13:14:41 IST - INFO - "GET /static/js/ui/index.js HTTP/1.1" 200 154
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+2026-05-28 13:14:41 IST - WARNING - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+"GET /static/js/ui/App.js HTTP/1.1" 200 28652
+2026-05-28 13:14:42 IST - INFO - "GET /static/js/ui/App.js HTTP/1.1" 200 28652
+"GET /static/js/ui/components/icons.js HTTP/1.1" 200 7279
+2026-05-28 13:14:42 IST - INFO - "GET /static/js/ui/components/icons.js HTTP/1.1" 200 7279
+"GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 200 983
+2026-05-28 13:14:42 IST - INFO - "GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 200 983
+"GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 200 4132
+2026-05-28 13:14:42 IST - INFO - "GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 200 4132
+"GET /static/js/ui/utils/api.js HTTP/1.1" 200 1488
+2026-05-28 13:14:42 IST - INFO - "GET /static/js/ui/utils/api.js HTTP/1.1" 200 1488
+"GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 200 2227
+2026-05-28 13:14:42 IST - INFO - "GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 200 2227
+"GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 200 3350
+2026-05-28 13:14:42 IST - INFO - "GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 200 3350
+"GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 200 5884
+2026-05-28 13:14:42 IST - INFO - "GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 200 5884
+"GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 200 9333
+2026-05-28 13:14:42 IST - INFO - "GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 200 9333
+"GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 200 3909
+2026-05-28 13:14:42 IST - INFO - "GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 200 3909
+"GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 200 5524
+2026-05-28 13:14:42 IST - INFO - "GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 200 5524
+"GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 200 4438
+2026-05-28 13:14:42 IST - INFO - "GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 200 4438
+"GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 200 4377
+2026-05-28 13:14:42 IST - INFO - "GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 200 4377
+"GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 200 4972
+2026-05-28 13:14:42 IST - INFO - "GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 200 4972
+"GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 200 6595
+2026-05-28 13:14:42 IST - INFO - "GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 200 6595
+"GET /static/js/ui/components/Toast.js HTTP/1.1" 200 1654
+2026-05-28 13:14:42 IST - INFO - "GET /static/js/ui/components/Toast.js HTTP/1.1" 200 1654
+"GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16904
+2026-05-28 13:14:42 IST - INFO - "GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16904
+"GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 200 7299
+2026-05-28 13:14:42 IST - INFO - "GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 200 7299
+"GET /static/js/ui/components/StrategiesPage.js HTTP/1.1" 200 26378
+2026-05-28 13:14:42 IST - INFO - "GET /static/js/ui/components/StrategiesPage.js HTTP/1.1" 200 26378
+"GET /get_order_book_details HTTP/1.1" 200 100027
+2026-05-28 13:14:42 IST - INFO - "GET /get_order_book_details HTTP/1.1" 200 100027
+"GET /get_config_values HTTP/1.1" 200 902
+2026-05-28 13:14:42 IST - INFO - "GET /get_config_values HTTP/1.1" 200 902
+"GET /get_scalper_details HTTP/1.1" 200 206
+2026-05-28 13:14:42 IST - INFO - "GET /get_scalper_details HTTP/1.1" 200 206
+"POST /get_auth_token HTTP/1.1" 200 76
+2026-05-28 13:14:42 IST - INFO - "POST /get_auth_token HTTP/1.1" 200 76
+"GET /get_broker_details HTTP/1.1" 200 367
+2026-05-28 13:14:42 IST - INFO - "GET /get_broker_details HTTP/1.1" 200 367
+"GET /get_strategy_summary HTTP/1.1" 200 869
+2026-05-28 13:14:42 IST - INFO - "GET /get_strategy_summary HTTP/1.1" 200 869
+"GET /manual_details HTTP/1.1" 200 4019
+2026-05-28 13:14:42 IST - INFO - "GET /manual_details HTTP/1.1" 200 4019
+"GET /check_admin HTTP/1.1" 200 39
+2026-05-28 13:14:42 IST - INFO - "GET /check_admin HTTP/1.1" 200 39
+"PUT /edit_broker_details HTTP/1.1" 200 58
+2026-05-28 13:14:50 IST - INFO - "PUT /edit_broker_details HTTP/1.1" 200 58
+"GET /get_broker_details HTTP/1.1" 200 367
+2026-05-28 13:14:50 IST - INFO - "GET /get_broker_details HTTP/1.1" 200 367
+"GET /get_log_details HTTP/1.1" 200 391050
+2026-05-28 13:14:57 IST - INFO - "GET /get_log_details HTTP/1.1" 200 391050
+/home/madara/Documents/plutusAI_Informer/plutusAI/views.py changed, reloading.
+2026-05-28 13:17:13 IST - INFO - /home/madara/Documents/plutusAI_Informer/plutusAI/views.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /dashboard HTTP/1.1" 200 5214
+2026-05-28 13:19:57 IST - INFO - "GET /dashboard HTTP/1.1" 200 5214
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+2026-05-28 13:19:57 IST - WARNING - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+2026-05-28 13:19:57 IST - WARNING - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+"GET /static/js/ui/index.js HTTP/1.1" 200 154
+2026-05-28 13:19:57 IST - INFO - "GET /static/js/ui/index.js HTTP/1.1" 200 154
+"GET /static/js/ui/App.js HTTP/1.1" 200 28652
+2026-05-28 13:19:58 IST - INFO - "GET /static/js/ui/App.js HTTP/1.1" 200 28652
+"GET /static/js/ui/components/icons.js HTTP/1.1" 200 7279
+2026-05-28 13:19:58 IST - INFO - "GET /static/js/ui/components/icons.js HTTP/1.1" 200 7279
+"GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 200 983
+"GET /static/js/ui/utils/api.js HTTP/1.1" 200 1488
+"GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 200 3350
+2026-05-28 13:19:58 IST - INFO - "GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 200 983
+"GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 200 2227
+2026-05-28 13:19:58 IST - INFO - "GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 200 2227
+2026-05-28 13:19:58 IST - INFO - "GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 200 3350
+2026-05-28 13:19:58 IST - INFO - "GET /static/js/ui/utils/api.js HTTP/1.1" 200 1488
+"GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 200 5884
+2026-05-28 13:19:58 IST - INFO - "GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 200 5884
+"GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 200 3909
+2026-05-28 13:19:58 IST - INFO - "GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 200 3909
+"GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 200 9333
+2026-05-28 13:19:58 IST - INFO - "GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 200 9333
+"GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 200 5524
+2026-05-28 13:19:58 IST - INFO - "GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 200 5524
+"GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 200 4132
+2026-05-28 13:19:58 IST - INFO - "GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 200 4132
+"GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 200 4438
+2026-05-28 13:19:58 IST - INFO - "GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 200 4438
+"GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 200 4377
+2026-05-28 13:19:58 IST - INFO - "GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 200 4377
+"GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 200 6595
+2026-05-28 13:19:58 IST - INFO - "GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 200 6595
+"GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 200 4972
+2026-05-28 13:19:58 IST - INFO - "GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 200 4972
+"GET /static/js/ui/components/Toast.js HTTP/1.1" 200 1654
+2026-05-28 13:19:58 IST - INFO - "GET /static/js/ui/components/Toast.js HTTP/1.1" 200 1654
+"GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16904
+"GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 200 9883
+2026-05-28 13:19:58 IST - INFO - "GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16904
+2026-05-28 13:19:58 IST - INFO - "GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 200 9883
+"GET /static/js/ui/components/StrategiesPage.js HTTP/1.1" 200 26378
+2026-05-28 13:19:58 IST - INFO - "GET /static/js/ui/components/StrategiesPage.js HTTP/1.1" 200 26378
+"GET /get_broker_details HTTP/1.1" 200 367
+2026-05-28 13:19:58 IST - INFO - "GET /get_broker_details HTTP/1.1" 200 367
+"GET /get_config_values HTTP/1.1" 200 902
+2026-05-28 13:19:58 IST - INFO - "GET /get_config_values HTTP/1.1" 200 902
+"POST /get_auth_token HTTP/1.1" 200 76
+2026-05-28 13:19:58 IST - INFO - "POST /get_auth_token HTTP/1.1" 200 76
+"GET /get_scalper_details HTTP/1.1" 200 206
+2026-05-28 13:19:58 IST - INFO - "GET /get_scalper_details HTTP/1.1" 200 206
+"GET /get_order_book_details HTTP/1.1" 200 100027
+2026-05-28 13:19:58 IST - INFO - "GET /get_order_book_details HTTP/1.1" 200 100027
+"GET /check_admin HTTP/1.1" 200 39
+2026-05-28 13:19:58 IST - INFO - "GET /check_admin HTTP/1.1" 200 39
+"GET /get_strategy_summary HTTP/1.1" 200 869
+2026-05-28 13:19:58 IST - INFO - "GET /get_strategy_summary HTTP/1.1" 200 869
+"GET /manual_details HTTP/1.1" 200 4019
+2026-05-28 13:19:58 IST - INFO - "GET /manual_details HTTP/1.1" 200 4019
+Method Not Allowed (POST): /get_log_details
+2026-05-28 13:20:00 IST - WARNING - Method Not Allowed (POST): /get_log_details
+"POST /get_log_details HTTP/1.1" 405 0
+2026-05-28 13:20:00 IST - WARNING - "POST /get_log_details HTTP/1.1" 405 0
+Method Not Allowed (POST): /get_log_details
+2026-05-28 13:20:05 IST - WARNING - Method Not Allowed (POST): /get_log_details
+"POST /get_log_details HTTP/1.1" 405 0
+2026-05-28 13:20:05 IST - WARNING - "POST /get_log_details HTTP/1.1" 405 0
+Method Not Allowed (POST): /get_log_details
+2026-05-28 13:20:07 IST - WARNING - Method Not Allowed (POST): /get_log_details
+"POST /get_log_details HTTP/1.1" 405 0
+2026-05-28 13:20:07 IST - WARNING - "POST /get_log_details HTTP/1.1" 405 0
+Method Not Allowed (POST): /get_log_details
+2026-05-28 13:20:11 IST - WARNING - Method Not Allowed (POST): /get_log_details
+"POST /get_log_details HTTP/1.1" 405 0
+2026-05-28 13:20:11 IST - WARNING - "POST /get_log_details HTTP/1.1" 405 0
+Method Not Allowed (POST): /get_log_details
+2026-05-28 13:20:12 IST - WARNING - Method Not Allowed (POST): /get_log_details
+"POST /get_log_details HTTP/1.1" 405 0
+2026-05-28 13:20:12 IST - WARNING - "POST /get_log_details HTTP/1.1" 405 0
+/home/madara/Documents/plutusAI_Informer/plutusAI/views.py changed, reloading.
+2026-05-28 13:20:59 IST - INFO - /home/madara/Documents/plutusAI_Informer/plutusAI/views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /dashboard HTTP/1.1" 200 5214
+2026-05-28 13:21:31 IST - INFO - "GET /dashboard HTTP/1.1" 200 5214
+"GET /static/js/ui/index.js HTTP/1.1" 200 154
+2026-05-28 13:21:31 IST - INFO - "GET /static/js/ui/index.js HTTP/1.1" 200 154
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+2026-05-28 13:21:31 IST - WARNING - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+2026-05-28 13:21:31 IST - WARNING - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+"GET /static/js/ui/App.js HTTP/1.1" 200 28652
+2026-05-28 13:21:31 IST - INFO - "GET /static/js/ui/App.js HTTP/1.1" 200 28652
+"GET /static/js/ui/utils/api.js HTTP/1.1" 200 1488
+2026-05-28 13:21:31 IST - INFO - "GET /static/js/ui/utils/api.js HTTP/1.1" 200 1488
+"GET /static/js/ui/components/icons.js HTTP/1.1" 200 7279
+2026-05-28 13:21:31 IST - INFO - "GET /static/js/ui/components/icons.js HTTP/1.1" 200 7279
+"GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 200 2227
+2026-05-28 13:21:31 IST - INFO - "GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 200 2227
+"GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 200 3350
+2026-05-28 13:21:31 IST - INFO - "GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 200 3350
+"GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 200 4132
+2026-05-28 13:21:31 IST - INFO - "GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 200 4132
+"GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 200 983
+2026-05-28 13:21:31 IST - INFO - "GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 200 983
+"GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 200 5884
+2026-05-28 13:21:31 IST - INFO - "GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 200 5884
+"GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 200 5524
+2026-05-28 13:21:31 IST - INFO - "GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 200 5524
+"GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 200 9333
+2026-05-28 13:21:32 IST - INFO - "GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 200 9333
+"GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 200 4377
+2026-05-28 13:21:32 IST - INFO - "GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 200 4377
+"GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 200 4438
+2026-05-28 13:21:32 IST - INFO - "GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 200 4438
+"GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 200 3909
+2026-05-28 13:21:32 IST - INFO - "GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 200 3909
+"GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 200 4972
+2026-05-28 13:21:32 IST - INFO - "GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 200 4972
+"GET /static/js/ui/components/Toast.js HTTP/1.1" 200 1654
+2026-05-28 13:21:32 IST - INFO - "GET /static/js/ui/components/Toast.js HTTP/1.1" 200 1654
+"GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 200 6595
+2026-05-28 13:21:32 IST - INFO - "GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 200 6595
+"GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 200 9883
+2026-05-28 13:21:32 IST - INFO - "GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 200 9883
+"GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16904
+2026-05-28 13:21:32 IST - INFO - "GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16904
+"GET /static/js/ui/components/StrategiesPage.js HTTP/1.1" 200 26378
+2026-05-28 13:21:32 IST - INFO - "GET /static/js/ui/components/StrategiesPage.js HTTP/1.1" 200 26378
+"GET /get_config_values HTTP/1.1" 200 902
+2026-05-28 13:21:32 IST - INFO - "GET /get_config_values HTTP/1.1" 200 902
+"GET /get_scalper_details HTTP/1.1" 200 206
+2026-05-28 13:21:32 IST - INFO - "GET /get_scalper_details HTTP/1.1" 200 206
+"GET /get_broker_details HTTP/1.1" 200 367
+2026-05-28 13:21:32 IST - INFO - "GET /get_broker_details HTTP/1.1" 200 367
+"GET /get_order_book_details HTTP/1.1" 200 100027
+2026-05-28 13:21:32 IST - INFO - "GET /get_order_book_details HTTP/1.1" 200 100027
+"POST /get_auth_token HTTP/1.1" 200 76
+2026-05-28 13:21:32 IST - INFO - "POST /get_auth_token HTTP/1.1" 200 76
+"GET /get_strategy_summary HTTP/1.1" 200 869
+2026-05-28 13:21:32 IST - INFO - "GET /get_strategy_summary HTTP/1.1" 200 869
+"GET /manual_details HTTP/1.1" 200 4019
+2026-05-28 13:21:32 IST - INFO - "GET /manual_details HTTP/1.1" 200 4019
+"GET /check_admin HTTP/1.1" 200 39
+2026-05-28 13:21:32 IST - INFO - "GET /check_admin HTTP/1.1" 200 39
+"POST /get_log_details HTTP/1.1" 200 33
+2026-05-28 13:21:39 IST - INFO - "POST /get_log_details HTTP/1.1" 200 33
+"POST /get_log_details HTTP/1.1" 200 61956
+2026-05-28 13:21:47 IST - INFO - "POST /get_log_details HTTP/1.1" 200 61956
+"POST /get_log_details HTTP/1.1" 200 10905
+2026-05-28 13:21:53 IST - INFO - "POST /get_log_details HTTP/1.1" 200 10905
+"GET /dashboard HTTP/1.1" 200 5214
+2026-05-28 13:22:08 IST - INFO - "GET /dashboard HTTP/1.1" 200 5214
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+2026-05-28 13:22:08 IST - WARNING - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+2026-05-28 13:22:08 IST - WARNING - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+"GET /get_order_book_details HTTP/1.1" 200 100027
+2026-05-28 13:22:08 IST - INFO - "GET /get_order_book_details HTTP/1.1" 200 100027
+"GET /get_scalper_details HTTP/1.1" 200 206
+2026-05-28 13:22:08 IST - INFO - "GET /get_scalper_details HTTP/1.1" 200 206
+"GET /get_broker_details HTTP/1.1" 200 367
+2026-05-28 13:22:08 IST - INFO - "GET /get_broker_details HTTP/1.1" 200 367
+"GET /get_config_values HTTP/1.1" 200 902
+2026-05-28 13:22:08 IST - INFO - "GET /get_config_values HTTP/1.1" 200 902
+"POST /get_auth_token HTTP/1.1" 200 76
+2026-05-28 13:22:08 IST - INFO - "POST /get_auth_token HTTP/1.1" 200 76
+"GET /manual_details HTTP/1.1" 200 4019
+2026-05-28 13:22:08 IST - INFO - "GET /manual_details HTTP/1.1" 200 4019
+"GET /check_admin HTTP/1.1" 200 39
+2026-05-28 13:22:08 IST - INFO - "GET /check_admin HTTP/1.1" 200 39
+"GET /get_strategy_summary HTTP/1.1" 200 869
+2026-05-28 13:22:08 IST - INFO - "GET /get_strategy_summary HTTP/1.1" 200 869
+"POST /get_log_details HTTP/1.1" 200 33
+2026-05-28 13:22:10 IST - INFO - "POST /get_log_details HTTP/1.1" 200 33
+"GET /get_telegram_settings HTTP/1.1" 200 81
+2026-05-28 13:24:15 IST - INFO - "GET /get_telegram_settings HTTP/1.1" 200 81
+"GET /check_task_status HTTP/1.1" 200 79
+2026-05-28 13:24:21 IST - INFO - "GET /check_task_status HTTP/1.1" 200 79
+"GET /get_telegram_bot_config HTTP/1.1" 200 178
+2026-05-28 13:24:21 IST - INFO - "GET /get_telegram_bot_config HTTP/1.1" 200 178
+"GET /get_index_data HTTP/1.1" 200 846
+2026-05-28 13:24:21 IST - INFO - "GET /get_index_data HTTP/1.1" 200 846
 "GET /get_celery_status HTTP/1.1" 200 62
-2026-01-02 22:01:05 IST - INFO - "GET /get_celery_status HTTP/1.1" 200 62
-Not Found: /favicon.ico
-2026-01-02 22:01:05 IST - WARNING - Not Found: /favicon.ico
-2026-01-02 22:01:16 IST - INFO - initisuccess for angleone
-2026-01-02 22:01:16 IST - ERROR - single positional indexer is out-of-bounds
-2026-01-02 22:01:17 IST - ERROR - single positional indexer is out-of-bounds
-2026-01-02 22:01:17 IST - ERROR - single positional indexer is out-of-bounds
-2026-01-02 22:01:17 IST - ERROR - single positional indexer is out-of-bounds
-2026-01-02 22:01:17 IST - ERROR - single positional indexer is out-of-bounds
-2026-01-02 22:01:17 IST - ERROR - single positional indexer is out-of-bounds
-2026-01-02 22:01:18 IST - ERROR - exception in getltpForPremium 'NoneType' object is not subscriptable
-2026-01-02 22:01:18 IST - ERROR - exception in getltpForPremium 'NoneType' object is not subscriptable
-2026-01-02 22:01:18 IST - ERROR - exception in getltpForPremium 'NoneType' object is not subscriptable
-2026-01-02 22:01:18 IST - ERROR - exception in getltpForPremium 'NoneType' object is not subscriptable
-2026-01-02 22:01:18 IST - ERROR - exception in getltpForPremium 'NoneType' object is not subscriptable
-2026-01-02 22:01:18 IST - ERROR - exception in getltpForPremium 'NoneType' object is not subscriptable
-2026-01-02 22:01:19 IST - INFO - NIFTY Expiry: {'current_expiry': '06-Jan-2026', 'next_expiry': '13-Jan-2026'}
-2026-01-02 22:01:19 IST - INFO - BANKNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-02 22:01:19 IST - INFO - FINNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-"GET /admin_console HTTP/1.1" 200 2912
-2026-01-02 22:01:19 IST - INFO - "GET /admin_console HTTP/1.1" 200 2912
-2026-01-02 22:01:19 IST - INFO - SENSEX Expiry: {'current_expiry': '08-Jan-2026', 'next_expiry': '15-Jan-2026'}
-"GET /get_index_data HTTP/1.1" 200 1251
-2026-01-02 22:01:19 IST - INFO - "GET /get_index_data HTTP/1.1" 200 1251
-"GET /get_celery_status HTTP/1.1" 200 62
-2026-01-02 22:01:19 IST - INFO - "GET /get_celery_status HTTP/1.1" 200 62
-2026-01-02 22:01:21 IST - INFO - NIFTY Expiry: {'current_expiry': '06-Jan-2026', 'next_expiry': '13-Jan-2026'}
-2026-01-02 22:01:21 IST - INFO - BANKNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-02 22:01:21 IST - INFO - FINNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-02 22:01:21 IST - INFO - SENSEX Expiry: {'current_expiry': '08-Jan-2026', 'next_expiry': '15-Jan-2026'}
-2026-01-02 22:01:27 IST - INFO - Expiry Updated
-code 400, message Bad request syntax ('{"expiry_date":"2025-12-31","next_expiry_date":"2026-12-31"}')
-2026-01-02 22:01:27 IST - INFO - code 400, message Bad request syntax ('{"expiry_date":"2025-12-31","next_expiry_date":"2026-12-31"}')
-"{"expiry_date":"2025-12-31","next_expiry_date":"2026-12-31"}" 400 -
-2026-01-02 22:01:27 IST - WARNING - "{"expiry_date":"2025-12-31","next_expiry_date":"2026-12-31"}" 400 -
-- Broken pipe from ('127.0.0.1', 53302)
-2026-01-02 22:01:27 IST - INFO - - Broken pipe from ('127.0.0.1', 53302)
-2026-01-02 22:01:32 IST - INFO - Expiry Updated
-code 400, message Bad request syntax ('{"expiry_date":"2025-12-31","next_expiry_date":"2026-12-31"}')
-2026-01-02 22:01:32 IST - INFO - code 400, message Bad request syntax ('{"expiry_date":"2025-12-31","next_expiry_date":"2026-12-31"}')
-"{"expiry_date":"2025-12-31","next_expiry_date":"2026-12-31"}" 400 -
-2026-01-02 22:01:32 IST - WARNING - "{"expiry_date":"2025-12-31","next_expiry_date":"2026-12-31"}" 400 -
-- Broken pipe from ('127.0.0.1', 53340)
-2026-01-02 22:01:32 IST - INFO - - Broken pipe from ('127.0.0.1', 53340)
-/home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-2026-01-02 22:02:06 IST - INFO - /home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-Watching for file changes with StatReloader
-Watching for file changes with StatReloader
-"GET /admin_console HTTP/1.1" 200 2912
-2026-01-02 22:03:06 IST - INFO - "GET /admin_console HTTP/1.1" 200 2912
-"GET /static/js/admin.js HTTP/1.1" 304 0
-2026-01-02 22:03:06 IST - INFO - "GET /static/js/admin.js HTTP/1.1" 304 0
-"GET /static/css/admin.css HTTP/1.1" 304 0
-2026-01-02 22:03:06 IST - INFO - "GET /static/css/admin.css HTTP/1.1" 304 0
-"GET /get_index_data HTTP/1.1" 200 1251
-2026-01-02 22:03:06 IST - INFO - "GET /get_index_data HTTP/1.1" 200 1251
-"GET /get_celery_status HTTP/1.1" 200 62
-2026-01-02 22:03:06 IST - INFO - "GET /get_celery_status HTTP/1.1" 200 62
-2026-01-02 22:03:15 IST - INFO - NIFTY Expiry: {'current_expiry': '06-Jan-2026', 'next_expiry': '13-Jan-2026'}
-2026-01-02 22:03:15 IST - INFO - BANKNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-02 22:03:15 IST - INFO - FINNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-02 22:03:15 IST - INFO - SENSEX Expiry: {'current_expiry': '08-Jan-2026', 'next_expiry': '15-Jan-2026'}
-2026-01-02 22:03:21 IST - INFO - Expiry Updated
-"POST /update_expiry_details HTTP/1.1" 200 79
-2026-01-02 22:03:21 IST - INFO - "POST /update_expiry_details HTTP/1.1" 200 79
-/home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-2026-01-02 22:04:51 IST - INFO - /home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-Watching for file changes with StatReloader
-Watching for file changes with StatReloader
-2026-01-02 22:06:07 IST - INFO - NIFTY Expiry: {'current_expiry': '06-Jan-2026', 'next_expiry': '13-Jan-2026'}
-2026-01-02 22:06:07 IST - INFO - BANKNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-02 22:06:07 IST - INFO - FINNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-02 22:06:07 IST - INFO - SENSEX Expiry: {'current_expiry': '08-Jan-2026', 'next_expiry': '15-Jan-2026'}
-2026-01-02 22:06:14 IST - INFO - Expiry Updated
-"POST /update_expiry_details HTTP/1.1" 200 79
-2026-01-02 22:06:14 IST - INFO - "POST /update_expiry_details HTTP/1.1" 200 79
-/home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-2026-01-02 22:08:45 IST - INFO - /home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-"GET /admin_console HTTP/1.1" 200 2912
-2026-01-02 22:08:51 IST - INFO - "GET /admin_console HTTP/1.1" 200 2912
-"GET /static/js/admin.js HTTP/1.1" 304 0
-2026-01-02 22:08:51 IST - INFO - "GET /static/js/admin.js HTTP/1.1" 304 0
-"GET /static/css/admin.css HTTP/1.1" 304 0
-2026-01-02 22:08:51 IST - INFO - "GET /static/css/admin.css HTTP/1.1" 304 0
-"GET /get_index_data HTTP/1.1" 200 1251
-2026-01-02 22:08:51 IST - INFO - "GET /get_index_data HTTP/1.1" 200 1251
-"GET /get_celery_status HTTP/1.1" 200 62
-2026-01-02 22:08:51 IST - INFO - "GET /get_celery_status HTTP/1.1" 200 62
-2026-01-02 22:09:00 IST - INFO - NIFTY Expiry: {'current_expiry': '06-Jan-2026', 'next_expiry': '13-Jan-2026'}
-2026-01-02 22:09:00 IST - INFO - BANKNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-02 22:09:00 IST - INFO - FINNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-02 22:09:00 IST - INFO - SENSEX Expiry: {'current_expiry': '08-Jan-2026', 'next_expiry': '15-Jan-2026'}
-2026-01-02 22:09:07 IST - INFO - Expiry Updated
-"POST /update_expiry_details HTTP/1.1" 200 79
-2026-01-02 22:09:07 IST - INFO - "POST /update_expiry_details HTTP/1.1" 200 79
-/home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-2026-01-02 22:10:51 IST - INFO - /home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-2026-01-02 22:11:06 IST - INFO - NIFTY Expiry: {'current_expiry': '06-Jan-2026', 'next_expiry': '13-Jan-2026'}
-2026-01-02 22:11:06 IST - INFO - BANKNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-02 22:11:06 IST - INFO - FINNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-02 22:11:06 IST - INFO - SENSEX Expiry: {'current_expiry': '08-Jan-2026', 'next_expiry': '15-Jan-2026'}
-"GET /admin_console HTTP/1.1" 302 0
-2026-01-02 22:11:08 IST - INFO - "GET /admin_console HTTP/1.1" 302 0
-2026-01-02 22:11:14 IST - INFO - Expiry Updated
-"POST /update_expiry_details HTTP/1.1" 200 79
-2026-01-02 22:11:14 IST - INFO - "POST /update_expiry_details HTTP/1.1" 200 79
-Watching for file changes with StatReloader
-"GET /admin_console HTTP/1.1" 200 2912
-2026-01-03 22:00:46 IST - INFO - "GET /admin_console HTTP/1.1" 200 2912
-"GET /static/js/admin.js HTTP/1.1" 304 0
-2026-01-03 22:00:47 IST - INFO - "GET /static/js/admin.js HTTP/1.1" 304 0
-"GET /static/css/admin.css HTTP/1.1" 304 0
-2026-01-03 22:00:47 IST - INFO - "GET /static/css/admin.css HTTP/1.1" 304 0
-"GET /get_index_data HTTP/1.1" 200 1251
-2026-01-03 22:00:47 IST - INFO - "GET /get_index_data HTTP/1.1" 200 1251
-"GET /get_celery_status HTTP/1.1" 200 62
-2026-01-03 22:00:47 IST - INFO - "GET /get_celery_status HTTP/1.1" 200 62
-2026-01-03 22:00:55 IST - ERROR - getnsedata error: 'list' object has no attribute 'keys'
-2026-01-03 22:01:01 IST - INFO - Expiry Updated
-"POST /update_expiry_details HTTP/1.1" 200 79
-2026-01-03 22:01:01 IST - INFO - "POST /update_expiry_details HTTP/1.1" 200 79
-/home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-2026-01-03 22:01:41 IST - INFO - /home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-/home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-2026-01-03 22:02:21 IST - INFO - /home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-2026-01-03 22:02:35 IST - INFO - NIFTY Expiry: {'current_expiry': '06-Jan-2026', 'next_expiry': '13-Jan-2026'}
-2026-01-03 22:02:35 IST - INFO - BANKNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:02:35 IST - INFO - FINNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:02:35 IST - INFO - SENSEX Expiry: {'current_expiry': '08-Jan-2026', 'next_expiry': '15-Jan-2026'}
-2026-01-03 22:02:42 IST - INFO - Expiry Updated
-"POST /update_expiry_details HTTP/1.1" 200 79
-2026-01-03 22:02:42 IST - INFO - "POST /update_expiry_details HTTP/1.1" 200 79
-/home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-2026-01-03 22:03:02 IST - INFO - /home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-2026-01-03 22:03:19 IST - INFO - NIFTY Expiry: {'current_expiry': '06-Jan-2026', 'next_expiry': '13-Jan-2026'}
-2026-01-03 22:03:19 IST - INFO - BANKNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:03:19 IST - INFO - FINNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:03:19 IST - INFO - SENSEX Expiry: {'current_expiry': '08-Jan-2026', 'next_expiry': '15-Jan-2026'}
-2026-01-03 22:03:25 IST - INFO - Expiry Updated
-"POST /update_expiry_details HTTP/1.1" 200 79
-2026-01-03 22:03:25 IST - INFO - "POST /update_expiry_details HTTP/1.1" 200 79
-/home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-2026-01-03 22:07:33 IST - INFO - /home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-2026-01-03 22:07:46 IST - INFO - NIFTY Expiry: {'current_expiry': '06-Jan-2026', 'next_expiry': '13-Jan-2026'}
-2026-01-03 22:07:46 IST - INFO - BANKNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:07:46 IST - INFO - FINNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:07:46 IST - INFO - SENSEX Expiry: {'current_expiry': '08-Jan-2026', 'next_expiry': '15-Jan-2026'}
-2026-01-03 22:07:54 IST - INFO - Expiry Updated
-"POST /update_expiry_details HTTP/1.1" 200 79
-2026-01-03 22:07:54 IST - INFO - "POST /update_expiry_details HTTP/1.1" 200 79
-/home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-2026-01-03 22:08:25 IST - INFO - /home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-/home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-2026-01-03 22:11:01 IST - INFO - /home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-/home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-2026-01-03 22:11:36 IST - INFO - /home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-2026-01-03 22:11:52 IST - INFO - NIFTY Expiry: {'current_expiry': '06-Jan-2026', 'next_expiry': '13-Jan-2026'}
-2026-01-03 22:11:52 IST - INFO - BANKNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:11:52 IST - INFO - FINNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:11:52 IST - INFO - SENSEX Expiry: {'current_expiry': '08-Jan-2026', 'next_expiry': '15-Jan-2026'}
-2026-01-03 22:11:58 IST - INFO - Expiry Updated
-"POST /update_expiry_details HTTP/1.1" 200 79
-2026-01-03 22:11:58 IST - INFO - "POST /update_expiry_details HTTP/1.1" 200 79
-/home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-2026-01-03 22:15:57 IST - INFO - /home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-/home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-2026-01-03 22:16:22 IST - INFO - /home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-2026-01-03 22:16:34 IST - INFO - NIFTY Expiry: {'current_expiry': '06-Jan-2026', 'next_expiry': '13-Jan-2026'}
-2026-01-03 22:16:34 IST - INFO - BANKNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:16:34 IST - INFO - FINNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:16:34 IST - INFO - SENSEX Expiry: {'current_expiry': '08-Jan-2026', 'next_expiry': '15-Jan-2026'}
-2026-01-03 22:16:40 IST - INFO - Expiry Updated
-"POST /update_expiry_details HTTP/1.1" 200 79
-2026-01-03 22:16:40 IST - INFO - "POST /update_expiry_details HTTP/1.1" 200 79
-/home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-2026-01-03 22:19:01 IST - INFO - /home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-2026-01-03 22:19:12 IST - INFO - NIFTY Expiry: {'current_expiry': '06-Jan-2026', 'next_expiry': '13-Jan-2026'}
-2026-01-03 22:19:12 IST - INFO - BANKNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:19:12 IST - INFO - FINNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:19:12 IST - INFO - SENSEX Expiry: {'current_expiry': '08-Jan-2026', 'next_expiry': '15-Jan-2026'}
-2026-01-03 22:19:18 IST - INFO - Expiry Updated
-"POST /update_expiry_details HTTP/1.1" 200 79
-2026-01-03 22:19:18 IST - INFO - "POST /update_expiry_details HTTP/1.1" 200 79
-/home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-2026-01-03 22:20:38 IST - INFO - /home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-/home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-2026-01-03 22:21:33 IST - INFO - /home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-2026-01-03 22:21:44 IST - INFO - NIFTY Expiry: {'current_expiry': '06-Jan-2026', 'next_expiry': '13-Jan-2026'}
-2026-01-03 22:21:44 IST - INFO - BANKNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:21:44 IST - INFO - FINNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:21:44 IST - INFO - SENSEX Expiry: {'current_expiry': '08-Jan-2026', 'next_expiry': '15-Jan-2026'}
-2026-01-03 22:21:51 IST - INFO - Expiry Updated
-"POST /update_expiry_details HTTP/1.1" 200 79
-2026-01-03 22:21:51 IST - INFO - "POST /update_expiry_details HTTP/1.1" 200 79
-/home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-2026-01-03 22:23:17 IST - INFO - /home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-Watching for file changes with StatReloader
-"GET /admin_console HTTP/1.1" 200 2912
-2026-01-03 22:23:48 IST - INFO - "GET /admin_console HTTP/1.1" 200 2912
-"GET /static/js/admin.js HTTP/1.1" 304 0
-2026-01-03 22:23:48 IST - INFO - "GET /static/js/admin.js HTTP/1.1" 304 0
-"GET /static/css/admin.css HTTP/1.1" 304 0
-2026-01-03 22:23:48 IST - INFO - "GET /static/css/admin.css HTTP/1.1" 304 0
-"GET /get_index_data HTTP/1.1" 200 1251
-2026-01-03 22:23:48 IST - INFO - "GET /get_index_data HTTP/1.1" 200 1251
-"GET /get_celery_status HTTP/1.1" 200 62
-2026-01-03 22:23:48 IST - INFO - "GET /get_celery_status HTTP/1.1" 200 62
-2026-01-03 22:23:57 IST - INFO - NIFTY Expiry: {'current_expiry': '06-Jan-2026', 'next_expiry': '13-Jan-2026'}
-2026-01-03 22:23:57 IST - INFO - BANKNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:23:57 IST - INFO - FINNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:23:57 IST - INFO - SENSEX Expiry: {'current_expiry': '08-Jan-2026', 'next_expiry': '15-Jan-2026'}
-2026-01-03 22:24:04 IST - INFO - Expiry Updated
-"POST /update_expiry_details HTTP/1.1" 200 79
-2026-01-03 22:24:04 IST - INFO - "POST /update_expiry_details HTTP/1.1" 200 79
-/home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-2026-01-03 22:26:25 IST - INFO - /home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-Watching for file changes with StatReloader
-Watching for file changes with StatReloader
-"GET /admin_console HTTP/1.1" 200 2912
-2026-01-03 22:27:38 IST - INFO - "GET /admin_console HTTP/1.1" 200 2912
-"GET /static/js/admin.js HTTP/1.1" 304 0
-2026-01-03 22:27:38 IST - INFO - "GET /static/js/admin.js HTTP/1.1" 304 0
-"GET /static/css/admin.css HTTP/1.1" 304 0
-2026-01-03 22:27:38 IST - INFO - "GET /static/css/admin.css HTTP/1.1" 304 0
-"GET /get_index_data HTTP/1.1" 200 1251
-2026-01-03 22:27:39 IST - INFO - "GET /get_index_data HTTP/1.1" 200 1251
-"GET /get_celery_status HTTP/1.1" 200 62
-2026-01-03 22:27:39 IST - INFO - "GET /get_celery_status HTTP/1.1" 200 62
-2026-01-03 22:27:46 IST - INFO - NIFTY Expiry: {'current_expiry': '06-Jan-2026', 'next_expiry': '13-Jan-2026'}
-2026-01-03 22:27:46 IST - INFO - BANKNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:27:46 IST - INFO - FINNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:27:46 IST - INFO - SENSEX Expiry: {'current_expiry': '08-Jan-2026', 'next_expiry': '15-Jan-2026'}
-2026-01-03 22:27:53 IST - INFO - Expiry Updated
-"POST /update_expiry_details HTTP/1.1" 200 79
-2026-01-03 22:27:53 IST - INFO - "POST /update_expiry_details HTTP/1.1" 200 79
-"GET /admin_console HTTP/1.1" 200 2912
-2026-01-03 22:30:53 IST - INFO - "GET /admin_console HTTP/1.1" 200 2912
-"GET /static/js/admin.js HTTP/1.1" 304 0
-2026-01-03 22:30:53 IST - INFO - "GET /static/js/admin.js HTTP/1.1" 304 0
-"GET /static/css/admin.css HTTP/1.1" 304 0
-2026-01-03 22:30:53 IST - INFO - "GET /static/css/admin.css HTTP/1.1" 304 0
-"GET /get_index_data HTTP/1.1" 200 1251
-2026-01-03 22:30:53 IST - INFO - "GET /get_index_data HTTP/1.1" 200 1251
-"GET /get_celery_status HTTP/1.1" 200 62
-2026-01-03 22:30:53 IST - INFO - "GET /get_celery_status HTTP/1.1" 200 62
-2026-01-03 22:31:02 IST - INFO - NIFTY Expiry: {'current_expiry': '06-Jan-2026', 'next_expiry': '13-Jan-2026'}
-2026-01-03 22:31:02 IST - INFO - BANKNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:31:02 IST - INFO - FINNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:31:02 IST - INFO - SENSEX Expiry: {'current_expiry': '08-Jan-2026', 'next_expiry': '15-Jan-2026'}
-Watching for file changes with StatReloader
-Watching for file changes with StatReloader
-Watching for file changes with StatReloader
-Watching for file changes with StatReloader
-"GET /admin_console HTTP/1.1" 200 2912
-2026-01-03 22:33:47 IST - INFO - "GET /admin_console HTTP/1.1" 200 2912
-"GET /static/js/admin.js HTTP/1.1" 304 0
-2026-01-03 22:33:47 IST - INFO - "GET /static/js/admin.js HTTP/1.1" 304 0
-"GET /static/css/admin.css HTTP/1.1" 200 5275
-2026-01-03 22:33:47 IST - INFO - "GET /static/css/admin.css HTTP/1.1" 200 5275
-"GET /get_index_data HTTP/1.1" 200 1251
-2026-01-03 22:33:47 IST - INFO - "GET /get_index_data HTTP/1.1" 200 1251
-"GET /get_celery_status HTTP/1.1" 200 62
-2026-01-03 22:33:47 IST - INFO - "GET /get_celery_status HTTP/1.1" 200 62
-Not Found: /favicon.ico
-2026-01-03 22:33:47 IST - WARNING - Not Found: /favicon.ico
-2026-01-03 22:33:55 IST - INFO - NIFTY Expiry: {'current_expiry': '06-Jan-2026', 'next_expiry': '13-Jan-2026'}
-2026-01-03 22:33:55 IST - INFO - BANKNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:33:55 IST - INFO - FINNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:33:55 IST - INFO - SENSEX Expiry: {'current_expiry': '08-Jan-2026', 'next_expiry': '15-Jan-2026'}
-2026-01-03 22:34:01 IST - INFO - Expiry Updated
-"POST /update_expiry_details HTTP/1.1" 200 79
-2026-01-03 22:34:01 IST - INFO - "POST /update_expiry_details HTTP/1.1" 200 79
-/home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-2026-01-03 22:35:07 IST - INFO - /home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-"GET /admin_console HTTP/1.1" 200 2912
-2026-01-03 22:35:18 IST - INFO - "GET /admin_console HTTP/1.1" 200 2912
-"GET /static/js/admin.js HTTP/1.1" 304 0
-2026-01-03 22:35:18 IST - INFO - "GET /static/js/admin.js HTTP/1.1" 304 0
-"GET /static/css/admin.css HTTP/1.1" 304 0
-2026-01-03 22:35:18 IST - INFO - "GET /static/css/admin.css HTTP/1.1" 304 0
-"GET /get_index_data HTTP/1.1" 200 1251
-2026-01-03 22:35:18 IST - INFO - "GET /get_index_data HTTP/1.1" 200 1251
-"GET /get_celery_status HTTP/1.1" 200 62
-2026-01-03 22:35:18 IST - INFO - "GET /get_celery_status HTTP/1.1" 200 62
-2026-01-03 22:35:27 IST - INFO - NIFTY Expiry: {'current_expiry': '06-Jan-2026', 'next_expiry': '13-Jan-2026'}
-2026-01-03 22:35:27 IST - INFO - BANKNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:35:27 IST - INFO - FINNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:35:27 IST - INFO - SENSEX Expiry: {'current_expiry': '08-Jan-2026', 'next_expiry': '15-Jan-2026'}
-2026-01-03 22:35:33 IST - INFO - Expiry Updated
-"POST /update_expiry_details HTTP/1.1" 200 79
-2026-01-03 22:35:33 IST - INFO - "POST /update_expiry_details HTTP/1.1" 200 79
-/home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-2026-01-03 22:36:23 IST - INFO - /home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-/home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-2026-01-03 22:37:08 IST - INFO - /home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-/home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-2026-01-03 22:37:49 IST - INFO - /home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-/home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-2026-01-03 22:38:35 IST - INFO - /home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-Watching for file changes with StatReloader
-2026-01-03 22:39:08 IST - INFO - NIFTY Expiry: {'current_expiry': '06-Jan-2026', 'next_expiry': '13-Jan-2026'}
-2026-01-03 22:39:08 IST - INFO - BANKNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:39:08 IST - INFO - FINNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:39:08 IST - INFO - SENSEX Expiry: {'current_expiry': '08-Jan-2026', 'next_expiry': '15-Jan-2026'}
-2026-01-03 22:39:14 IST - INFO - Expiry Updated
-"POST /update_expiry_details HTTP/1.1" 200 79
-2026-01-03 22:39:14 IST - INFO - "POST /update_expiry_details HTTP/1.1" 200 79
-/home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-2026-01-03 22:40:10 IST - INFO - /home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-Watching for file changes with StatReloader
-2026-01-03 22:42:18 IST - ERROR - getnsedata error: 'str' object has no attribute 'key'
-2026-01-03 22:42:24 IST - INFO - Expiry Updated
-"POST /update_expiry_details HTTP/1.1" 200 79
-2026-01-03 22:42:24 IST - INFO - "POST /update_expiry_details HTTP/1.1" 200 79
-/home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-2026-01-03 22:44:41 IST - INFO - /home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-Watching for file changes with StatReloader
-"GET /admin_console HTTP/1.1" 200 2912
-2026-01-03 22:45:03 IST - INFO - "GET /admin_console HTTP/1.1" 200 2912
-"GET /static/js/admin.js HTTP/1.1" 304 0
-2026-01-03 22:45:03 IST - INFO - "GET /static/js/admin.js HTTP/1.1" 304 0
-"GET /static/css/admin.css HTTP/1.1" 304 0
-2026-01-03 22:45:03 IST - INFO - "GET /static/css/admin.css HTTP/1.1" 304 0
-"GET /get_index_data HTTP/1.1" 200 1251
-2026-01-03 22:45:03 IST - INFO - "GET /get_index_data HTTP/1.1" 200 1251
-"GET /get_celery_status HTTP/1.1" 200 62
-2026-01-03 22:45:03 IST - INFO - "GET /get_celery_status HTTP/1.1" 200 62
-2026-01-03 22:45:12 IST - ERROR - getnsedata error: 'str' object has no attribute 'key'
-2026-01-03 22:45:18 IST - INFO - Expiry Updated
-"POST /update_expiry_details HTTP/1.1" 200 79
-2026-01-03 22:45:18 IST - INFO - "POST /update_expiry_details HTTP/1.1" 200 79
-/home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-2026-01-03 22:46:42 IST - INFO - /home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-Watching for file changes with StatReloader
-2026-01-03 22:47:09 IST - ERROR - getnsedata error: 'str' object has no attribute 'key'
-2026-01-03 22:47:15 IST - INFO - Expiry Updated
-"POST /update_expiry_details HTTP/1.1" 200 79
-2026-01-03 22:47:15 IST - INFO - "POST /update_expiry_details HTTP/1.1" 200 79
-/home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-2026-01-03 22:47:57 IST - INFO - /home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-2026-01-03 22:48:09 IST - ERROR - getnsedata error: 'nifty'
-2026-01-03 22:48:15 IST - INFO - Expiry Updated
-"POST /update_expiry_details HTTP/1.1" 200 79
-2026-01-03 22:48:15 IST - INFO - "POST /update_expiry_details HTTP/1.1" 200 79
-/home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-2026-01-03 22:48:49 IST - INFO - /home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-2026-01-03 22:49:00 IST - ERROR - getnsedata error: too many values to unpack (expected 2)
-2026-01-03 22:49:07 IST - INFO - Expiry Updated
-"POST /update_expiry_details HTTP/1.1" 200 79
-2026-01-03 22:49:07 IST - INFO - "POST /update_expiry_details HTTP/1.1" 200 79
-/home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-2026-01-03 22:49:20 IST - INFO - /home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-2026-01-03 22:49:31 IST - ERROR - getnsedata error: too many values to unpack (expected 2)
-2026-01-03 22:49:38 IST - INFO - Expiry Updated
-"POST /update_expiry_details HTTP/1.1" 200 79
-2026-01-03 22:49:38 IST - INFO - "POST /update_expiry_details HTTP/1.1" 200 79
-/home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-2026-01-03 22:50:13 IST - INFO - /home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-2026-01-03 22:50:26 IST - ERROR - getnsedata error: 'nifty'
-2026-01-03 22:50:34 IST - INFO - Expiry Updated
-"POST /update_expiry_details HTTP/1.1" 200 79
-2026-01-03 22:50:34 IST - INFO - "POST /update_expiry_details HTTP/1.1" 200 79
-/home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-2026-01-03 22:51:06 IST - INFO - /home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-2026-01-03 22:51:18 IST - INFO - NIFTY Expiry: {'current_expiry': '06-Jan-2026', 'next_expiry': '13-Jan-2026'}
-2026-01-03 22:51:18 IST - INFO - BANKNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:51:18 IST - INFO - FINNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:51:18 IST - INFO - SENSEX Expiry: {'current_expiry': '08-Jan-2026', 'next_expiry': '15-Jan-2026'}
-2026-01-03 22:51:27 IST - INFO - Expiry Updated
-"POST /update_expiry_details HTTP/1.1" 200 79
-2026-01-03 22:51:27 IST - INFO - "POST /update_expiry_details HTTP/1.1" 200 79
-/home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-2026-01-03 22:52:12 IST - INFO - /home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-2026-01-03 22:52:24 IST - INFO - NIFTY Expiry: {'current_expiry': '06-Jan-2026', 'next_expiry': '13-Jan-2026'}
-2026-01-03 22:52:24 IST - INFO - BANKNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:52:24 IST - INFO - FINNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:52:24 IST - INFO - SENSEX Expiry: {'current_expiry': '08-Jan-2026', 'next_expiry': '15-Jan-2026'}
-2026-01-03 22:52:31 IST - INFO - Expiry Updated
-"POST /update_expiry_details HTTP/1.1" 200 79
-2026-01-03 22:52:31 IST - INFO - "POST /update_expiry_details HTTP/1.1" 200 79
-/home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-2026-01-03 22:53:40 IST - INFO - /home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-2026-01-03 22:53:54 IST - INFO - NIFTY Expiry: {'current_expiry': '06-Jan-2026', 'next_expiry': '13-Jan-2026'}
-2026-01-03 22:53:54 IST - INFO - BANKNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:53:54 IST - INFO - FINNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:53:54 IST - INFO - SENSEX Expiry: {'current_expiry': '08-Jan-2026', 'next_expiry': '15-Jan-2026'}
-2026-01-03 22:54:01 IST - INFO - Expiry Updated
-"POST /update_expiry_details HTTP/1.1" 200 79
-2026-01-03 22:54:01 IST - INFO - "POST /update_expiry_details HTTP/1.1" 200 79
-/home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-2026-01-03 22:54:16 IST - INFO - /home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-/home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-2026-01-03 22:54:27 IST - INFO - /home/madara/PycharmProjects/plutusAI/plutusAI/server/base.py changed, reloading.
-Watching for file changes with StatReloader
-2026-01-03 22:55:04 IST - INFO - NIFTY Expiry: {'current_expiry': '06-Jan-2026', 'next_expiry': '13-Jan-2026'}
-2026-01-03 22:55:04 IST - INFO - BANKNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:55:04 IST - INFO - FINNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:55:04 IST - INFO - SENSEX Expiry: {'current_expiry': '08-Jan-2026', 'next_expiry': '15-Jan-2026'}
-2026-01-03 22:55:10 IST - INFO - Expiry Updated
-"POST /update_expiry_details HTTP/1.1" 200 79
-2026-01-03 22:55:10 IST - INFO - "POST /update_expiry_details HTTP/1.1" 200 79
-"GET /admin_console HTTP/1.1" 200 2912
-2026-01-03 22:55:33 IST - INFO - "GET /admin_console HTTP/1.1" 200 2912
-"GET /static/js/admin.js HTTP/1.1" 304 0
-2026-01-03 22:55:33 IST - INFO - "GET /static/js/admin.js HTTP/1.1" 304 0
-"GET /static/css/admin.css HTTP/1.1" 304 0
-2026-01-03 22:55:33 IST - INFO - "GET /static/css/admin.css HTTP/1.1" 304 0
-"GET /get_index_data HTTP/1.1" 200 1251
-2026-01-03 22:55:33 IST - INFO - "GET /get_index_data HTTP/1.1" 200 1251
-"GET /get_celery_status HTTP/1.1" 200 62
-2026-01-03 22:55:33 IST - INFO - "GET /get_celery_status HTTP/1.1" 200 62
-2026-01-03 22:55:37 IST - INFO - NIFTY Expiry: {'current_expiry': '06-Jan-2026', 'next_expiry': '13-Jan-2026'}
-2026-01-03 22:55:37 IST - INFO - BANKNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:55:37 IST - INFO - FINNIFTY Expiry: {'current_expiry': '27-Jan-2026', 'next_expiry': '24-Feb-2026'}
-2026-01-03 22:55:37 IST - INFO - SENSEX Expiry: {'current_expiry': '08-Jan-2026', 'next_expiry': '15-Jan-2026'}
-2026-01-03 22:55:43 IST - INFO - Expiry Updated
-code 400, message Bad request syntax ('{"expiry_date":"2025-12-31","next_expiry_date":"2026-12-31"}')
-2026-01-03 22:55:43 IST - INFO - code 400, message Bad request syntax ('{"expiry_date":"2025-12-31","next_expiry_date":"2026-12-31"}')
-"{"expiry_date":"2025-12-31","next_expiry_date":"2026-12-31"}" 400 -
-2026-01-03 22:55:43 IST - WARNING - "{"expiry_date":"2025-12-31","next_expiry_date":"2026-12-31"}" 400 -
-- Broken pipe from ('127.0.0.1', 54252)
-2026-01-03 22:55:43 IST - INFO - - Broken pipe from ('127.0.0.1', 54252)
+2026-05-28 13:24:21 IST - INFO - "GET /get_celery_status HTTP/1.1" 200 62
