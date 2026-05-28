@@ -545,29 +545,34 @@ function attachManualOrdersListeners() {
         });
     });
 
+    function copyToClipboard(text, successMsg, failMsg) {
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text).then(() => showToast(successMsg, 'success')).catch(() => showToast(failMsg, 'error'));
+        } else {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); showToast(successMsg, 'success'); } catch { showToast(failMsg, 'error'); }
+            document.body.removeChild(ta);
+        }
+    }
+
     document.querySelectorAll('.copy-btn, .copy-content').forEach(el => {
-        el.addEventListener('click', async () => {
+        el.addEventListener('click', () => {
             const text = el.closest('td')?.querySelector('code, pre')?.textContent
                 || el.previousElementSibling?.textContent
                 || el.textContent;
-            try {
-                await navigator.clipboard.writeText(text.trim());
-                showToast('Copied to clipboard', 'success');
-            } catch {
-                showToast('Failed to copy', 'error');
-            }
+            copyToClipboard(text.trim(), 'Copied to clipboard', 'Failed to copy');
         });
     });
 
-    document.getElementById('copy-token-btn')?.addEventListener('click', async () => {
+    document.getElementById('copy-token-btn')?.addEventListener('click', () => {
         const input = document.getElementById('webhook-token-input');
         if (!input) return;
-        try {
-            await navigator.clipboard.writeText(input.value);
-            showToast('Token copied to clipboard', 'success');
-        } catch {
-            showToast('Failed to copy token', 'error');
-        }
+        copyToClipboard(input.value, 'Token copied to clipboard', 'Failed to copy token');
     });
 
     document.getElementById('regenerate-token-button')?.addEventListener('click', async () => {

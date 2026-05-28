@@ -1148,6 +1148,11 @@ def getIndexDetails(request):
 
 @require_http_methods([POST])
 @csrf_exempt
+@csrf_exempt
+@require_http_methods([POST])
+@api_view([POST])
+@authentication_classes([QueryParamTokenAuthentication])
+@permission_classes([IsAuthenticated])
 def updateIndexExpiryDetails(request):
     if admin_check(request.user):
         try:
