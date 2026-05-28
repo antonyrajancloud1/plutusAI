@@ -1,0 +1,159 @@
+"GET /home HTTP/1.1" 200 1368
+2026-05-14 16:20:59 IST - INFO - "GET /home HTTP/1.1" 200 1368
+"GET /static/js/resource.js HTTP/1.1" 304 0
+2026-05-14 16:20:59 IST - INFO - "GET /static/js/resource.js HTTP/1.1" 304 0
+"GET /static/css/global.css HTTP/1.1" 304 0
+2026-05-14 16:20:59 IST - INFO - "GET /static/css/global.css HTTP/1.1" 304 0
+"GET /static/js/webhook-strategy-manager.js HTTP/1.1" 304 0
+2026-05-14 16:20:59 IST - INFO - "GET /static/js/webhook-strategy-manager.js HTTP/1.1" 304 0
+"GET /static/css/webhook-strategy-manager.css HTTP/1.1" 304 0
+2026-05-14 16:20:59 IST - INFO - "GET /static/css/webhook-strategy-manager.css HTTP/1.1" 304 0
+"GET /static/css/common.css HTTP/1.1" 304 0
+2026-05-14 16:20:59 IST - INFO - "GET /static/css/common.css HTTP/1.1" 304 0
+"GET /static/js/home.js HTTP/1.1" 304 0
+2026-05-14 16:20:59 IST - INFO - "GET /static/js/home.js HTTP/1.1" 304 0
+"GET /get_strategy_summary HTTP/1.1" 200 647
+2026-05-14 16:21:00 IST - INFO - "GET /get_strategy_summary HTTP/1.1" 200 647
+2026-05-14 16:21:00 IST - INFO - into Existing token flow antonyrajan.d@gmail.com
+2026-05-14 16:21:01 IST - INFO - Broker object initiated with existing token antonyrajan.d@gmail.com
+"GET /manual_details HTTP/1.1" 200 4014
+2026-05-14 16:21:01 IST - INFO - "GET /manual_details HTTP/1.1" 200 4014
+"POST /get_auth_token HTTP/1.1" 200 76
+2026-05-14 16:21:01 IST - INFO - "POST /get_auth_token HTTP/1.1" 200 76
+2026-05-14 16:21:02 IST - INFO - initisuccess for angleone
+"GET /all_open_orders HTTP/1.1" 200 19
+2026-05-14 16:21:02 IST - INFO - "GET /all_open_orders HTTP/1.1" 200 19
+"GET /manual_details?index_name=nifty HTTP/1.1" 200 2232
+2026-05-14 16:21:03 IST - INFO - "GET /manual_details?index_name=nifty HTTP/1.1" 200 2232
+"PUT /update_manual_details HTTP/1.1" 200 49
+2026-05-14 16:21:12 IST - INFO - "PUT /update_manual_details HTTP/1.1" 200 49
+/home/madara/Documents/plutusAI_Informer/plutusAI/views.py changed, reloading.
+2026-05-14 16:22:23 IST - INFO - /home/madara/Documents/plutusAI_Informer/plutusAI/views.py changed, reloading.
+Watching for file changes with StatReloader
+/home/madara/Documents/plutusAI_Informer/plutusAI/views.py changed, reloading.
+2026-05-14 16:22:35 IST - INFO - /home/madara/Documents/plutusAI_Informer/plutusAI/views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /manual_details?index_name=nifty HTTP/1.1" 200 2232
+2026-05-14 16:22:42 IST - INFO - "GET /manual_details?index_name=nifty HTTP/1.1" 200 2232
+2026-05-14 16:22:50 IST - ERROR - (1062, "Duplicate entry '1' for key 'plutusAI_manualorders.strategy_name'")
+"PUT /update_manual_details HTTP/1.1" 200 49
+2026-05-14 16:22:50 IST - INFO - "PUT /update_manual_details HTTP/1.1" 200 49
+"GET /manual_details?index_name=bank_nifty HTTP/1.1" 200 976null
+2026-05-14 16:23:05 IST - INFO - "GET /manual_details?index_name=bank_nifty HTTP/1.1" 200 976
+2026-05-14 16:23:13 IST - ERROR - (1062, "Duplicate entry '1' for key 'plutusAI_manualorders.strategy_name'")
+"PUT /update_manual_details HTTP/1.1" 200 49
+2026-05-14 16:23:13 IST - INFO - "PUT /update_manual_details HTTP/1.1" 200 49
+"GET /manual_details?index_name=bank_nifty HTTP/1.1" 200 976
+2026-05-14 16:25:25 IST - INFO - "GET /manual_details?index_name=bank_nifty HTTP/1.1" 200 976
+"GET /static/css/global.css HTTP/1.1" 304 0
+2026-05-14 16:25:32 IST - INFO - "GET /static/css/global.css HTTP/1.1" 304 0
+"GET /static/css/common.css HTTP/1.1" 304 0
+2026-05-14 16:25:32 IST - INFO - "GET /static/css/common.css HTTP/1.1" 304 0
+"GET /static/css/webhook-strategy-manager.css HTTP/1.1" 304 0
+2026-05-14 16:25:32 IST - INFO - "GET /static/css/webhook-strategy-manager.css HTTP/1.1" 304 0
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+2026-05-14 16:25:32 IST - WARNING - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+2026-05-14 16:25:32 IST - WARNING - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+2026-05-14 16:25:36 IST - ERROR - (1062, "Duplicate entry '2' for key 'plutusAI_manualorders.strategy_name'")
+"PUT /update_manual_details HTTP/1.1" 200 49
+2026-05-14 16:25:36 IST - INFO - "PUT /update_manual_details HTTP/1.1" 200 49
+/home/madara/Documents/plutusAI_Informer/plutusAI/models.py changed, reloading.
+2026-05-14 16:28:59 IST - INFO - /home/madara/Documents/plutusAI_Informer/plutusAI/models.py changed, reloading.
+Watching for file changes with StatReloader
+/home/madara/Documents/plutusAI_Informer/plutusAI/views.py changed, reloading.
+2026-05-14 16:31:22 IST - INFO - /home/madara/Documents/plutusAI_Informer/plutusAI/views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /manual_details?index_name=nifty HTTP/1.1" 200 2232
+2026-05-14 16:32:17 IST - INFO - "GET /manual_details?index_name=nifty HTTP/1.1" 200 2232
+"PUT /update_manual_details HTTP/1.1" 200 498
+2026-05-14 16:32:26 IST - INFO - "PUT /update_manual_details HTTP/1.1" 200 498
+"GET /manual_details?index_name=nifty HTTP/1.1" 200 2245
+2026-05-14 16:32:34 IST - INFO - "GET /manual_details?index_name=nifty HTTP/1.1" 200 2245
+"GET /manual_details?index_name=bank_nifty HTTP/1.1" 200 976
+2026-05-14 16:32:46 IST - INFO - "GET /manual_details?index_name=bank_nifty HTTP/1.1" 200 976
+"GET /manual_details?index_name=nifty HTTP/1.1" 200 2245
+2026-05-14 16:32:52 IST - INFO - "GET /manual_details?index_name=nifty HTTP/1.1" 200 2245
+"GET /manual_details?index_name=bank_nifty HTTP/1.1" 200 976
+2026-05-14 16:33:01 IST - INFO - "GET /manual_details?index_name=bank_nifty HTTP/1.1" 200 976
+"PUT /update_manual_details HTTP/1.1" 200 507
+2026-05-14 16:33:10 IST - INFO - "PUT /update_manual_details HTTP/1.1" 200 507
+"GET /home HTTP/1.1" 200 1368
+2026-05-14 16:33:33 IST - INFO - "GET /home HTTP/1.1" 200 1368
+"GET /static/js/resource.js HTTP/1.1" 304 0
+2026-05-14 16:33:33 IST - INFO - "GET /static/js/resource.js HTTP/1.1" 304 0
+"GET /static/js/home.js HTTP/1.1" 304 0
+2026-05-14 16:33:33 IST - INFO - "GET /static/js/home.js HTTP/1.1" 304 0
+"GET /static/js/webhook-strategy-manager.js HTTP/1.1" 304 0
+2026-05-14 16:33:33 IST - INFO - "GET /static/js/webhook-strategy-manager.js HTTP/1.1" 304 0
+"GET /static/css/common.css HTTP/1.1" 304 0
+2026-05-14 16:33:33 IST - INFO - "GET /static/css/common.css HTTP/1.1" 304 0
+"GET /static/css/global.css HTTP/1.1" 304 0
+2026-05-14 16:33:33 IST - INFO - "GET /static/css/global.css HTTP/1.1" 304 0
+"GET /static/css/webhook-strategy-manager.css HTTP/1.1" 304 0
+2026-05-14 16:33:33 IST - INFO - "GET /static/css/webhook-strategy-manager.css HTTP/1.1" 304 0
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+2026-05-14 16:33:33 IST - WARNING - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+2026-05-14 16:33:33 IST - WARNING - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+2026-05-14 16:33:33 IST - INFO - into Existing token flow antonyrajan.d@gmail.com
+"GET /get_strategy_summary HTTP/1.1" 200 647
+2026-05-14 16:33:33 IST - INFO - "GET /get_strategy_summary HTTP/1.1" 200 647
+2026-05-14 16:33:34 IST - INFO - Broker object initiated with existing token antonyrajan.d@gmail.com
+"GET /manual_details HTTP/1.1" 200 4029
+2026-05-14 16:33:35 IST - INFO - "GET /manual_details HTTP/1.1" 200 4029
+2026-05-14 16:33:35 IST - INFO - initisuccess for angleone
+"GET /all_open_orders HTTP/1.1" 200 19
+2026-05-14 16:33:35 IST - INFO - "GET /all_open_orders HTTP/1.1" 200 19
+"POST /get_auth_token HTTP/1.1" 200 76
+2026-05-14 16:33:35 IST - INFO - "POST /get_auth_token HTTP/1.1" 200 76
+"GET /manual_details?index_name=nifty HTTP/1.1" 200 2245
+2026-05-14 16:33:56 IST - INFO - "GET /manual_details?index_name=nifty HTTP/1.1" 200 2245
+"PUT /update_manual_details HTTP/1.1" 200 498
+2026-05-14 16:34:09 IST - INFO - "PUT /update_manual_details HTTP/1.1" 200 498
+"GET /manual_details?index_name=nifty HTTP/1.1" 200 2245
+2026-05-14 16:34:11 IST - INFO - "GET /manual_details?index_name=nifty HTTP/1.1" 200 2245
+"PUT /update_manual_details HTTP/1.1" 200 498
+2026-05-14 16:34:24 IST - INFO - "PUT /update_manual_details HTTP/1.1" 200 498
+"GET /get_order_book_details HTTP/1.1" 200 8739
+2026-05-14 16:34:32 IST - INFO - "GET /get_order_book_details HTTP/1.1" 200 8739
+"GET /get_broker_details HTTP/1.1" 200 367
+2026-05-14 16:34:33 IST - INFO - "GET /get_broker_details HTTP/1.1" 200 367
+"GET /manual_details HTTP/1.1" 200 4029
+2026-05-14 16:34:34 IST - INFO - "GET /manual_details HTTP/1.1" 200 4029
+"GET /get_broker_details HTTP/1.1" 200 367
+2026-05-14 16:34:35 IST - INFO - "GET /get_broker_details HTTP/1.1" 200 367
+"GET /manual_details HTTP/1.1" 200 4029
+2026-05-14 16:35:47 IST - INFO - "GET /manual_details HTTP/1.1" 200 4029
+"GET /manual_details?index_name=nifty HTTP/1.1" 200 2245
+2026-05-14 16:35:49 IST - INFO - "GET /manual_details?index_name=nifty HTTP/1.1" 200 2245
+"PUT /update_manual_details HTTP/1.1" 200 499
+2026-05-14 16:35:56 IST - INFO - "PUT /update_manual_details HTTP/1.1" 200 499
+"POST /trigger_buy?token=43101e56d3cbb7e01b10f0b9dfca0adb74303ff3 HTTP/1.1" 200 48
+2026-05-14 16:35:58 IST - INFO - "POST /trigger_buy?token=43101e56d3cbb7e01b10f0b9dfca0adb74303ff3 HTTP/1.1" 200 48
+2026-05-14 16:35:58 IST - ERROR - antonyrajan.d@gmail.com :: triggerOrder error: invalid literal for int() with base 10: '-'
+"GET /manual_details?index_name=nifty HTTP/1.1" 200 2250
+2026-05-14 16:36:47 IST - INFO - "GET /manual_details?index_name=nifty HTTP/1.1" 200 2250
+"PUT /update_manual_details HTTP/1.1" 200 498
+2026-05-14 16:36:56 IST - INFO - "PUT /update_manual_details HTTP/1.1" 200 498
+/home/madara/Documents/plutusAI_Informer/plutusAI/server/broker/AngelOneBroker.py changed, reloading.
+2026-05-14 16:40:46 IST - INFO - /home/madara/Documents/plutusAI_Informer/plutusAI/server/broker/AngelOneBroker.py changed, reloading.
+Watching for file changes with StatReloader
+/home/madara/Documents/plutusAI_Informer/plutusAI/server/manualOrder.py changed, reloading.
+2026-05-14 16:41:07 IST - INFO - /home/madara/Documents/plutusAI_Informer/plutusAI/server/manualOrder.py changed, reloading.
+Watching for file changes with StatReloader
+/home/madara/Documents/plutusAI_Informer/plutusAI/server/broker/AngelOneBroker.py changed, reloading.
+2026-05-14 16:48:38 IST - INFO - /home/madara/Documents/plutusAI_Informer/plutusAI/server/broker/AngelOneBroker.py changed, reloading.
+Watching for file changes with StatReloader
+/home/madara/Documents/plutusAI_Informer/plutusAI/server/manualOrder.py changed, reloading.
+2026-05-14 16:49:01 IST - INFO - /home/madara/Documents/plutusAI_Informer/plutusAI/server/manualOrder.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /home HTTP/1.1" 200 1368
+"GET /static/js/resource.js HTTP/1.1" 304 0
+"GET /static/js/home.js HTTP/1.1" 304 0
+"GET /static/js/webhook-strategy-manager.js HTTP/1.1" 304 0
+"GET /static/css/global.css HTTP/1.1" 304 0
+"GET /static/css/common.css HTTP/1.1" 304 0
+"GET /static/css/webhook-strategy-manager.css HTTP/1.1" 304 0
+"GET /get_strategy_summary HTTP/1.1" 200 647
+"GET /all_open_orders HTTP/1.1" 200 19

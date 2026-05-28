@@ -1,0 +1,658 @@
+2026-05-15 14:52:46 IST - INFO - "GET /home HTTP/1.1" 200 1368
+2026-05-15 14:52:46 IST - INFO - "GET /static/js/resource.js HTTP/1.1" 304 0
+2026-05-15 14:52:46 IST - INFO - "GET /static/js/home.js HTTP/1.1" 304 0
+2026-05-15 14:52:46 IST - INFO - "GET /static/js/webhook-strategy-manager.js HTTP/1.1" 304 0
+2026-05-15 14:52:46 IST - INFO - "GET /static/css/global.css HTTP/1.1" 304 0
+2026-05-15 14:52:46 IST - INFO - "GET /static/css/common.css HTTP/1.1" 304 0
+2026-05-15 14:52:46 IST - INFO - "GET /static/css/webhook-strategy-manager.css HTTP/1.1" 304 0
+2026-05-15 14:52:50 IST - INFO - into Existing token flow antonyrajan.d@gmail.com
+2026-05-15 14:52:50 IST - INFO - "GET /get_strategy_summary HTTP/1.1" 200 647
+2026-05-15 14:52:50 IST - INFO - SmartAPI token is invalid or expired.
+2026-05-15 14:52:50 IST - INFO - user_broker_details
+2026-05-15 14:52:50 IST - INFO - {'id': 1, 'user_id': 'antonyrajan.d@gmail.com', 'broker_name': 'angel_one', 'broker_user_id': 'AAAJ478685', 'broker_user_name': 'DANIEL VIJAYAMARY', 'broker_mpin': '1005', 'broker_api_token': 'SBvsnKPX', 'broker_qr': 'ECKSFSRCFC6LIVJX7L5TOONR3A', 'token_status': 'generated', 'is_demo_trading_enabled': False, 'index_group': 'indian_index', 'broker_password': '1', 'broker_forex_server': '1'}
+2026-05-15 14:52:50 IST - INFO - Into GenerateAuthToken
+2026-05-15 14:52:51 IST - INFO - API Response: {'status': True, 'message': 'SUCCESS', 'errorcode': '', 'data': {'jwtToken': 'eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6IkFBQUo0Nzg2ODUiLCJyb2xlcyI6MCwidXNlcnR5cGUiOiJVU0VSIiwidG9rZW4iOiJleUpoYkdjaU9pSlNVekkxTmlJc0luUjVjQ0k2SWtwWFZDSjkuZXlKMWMyVnlYM1I1Y0dVaU9pSmpiR2xsYm5RaUxDSjBiMnRsYmw5MGVYQmxJam9pZEhKaFpHVmZZV05qWlhOelgzUnZhMlZ1SWl3aVoyMWZhV1FpT2pnc0luTnZkWEpqWlNJNklqTWlMQ0prWlhacFkyVmZhV1FpT2lJeU9EQXlORE0zTVMxbVlqZzJMVE5oTURVdFlXTXhNeTFrWWpZMFpXSXdOVEkyTUdFaUxDSnJhV1FpT2lKMGNtRmtaVjlyWlhsZmRqSWlMQ0p2Ylc1bGJXRnVZV2RsY21sa0lqbzRMQ0p3Y205a2RXTjBjeUk2ZXlKa1pXMWhkQ0k2ZXlKemRHRjBkWE1pT2lKaFkzUnBkbVVpZlN3aWJXWWlPbnNpYzNSaGRIVnpJam9pWVdOMGFYWmxJbjE5TENKcGMzTWlPaUowY21Ga1pWOXNiMmRwYmw5elpYSjJhV05sSWl3aWMzVmlJam9pUVVGQlNqUTNPRFk0TlNJc0ltVjRjQ0k2TVRjM09Ea3lNek0zTVN3aWJtSm1Jam94TnpjNE9ETTJOemt4TENKcFlYUWlPakUzTnpnNE16WTNPVEVzSW1wMGFTSTZJbVptTjJFellqRTFMVFE0TXpFdE5HSmtZaTFpWVdKbExUZzRZekk0TnpnMVpXUmlZU0lzSWxSdmEyVnVJam9pSW4wLkxseXVDZ01FWUU3R09jQzIwVzlGNmxaSWpId293MVdFUWpGRVp1RlNINkpkWGpLb3BmYW1oc3F0emxvUFBNX0hBZFB5UFJtTExtUmRFWXdwcXdFSGhfQnhSVXhQQm5qYTNVQXRiX285eEVKellXNFJuRjZLWjMyclFEdmExRURzS1pKeW53cFNDaXFuamxqR0Fhd2Q1UGZUSXBnRFI1QUJuMHluUEdOOTF2MCIsIkFQSS1LRVkiOiJTQnZzbktQWCIsImlhdCI6MTc3ODgzNjk3MSwiZXhwIjoxNzc4ODY5ODAwfQ.pF-mWkxDfnqXqgj5nySmSFX4zEyUhi9PTxb0ZRx3RDz-JelIdMLKvUSKjqBXRswHZe9lcpZkpv_E0rmEm4LNAA', 'refreshToken': 'eyJhbGciOiJIUzUxMiJ9.eyJ0b2tlbiI6IlJFRlJFU0gtVE9LRU4iLCJSRUZSRVNILVRPS0VOIjoiZXlKaGJHY2lPaUpTVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SjFjMlZ5WDNSNWNHVWlPaUpqYkdsbGJuUWlMQ0owYjJ0bGJsOTBlWEJsSWpvaWRISmhaR1ZmY21WbWNtVnphRjkwYjJ0bGJpSXNJbWR0WDJsa0lqb3dMQ0p6YjNWeVkyVWlPaUl6SWl3aVpHVjJhV05sWDJsa0lqb2lNamd3TWpRek56RXRabUk0TmkwellUQTFMV0ZqTVRNdFpHSTJOR1ZpTURVeU5qQmhJaXdpYTJsa0lqb2lkSEpoWkdWZmEyVjVYM1l5SWl3aWIyMXVaVzFoYm1GblpYSnBaQ0k2TUN3aWFYTnpJam9pYkc5bmFXNWZjMlZ5ZG1salpTSXNJbk4xWWlJNklrRkJRVW8wTnpnMk9EVWlMQ0psZUhBaU9qRTNOemc1TWpNek56RXNJbTVpWmlJNk1UYzNPRGd6TmpjNU1Td2lhV0YwSWpveE56YzRPRE0yTnpreExDSnFkR2tpT2lJMk5UQXhZbVU0TlMxbU5qQmxMVFJqTmpndE9HTXpPQzB5TURoaU5UQm1abVE1TldJaUxDSlViMnRsYmlJNklpSjkuSmlyLVFRYWxncU53RGtnZHM4UjMtbmFvWDgwa0YxOUNsV2dIQ2NKc29yb0l3S3U4RXk4T0ZZSkU4bklPQkYxR0NlNE1pbDRYeDg5UkN1NTZQQUNpV1NrOVBxcXBQWXUza2hCbDRaOFlsQmZSQ2U0Ym9OcWE0UTM0Q25HeTU2UVFYMVFfM3c0Z2N1V2NqSkM4bU0ta212VkM3Q1lxOTBBMWt1c3NBeWJBcEdjIiwiaWF0IjoxNzc4ODM2OTcxfQ.CFk8fJrsmzyVQZCJKhbN9mORa8lscugeOw3Hyj7HZdczsuSCCTnxwa5HHxxAsIX4i8bZSfXX9rsCTWU1rDPrMg', 'feedToken': 'eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6IkFBQUo0Nzg2ODUiLCJpYXQiOjE3Nzg4MzY5NzEsImV4cCI6MTc3ODkyMzM3MX0.pSKyZa5QG664kMKuqIwti69LRC6X6dJjBmnPwq04MGlGlZp8hBYh50NCh1HBDy79y9vTG5y3PNKQjbuCo5c_DA', 'state': None}}
+2026-05-15 14:52:51 IST - INFO - New Token generated antonyrajan.d@gmail.com
+2026-05-15 14:52:59 IST - INFO - initisuccess for angleone
+2026-05-15 14:52:59 IST - INFO - "GET /all_open_orders HTTP/1.1" 200 19
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 302 0
+2026-05-25 22:02:09 IST - INFO - "GET / HTTP/1.1" 302 0
+"GET /login HTTP/1.1" 200 1113
+2026-05-25 22:02:09 IST - INFO - "GET /login HTTP/1.1" 200 1113
+"GET /static/css/global.css HTTP/1.1" 200 9163
+2026-05-25 22:02:09 IST - INFO - "GET /static/css/global.css HTTP/1.1" 200 9163
+"GET /static/js/resource.js HTTP/1.1" 200 5972
+2026-05-25 22:02:09 IST - INFO - "GET /static/js/resource.js HTTP/1.1" 200 5972
+"GET /static/js/login.js HTTP/1.1" 200 5954
+2026-05-25 22:02:09 IST - INFO - "GET /static/js/login.js HTTP/1.1" 200 5954
+"GET /static/css/common.css HTTP/1.1" 200 14272
+2026-05-25 22:02:09 IST - INFO - "GET /static/css/common.css HTTP/1.1" 200 14272
+"POST /login HTTP/1.1" 200 49
+2026-05-25 22:02:21 IST - INFO - "POST /login HTTP/1.1" 200 49
+"GET /home HTTP/1.1" 200 1368
+2026-05-25 22:02:21 IST - INFO - "GET /home HTTP/1.1" 200 1368
+"GET /static/js/home.js HTTP/1.1" 200 107406
+2026-05-25 22:02:21 IST - INFO - "GET /static/js/home.js HTTP/1.1" 200 107406
+"GET /static/css/webhook-strategy-manager.css HTTP/1.1" 200 6698
+2026-05-25 22:02:21 IST - INFO - "GET /static/css/webhook-strategy-manager.css HTTP/1.1" 200 6698
+"GET /static/js/webhook-strategy-manager.js HTTP/1.1" 200 29633
+2026-05-25 22:02:21 IST - INFO - "GET /static/js/webhook-strategy-manager.js HTTP/1.1" 200 29633
+"GET /get_strategy_summary HTTP/1.1" 200 647
+2026-05-25 22:02:23 IST - INFO - "GET /get_strategy_summary HTTP/1.1" 200 647
+2026-05-25 22:02:23 IST - INFO - into Existing token flow antonyrajan.d@gmail.com
+2026-05-25 22:02:23 IST - INFO - SmartAPI token is invalid or expired.
+2026-05-25 22:02:23 IST - INFO - user_broker_details
+2026-05-25 22:02:23 IST - INFO - {'id': 1, 'user_id': 'antonyrajan.d@gmail.com', 'broker_name': 'angel_one', 'broker_user_id': 'AAAJ478685', 'broker_user_name': 'DANIEL VIJAYAMARY', 'broker_mpin': '1005', 'broker_api_token': 'SBvsnKPX', 'broker_qr': 'ECKSFSRCFC6LIVJX7L5TOONR3A', 'token_status': 'generated', 'is_demo_trading_enabled': False, 'index_group': 'indian_index', 'broker_password': '1', 'broker_forex_server': '1'}
+2026-05-25 22:02:23 IST - INFO - Into GenerateAuthToken
+2026-05-25 22:02:24 IST - INFO - API Response: {'status': True, 'message': 'SUCCESS', 'errorcode': '', 'data': {'jwtToken': 'eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6IkFBQUo0Nzg2ODUiLCJyb2xlcyI6MCwidXNlcnR5cGUiOiJVU0VSIiwidG9rZW4iOiJleUpoYkdjaU9pSlNVekkxTmlJc0luUjVjQ0k2SWtwWFZDSjkuZXlKMWMyVnlYM1I1Y0dVaU9pSmpiR2xsYm5RaUxDSjBiMnRsYmw5MGVYQmxJam9pZEhKaFpHVmZZV05qWlhOelgzUnZhMlZ1SWl3aVoyMWZhV1FpT2pnc0luTnZkWEpqWlNJNklqTWlMQ0prWlhacFkyVmZhV1FpT2lJeU9EQXlORE0zTVMxbVlqZzJMVE5oTURVdFlXTXhNeTFrWWpZMFpXSXdOVEkyTUdFaUxDSnJhV1FpT2lKMGNtRmtaVjlyWlhsZmRqSWlMQ0p2Ylc1bGJXRnVZV2RsY21sa0lqbzRMQ0p3Y205a2RXTjBjeUk2ZXlKa1pXMWhkQ0k2ZXlKemRHRjBkWE1pT2lKaFkzUnBkbVVpZlN3aWJXWWlPbnNpYzNSaGRIVnpJam9pWVdOMGFYWmxJbjE5TENKcGMzTWlPaUowY21Ga1pWOXNiMmRwYmw5elpYSjJhV05sSWl3aWMzVmlJam9pUVVGQlNqUTNPRFk0TlNJc0ltVjRjQ0k2TVRjM09UZ3hNekUwTkN3aWJtSm1Jam94TnpjNU56STJOVFkwTENKcFlYUWlPakUzTnprM01qWTFOalFzSW1wMGFTSTZJbUl6TkdReE1XTTNMV0V3WXprdE5ETmlOaTA0Tm1JMkxUVXdPRGN3TXpJeFpXWXlOQ0lzSWxSdmEyVnVJam9pSW4wLlVOYW5tazJva1ptNnVHckd4dGZra3VhUm1pZktIaDBNeU5zaWJIV0xSd0NzSV9oM292djZGZGVpU1ZETGtBbWRneHRjTFJlVWhvWFpBbktxeHdGbDNZSmdwY0pPT2F2elhUdDVvY043RzAzRDN4d3JLMmdGRmsyVGhSV083ancyWkczazMwNEx1TVl6OEpleUdZRTlVRzdtU2dOVEYzVENteWotWWFnM0pOdyIsIkFQSS1LRVkiOiJTQnZzbktQWCIsImlhdCI6MTc3OTcyNjc0NCwiZXhwIjoxNzc5NzMzODAwfQ.ztS6nq1aTtYQsNW6iNCiKxenW1bIzmdGmWnnDL06uFcs46MFglhVi96Uxy8CTBj5jDY-z5l3m4q5P5wNxbiqkg', 'refreshToken': 'eyJhbGciOiJIUzUxMiJ9.eyJ0b2tlbiI6IlJFRlJFU0gtVE9LRU4iLCJSRUZSRVNILVRPS0VOIjoiZXlKaGJHY2lPaUpTVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SjFjMlZ5WDNSNWNHVWlPaUpqYkdsbGJuUWlMQ0owYjJ0bGJsOTBlWEJsSWpvaWRISmhaR1ZmY21WbWNtVnphRjkwYjJ0bGJpSXNJbWR0WDJsa0lqb3dMQ0p6YjNWeVkyVWlPaUl6SWl3aVpHVjJhV05sWDJsa0lqb2lNamd3TWpRek56RXRabUk0TmkwellUQTFMV0ZqTVRNdFpHSTJOR1ZpTURVeU5qQmhJaXdpYTJsa0lqb2lkSEpoWkdWZmEyVjVYM1l5SWl3aWIyMXVaVzFoYm1GblpYSnBaQ0k2TUN3aWFYTnpJam9pYkc5bmFXNWZjMlZ5ZG1salpTSXNJbk4xWWlJNklrRkJRVW8wTnpnMk9EVWlMQ0psZUhBaU9qRTNOems0TVRNeE5EUXNJbTVpWmlJNk1UYzNPVGN5TmpVMk5Dd2lhV0YwSWpveE56YzVOekkyTlRZMExDSnFkR2tpT2lJMlpqSmlOVE01TnkweU5qQTNMVFJqTmpFdE9XUmpaQzFsTmprMFl6TmpZek0wT1dNaUxDSlViMnRsYmlJNklpSjkuczJXS2ZCclpROWQ0cUVlV0x5cjBlSXBBSzM5dnlFUEozYjljVjFwRGEydnVscnlhcGgySFpHem9oUGxWSU9LMmNDa1UwcHU5UTAzWUFqTVJEUGxRSkNRS0d1aVI5NXN3QkU1TXJxU3JzMkJpMlh3OE4xVkNnMlpuYXdBTTZfbTBDbllnNkpfMl9yU1lKWlV2Sk1XcnlHRnlaT0FfaVkxY2RkVTBwODB0X01VIiwiaWF0IjoxNzc5NzI2NzQ0fQ.uIoHoITShOWutQol_WGSFuTSSKifRg6TCA_aaPm5WnBU9v9IVgJZ_vwOwcdKzGQMP_9pPl8YzccZXqPgnn9JoA', 'feedToken': 'eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6IkFBQUo0Nzg2ODUiLCJpYXQiOjE3Nzk3MjY3NDQsImV4cCI6MTc3OTgxMzE0NH0.TtLYyVcvdUE0gAJpJSFw8wWmRj3FsBGKYyYMDMXm-9kn7xIPyIhB4zo9gTfzVSyu0MUEsfesE8Y7ELpV-Zgn0A', 'state': None}}
+2026-05-25 22:02:24 IST - INFO - New Token generated antonyrajan.d@gmail.com
+2026-05-25 22:02:33 IST - INFO - initisuccess for angleone
+"GET /all_open_orders HTTP/1.1" 200 19
+2026-05-25 22:02:33 IST - INFO - "GET /all_open_orders HTTP/1.1" 200 19
+"GET /dashboard HTTP/1.1" 200 3593
+2026-05-25 22:03:35 IST - INFO - "GET /dashboard HTTP/1.1" 200 3593
+"GET /static/js/ui/index.js HTTP/1.1" 200 154
+2026-05-25 22:03:35 IST - INFO - "GET /static/js/ui/index.js HTTP/1.1" 200 154
+"GET /static/js/ui/App.js HTTP/1.1" 200 22887
+2026-05-25 22:03:36 IST - INFO - "GET /static/js/ui/App.js HTTP/1.1" 200 22887
+"GET /static/js/ui/components/icons.js HTTP/1.1" 200 14978
+2026-05-25 22:03:36 IST - INFO - "GET /static/js/ui/components/icons.js HTTP/1.1" 200 14978
+"GET /static/js/ui/utils/api.js HTTP/1.1" 200 1488
+2026-05-25 22:03:36 IST - INFO - "GET /static/js/ui/utils/api.js HTTP/1.1" 200 1488
+"GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 200 2217
+2026-05-25 22:03:36 IST - INFO - "GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 200 2217
+"GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 200 3340
+2026-05-25 22:03:36 IST - INFO - "GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 200 3340
+"GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 200 4117
+2026-05-25 22:03:36 IST - INFO - "GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 200 4117
+"GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 200 978
+2026-05-25 22:03:36 IST - INFO - "GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 200 978
+"GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 200 5869
+2026-05-25 22:03:36 IST - INFO - "GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 200 5869
+"GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 200 3899
+2026-05-25 22:03:36 IST - INFO - "GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 200 3899
+"GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 200 4423
+2026-05-25 22:03:36 IST - INFO - "GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 200 4423
+"GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 200 7592
+2026-05-25 22:03:36 IST - INFO - "GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 200 7592
+"GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 200 5509
+2026-05-25 22:03:36 IST - INFO - "GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 200 5509
+"GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 200 4362
+2026-05-25 22:03:36 IST - INFO - "GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 200 4362
+"GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 200 4866
+2026-05-25 22:03:36 IST - INFO - "GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 200 4866
+"GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 200 7279
+2026-05-25 22:03:36 IST - INFO - "GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 200 7279
+"GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 200 6492
+2026-05-25 22:03:36 IST - INFO - "GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 200 6492
+"GET /static/js/ui/components/Toast.js HTTP/1.1" 200 1654
+2026-05-25 22:03:36 IST - INFO - "GET /static/js/ui/components/Toast.js HTTP/1.1" 200 1654
+"GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 11212
+2026-05-25 22:03:36 IST - INFO - "GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 11212
+"GET /get_broker_details HTTP/1.1" 200 367
+2026-05-25 22:03:36 IST - INFO - "GET /get_broker_details HTTP/1.1" 200 367
+"GET /manual_details HTTP/1.1" 200 4029
+2026-05-25 22:03:36 IST - INFO - "GET /manual_details HTTP/1.1" 200 4029
+"GET /get_scalper_details HTTP/1.1" 200 206
+2026-05-25 22:03:36 IST - INFO - "GET /get_scalper_details HTTP/1.1" 200 206
+"GET /get_order_book_details HTTP/1.1" 200 8739
+2026-05-25 22:03:36 IST - INFO - "GET /get_order_book_details HTTP/1.1" 200 8739
+"GET /get_config_values HTTP/1.1" 200 902
+2026-05-25 22:03:36 IST - INFO - "GET /get_config_values HTTP/1.1" 200 902
+"GET /get_strategy_summary HTTP/1.1" 200 647
+2026-05-25 22:03:36 IST - INFO - "GET /get_strategy_summary HTTP/1.1" 200 647
+"GET /get_telegram_settings HTTP/1.1" 200 62
+2026-05-25 22:04:03 IST - INFO - "GET /get_telegram_settings HTTP/1.1" 200 62
+"POST /update_telegram_settings HTTP/1.1" 200 101
+2026-05-25 22:04:06 IST - INFO - "POST /update_telegram_settings HTTP/1.1" 200 101
+"POST /update_telegram_settings HTTP/1.1" 200 107
+2026-05-25 22:04:13 IST - INFO - "POST /update_telegram_settings HTTP/1.1" 200 107
+"GET /get_telegram_settings HTTP/1.1" 200 67
+2026-05-25 22:04:16 IST - INFO - "GET /get_telegram_settings HTTP/1.1" 200 67
+"GET /get_telegram_settings HTTP/1.1" 200 67
+2026-05-25 22:04:17 IST - INFO - "GET /get_telegram_settings HTTP/1.1" 200 67
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /dashboard HTTP/1.1" 200 5214
+2026-05-25 22:13:00 IST - INFO - "GET /dashboard HTTP/1.1" 200 5214
+"GET /static/js/ui/index.js HTTP/1.1" 200 154
+2026-05-25 22:13:01 IST - INFO - "GET /static/js/ui/index.js HTTP/1.1" 200 154
+"GET /static/js/ui/App.js HTTP/1.1" 200 24467
+2026-05-25 22:13:01 IST - INFO - "GET /static/js/ui/App.js HTTP/1.1" 200 24467
+"GET /static/js/ui/components/icons.js HTTP/1.1" 200 7055
+2026-05-25 22:13:01 IST - INFO - "GET /static/js/ui/components/icons.js HTTP/1.1" 200 7055
+"GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 200 3350
+2026-05-25 22:13:01 IST - INFO - "GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 200 3350
+"GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 200 2227
+2026-05-25 22:13:01 IST - INFO - "GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 200 2227
+"GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 200 983
+2026-05-25 22:13:01 IST - INFO - "GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 200 983
+"GET /static/js/ui/utils/api.js HTTP/1.1" 200 1488
+2026-05-25 22:13:01 IST - INFO - "GET /static/js/ui/utils/api.js HTTP/1.1" 200 1488
+"GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 200 5884
+2026-05-25 22:13:01 IST - INFO - "GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 200 5884
+"GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 200 4132
+2026-05-25 22:13:01 IST - INFO - "GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 200 4132
+"GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 200 5524
+2026-05-25 22:13:01 IST - INFO - "GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 200 5524
+"GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 200 7652
+2026-05-25 22:13:01 IST - INFO - "GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 200 7652
+"GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 200 4438
+2026-05-25 22:13:01 IST - INFO - "GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 200 4438
+"GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 200 3909
+2026-05-25 22:13:01 IST - INFO - "GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 200 3909
+"GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 200 4377
+2026-05-25 22:13:01 IST - INFO - "GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 200 4377
+"GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 200 4881
+2026-05-25 22:13:01 IST - INFO - "GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 200 4881
+"GET /static/js/ui/components/Toast.js HTTP/1.1" 200 1654
+2026-05-25 22:13:01 IST - INFO - "GET /static/js/ui/components/Toast.js HTTP/1.1" 200 1654
+"GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 11262
+2026-05-25 22:13:01 IST - INFO - "GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 11262
+"GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 200 6533
+2026-05-25 22:13:01 IST - INFO - "GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 200 6533
+"GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 200 7299
+2026-05-25 22:13:01 IST - INFO - "GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 200 7299
+"GET /get_scalper_details HTTP/1.1" 200 206
+2026-05-25 22:13:01 IST - INFO - "GET /get_scalper_details HTTP/1.1" 200 206
+"GET /get_broker_details HTTP/1.1" 200 367
+2026-05-25 22:13:01 IST - INFO - "GET /get_broker_details HTTP/1.1" 200 367
+"GET /get_order_book_details HTTP/1.1" 200 8739
+"GET /get_config_values HTTP/1.1" 200 902
+2026-05-25 22:13:01 IST - INFO - "GET /get_order_book_details HTTP/1.1" 200 8739
+2026-05-25 22:13:01 IST - INFO - "GET /get_config_values HTTP/1.1" 200 902
+"GET /manual_details HTTP/1.1" 200 4029
+2026-05-25 22:13:01 IST - INFO - "GET /manual_details HTTP/1.1" 200 4029
+"GET /get_strategy_summary HTTP/1.1" 200 647
+2026-05-25 22:13:01 IST - INFO - "GET /get_strategy_summary HTTP/1.1" 200 647
+"GET /dashboard HTTP/1.1" 200 5214
+2026-05-25 22:13:02 IST - INFO - "GET /dashboard HTTP/1.1" 200 5214
+"GET /static/js/ui/index.js HTTP/1.1" 200 154
+2026-05-25 22:13:02 IST - INFO - "GET /static/js/ui/index.js HTTP/1.1" 200 154
+"GET /static/js/ui/App.js HTTP/1.1" 200 24467
+2026-05-25 22:13:03 IST - INFO - "GET /static/js/ui/App.js HTTP/1.1" 200 24467
+"GET /static/js/ui/components/icons.js HTTP/1.1" 200 7055
+2026-05-25 22:13:03 IST - INFO - "GET /static/js/ui/components/icons.js HTTP/1.1" 200 7055
+"GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 200 983
+2026-05-25 22:13:03 IST - INFO - "GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 200 983
+"GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 200 2227
+2026-05-25 22:13:03 IST - INFO - "GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 200 2227
+"GET /static/js/ui/utils/api.js HTTP/1.1" 200 1488
+2026-05-25 22:13:03 IST - INFO - "GET /static/js/ui/utils/api.js HTTP/1.1" 200 1488
+"GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 200 5884
+2026-05-25 22:13:03 IST - INFO - "GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 200 5884
+"GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 200 3350
+2026-05-25 22:13:03 IST - INFO - "GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 200 3350
+"GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 200 5524
+2026-05-25 22:13:03 IST - INFO - "GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 200 5524
+"GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 200 4132
+2026-05-25 22:13:03 IST - INFO - "GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 200 4132
+"GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 200 7652
+2026-05-25 22:13:03 IST - INFO - "GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 200 7652
+"GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 200 4438
+2026-05-25 22:13:03 IST - INFO - "GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 200 4438
+"GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 200 3909
+2026-05-25 22:13:03 IST - INFO - "GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 200 3909
+"GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 200 4377
+2026-05-25 22:13:03 IST - INFO - "GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 200 4377
+"GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 200 4881
+2026-05-25 22:13:03 IST - INFO - "GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 200 4881
+"GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 200 7299
+2026-05-25 22:13:03 IST - INFO - "GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 200 7299
+"GET /static/js/ui/components/Toast.js HTTP/1.1" 200 1654
+2026-05-25 22:13:03 IST - INFO - "GET /static/js/ui/components/Toast.js HTTP/1.1" 200 1654
+"GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 11262
+2026-05-25 22:13:03 IST - INFO - "GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 11262
+"GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 200 6533
+2026-05-25 22:13:03 IST - INFO - "GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 200 6533
+"GET /get_scalper_details HTTP/1.1" 200 206
+"GET /get_broker_details HTTP/1.1" 200 367
+2026-05-25 22:13:03 IST - INFO - "GET /get_scalper_details HTTP/1.1" 200 206
+"GET /get_order_book_details HTTP/1.1" 200 8739
+2026-05-25 22:13:03 IST - INFO - "GET /get_broker_details HTTP/1.1" 200 367
+"GET /manual_details HTTP/1.1" 200 4029
+"GET /get_config_values HTTP/1.1" 200 902
+2026-05-25 22:13:03 IST - INFO - "GET /get_order_book_details HTTP/1.1" 200 8739
+2026-05-25 22:13:03 IST - INFO - "GET /manual_details HTTP/1.1" 200 4029
+"GET /get_strategy_summary HTTP/1.1" 200 647
+2026-05-25 22:13:03 IST - INFO - "GET /get_config_values HTTP/1.1" 200 902
+2026-05-25 22:13:03 IST - INFO - "GET /get_strategy_summary HTTP/1.1" 200 647
+"GET /get_telegram_settings HTTP/1.1" 200 67
+2026-05-25 22:13:16 IST - INFO - "GET /get_telegram_settings HTTP/1.1" 200 67
+"GET /admin_console HTTP/1.1" 200 2912
+2026-05-25 22:13:52 IST - INFO - "GET /admin_console HTTP/1.1" 200 2912
+"GET /static/css/admin.css HTTP/1.1" 200 5275
+2026-05-25 22:13:52 IST - INFO - "GET /static/css/admin.css HTTP/1.1" 200 5275
+"GET /static/js/admin.js HTTP/1.1" 200 11202
+2026-05-25 22:13:52 IST - INFO - "GET /static/js/admin.js HTTP/1.1" 200 11202
+"GET /get_index_data HTTP/1.1" 200 1266
+2026-05-25 22:13:52 IST - INFO - "GET /get_index_data HTTP/1.1" 200 1266
+Not Found: /favicon.ico
+2026-05-25 22:13:52 IST - WARNING - Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 190
+2026-05-25 22:13:52 IST - WARNING - "GET /favicon.ico HTTP/1.1" 404 190
+"GET /get_celery_status HTTP/1.1" 200 62
+2026-05-25 22:13:52 IST - INFO - "GET /get_celery_status HTTP/1.1" 200 62
+"GET / HTTP/1.1" 302 0
+2026-05-25 22:13:58 IST - INFO - "GET / HTTP/1.1" 302 0
+"GET /home HTTP/1.1" 200 1368
+2026-05-25 22:13:59 IST - INFO - "GET /home HTTP/1.1" 200 1368
+"GET /static/css/common.css HTTP/1.1" 304 0
+2026-05-25 22:13:59 IST - INFO - "GET /static/css/common.css HTTP/1.1" 304 0
+"GET /static/css/global.css HTTP/1.1" 304 0
+2026-05-25 22:13:59 IST - INFO - "GET /static/css/global.css HTTP/1.1" 304 0
+"GET /static/css/webhook-strategy-manager.css HTTP/1.1" 304 0
+"GET /static/js/resource.js HTTP/1.1" 304 0
+"GET /static/js/webhook-strategy-manager.js HTTP/1.1" 304 0
+"GET /static/js/home.js HTTP/1.1" 304 0
+2026-05-25 22:13:59 IST - INFO - "GET /static/css/webhook-strategy-manager.css HTTP/1.1" 304 0
+2026-05-25 22:13:59 IST - INFO - "GET /static/js/resource.js HTTP/1.1" 304 0
+2026-05-25 22:13:59 IST - INFO - "GET /static/js/webhook-strategy-manager.js HTTP/1.1" 304 0
+2026-05-25 22:13:59 IST - INFO - "GET /static/js/home.js HTTP/1.1" 304 0
+2026-05-25 22:13:59 IST - INFO - into Existing token flow antonyrajan.d@gmail.com
+"GET /get_strategy_summary HTTP/1.1" 200 647
+2026-05-25 22:13:59 IST - INFO - "GET /get_strategy_summary HTTP/1.1" 200 647
+2026-05-25 22:13:59 IST - INFO - NIFTY Expiry: {'current_expiry': '26-May-2026', 'next_expiry': '02-Jun-2026'}
+2026-05-25 22:13:59 IST - INFO - BANKNIFTY Expiry: {'current_expiry': '26-May-2026', 'next_expiry': '30-Jun-2026'}
+2026-05-25 22:13:59 IST - INFO - FINNIFTY Expiry: {'current_expiry': '26-May-2026', 'next_expiry': '30-Jun-2026'}
+2026-05-25 22:13:59 IST - INFO - SENSEX Expiry: {'current_expiry': '27-May-2026', 'next_expiry': '04-Jun-2026'}
+2026-05-25 22:13:59 IST - INFO - Broker object initiated with existing token antonyrajan.d@gmail.com
+2026-05-25 22:14:01 IST - INFO - initisuccess for angleone
+"GET /all_open_orders HTTP/1.1" 200 19
+2026-05-25 22:14:01 IST - INFO - "GET /all_open_orders HTTP/1.1" 200 19
+"GET /dashboard HTTP/1.1" 200 5214
+2026-05-25 22:14:03 IST - INFO - "GET /dashboard HTTP/1.1" 200 5214
+"GET /static/js/ui/index.js HTTP/1.1" 304 0
+2026-05-25 22:14:03 IST - INFO - "GET /static/js/ui/index.js HTTP/1.1" 304 0
+"GET /static/js/ui/App.js HTTP/1.1" 304 0
+2026-05-25 22:14:03 IST - INFO - "GET /static/js/ui/App.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/icons.js HTTP/1.1" 304 0
+2026-05-25 22:14:03 IST - INFO - "GET /static/js/ui/components/icons.js HTTP/1.1" 304 0
+"GET /static/js/ui/utils/api.js HTTP/1.1" 304 0
+2026-05-25 22:14:03 IST - INFO - "GET /static/js/ui/utils/api.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 304 0
+2026-05-25 22:14:03 IST - INFO - "GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 304 0
+2026-05-25 22:14:03 IST - INFO - "GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 304 0
+2026-05-25 22:14:03 IST - INFO - "GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 304 0
+2026-05-25 22:14:03 IST - INFO - "GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 304 0
+2026-05-25 22:14:03 IST - INFO - "GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 304 0
+2026-05-25 22:14:03 IST - INFO - "GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 304 0
+2026-05-25 22:14:03 IST - INFO - "GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 304 0
+2026-05-25 22:14:03 IST - INFO - "GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/Toast.js HTTP/1.1" 304 0
+2026-05-25 22:14:03 IST - INFO - "GET /static/js/ui/components/Toast.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 304 0
+2026-05-25 22:14:03 IST - INFO - "GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 304 0
+2026-05-25 22:14:03 IST - INFO - "GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 304 0
+2026-05-25 22:14:03 IST - INFO - "GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 304 0
+2026-05-25 22:14:03 IST - INFO - "GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 304 0
+2026-05-25 22:14:03 IST - INFO - "GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 304 0
+2026-05-25 22:14:03 IST - INFO - "GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 304 0
+"GET /get_order_book_details HTTP/1.1" 200 8739
+2026-05-25 22:14:04 IST - INFO - "GET /get_order_book_details HTTP/1.1" 200 8739
+"GET /get_scalper_details HTTP/1.1" 200 206
+2026-05-25 22:14:04 IST - INFO - "GET /get_scalper_details HTTP/1.1" 200 206
+"GET /get_config_values HTTP/1.1" 200 902
+2026-05-25 22:14:04 IST - INFO - "GET /get_config_values HTTP/1.1" 200 902
+"GET /get_strategy_summary HTTP/1.1" 200 647
+2026-05-25 22:14:04 IST - INFO - "GET /get_strategy_summary HTTP/1.1" 200 647
+"GET /get_broker_details HTTP/1.1" 200 367
+2026-05-25 22:14:04 IST - INFO - "GET /get_broker_details HTTP/1.1" 200 367
+"GET /manual_details HTTP/1.1" 200 4029
+2026-05-25 22:14:04 IST - INFO - "GET /manual_details HTTP/1.1" 200 4029
+2026-05-25 22:14:05 IST - INFO - Expiry Updated
+"POST /update_expiry_details HTTP/1.1" 200 79
+2026-05-25 22:14:05 IST - INFO - "POST /update_expiry_details HTTP/1.1" 200 79
+"GET /get_telegram_settings HTTP/1.1" 200 67
+2026-05-25 22:14:06 IST - INFO - "GET /get_telegram_settings HTTP/1.1" 200 67
+"GET /get_telegram_settings HTTP/1.1" 200 67
+2026-05-25 22:14:14 IST - INFO - "GET /get_telegram_settings HTTP/1.1" 200 67
+"GET /get_telegram_settings HTTP/1.1" 200 67
+2026-05-25 22:14:16 IST - INFO - "GET /get_telegram_settings HTTP/1.1" 200 67
+"GET /get_telegram_settings HTTP/1.1" 200 67
+2026-05-25 22:14:16 IST - INFO - "GET /get_telegram_settings HTTP/1.1" 200 67
+"GET /get_telegram_settings HTTP/1.1" 200 67
+2026-05-25 22:14:17 IST - INFO - "GET /get_telegram_settings HTTP/1.1" 200 67
+"GET /get_telegram_settings HTTP/1.1" 200 67
+2026-05-25 22:14:18 IST - INFO - "GET /get_telegram_settings HTTP/1.1" 200 67
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+2026-05-25 22:14:31 IST - WARNING - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+2026-05-25 22:14:31 IST - WARNING - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+"GET /dashboard HTTP/1.1" 200 5214
+2026-05-25 22:14:44 IST - INFO - "GET /dashboard HTTP/1.1" 200 5214
+"GET /static/js/ui/index.js HTTP/1.1" 200 154
+2026-05-25 22:14:44 IST - INFO - "GET /static/js/ui/index.js HTTP/1.1" 200 154
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+2026-05-25 22:14:44 IST - WARNING - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+2026-05-25 22:14:44 IST - WARNING - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+"GET /static/js/ui/App.js HTTP/1.1" 200 24467
+2026-05-25 22:14:44 IST - INFO - "GET /static/js/ui/App.js HTTP/1.1" 200 24467
+"GET /static/js/ui/components/icons.js HTTP/1.1" 200 7055
+2026-05-25 22:14:44 IST - INFO - "GET /static/js/ui/components/icons.js HTTP/1.1" 200 7055
+"GET /static/js/ui/utils/api.js HTTP/1.1" 200 1488
+2026-05-25 22:14:44 IST - INFO - "GET /static/js/ui/utils/api.js HTTP/1.1" 200 1488
+"GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 200 983
+2026-05-25 22:14:44 IST - INFO - "GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 200 983
+"GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 200 2227
+2026-05-25 22:14:44 IST - INFO - "GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 200 2227
+"GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 200 3350
+2026-05-25 22:14:44 IST - INFO - "GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 200 3350
+"GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 200 4132
+2026-05-25 22:14:44 IST - INFO - "GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 200 4132
+"GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 200 5884
+2026-05-25 22:14:44 IST - INFO - "GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 200 5884
+"GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 200 7652
+2026-05-25 22:14:44 IST - INFO - "GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 200 7652
+"GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 200 4881
+2026-05-25 22:14:44 IST - INFO - "GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 200 4881
+"GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 200 4438
+2026-05-25 22:14:44 IST - INFO - "GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 200 4438
+"GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 200 5524
+2026-05-25 22:14:44 IST - INFO - "GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 200 5524
+"GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 200 3909
+2026-05-25 22:14:44 IST - INFO - "GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 200 3909
+"GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 200 4377
+2026-05-25 22:14:44 IST - INFO - "GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 200 4377
+"GET /static/js/ui/components/Toast.js HTTP/1.1" 200 1654
+2026-05-25 22:14:44 IST - INFO - "GET /static/js/ui/components/Toast.js HTTP/1.1" 200 1654
+"GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 200 6533
+2026-05-25 22:14:44 IST - INFO - "GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 200 6533
+"GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 11262
+2026-05-25 22:14:44 IST - INFO - "GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 11262
+"GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 200 7299
+2026-05-25 22:14:44 IST - INFO - "GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 200 7299
+"GET /get_config_values HTTP/1.1" 200 902
+2026-05-25 22:14:44 IST - INFO - "GET /get_config_values HTTP/1.1" 200 902
+"GET /get_broker_details HTTP/1.1" 200 367
+2026-05-25 22:14:44 IST - INFO - "GET /get_broker_details HTTP/1.1" 200 367
+"GET /get_order_book_details HTTP/1.1" 200 8739
+2026-05-25 22:14:44 IST - INFO - "GET /get_order_book_details HTTP/1.1" 200 8739
+"GET /get_scalper_details HTTP/1.1" 200 206
+2026-05-25 22:14:45 IST - INFO - "GET /get_scalper_details HTTP/1.1" 200 206
+"GET /manual_details HTTP/1.1" 200 4029
+2026-05-25 22:14:45 IST - INFO - "GET /manual_details HTTP/1.1" 200 4029
+"GET /get_strategy_summary HTTP/1.1" 200 647
+2026-05-25 22:14:45 IST - INFO - "GET /get_strategy_summary HTTP/1.1" 200 647
+"GET /home HTTP/1.1" 200 1368
+2026-05-25 22:15:35 IST - INFO - "GET /home HTTP/1.1" 200 1368
+"GET /static/css/global.css HTTP/1.1" 304 0
+2026-05-25 22:15:35 IST - INFO - "GET /static/css/global.css HTTP/1.1" 304 0
+"GET /static/js/resource.js HTTP/1.1" 304 0
+2026-05-25 22:15:35 IST - INFO - "GET /static/js/resource.js HTTP/1.1" 304 0
+"GET /static/js/home.js HTTP/1.1" 304 0
+2026-05-25 22:15:35 IST - INFO - "GET /static/js/home.js HTTP/1.1" 304 0
+"GET /static/css/webhook-strategy-manager.css HTTP/1.1" 304 0
+2026-05-25 22:15:35 IST - INFO - "GET /static/css/webhook-strategy-manager.css HTTP/1.1" 304 0
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+2026-05-25 22:15:35 IST - WARNING - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+2026-05-25 22:15:35 IST - WARNING - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+"GET /static/js/webhook-strategy-manager.js HTTP/1.1" 304 0
+2026-05-25 22:15:35 IST - INFO - "GET /static/js/webhook-strategy-manager.js HTTP/1.1" 304 0
+"GET /static/css/common.css HTTP/1.1" 304 0
+2026-05-25 22:15:35 IST - INFO - "GET /static/css/common.css HTTP/1.1" 304 0
+2026-05-25 22:15:36 IST - INFO - into Existing token flow antonyrajan.d@gmail.com
+"GET /get_strategy_summary HTTP/1.1" 200 647
+2026-05-25 22:15:36 IST - INFO - "GET /get_strategy_summary HTTP/1.1" 200 647
+2026-05-25 22:15:36 IST - INFO - Broker object initiated with existing token antonyrajan.d@gmail.com
+2026-05-25 22:15:37 IST - INFO - initisuccess for angleone
+"GET /all_open_orders HTTP/1.1" 200 19
+2026-05-25 22:15:37 IST - INFO - "GET /all_open_orders HTTP/1.1" 200 19
+Watching for file changes with StatReloader
+"GET /home HTTP/1.1" 200 1368
+2026-05-25 22:20:15 IST - INFO - "GET /home HTTP/1.1" 200 1368
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+2026-05-25 22:20:15 IST - WARNING - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+2026-05-25 22:20:15 IST - WARNING - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+"GET /static/js/resource.js HTTP/1.1" 304 0
+2026-05-25 22:20:15 IST - INFO - "GET /static/js/resource.js HTTP/1.1" 304 0
+"GET /static/css/common.css HTTP/1.1" 304 0
+2026-05-25 22:20:15 IST - INFO - "GET /static/css/common.css HTTP/1.1" 304 0
+"GET /static/css/global.css HTTP/1.1" 304 0
+2026-05-25 22:20:15 IST - INFO - "GET /static/css/global.css HTTP/1.1" 304 0
+"GET /static/css/webhook-strategy-manager.css HTTP/1.1" 304 0
+2026-05-25 22:20:15 IST - INFO - "GET /static/css/webhook-strategy-manager.css HTTP/1.1" 304 0
+"GET /static/js/home.js HTTP/1.1" 304 0
+2026-05-25 22:20:15 IST - INFO - "GET /static/js/home.js HTTP/1.1" 304 0
+"GET /static/js/webhook-strategy-manager.js HTTP/1.1" 304 0
+2026-05-25 22:20:15 IST - INFO - "GET /static/js/webhook-strategy-manager.js HTTP/1.1" 304 0
+"GET /get_strategy_summary HTTP/1.1" 200 647
+2026-05-25 22:20:16 IST - INFO - "GET /get_strategy_summary HTTP/1.1" 200 647
+2026-05-25 22:20:16 IST - INFO - into Existing token flow antonyrajan.d@gmail.com
+2026-05-25 22:20:16 IST - INFO - Broker object initiated with existing token antonyrajan.d@gmail.com
+2026-05-25 22:20:17 IST - INFO - initisuccess for angleone
+"GET /all_open_orders HTTP/1.1" 200 19
+2026-05-25 22:20:17 IST - INFO - "GET /all_open_orders HTTP/1.1" 200 19
+"GET /dashboard HTTP/1.1" 200 5214
+2026-05-25 22:20:20 IST - INFO - "GET /dashboard HTTP/1.1" 200 5214
+"GET /static/js/ui/index.js HTTP/1.1" 304 0
+2026-05-25 22:20:20 IST - INFO - "GET /static/js/ui/index.js HTTP/1.1" 304 0
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+2026-05-25 22:20:20 IST - WARNING - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+2026-05-25 22:20:20 IST - WARNING - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+"GET /static/js/ui/App.js HTTP/1.1" 200 27783
+2026-05-25 22:20:21 IST - INFO - "GET /static/js/ui/App.js HTTP/1.1" 200 27783
+"GET /static/js/ui/components/icons.js HTTP/1.1" 200 7279
+2026-05-25 22:20:21 IST - INFO - "GET /static/js/ui/components/icons.js HTTP/1.1" 200 7279
+"GET /static/js/ui/utils/api.js HTTP/1.1" 304 0
+2026-05-25 22:20:21 IST - INFO - "GET /static/js/ui/utils/api.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 304 0
+2026-05-25 22:20:21 IST - INFO - "GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 304 0
+2026-05-25 22:20:21 IST - INFO - "GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 304 0
+2026-05-25 22:20:21 IST - INFO - "GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 304 0
+2026-05-25 22:20:21 IST - INFO - "GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 304 0
+2026-05-25 22:20:21 IST - INFO - "GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 304 0
+2026-05-25 22:20:21 IST - INFO - "GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 304 0
+2026-05-25 22:20:21 IST - INFO - "GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 304 0
+2026-05-25 22:20:21 IST - INFO - "GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 200 9333
+2026-05-25 22:20:21 IST - INFO - "GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 200 9333
+"GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 304 0
+2026-05-25 22:20:21 IST - INFO - "GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 304 0
+2026-05-25 22:20:21 IST - INFO - "GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/Toast.js HTTP/1.1" 304 0
+2026-05-25 22:20:21 IST - INFO - "GET /static/js/ui/components/Toast.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 304 0
+2026-05-25 22:20:21 IST - INFO - "GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 304 0
+2026-05-25 22:20:21 IST - INFO - "GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 304 0
+2026-05-25 22:20:21 IST - INFO - "GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 304 0
+"GET /get_scalper_details HTTP/1.1" 200 206
+2026-05-25 22:20:21 IST - INFO - "GET /get_scalper_details HTTP/1.1" 200 206
+"GET /get_broker_details HTTP/1.1" 200 367
+2026-05-25 22:20:21 IST - INFO - "GET /get_broker_details HTTP/1.1" 200 367
+Method Not Allowed (GET): /get_auth_token
+2026-05-25 22:20:21 IST - WARNING - Method Not Allowed (GET): /get_auth_token
+"GET /get_order_book_details HTTP/1.1" 200 8739
+2026-05-25 22:20:21 IST - INFO - "GET /get_order_book_details HTTP/1.1" 200 8739
+"GET /get_strategy_summary HTTP/1.1" 200 647
+2026-05-25 22:20:21 IST - INFO - "GET /get_strategy_summary HTTP/1.1" 200 647
+"GET /manual_details HTTP/1.1" 200 4029
+2026-05-25 22:20:21 IST - INFO - "GET /manual_details HTTP/1.1" 200 4029
+"GET /get_auth_token HTTP/1.1" 405 0
+"GET /get_config_values HTTP/1.1" 200 902
+2026-05-25 22:20:21 IST - WARNING - "GET /get_auth_token HTTP/1.1" 405 0
+2026-05-25 22:20:21 IST - INFO - "GET /get_config_values HTTP/1.1" 200 902
+2026-05-25 22:20:27 IST - INFO - into Existing token flow antonyrajan.d@gmail.com
+2026-05-25 22:20:27 IST - INFO - Broker object initiated with existing token antonyrajan.d@gmail.com
+2026-05-25 22:20:28 IST - INFO - initisuccess for angleone
+2026-05-25 22:20:30 IST - INFO - antonyrajan.d@gmail.com :: {'exchange': 'NFO', 'tradingsymbol': 'BANKNIFTY26MAY2655200CE', 'symboltoken': '67267'}
+2026-05-25 22:20:30 IST - INFO - antonyrajan.d@gmail.com :: Get Candle Details
+2026-05-25 22:20:30 IST - INFO - antonyrajan.d@gmail.com :: from_time: 2026-05-25 22:14
+2026-05-25 22:20:30 IST - INFO - antonyrajan.d@gmail.com :: to_time: 2026-05-25 22:21
+2026-05-25 22:20:30 IST - ERROR - antonyrajan.d@gmail.com :: Candle data missing or HIGH column not found. Using market order.
+2026-05-25 22:20:30 IST - INFO - antonyrajan.d@gmail.com :: Placing buy order for BANKNIFTY26MAY2655200CE
+2026-05-25 22:20:30 IST - ERROR - [AngelOne AG7002] antonyrajan.d@gmail.com - placeOrder: Access denied: Unregistered IP address. Register your IP before retrying.
+2026-05-25 22:20:30 IST - INFO - antonyrajan.d@gmail.com :: Buy order response: {'success': False, 'message': 'Access denied: Unregistered IP address. Register your IP before retrying.', 'errorCode': 'AG7002', 'data': ''}
+2026-05-25 22:20:30 IST - ERROR - antonyrajan.d@gmail.com :: triggerOrder error: 'str' object has no attribute 'get'
+"POST /place_order_buy HTTP/1.1" 200 54
+2026-05-25 22:20:32 IST - INFO - "POST /place_order_buy HTTP/1.1" 200 54
+2026-05-25 22:20:40 IST - INFO - into Existing token flow antonyrajan.d@gmail.com
+2026-05-25 22:20:40 IST - INFO - Broker object initiated with existing token antonyrajan.d@gmail.com
+2026-05-25 22:20:41 IST - INFO - initisuccess for angleone
+2026-05-25 22:20:41 IST - INFO - antonyrajan.d@gmail.com :: No Pending orders for strategy DefaultStrategy
+"POST /place_order_exit HTTP/1.1" 200 48
+2026-05-25 22:20:41 IST - INFO - "POST /place_order_exit HTTP/1.1" 200 48
+2026-05-25 22:20:43 IST - INFO - into Existing token flow antonyrajan.d@gmail.com
+2026-05-25 22:20:44 IST - INFO - Broker object initiated with existing token antonyrajan.d@gmail.com
+2026-05-25 22:20:45 IST - INFO - initisuccess for angleone
+2026-05-25 22:20:45 IST - INFO - antonyrajan.d@gmail.com :: No Pending orders for strategy DefaultStrategy
+"POST /place_order_exit HTTP/1.1" 200 48
+2026-05-25 22:20:45 IST - INFO - "POST /place_order_exit HTTP/1.1" 200 48
+2026-05-25 22:20:48 IST - INFO - into Existing token flow antonyrajan.d@gmail.com
+2026-05-25 22:20:49 IST - INFO - Broker object initiated with existing token antonyrajan.d@gmail.com
+2026-05-25 22:20:50 IST - INFO - initisuccess for angleone
+2026-05-25 22:20:50 IST - INFO - antonyrajan.d@gmail.com :: No Pending orders for strategy DefaultStrategy
+"POST /place_order_exit HTTP/1.1" 200 48
+2026-05-25 22:20:50 IST - INFO - "POST /place_order_exit HTTP/1.1" 200 48
+2026-05-25 22:20:51 IST - INFO - into Existing token flow antonyrajan.d@gmail.com
+2026-05-25 22:20:52 IST - INFO - Broker object initiated with existing token antonyrajan.d@gmail.com
+2026-05-25 22:20:53 IST - INFO - initisuccess for angleone
+2026-05-25 22:20:53 IST - INFO - antonyrajan.d@gmail.com :: No Pending orders for strategy DefaultStrategy
+"POST /place_order_exit HTTP/1.1" 200 48
+2026-05-25 22:20:53 IST - INFO - "POST /place_order_exit HTTP/1.1" 200 48
+2026-05-25 22:20:54 IST - INFO - into Existing token flow antonyrajan.d@gmail.com
+2026-05-25 22:20:54 IST - INFO - Broker object initiated with existing token antonyrajan.d@gmail.com
+2026-05-25 22:20:55 IST - INFO - initisuccess for angleone
+2026-05-25 22:20:56 IST - INFO - antonyrajan.d@gmail.com :: {'exchange': 'NFO', 'tradingsymbol': 'NIFTY26MAY2623950CE', 'symboltoken': '72177'}
+2026-05-25 22:20:56 IST - INFO - antonyrajan.d@gmail.com :: Get Candle Details
+2026-05-25 22:20:56 IST - INFO - antonyrajan.d@gmail.com :: from_time: 2026-05-25 22:14
+2026-05-25 22:20:56 IST - INFO - antonyrajan.d@gmail.com :: to_time: 2026-05-25 22:21
+2026-05-25 22:20:56 IST - ERROR - antonyrajan.d@gmail.com :: Candle data missing or HIGH column not found. Using market order.
+2026-05-25 22:20:56 IST - INFO - antonyrajan.d@gmail.com :: Placing buy order for NIFTY26MAY2623950CE
+2026-05-25 22:20:56 IST - ERROR - [AngelOne AG7002] antonyrajan.d@gmail.com - placeOrder: Access denied: Unregistered IP address. Register your IP before retrying.
+2026-05-25 22:20:56 IST - INFO - antonyrajan.d@gmail.com :: Buy order response: {'success': False, 'message': 'Access denied: Unregistered IP address. Register your IP before retrying.', 'errorCode': 'AG7002', 'data': ''}
+2026-05-25 22:20:56 IST - ERROR - antonyrajan.d@gmail.com :: triggerOrder error: 'str' object has no attribute 'get'
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /dashboard HTTP/1.1" 200 5214
+2026-05-25 22:23:05 IST - INFO - "GET /dashboard HTTP/1.1" 200 5214
+"GET /static/js/ui/index.js HTTP/1.1" 304 0
+2026-05-25 22:23:05 IST - INFO - "GET /static/js/ui/index.js HTTP/1.1" 304 0
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+2026-05-25 22:23:05 IST - WARNING - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+2026-05-25 22:23:05 IST - WARNING - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+"GET /static/js/ui/App.js HTTP/1.1" 200 27803
+2026-05-25 22:23:05 IST - INFO - "GET /static/js/ui/App.js HTTP/1.1" 200 27803
+"GET /static/js/ui/components/icons.js HTTP/1.1" 304 0
+2026-05-25 22:23:06 IST - INFO - "GET /static/js/ui/components/icons.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 304 0
+2026-05-25 22:23:06 IST - INFO - "GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 304 0
+2026-05-25 22:23:06 IST - INFO - "GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 304 0
+"GET /static/js/ui/utils/api.js HTTP/1.1" 304 0
+2026-05-25 22:23:06 IST - INFO - "GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 304 0
+2026-05-25 22:23:06 IST - INFO - "GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 304 0
+2026-05-25 22:23:06 IST - INFO - "GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 304 0
+2026-05-25 22:23:06 IST - INFO - "GET /static/js/ui/utils/api.js HTTP/1.1" 304 0
+2026-05-25 22:23:06 IST - INFO - "GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 304 0
+2026-05-25 22:23:06 IST - INFO - "GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 304 0
+2026-05-25 22:23:06 IST - INFO - "GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 304 0
+2026-05-25 22:23:06 IST - INFO - "GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 304 0
+2026-05-25 22:23:06 IST - INFO - "GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 304 0
+2026-05-25 22:23:06 IST - INFO - "GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/Toast.js HTTP/1.1" 304 0
+2026-05-25 22:23:06 IST - INFO - "GET /static/js/ui/components/Toast.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 304 0
+2026-05-25 22:23:06 IST - INFO - "GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 304 0
+2026-05-25 22:23:06 IST - INFO - "GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 304 0
+"GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 304 0
+2026-05-25 22:23:06 IST - INFO - "GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 304 0
+"GET /get_config_values HTTP/1.1" 200 902
+2026-05-25 22:23:06 IST - INFO - "GET /get_config_values HTTP/1.1" 200 902
+"GET /get_broker_details HTTP/1.1" 200 367
+2026-05-25 22:23:06 IST - INFO - "GET /get_broker_details HTTP/1.1" 200 367
+"GET /get_scalper_details HTTP/1.1" 200 206
+2026-05-25 22:23:06 IST - INFO - "GET /get_scalper_details HTTP/1.1" 200 206
+"POST /get_auth_token HTTP/1.1" 200 76
+2026-05-25 22:23:06 IST - INFO - "POST /get_auth_token HTTP/1.1" 200 76
+"GET /get_order_book_details HTTP/1.1" 200 8739
+2026-05-25 22:23:06 IST - INFO - "GET /get_order_book_details HTTP/1.1" 200 8739
+"GET /get_strategy_summary HTTP/1.1" 200 647
+2026-05-25 22:23:06 IST - INFO - "GET /get_strategy_summary HTTP/1.1" 200 647
+"GET /manual_details HTTP/1.1" 200 4029
+2026-05-25 22:23:06 IST - INFO - "GET /manual_details HTTP/1.1" 200 4029
+2026-05-25 22:23:24 IST - INFO - into Existing token flow antonyrajan.d@gmail.com
+2026-05-25 22:23:24 IST - INFO - Broker object initiated with existing token antonyrajan.d@gmail.com
+2026-05-25 22:23:25 IST - INFO - initisuccess for angleone
+2026-05-25 22:23:26 IST - INFO - antonyrajan.d@gmail.com :: {'exchange': 'NFO', 'tradingsymbol': 'NIFTY26MAY2623950CE', 'symboltoken': '72177'}
+2026-05-25 22:23:26 IST - INFO - antonyrajan.d@gmail.com :: Get Candle Details
+2026-05-25 22:23:26 IST - INFO - antonyrajan.d@gmail.com :: from_time: 2026-05-25 22:17
+2026-05-25 22:23:26 IST - INFO - antonyrajan.d@gmail.com :: to_time: 2026-05-25 22:24
+2026-05-25 22:23:26 IST - ERROR - antonyrajan.d@gmail.com :: Candle data missing or HIGH column not found. Using market order.
+2026-05-25 22:23:26 IST - INFO - antonyrajan.d@gmail.com :: Placing buy order for NIFTY26MAY2623950CE
+2026-05-25 22:23:27 IST - ERROR - [AngelOne AG7002] antonyrajan.d@gmail.com - placeOrder: Access denied: Unregistered IP address. Register your IP before retrying.
+2026-05-25 22:23:27 IST - INFO - antonyrajan.d@gmail.com :: Buy order response: {'success': False, 'message': 'Access denied: Unregistered IP address. Register your IP before retrying.', 'errorCode': 'AG7002', 'data': ''}
+2026-05-25 22:23:27 IST - ERROR - antonyrajan.d@gmail.com :: triggerOrder error: 'str' object has no attribute 'get'
+"POST /place_order_buy HTTP/1.1" 200 54
+2026-05-25 22:23:29 IST - INFO - "POST /place_order_buy HTTP/1.1" 200 54
+2026-05-25 22:23:46 IST - INFO - into Existing token flow antonyrajan.d@gmail.com
+2026-05-25 22:23:46 IST - INFO - Broker object initiated with existing token antonyrajan.d@gmail.com
+2026-05-25 22:23:47 IST - INFO - initisuccess for angleone
+2026-05-25 22:23:47 IST - INFO - antonyrajan.d@gmail.com :: No Pending orders for strategy DefaultStrategy
+"POST /place_order_exit HTTP/1.1" 200 48
+2026-05-25 22:23:47 IST - INFO - "POST /place_order_exit HTTP/1.1" 200 48
+"GET /get_telegram_settings HTTP/1.1" 200 67
+2026-05-25 22:23:54 IST - INFO - "GET /get_telegram_settings HTTP/1.1" 200 67
+"POST /update_telegram_settings HTTP/1.1" 200 110
+"POST /place_order_sell HTTP/1.1" 200 55
+"GET /dashboard HTTP/1.1" 302 0
+"GET /login HTTP/1.1" 200 1113
+"GET /static/js/resource.js HTTP/1.1" 200 5972
+"GET /static/js/login.js HTTP/1.1" 200 5954
+"GET /static/css/common.css HTTP/1.1" 200 14272
+"GET /static/css/global.css HTTP/1.1" 200 9163
+"POST /login HTTP/1.1" 200 49
+"GET /home HTTP/1.1" 200 1368
+"GET /static/js/home.js HTTP/1.1" 200 107406
+"GET /static/css/webhook-strategy-manager.css HTTP/1.1" 200 6698
+"GET /static/js/webhook-strategy-manager.js HTTP/1.1" 200 29633
+"GET /get_strategy_summary HTTP/1.1" 200 218
+"POST /login HTTP/1.1" 200 49
+"GET /all_open_orders HTTP/1.1" 200 19
+"GET /manual_details HTTP/1.1" 200 1729
+"POST /get_auth_token HTTP/1.1" 200 76
+"POST /trigger_sell?token=1b954375a1929a7e21d9ee32c2c00973bb1e2258 HTTP/1.1" 200 48
+"GET /get_telegram_settings HTTP/1.1" 200 70
+"POST /trigger_sell?token=1b954375a1929a7e21d9ee32c2c00973bb1e2258 HTTP/1.1" 200 48
+"POST /trigger_exit?token=1b954375a1929a7e21d9ee32c2c00973bb1e2258 HTTP/1.1" 200 55
+"POST /trigger_exit?token=1b954375a1929a7e21d9ee32c2c00973bb1e2258 HTTP/1.1" 200 55
+"POST /trigger_buy?token=1b954375a1929a7e21d9ee32c2c00973bb1e2258 HTTP/1.1" 200 48
+/home/madara/Documents/plutusAI_Informer/plutusAI/server/telegram_notifier.py changed, reloading.

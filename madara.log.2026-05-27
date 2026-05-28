@@ -1,0 +1,550 @@
+Internal Server Error: /start_ws
+Traceback (most recent call last):
+  File "/home/madara/Documents/plutusAI_Informer/.venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/madara/Documents/plutusAI_Informer/.venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/madara/Documents/plutusAI_Informer/.venv/lib/python3.12/site-packages/django/views/decorators/http.py", line 64, in inner
+    return func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/madara/Documents/plutusAI_Informer/.venv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/madara/Documents/plutusAI_Informer/plutusAI/views.py", line 447, in start_ws
+    if user_data.count() > 0:
+       ^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'count'
+2026-05-27 22:19:34 IST - ERROR - Internal Server Error: /start_ws
+Traceback (most recent call last):
+  File "/home/madara/Documents/plutusAI_Informer/.venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/madara/Documents/plutusAI_Informer/.venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/madara/Documents/plutusAI_Informer/.venv/lib/python3.12/site-packages/django/views/decorators/http.py", line 64, in inner
+    return func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/madara/Documents/plutusAI_Informer/.venv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/madara/Documents/plutusAI_Informer/plutusAI/views.py", line 447, in start_ws
+    if user_data.count() > 0:
+       ^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'count'
+"POST /start_ws HTTP/1.1" 500 196
+2026-05-27 22:19:34 IST - ERROR - "POST /start_ws HTTP/1.1" 500 196
+"GET /check_task_status HTTP/1.1" 200 79
+2026-05-27 22:19:34 IST - INFO - "GET /check_task_status HTTP/1.1" 200 79
+"GET /get_index_data HTTP/1.1" 200 846
+2026-05-27 22:19:34 IST - INFO - "GET /get_index_data HTTP/1.1" 200 846
+"GET /get_telegram_bot_config HTTP/1.1" 200 178
+2026-05-27 22:19:34 IST - INFO - "GET /get_telegram_bot_config HTTP/1.1" 200 178
+"GET /get_celery_status HTTP/1.1" 200 62
+2026-05-27 22:19:34 IST - INFO - "GET /get_celery_status HTTP/1.1" 200 62
+Internal Server Error: /stop_ws
+Traceback (most recent call last):
+  File "/home/madara/Documents/plutusAI_Informer/.venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/madara/Documents/plutusAI_Informer/.venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 205, in _get_response
+    self.check_response(response, callback)
+  File "/home/madara/Documents/plutusAI_Informer/.venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 333, in check_response
+    raise ValueError(
+ValueError: The view plutusAI.views.stop_ws didn't return an HttpResponse object. It returned None instead.
+2026-05-27 22:19:35 IST - ERROR - Internal Server Error: /stop_ws
+Traceback (most recent call last):
+  File "/home/madara/Documents/plutusAI_Informer/.venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/madara/Documents/plutusAI_Informer/.venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 205, in _get_response
+    self.check_response(response, callback)
+  File "/home/madara/Documents/plutusAI_Informer/.venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 333, in check_response
+    raise ValueError(
+ValueError: The view plutusAI.views.stop_ws didn't return an HttpResponse object. It returned None instead.
+"POST /stop_ws HTTP/1.1" 500 196
+2026-05-27 22:19:35 IST - ERROR - "POST /stop_ws HTTP/1.1" 500 196
+"GET /get_index_data HTTP/1.1" 200 846
+2026-05-27 22:19:35 IST - INFO - "GET /get_index_data HTTP/1.1" 200 846
+"GET /get_telegram_bot_config HTTP/1.1" 200 178
+2026-05-27 22:19:35 IST - INFO - "GET /get_telegram_bot_config HTTP/1.1" 200 178
+"GET /check_task_status HTTP/1.1" 200 79
+2026-05-27 22:19:35 IST - INFO - "GET /check_task_status HTTP/1.1" 200 79
+"GET /get_celery_status HTTP/1.1" 200 62
+2026-05-27 22:19:35 IST - INFO - "GET /get_celery_status HTTP/1.1" 200 62
+Internal Server Error: /start_ws
+Traceback (most recent call last):
+  File "/home/madara/Documents/plutusAI_Informer/.venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/madara/Documents/plutusAI_Informer/.venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/madara/Documents/plutusAI_Informer/.venv/lib/python3.12/site-packages/django/views/decorators/http.py", line 64, in inner
+    return func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/madara/Documents/plutusAI_Informer/.venv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/madara/Documents/plutusAI_Informer/plutusAI/views.py", line 447, in start_ws
+    if user_data.count() > 0:
+       ^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'count'
+2026-05-27 22:19:36 IST - ERROR - Internal Server Error: /start_ws
+Traceback (most recent call last):
+  File "/home/madara/Documents/plutusAI_Informer/.venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/madara/Documents/plutusAI_Informer/.venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/madara/Documents/plutusAI_Informer/.venv/lib/python3.12/site-packages/django/views/decorators/http.py", line 64, in inner
+    return func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/madara/Documents/plutusAI_Informer/.venv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/madara/Documents/plutusAI_Informer/plutusAI/views.py", line 447, in start_ws
+    if user_data.count() > 0:
+       ^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'count'
+"POST /start_ws HTTP/1.1" 500 196
+2026-05-27 22:19:36 IST - ERROR - "POST /start_ws HTTP/1.1" 500 196
+"GET /get_index_data HTTP/1.1" 200 846
+2026-05-27 22:19:36 IST - INFO - "GET /get_index_data HTTP/1.1" 200 846
+"GET /get_telegram_bot_config HTTP/1.1" 200 178
+2026-05-27 22:19:36 IST - INFO - "GET /get_telegram_bot_config HTTP/1.1" 200 178
+"GET /check_task_status HTTP/1.1" 200 79
+2026-05-27 22:19:36 IST - INFO - "GET /check_task_status HTTP/1.1" 200 79
+"GET /get_celery_status HTTP/1.1" 200 62
+2026-05-27 22:19:36 IST - INFO - "GET /get_celery_status HTTP/1.1" 200 62
+"POST /stop_celery HTTP/1.1" 200 77
+2026-05-27 22:19:37 IST - INFO - "POST /stop_celery HTTP/1.1" 200 77
+"GET /get_telegram_bot_config HTTP/1.1" 200 178
+2026-05-27 22:19:37 IST - INFO - "GET /get_telegram_bot_config HTTP/1.1" 200 178
+"GET /check_task_status HTTP/1.1" 200 79
+2026-05-27 22:19:37 IST - INFO - "GET /check_task_status HTTP/1.1" 200 79
+"GET /get_index_data HTTP/1.1" 200 846
+2026-05-27 22:19:37 IST - INFO - "GET /get_index_data HTTP/1.1" 200 846
+"GET /get_celery_status HTTP/1.1" 200 62
+2026-05-27 22:19:37 IST - INFO - "GET /get_celery_status HTTP/1.1" 200 62
+"POST /restart_celery HTTP/1.1" 200 83
+2026-05-27 22:19:39 IST - INFO - "POST /restart_celery HTTP/1.1" 200 83
+"GET /check_task_status HTTP/1.1" 200 79
+2026-05-27 22:19:39 IST - INFO - "GET /check_task_status HTTP/1.1" 200 79
+"GET /get_index_data HTTP/1.1" 200 846
+2026-05-27 22:19:39 IST - INFO - "GET /get_index_data HTTP/1.1" 200 846
+"GET /get_telegram_bot_config HTTP/1.1" 200 178
+2026-05-27 22:19:39 IST - INFO - "GET /get_telegram_bot_config HTTP/1.1" 200 178
+"GET /get_celery_status HTTP/1.1" 200 57
+2026-05-27 22:19:39 IST - INFO - "GET /get_celery_status HTTP/1.1" 200 57
+"POST /stop_celery HTTP/1.1" 200 81
+2026-05-27 22:19:40 IST - INFO - "POST /stop_celery HTTP/1.1" 200 81
+"GET /get_index_data HTTP/1.1" 200 846
+2026-05-27 22:19:40 IST - INFO - "GET /get_index_data HTTP/1.1" 200 846
+"GET /get_telegram_bot_config HTTP/1.1" 200 178
+2026-05-27 22:19:40 IST - INFO - "GET /get_telegram_bot_config HTTP/1.1" 200 178
+"GET /check_task_status HTTP/1.1" 200 79
+2026-05-27 22:19:40 IST - INFO - "GET /check_task_status HTTP/1.1" 200 79
+"GET /get_celery_status HTTP/1.1" 200 62
+2026-05-27 22:19:40 IST - INFO - "GET /get_celery_status HTTP/1.1" 200 62
+2026-05-27 22:19:43 IST - INFO - user_broker_details
+2026-05-27 22:19:43 IST - INFO - {'id': 1, 'user_id': 'antonyrajan.d@gmail.com', 'broker_name': 'angel_one', 'broker_user_id': 'AAAJ478685', 'broker_user_name': 'DANIEL VIJAYAMARY', 'broker_mpin': '1005', 'broker_api_token': 'SBvsnKPX', 'broker_qr': 'ECKSFSRCFC6LIVJX7L5TOONR3A', 'token_status': 'generated', 'is_demo_trading_enabled': False, 'index_group': 'indian_index', 'broker_password': '1', 'broker_forex_server': '1'}
+2026-05-27 22:19:43 IST - INFO - Into GenerateAuthToken
+2026-05-27 22:19:44 IST - INFO - API Response: {'status': True, 'message': 'SUCCESS', 'errorcode': '', 'data': {'jwtToken': 'eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6IkFBQUo0Nzg2ODUiLCJyb2xlcyI6MCwidXNlcnR5cGUiOiJVU0VSIiwidG9rZW4iOiJleUpoYkdjaU9pSlNVekkxTmlJc0luUjVjQ0k2SWtwWFZDSjkuZXlKMWMyVnlYM1I1Y0dVaU9pSmpiR2xsYm5RaUxDSjBiMnRsYmw5MGVYQmxJam9pZEhKaFpHVmZZV05qWlhOelgzUnZhMlZ1SWl3aVoyMWZhV1FpT2pnc0luTnZkWEpqWlNJNklqTWlMQ0prWlhacFkyVmZhV1FpT2lJeU9EQXlORE0zTVMxbVlqZzJMVE5oTURVdFlXTXhNeTFrWWpZMFpXSXdOVEkyTUdFaUxDSnJhV1FpT2lKMGNtRmtaVjlyWlhsZmRqSWlMQ0p2Ylc1bGJXRnVZV2RsY21sa0lqbzRMQ0p3Y205a2RXTjBjeUk2ZXlKa1pXMWhkQ0k2ZXlKemRHRjBkWE1pT2lKaFkzUnBkbVVpZlN3aWJXWWlPbnNpYzNSaGRIVnpJam9pWVdOMGFYWmxJbjE5TENKcGMzTWlPaUowY21Ga1pWOXNiMmRwYmw5elpYSjJhV05sSWl3aWMzVmlJam9pUVVGQlNqUTNPRFk0TlNJc0ltVjRjQ0k2TVRjM09UazROams0TkN3aWJtSm1Jam94TnpjNU9UQXdOREEwTENKcFlYUWlPakUzTnprNU1EQTBNRFFzSW1wMGFTSTZJamxtTm1NMU56TmlMVE13TnpjdE5HUmhOUzA1TXpabUxXUTNZVFF3WXpObE1EVmtOaUlzSWxSdmEyVnVJam9pSW4wLklZa2taRGxlRW1scEVNU1lsTkNhSmhBZFEtN2Q0MmN3X1VjNHJDN2FuQTJRUWhLMHlxdTlTZmFMVGZKaWNnR3U2NjV3MFo5NUFRYTl4UGxQRm80dlNLSG83ZTI3WTZYZHE0amVBd0N3SExscmFRYXhvQ2dINUFpVHNSWkVDLXBfbGFHUTU5SU9uWTJLVWFMYi02UXRsQlVPNllhTWdqVlN5aTJjRGRxdUtycyIsIkFQSS1LRVkiOiJTQnZzbktQWCIsImlhdCI6MTc3OTkwMDU4NCwiZXhwIjoxNzc5OTA2NjAwfQ.T94MTwLkqF1bUgutqJhymH1yk3k6x3IYY64sKp-8aXwDDzwjn9kNNNSw0GOQE3e119zL2N_Lu1pbpZF15SKzag', 'refreshToken': 'eyJhbGciOiJIUzUxMiJ9.eyJ0b2tlbiI6IlJFRlJFU0gtVE9LRU4iLCJSRUZSRVNILVRPS0VOIjoiZXlKaGJHY2lPaUpTVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SjFjMlZ5WDNSNWNHVWlPaUpqYkdsbGJuUWlMQ0owYjJ0bGJsOTBlWEJsSWpvaWRISmhaR1ZmY21WbWNtVnphRjkwYjJ0bGJpSXNJbWR0WDJsa0lqb3dMQ0p6YjNWeVkyVWlPaUl6SWl3aVpHVjJhV05sWDJsa0lqb2lNamd3TWpRek56RXRabUk0TmkwellUQTFMV0ZqTVRNdFpHSTJOR1ZpTURVeU5qQmhJaXdpYTJsa0lqb2lkSEpoWkdWZmEyVjVYM1l5SWl3aWIyMXVaVzFoYm1GblpYSnBaQ0k2TUN3aWFYTnpJam9pYkc5bmFXNWZjMlZ5ZG1salpTSXNJbk4xWWlJNklrRkJRVW8wTnpnMk9EVWlMQ0psZUhBaU9qRTNOems1T0RZNU9EUXNJbTVpWmlJNk1UYzNPVGt3TURRd05Dd2lhV0YwSWpveE56YzVPVEF3TkRBMExDSnFkR2tpT2lJek1XUmxZVGhoWWkxaU5UZGpMVFExTlRFdFltVTNOeTB3TUdJd1pqRXdPRE0wWlRJaUxDSlViMnRsYmlJNklpSjkuSFI3VXcyRE9yTE9XV0JuZHFaVjZWSzVTdU1QN0NuUE1iM3ZDZ3lfR3ZDbU1NMmNxRWFCSVpLM19YRlo3aEF3MzQwei1nek12cEhvdm5oTmZXVFNhc0xLNF9RSmtrdnZtYk5XQkQ5UG1SQnliYURiSmVuR1A0S1Rka3d2ZnZzZk1wc0ZCd1VlZDFoTFVXUHVjdUt6dWhqdmVqUTNtbXB3WmlJZzlMOFZTRGE4IiwiaWF0IjoxNzc5OTAwNTg0fQ.n3ZgWv7YEL1969LxQ5kdrt1MlL1pHwgzS00x7u7teslVahpSoBtTe3wEEakaWxzLk3i13bAzaFEDyk8rWPkAdw', 'feedToken': 'eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6IkFBQUo0Nzg2ODUiLCJpYXQiOjE3Nzk5MDA1ODQsImV4cCI6MTc3OTk4Njk4NH0.dxc8M7CkF2XykYVEnX6ifBJAADBXcsICdABG7WhWHnuiKHU5matPWKjh3ZRQ0zQsfT7jJyekKlYKHDBuU_qLOg', 'state': None}}
+"POST /regenerate_token HTTP/1.1" 200 72
+2026-05-27 22:19:44 IST - INFO - "POST /regenerate_token HTTP/1.1" 200 72
+"GET /get_telegram_bot_config HTTP/1.1" 200 178
+2026-05-27 22:19:44 IST - INFO - "GET /get_telegram_bot_config HTTP/1.1" 200 178
+"GET /get_index_data HTTP/1.1" 200 846
+2026-05-27 22:19:44 IST - INFO - "GET /get_index_data HTTP/1.1" 200 846
+"GET /check_task_status HTTP/1.1" 200 79
+2026-05-27 22:19:44 IST - INFO - "GET /check_task_status HTTP/1.1" 200 79
+"GET /get_celery_status HTTP/1.1" 200 62
+2026-05-27 22:19:44 IST - INFO - "GET /get_celery_status HTTP/1.1" 200 62
+2026-05-27 22:19:55 IST - INFO - NIFTY Expiry: {'current_expiry': '02-Jun-2026', 'next_expiry': '09-Jun-2026'}
+2026-05-27 22:19:55 IST - INFO - BANKNIFTY Expiry: {'current_expiry': '30-Jun-2026', 'next_expiry': '28-Jul-2026'}
+2026-05-27 22:19:55 IST - INFO - FINNIFTY Expiry: {'current_expiry': '30-Jun-2026', 'next_expiry': '28-Jul-2026'}
+2026-05-27 22:19:55 IST - INFO - SENSEX Expiry: {'current_expiry': '27-May-2026', 'next_expiry': '04-Jun-2026'}
+2026-05-27 22:20:01 IST - INFO - Expiry Updated
+"POST /update_expiry_details HTTP/1.1" 200 79
+2026-05-27 22:20:01 IST - INFO - "POST /update_expiry_details HTTP/1.1" 200 79
+"GET /get_index_data HTTP/1.1" 200 846
+2026-05-27 22:20:01 IST - INFO - "GET /get_index_data HTTP/1.1" 200 846
+"GET /check_task_status HTTP/1.1" 200 79
+2026-05-27 22:20:01 IST - INFO - "GET /check_task_status HTTP/1.1" 200 79
+"GET /get_telegram_bot_config HTTP/1.1" 200 178
+2026-05-27 22:20:01 IST - INFO - "GET /get_telegram_bot_config HTTP/1.1" 200 178
+"GET /get_celery_status HTTP/1.1" 200 62
+2026-05-27 22:20:01 IST - INFO - "GET /get_celery_status HTTP/1.1" 200 62
+2026-05-27 22:20:10 IST - INFO - NIFTY Expiry: {'current_expiry': '02-Jun-2026', 'next_expiry': '09-Jun-2026'}
+2026-05-27 22:20:10 IST - INFO - BANKNIFTY Expiry: {'current_expiry': '30-Jun-2026', 'next_expiry': '28-Jul-2026'}
+2026-05-27 22:20:10 IST - INFO - FINNIFTY Expiry: {'current_expiry': '30-Jun-2026', 'next_expiry': '28-Jul-2026'}
+2026-05-27 22:20:10 IST - INFO - SENSEX Expiry: {'current_expiry': '27-May-2026', 'next_expiry': '04-Jun-2026'}
+2026-05-27 22:20:17 IST - INFO - Expiry Updated
+"POST /update_expiry_details HTTP/1.1" 200 79
+2026-05-27 22:20:17 IST - INFO - "POST /update_expiry_details HTTP/1.1" 200 79
+"GET /check_task_status HTTP/1.1" 200 79
+2026-05-27 22:20:18 IST - INFO - "GET /check_task_status HTTP/1.1" 200 79
+"GET /get_index_data HTTP/1.1" 200 846
+2026-05-27 22:20:18 IST - INFO - "GET /get_index_data HTTP/1.1" 200 846
+"GET /get_telegram_bot_config HTTP/1.1" 200 178
+2026-05-27 22:20:18 IST - INFO - "GET /get_telegram_bot_config HTTP/1.1" 200 178
+"GET /get_celery_status HTTP/1.1" 200 62
+2026-05-27 22:20:18 IST - INFO - "GET /get_celery_status HTTP/1.1" 200 62
+/home/madara/Documents/plutusAI_Informer/plutusAI/views.py changed, reloading.
+2026-05-27 22:20:40 IST - INFO - /home/madara/Documents/plutusAI_Informer/plutusAI/views.py changed, reloading.
+Watching for file changes with StatReloader
+/home/madara/Documents/plutusAI_Informer/plutusAI/views.py changed, reloading.
+2026-05-27 22:20:49 IST - INFO - /home/madara/Documents/plutusAI_Informer/plutusAI/views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /dashboard HTTP/1.1" 200 5214
+2026-05-27 22:21:29 IST - INFO - "GET /dashboard HTTP/1.1" 200 5214
+"GET /static/js/ui/index.js HTTP/1.1" 200 154
+2026-05-27 22:21:29 IST - INFO - "GET /static/js/ui/index.js HTTP/1.1" 200 154
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+2026-05-27 22:21:29 IST - WARNING - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+2026-05-27 22:21:29 IST - WARNING - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+"GET /static/js/ui/App.js HTTP/1.1" 200 28300
+2026-05-27 22:21:30 IST - INFO - "GET /static/js/ui/App.js HTTP/1.1" 200 28300
+"GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 200 2227
+2026-05-27 22:21:30 IST - INFO - "GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 200 2227
+"GET /static/js/ui/utils/api.js HTTP/1.1" 200 1488
+2026-05-27 22:21:30 IST - INFO - "GET /static/js/ui/utils/api.js HTTP/1.1" 200 1488
+"GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 200 983
+2026-05-27 22:21:30 IST - INFO - "GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 200 983
+"GET /static/js/ui/components/icons.js HTTP/1.1" 200 7279
+2026-05-27 22:21:30 IST - INFO - "GET /static/js/ui/components/icons.js HTTP/1.1" 200 7279
+"GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 200 4132
+2026-05-27 22:21:30 IST - INFO - "GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 200 4132
+"GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 200 3350
+2026-05-27 22:21:30 IST - INFO - "GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 200 3350
+"GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 200 9333
+2026-05-27 22:21:30 IST - INFO - "GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 200 9333
+"GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 200 5524
+2026-05-27 22:21:30 IST - INFO - "GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 200 5524
+"GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 200 5884
+2026-05-27 22:21:30 IST - INFO - "GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 200 5884
+"GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 200 3909
+2026-05-27 22:21:30 IST - INFO - "GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 200 3909
+"GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 200 4438
+2026-05-27 22:21:30 IST - INFO - "GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 200 4438
+"GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 200 4377
+2026-05-27 22:21:30 IST - INFO - "GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 200 4377
+"GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 200 4881
+2026-05-27 22:21:30 IST - INFO - "GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 200 4881
+"GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 200 6595
+"GET /static/js/ui/components/Toast.js HTTP/1.1" 200 1654
+2026-05-27 22:21:30 IST - INFO - "GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 200 6595
+2026-05-27 22:21:30 IST - INFO - "GET /static/js/ui/components/Toast.js HTTP/1.1" 200 1654
+"GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16908
+2026-05-27 22:21:30 IST - INFO - "GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16908
+"GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 200 7299
+2026-05-27 22:21:30 IST - INFO - "GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 200 7299
+"GET /static/js/ui/components/StrategiesPage.js HTTP/1.1" 200 26378
+2026-05-27 22:21:30 IST - INFO - "GET /static/js/ui/components/StrategiesPage.js HTTP/1.1" 200 26378
+"GET /get_config_values HTTP/1.1" 200 902
+2026-05-27 22:21:30 IST - INFO - "GET /get_config_values HTTP/1.1" 200 902
+"GET /get_scalper_details HTTP/1.1" 200 206
+2026-05-27 22:21:30 IST - INFO - "GET /get_scalper_details HTTP/1.1" 200 206
+"GET /get_broker_details HTTP/1.1" 200 367
+2026-05-27 22:21:30 IST - INFO - "GET /get_broker_details HTTP/1.1" 200 367
+"POST /get_auth_token HTTP/1.1" 200 76
+2026-05-27 22:21:30 IST - INFO - "POST /get_auth_token HTTP/1.1" 200 76
+"GET /get_order_book_details HTTP/1.1" 200 100027
+2026-05-27 22:21:30 IST - INFO - "GET /get_order_book_details HTTP/1.1" 200 100027
+"GET /get_strategy_summary HTTP/1.1" 200 1290
+2026-05-27 22:21:30 IST - INFO - "GET /get_strategy_summary HTTP/1.1" 200 1290
+"GET /check_admin HTTP/1.1" 200 39
+2026-05-27 22:21:30 IST - INFO - "GET /check_admin HTTP/1.1" 200 39
+"GET /manual_details HTTP/1.1" 200 4019
+2026-05-27 22:21:30 IST - INFO - "GET /manual_details HTTP/1.1" 200 4019
+"GET /get_telegram_bot_config HTTP/1.1" 200 178
+2026-05-27 22:21:43 IST - INFO - "GET /get_telegram_bot_config HTTP/1.1" 200 178
+"GET /check_task_status HTTP/1.1" 200 79
+2026-05-27 22:21:43 IST - INFO - "GET /check_task_status HTTP/1.1" 200 79
+"GET /get_index_data HTTP/1.1" 200 846
+2026-05-27 22:21:43 IST - INFO - "GET /get_index_data HTTP/1.1" 200 846
+"GET /get_celery_status HTTP/1.1" 200 62
+2026-05-27 22:21:43 IST - INFO - "GET /get_celery_status HTTP/1.1" 200 62
+"POST /start_ws HTTP/1.1" 200 72
+2026-05-27 22:21:47 IST - INFO - "POST /start_ws HTTP/1.1" 200 72
+"GET /check_task_status HTTP/1.1" 200 79
+2026-05-27 22:21:47 IST - INFO - "GET /check_task_status HTTP/1.1" 200 79
+"GET /get_telegram_bot_config HTTP/1.1" 200 178
+2026-05-27 22:21:47 IST - INFO - "GET /get_telegram_bot_config HTTP/1.1" 200 178
+"GET /get_index_data HTTP/1.1" 200 846
+2026-05-27 22:21:47 IST - INFO - "GET /get_index_data HTTP/1.1" 200 846
+"GET /get_celery_status HTTP/1.1" 200 62
+2026-05-27 22:21:47 IST - INFO - "GET /get_celery_status HTTP/1.1" 200 62
+"GET /dashboard HTTP/1.1" 200 5214
+2026-05-27 22:22:39 IST - INFO - "GET /dashboard HTTP/1.1" 200 5214
+"GET /static/js/ui/index.js HTTP/1.1" 200 154
+2026-05-27 22:22:39 IST - INFO - "GET /static/js/ui/index.js HTTP/1.1" 200 154
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+2026-05-27 22:22:39 IST - WARNING - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+2026-05-27 22:22:39 IST - WARNING - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+"GET /static/js/ui/App.js HTTP/1.1" 200 28300
+2026-05-27 22:22:40 IST - INFO - "GET /static/js/ui/App.js HTTP/1.1" 200 28300
+"GET /static/js/ui/components/icons.js HTTP/1.1" 200 7279
+2026-05-27 22:22:40 IST - INFO - "GET /static/js/ui/components/icons.js HTTP/1.1" 200 7279
+"GET /static/js/ui/utils/api.js HTTP/1.1" 200 1488
+2026-05-27 22:22:40 IST - INFO - "GET /static/js/ui/utils/api.js HTTP/1.1" 200 1488
+"GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 200 5884
+2026-05-27 22:22:40 IST - INFO - "GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 200 5884
+"GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 200 2227
+2026-05-27 22:22:40 IST - INFO - "GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 200 2227
+"GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 200 3350
+2026-05-27 22:22:40 IST - INFO - "GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 200 3350
+"GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 200 4132
+2026-05-27 22:22:40 IST - INFO - "GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 200 4132
+"GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 200 983
+2026-05-27 22:22:40 IST - INFO - "GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 200 983
+"GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 200 9333
+2026-05-27 22:22:40 IST - INFO - "GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 200 9333
+"GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 200 3909
+2026-05-27 22:22:40 IST - INFO - "GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 200 3909
+"GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 200 5524
+2026-05-27 22:22:40 IST - INFO - "GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 200 5524
+"GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 200 4438
+2026-05-27 22:22:40 IST - INFO - "GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 200 4438
+"GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 200 4881
+2026-05-27 22:22:40 IST - INFO - "GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 200 4881
+"GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 200 4377
+2026-05-27 22:22:40 IST - INFO - "GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 200 4377
+"GET /static/js/ui/components/Toast.js HTTP/1.1" 200 1654
+2026-05-27 22:22:40 IST - INFO - "GET /static/js/ui/components/Toast.js HTTP/1.1" 200 1654
+"GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16921
+2026-05-27 22:22:40 IST - INFO - "GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16921
+"GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 200 6595
+2026-05-27 22:22:40 IST - INFO - "GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 200 6595
+"GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 200 7299
+2026-05-27 22:22:40 IST - INFO - "GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 200 7299
+"GET /static/js/ui/components/StrategiesPage.js HTTP/1.1" 200 26378
+2026-05-27 22:22:40 IST - INFO - "GET /static/js/ui/components/StrategiesPage.js HTTP/1.1" 200 26378
+Watching for file changes with StatReloader
+"GET /dashboard HTTP/1.1" 200 5214
+2026-05-27 22:24:03 IST - INFO - "GET /dashboard HTTP/1.1" 200 5214
+"GET /dashboard HTTP/1.1" 200 5214
+2026-05-27 22:24:52 IST - INFO - "GET /dashboard HTTP/1.1" 200 5214
+"POST /login HTTP/1.1" 302 0
+2026-05-27 22:25:50 IST - INFO - "POST /login HTTP/1.1" 302 0
+Forbidden (CSRF token missing.): /home
+2026-05-27 22:25:50 IST - WARNING - Forbidden (CSRF token missing.): /home
+"POST /home HTTP/1.1" 403 1004
+2026-05-27 22:25:50 IST - WARNING - "POST /home HTTP/1.1" 403 1004
+"GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16921
+2026-05-27 22:28:33 IST - INFO - "GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16921
+"GET /static/js/ui/index.js HTTP/1.1" 200 154
+2026-05-27 22:28:56 IST - INFO - "GET /static/js/ui/index.js HTTP/1.1" 200 154
+"GET /static/js/ui/App.js HTTP/1.1" 200 28300
+2026-05-27 22:28:56 IST - INFO - "GET /static/js/ui/App.js HTTP/1.1" 200 28300
+"GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16921
+2026-05-27 22:28:56 IST - INFO - "GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16921
+"GET /dashboard HTTP/1.1" 200 5214
+2026-05-27 22:29:14 IST - INFO - "GET /dashboard HTTP/1.1" 200 5214
+"GET /dashboard HTTP/1.1" 200 5214
+2026-05-27 22:29:30 IST - INFO - "GET /dashboard HTTP/1.1" 200 5214
+"GET /static/js/ui/components/icons.js HTTP/1.1" 200 7279
+2026-05-27 22:30:17 IST - INFO - "GET /static/js/ui/components/icons.js HTTP/1.1" 200 7279
+"HEAD /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 0
+2026-05-27 22:31:08 IST - INFO - "HEAD /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 0
+"GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16904
+2026-05-27 22:31:16 IST - INFO - "GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16904
+"GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16904
+2026-05-27 22:33:21 IST - INFO - "GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16904
+"GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16904
+2026-05-27 22:35:31 IST - INFO - "GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16904
+"GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16904
+2026-05-27 22:35:57 IST - INFO - "GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16904
+"GET /dashboard HTTP/1.1" 200 5214
+2026-05-27 22:36:19 IST - INFO - "GET /dashboard HTTP/1.1" 200 5214
+"GET /static/js/ui/index.js HTTP/1.1" 200 154
+2026-05-27 22:36:19 IST - INFO - "GET /static/js/ui/index.js HTTP/1.1" 200 154
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+2026-05-27 22:36:19 IST - WARNING - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+2026-05-27 22:36:19 IST - WARNING - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+"GET /static/js/ui/App.js HTTP/1.1" 200 28300
+2026-05-27 22:36:19 IST - INFO - "GET /static/js/ui/App.js HTTP/1.1" 200 28300
+"GET /static/js/ui/utils/api.js HTTP/1.1" 200 1488
+2026-05-27 22:36:19 IST - INFO - "GET /static/js/ui/utils/api.js HTTP/1.1" 200 1488
+"GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 200 983
+2026-05-27 22:36:19 IST - INFO - "GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 200 983
+"GET /static/js/ui/components/icons.js HTTP/1.1" 200 7279
+2026-05-27 22:36:19 IST - INFO - "GET /static/js/ui/components/icons.js HTTP/1.1" 200 7279
+"GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 200 2227
+2026-05-27 22:36:19 IST - INFO - "GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 200 2227
+"GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 200 3350
+2026-05-27 22:36:19 IST - INFO - "GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 200 3350
+"GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 200 5884
+2026-05-27 22:36:19 IST - INFO - "GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 200 5884
+"GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 200 4132
+2026-05-27 22:36:19 IST - INFO - "GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 200 4132
+"GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 200 9333
+2026-05-27 22:36:19 IST - INFO - "GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 200 9333
+"GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 200 5524
+2026-05-27 22:36:19 IST - INFO - "GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 200 5524
+"GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 200 4377
+2026-05-27 22:36:19 IST - INFO - "GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 200 4377
+"GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 200 3909
+2026-05-27 22:36:19 IST - INFO - "GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 200 3909
+"GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 200 4438
+2026-05-27 22:36:19 IST - INFO - "GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 200 4438
+"GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 200 4881
+2026-05-27 22:36:19 IST - INFO - "GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 200 4881
+"GET /static/js/ui/components/Toast.js HTTP/1.1" 200 1654
+2026-05-27 22:36:19 IST - INFO - "GET /static/js/ui/components/Toast.js HTTP/1.1" 200 1654
+"GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 200 6595
+2026-05-27 22:36:19 IST - INFO - "GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 200 6595
+"GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16904
+2026-05-27 22:36:19 IST - INFO - "GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16904
+"GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 200 7299
+2026-05-27 22:36:19 IST - INFO - "GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 200 7299
+"GET /static/js/ui/components/StrategiesPage.js HTTP/1.1" 200 26378
+2026-05-27 22:36:19 IST - INFO - "GET /static/js/ui/components/StrategiesPage.js HTTP/1.1" 200 26378
+Watching for file changes with StatReloader
+"GET /dashboard HTTP/1.1" 200 5214
+2026-05-27 22:36:36 IST - INFO - "GET /dashboard HTTP/1.1" 200 5214
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+2026-05-27 22:36:36 IST - WARNING - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+"GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+2026-05-27 22:36:36 IST - WARNING - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 190
+"GET /static/js/ui/index.js HTTP/1.1" 200 154
+2026-05-27 22:36:36 IST - INFO - "GET /static/js/ui/index.js HTTP/1.1" 200 154
+"GET /static/js/ui/App.js HTTP/1.1" 200 28300
+2026-05-27 22:36:37 IST - INFO - "GET /static/js/ui/App.js HTTP/1.1" 200 28300
+"GET /static/js/ui/components/icons.js HTTP/1.1" 200 7279
+2026-05-27 22:36:37 IST - INFO - "GET /static/js/ui/components/icons.js HTTP/1.1" 200 7279
+"GET /static/js/ui/utils/api.js HTTP/1.1" 200 1488
+2026-05-27 22:36:37 IST - INFO - "GET /static/js/ui/utils/api.js HTTP/1.1" 200 1488
+"GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 200 2227
+"GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 200 5884
+"GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 200 3350
+"GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 200 983
+2026-05-27 22:36:37 IST - INFO - "GET /static/js/ui/components/SummaryCard.js HTTP/1.1" 200 983
+2026-05-27 22:36:37 IST - INFO - "GET /static/js/ui/components/StrategyTable.js HTTP/1.1" 200 2227
+2026-05-27 22:36:37 IST - INFO - "GET /static/js/ui/components/OpenOrdersTable.js HTTP/1.1" 200 3350
+2026-05-27 22:36:37 IST - INFO - "GET /static/js/ui/components/OrderBookTable.js HTTP/1.1" 200 5884
+"GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 200 5524
+2026-05-27 22:36:37 IST - INFO - "GET /static/js/ui/components/EditHunterConfigModal.js HTTP/1.1" 200 5524
+"GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 200 4438
+2026-05-27 22:36:37 IST - INFO - "GET /static/js/ui/components/EditScalperConfigModal.js HTTP/1.1" 200 4438
+"GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 200 4132
+2026-05-27 22:36:37 IST - INFO - "GET /static/js/ui/components/HunterConfigCard.js HTTP/1.1" 200 4132
+"GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 200 3909
+"GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 200 9333
+2026-05-27 22:36:37 IST - INFO - "GET /static/js/ui/components/ScalperConfigCard.js HTTP/1.1" 200 3909
+2026-05-27 22:36:37 IST - INFO - "GET /static/js/ui/components/ManualOrdersPageContent.js HTTP/1.1" 200 9333
+"GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 200 4377
+2026-05-27 22:36:37 IST - INFO - "GET /static/js/ui/components/BrokerInfoTable.js HTTP/1.1" 200 4377
+"GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 200 4881
+2026-05-27 22:36:37 IST - INFO - "GET /static/js/ui/components/EditBrokerInfoModal.js HTTP/1.1" 200 4881
+"GET /static/js/ui/components/Toast.js HTTP/1.1" 200 1654
+2026-05-27 22:36:37 IST - INFO - "GET /static/js/ui/components/Toast.js HTTP/1.1" 200 1654
+"GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 200 6595
+2026-05-27 22:36:37 IST - INFO - "GET /static/js/ui/components/TelegramSettingsPage.js HTTP/1.1" 200 6595
+"GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 200 7299
+2026-05-27 22:36:37 IST - INFO - "GET /static/js/ui/components/LogViewerPage.js HTTP/1.1" 200 7299
+"GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16904
+2026-05-27 22:36:37 IST - INFO - "GET /static/js/ui/components/AdminConsolePage.js HTTP/1.1" 200 16904
+"GET /static/js/ui/components/StrategiesPage.js HTTP/1.1" 200 26378
+2026-05-27 22:36:37 IST - INFO - "GET /static/js/ui/components/StrategiesPage.js HTTP/1.1" 200 26378
+"GET /get_scalper_details HTTP/1.1" 200 206
+2026-05-27 22:36:37 IST - INFO - "GET /get_scalper_details HTTP/1.1" 200 206
+"GET /get_config_values HTTP/1.1" 200 902
+2026-05-27 22:36:37 IST - INFO - "GET /get_config_values HTTP/1.1" 200 902
+"POST /get_auth_token HTTP/1.1" 200 76
+2026-05-27 22:36:37 IST - INFO - "POST /get_auth_token HTTP/1.1" 200 76
+"GET /get_order_book_details HTTP/1.1" 200 100027
+2026-05-27 22:36:37 IST - INFO - "GET /get_order_book_details HTTP/1.1" 200 100027
+"GET /get_broker_details HTTP/1.1" 200 367
+2026-05-27 22:36:37 IST - INFO - "GET /get_broker_details HTTP/1.1" 200 367
+"GET /check_admin HTTP/1.1" 200 39
+2026-05-27 22:36:37 IST - INFO - "GET /check_admin HTTP/1.1" 200 39
+"GET /get_strategy_summary HTTP/1.1" 200 1290
+2026-05-27 22:36:37 IST - INFO - "GET /get_strategy_summary HTTP/1.1" 200 1290
+"GET /manual_details HTTP/1.1" 200 4019
+2026-05-27 22:36:37 IST - INFO - "GET /manual_details HTTP/1.1" 200 4019
+"GET /check_task_status HTTP/1.1" 200 79
+2026-05-27 22:36:41 IST - INFO - "GET /check_task_status HTTP/1.1" 200 79
+"GET /get_telegram_bot_config HTTP/1.1" 200 178
+2026-05-27 22:36:41 IST - INFO - "GET /get_telegram_bot_config HTTP/1.1" 200 178
+"GET /get_index_data HTTP/1.1" 200 846
+2026-05-27 22:36:41 IST - INFO - "GET /get_index_data HTTP/1.1" 200 846
+"GET /get_celery_status HTTP/1.1" 200 62
+2026-05-27 22:36:41 IST - INFO - "GET /get_celery_status HTTP/1.1" 200 62
+"POST /start_ws HTTP/1.1" 200 67
+2026-05-27 22:36:44 IST - INFO - "POST /start_ws HTTP/1.1" 200 67
+"GET /get_index_data HTTP/1.1" 200 846
+2026-05-27 22:36:44 IST - INFO - "GET /get_index_data HTTP/1.1" 200 846
+"GET /check_task_status HTTP/1.1" 200 79
+"GET /get_telegram_bot_config HTTP/1.1" 200 178
+2026-05-27 22:36:44 IST - INFO - "GET /check_task_status HTTP/1.1" 200 79
+2026-05-27 22:36:44 IST - INFO - "GET /get_telegram_bot_config HTTP/1.1" 200 178
+"GET /get_celery_status HTTP/1.1" 200 62
+2026-05-27 22:36:44 IST - INFO - "GET /get_celery_status HTTP/1.1" 200 62
+2026-05-27 22:36:46 IST - INFO - terminate_task for madara@plutus.com index socket_job strategy socket_job
+"POST /stop_ws HTTP/1.1" 200 52
+2026-05-27 22:36:46 IST - INFO - "POST /stop_ws HTTP/1.1" 200 52
+"GET /get_telegram_bot_config HTTP/1.1" 200 178
+2026-05-27 22:36:46 IST - INFO - "GET /get_telegram_bot_config HTTP/1.1" 200 178
+"GET /get_index_data HTTP/1.1" 200 846
+2026-05-27 22:36:46 IST - INFO - "GET /get_index_data HTTP/1.1" 200 846
+"GET /check_task_status HTTP/1.1" 200 79
+2026-05-27 22:36:46 IST - INFO - "GET /check_task_status HTTP/1.1" 200 79
+"GET /get_celery_status HTTP/1.1" 200 62
+2026-05-27 22:36:46 IST - INFO - "GET /get_celery_status HTTP/1.1" 200 62
+2026-05-27 22:36:48 IST - INFO - terminate_task for madara@plutus.com index socket_job strategy socket_job
+"POST /stop_ws HTTP/1.1" 200 52
+2026-05-27 22:36:48 IST - INFO - "POST /stop_ws HTTP/1.1" 200 52
+"GET /get_telegram_bot_config HTTP/1.1" 200 178
+2026-05-27 22:36:48 IST - INFO - "GET /get_telegram_bot_config HTTP/1.1" 200 178
+"GET /get_index_data HTTP/1.1" 200 846
+2026-05-27 22:36:48 IST - INFO - "GET /get_index_data HTTP/1.1" 200 846
+"GET /check_task_status HTTP/1.1" 200 79
+2026-05-27 22:36:48 IST - INFO - "GET /check_task_status HTTP/1.1" 200 79
+"GET /get_celery_status HTTP/1.1" 200 62
+2026-05-27 22:36:48 IST - INFO - "GET /get_celery_status HTTP/1.1" 200 62
+2026-05-27 22:36:56 IST - INFO - NIFTY Expiry: {'current_expiry': '02-Jun-2026', 'next_expiry': '09-Jun-2026'}
+2026-05-27 22:36:56 IST - INFO - BANKNIFTY Expiry: {'current_expiry': '30-Jun-2026', 'next_expiry': '28-Jul-2026'}
+2026-05-27 22:36:56 IST - INFO - FINNIFTY Expiry: {'current_expiry': '30-Jun-2026', 'next_expiry': '28-Jul-2026'}
+2026-05-27 22:36:56 IST - INFO - SENSEX Expiry: {'current_expiry': '27-May-2026', 'next_expiry': '04-Jun-2026'}
+2026-05-27 22:37:01 IST - INFO - Expiry Updated
+"POST /update_expiry_details HTTP/1.1" 200 79
+2026-05-27 22:37:01 IST - INFO - "POST /update_expiry_details HTTP/1.1" 200 79
+"GET /check_task_status HTTP/1.1" 200 79
+2026-05-27 22:37:01 IST - INFO - "GET /check_task_status HTTP/1.1" 200 79
+"GET /get_index_data HTTP/1.1" 200 846
+2026-05-27 22:37:01 IST - INFO - "GET /get_index_data HTTP/1.1" 200 846
+"GET /get_telegram_bot_config HTTP/1.1" 200 178
+2026-05-27 22:37:01 IST - INFO - "GET /get_telegram_bot_config HTTP/1.1" 200 178
+"GET /get_celery_status HTTP/1.1" 200 62
+2026-05-27 22:37:01 IST - INFO - "GET /get_celery_status HTTP/1.1" 200 62
+"GET /get_telegram_settings HTTP/1.1" 200 81
+2026-05-27 22:37:04 IST - INFO - "GET /get_telegram_settings HTTP/1.1" 200 81
+"GET /get_log_details HTTP/1.1" 200 391050
+2026-05-27 22:37:05 IST - INFO - "GET /get_log_details HTTP/1.1" 200 391050
+"GET /check_task_status HTTP/1.1" 200 79
+"GET /get_index_data HTTP/1.1" 200 846
+"GET /get_telegram_bot_config HTTP/1.1" 200 178
+"GET /get_celery_status HTTP/1.1" 200 62
+"GET /get_strategy_details HTTP/1.1" 200 3995
+"POST /get_auth_token HTTP/1.1" 200 76
+"GET /get_strategy_details HTTP/1.1" 200 3995
+"POST /get_auth_token HTTP/1.1" 200 76
+"GET /get_log_details HTTP/1.1" 200 391050
+"GET /get_telegram_settings HTTP/1.1" 200 81
+"GET /check_task_status HTTP/1.1" 200 79
+"GET /get_index_data HTTP/1.1" 200 846
+"GET /get_telegram_bot_config HTTP/1.1" 200 178
+"GET /get_celery_status HTTP/1.1" 200 62
+"GET /get_index_data HTTP/1.1" 200 846
+"GET /get_telegram_bot_config HTTP/1.1" 200 178
+"GET /check_task_status HTTP/1.1" 200 79
+"GET /get_celery_status HTTP/1.1" 200 62
+"GET /get_log_details HTTP/1.1" 200 391050
