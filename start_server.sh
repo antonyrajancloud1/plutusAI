@@ -44,4 +44,4 @@ start_process() {
 check_and_start_service mysql
 check_and_start_service redis-server
 start_process "sudo xvfb-run -a python3 manage.py runserver 0.0.0.0:80" "django.log"
-start_process "celery -A plutus.celery worker -l info  --autoscale=100,1"
+#start_process "celery -A plutus.celery worker -l info  --autoscale=100,1"
