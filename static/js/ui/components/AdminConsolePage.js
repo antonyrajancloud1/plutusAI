@@ -59,6 +59,24 @@ async function handleAction(endpoint, successMsg, body = {}) {
     fetchAdminData();
 }
 
+async function handleUpdateExpiry() {
+    try {
+        const tokenResponse = await makeApiCall('/get_auth_token', { method: 'POST' });
+        const token = tokenResponse?.status === 'success' ? tokenResponse.message : null;
+
+        if (!token) {
+            throw new Error('Could not retrieve authentication token');
+        }
+
+        await handleAction(
+            `/update_expiry_details?token=${encodeURIComponent(token)}`,
+            'Expiry updated'
+        );
+    } catch (e) {
+        showToast('Request failed: ' + e.message, 'error');
+    }
+}
+
 async function handleAddUser() {
     const email = document.getElementById('new-user-email')?.value;
     const name = document.getElementById('new-user-name')?.value;
@@ -278,7 +296,7 @@ function render() {
 
     window.wsAction = (endpoint, body) => handleAction(endpoint, 'WebSocket action completed', body);
     window.regenerateToken = () => handleAction('/regenerate_token', 'Token regenerated');
-    window.updateExpiry = () => handleAction('/update_expiry_details', 'Expiry updated');
+    window.updateExpiry = handleUpdateExpiry;
     window.restartCelery = () => handleAction('/restart_celery', 'Celery restarted');
     window.stopCelery = () => handleAction('/stop_celery', 'Celery stopped');
     window.addUser = handleAddUser;
