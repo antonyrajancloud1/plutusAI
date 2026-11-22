@@ -1,0 +1,13 @@
+.git
+.idea
+.venv
+**/__pycache__
+**/*.pyc
+logs/
+*.log
+*.log.*
+db.sqlite3
+madara_db.sql
+Dockerfile
+.dockerignore
+DockerHelp

@@ -5,6 +5,7 @@ from SmartApi import SmartConnect
 import pandas as pd
 import pyotp
 import requests
+import time
 
 from plutusAI.models import UserAuthTokens
 from plutusAI.server.base import addLogDetails, getTokenUsingSymbol, getCurrentTimestamp
@@ -265,6 +266,34 @@ class AngelOneBroker:
                 return False
         except Exception as e:
             addLogDetails(ERROR, "exception in checkIfOrderExists" + str(e))
+
+    def getOrderStatus(self, unique_order_id, retries=3, delay=2):
+        # Unlike checkIfOrderPlaced/checkIfOrderExists, raises when the status
+        # can't be read so callers never mistake an API failure for "no order".
+        last_error = None
+        for attempt in range(1, retries + 1):
+            try:
+                response = self.smartApi.individual_order_details(unique_order_id)
+                if response:
+                    self._handle_api_error(
+                        response, f"getOrderStatus({unique_order_id})"
+                    )
+                addLogDetails(INFO, response)
+                status = response["data"]["status"]
+                if status:
+                    return status
+                last_error = "empty status"
+            except Exception as e:
+                last_error = str(e)
+            addLogDetails(
+                ERROR,
+                f"{self.user_id} :: getOrderStatus({unique_order_id}) attempt {attempt}/{retries} failed: {last_error}",
+            )
+            if attempt < retries:
+                time.sleep(delay)
+        raise Exception(
+            f"Unable to fetch order status for {unique_order_id} after {retries} attempts: {last_error}"
+        )
 
     def checkIfOrderPlaced(self, order_details):
         try:

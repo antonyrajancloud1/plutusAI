@@ -1,32 +1,50 @@
-import threading
+"""Webhook / manual option orders.
+
+triggerOrder         BUY signal -> CE entry, SELL signal -> PE entry (an opposite
+                     open position is exited first).
+exitOrderWebhook     exits the strategy's open position.
+modifyToMarketOrder  converts a pending (stop-limit) entry into a market entry.
+
+Every failure is logged and sent to Telegram with the trade details and what to do.
+"""
+from collections import defaultdict
+from threading import RLock
 
 from plutusAI.server.base import *
 from plutusAI.server.broker.Broker import Broker
 from plutusAI.server.constants import *
 
 try:
-    from plutusAI.server.telegram_notifier import sendMessageInTelegram
+    from plutusAI.server.telegram_notifier import sendMessageInTelegram, sendTradeAlert
 except ModuleNotFoundError:
 
     def sendMessageInTelegram(message, user_email=None):
         pass
 
+    def sendTradeAlert(title, user_email, error_msg, details=None, action=None):
+        pass
 
-from threading import Lock
+
+PENDING_STATUSES = ("open", "trigger pending")
+TIMEFRAME_TO_MINUTES = {
+    "ONE_MINUTE": 1,
+    "THREE_MINUTE": 3,
+    "FIVE_MINUTE": 5,
+    "TEN_MINUTE": 10,
+    "FIFTEEN_MINUTE": 15,
+    "THIRTY_MINUTE": 30,
+    "ONE_HOUR": 60,
+    "ONE_DAY": 1440,
+}
 
 executor = ThreadPoolExecutor(max_workers=150)
-user_locks = {}
+# One lock per user+strategy so duplicate signals can't open two positions.
+# Re-entrant because triggerOrder calls exitOrderWebhook for reversals.
+_strategy_locks = defaultdict(RLock)
 
 
-def get_user_lock(user_email, strategy):
-    key = f"{user_email}_{strategy}"
-    if key not in user_locks:
-        user_locks[key] = Lock()
-    return user_locks[key]
-
-
-def submit_triggerOrder(user_email, user_index_data, strategy, order_type):
-    executor.submit(triggerOrder, user_email, user_index_data, strategy, order_type)
+def submit_triggerOrder(user_email, user_index_data, signal_data, order_type):
+    executor.submit(triggerOrder, user_email, user_index_data, signal_data, order_type)
 
 
 def submit_exitOrderWebhook(strategy, data, user_email):
@@ -39,566 +57,348 @@ def submit_modifyToMarketOrder(user_email, user_index_data, strategy, order_type
     )
 
 
-def triggerOrder(user_email, user_index_data, signal_data, order_type):
+# ---------------------------------------------------------------- helpers
+
+
+def _response(ok, message):
+    return JsonResponse(
+        {STATUS: SUCCESS if ok else FAILED, MESSAGE: message, TASK_STATUS: ok}
+    )
+
+
+def _exchange(index_name):
+    return BFO if index_name == "sensex" else NFO
+
+
+def _openPosition(user_email, strategy):
+    return OrderBook.objects.filter(
+        user_id=user_email, strategy=strategy, exit_price=None
+    )
+
+
+def _webhookDetails(user_email, index_name, strategy):
+    return WebhookDetails.objects.filter(
+        user_id=user_email, index_name=index_name, strategy=strategy
+    ).values().first()
+
+
+def _productType(user_email, index_name):
+    return (
+        ManualOrders.objects.filter(user_id=user_email, index_name=index_name)
+        .values()
+        .first()[PRODUCT_TYPE]
+    )
+
+
+def _number(value):
     try:
-        strategy = signal_data.get(STRATEGY, "DefaultStrategy")
-        index_name = user_index_data.get(INDEX_NAME)
+        number = float(value)
+        return number if number > 0 else None
+    except (TypeError, ValueError):
+        return None
 
-        user_strategy_details = ManualOrders.objects.filter(
-            user_id=user_email, index_name=index_name, strategy_name=strategy
+
+def _cancelPending(broker, webhook, status):
+    # Stop-limit entries ("trigger pending") must be cancelled with their own variety.
+    variety = STOPLOSS if status == "trigger pending" else NORMAL
+    broker.cancelOrder(webhook.get(ORDER_ID), variety)
+
+
+def _pnl(exit_price, entry_price, qty):
+    return str((float(exit_price) - float(entry_price)) * int(qty))
+
+
+def buildOrder(broker, symbol, side, qty, product_type, exchange, trigger=None):
+    """Market order, or a stop-limit order at `trigger` when one is given."""
+    order = {
+        VARIETY: NORMAL,
+        EXCHANGE: exchange,
+        TRADING_SYMBOL: symbol,
+        SYMBOL_TOKEN: broker.getTokenForSymbol(symbol),
+        TRANSACTION_TYPE: side,
+        ORDER_TYPE: MARKET,
+        PRODUCT_TYPE: product_type,
+        DURATION: DAY,
+        QUANTITY: qty,
+    }
+    if trigger is not None:
+        order.update(
+            {VARIETY: STOPLOSS, ORDER_TYPE: ORDER_TYPE_SL, TRIGGER_PRICE: trigger, PRICE: trigger}
         )
-        if user_strategy_details.exists():
-            user_strategy_details_list = list(user_strategy_details.values())[0]
-            qty = int(user_strategy_details_list.get(LOTS))
-        else:
-            qty = int(signal_data.get(LOTS, user_index_data.get(LOTS, 1)))
+    return order
 
-        strike = int(user_index_data.get(STRIKE, 0))
 
-        on_candle_close = bool(user_index_data.get(ON_CANDLE_CLOSE))
-        product_type = user_index_data.get(PRODUCT_TYPE)
-        timeframe = user_index_data.get(TIMEFRAME)
-        index_data = IndexDetails.objects.filter(index_name=index_name).values().first()
-        if not index_data:
-            error_msg = f"Index data not found for {index_name}"
-            addLogDetails(ERROR, f"{user_email} :: {str(error_msg)}")
-            sendMessageInTelegram(
-                f"[triggerOrder] {user_email}: {error_msg}", user_email=user_email
+def ensureOrderAccepted(response, trading_symbol):
+    # placeOrderFullResponse returns status=False (not an exception) on rejection.
+    if not response or not response.get("status"):
+        response = response or {}
+        raise Exception(
+            f"Broker rejected order for {trading_symbol}: "
+            f"{response.get('message', 'no response')} ({response.get('errorcode', '')})"
+        )
+
+
+def placeAndVerify(broker, order, user_email):
+    """Places the order; returns (order_id, unique_order_id) or raises on rejection."""
+    response = broker.placeOrder(order)
+    addLogDetails(INFO, f"{user_email} :: Order response: {response}")
+    ensureOrderAccepted(response, order[TRADING_SYMBOL])
+    data = response.get("data") or {}
+    return data.get("orderid"), data.get("uniqueorderid")
+
+
+def fillPrice(broker, unique_order_id, *fallbacks):
+    """Best known fill price: broker fill details first, then the given fallbacks."""
+    details = broker.getOrderDetails(unique_order_id) or {}
+    for value in (details.get("averageprice"), details.get(PRICE), *fallbacks):
+        if _number(value):
+            return value
+    return None
+
+
+def entryTrigger(broker, symbol, ltp, exchange, timeframe):
+    """On-candle-close entries wait above the last candle high; None means market."""
+    minutes = TIMEFRAME_TO_MINUTES.get(timeframe, 6)
+    from_time = str(get_previous_n_minute_start(get_current_minute_start(), False, minutes + 1))
+    to_time = str(get_next_minute_start_ms(get_current_minute_start(), False))
+    token = broker.getTokenForSymbol(symbol)
+    try:
+        candles = broker.getCandleData(exchange, token, from_time, to_time, timeframe)
+        if candles is None or candles.empty or HIGH not in candles.columns:
+            addLogDetails(ERROR, f"{symbol} :: Candle data missing. Using market order.")
+            return None
+        high = float(candles.loc[0, HIGH])
+        return round(high * 1.001, 1) if float(ltp) < high else None
+    except Exception as e:
+        addLogDetails(ERROR, f"{symbol} :: Error fetching candle data: {e}. Using market order.")
+        return None
+
+
+# ---------------------------------------------------------------- flows
+
+
+def triggerOrder(user_email, user_index_data, signal_data, order_type):
+    strategy = signal_data.get(STRATEGY, "DefaultStrategy")
+    index_name = user_index_data.get(INDEX_NAME)
+    option_side = CE if str(order_type).upper() == BUY else PE
+    alert = {"Strategy": strategy, "Index": index_name, "Signal": f"{order_type} ({option_side} entry)"}
+    placed = False
+    try:
+        with _strategy_locks[(user_email, strategy)]:
+            strategy_row = ManualOrders.objects.filter(
+                user_id=user_email, index_name=index_name, strategy_name=strategy
+            ).values().first()
+            lots = int(
+                strategy_row.get(LOTS)
+                if strategy_row
+                else signal_data.get(LOTS, user_index_data.get(LOTS, 1))
             )
-            return JsonResponse(
-                {STATUS: FAILED, MESSAGE: "error_msg", TASK_STATUS: False}
-            )
+            index_data = IndexDetails.objects.filter(index_name=index_name).values().first()
+            if not index_data:
+                raise Exception(f"Index data not found for {index_name}")
+            qty = lots * int(index_data.get(QTY, 0))
+            alert["Qty"] = qty
 
-        index_qty = int(index_data.get(QTY, 0))
-        user_qty = qty * index_qty
-        broker = Broker(user_email, INDIAN_INDEX).BrokerObject
+            position = _openPosition(user_email, strategy).values().first()
+            if position:
+                if option_side in position[SCRIPT_NAME].upper():
+                    addLogDetails(INFO, f"{user_email} :: {order_type} order already exists")
+                    return _response(True, "Message Exists")
+                addLogDetails(INFO, f"{user_email} :: Reversal, exiting {position[SCRIPT_NAME]}")
+                exitOrderWebhook(strategy, {INDEX_NAME: index_name, STRATEGY: strategy}, user_email)
 
-        try:
+            broker = Broker(user_email, INDIAN_INDEX).BrokerObject
             atm = broker.getCurrentAtm(index_name)
-        except Exception as e:
-            raise Exception(f"[getCurrentAtm] {str(e)}") from e
+            alert["Spot ATM"] = atm
+            if atm is None:
+                raise Exception(f"[strike_calculation] atm=None for {index_name}")
+            strike = int(user_index_data.get(STRIKE, 0))
+            strike_price = atm - strike if option_side == CE else atm + strike
+            prefix = getTradingSymbol(index_name)
+            if not prefix:
+                raise Exception(f"Could not build trading symbol for {index_name} (expiry missing?)")
+            symbol = f"{prefix}{strike_price}{option_side}"
+            exchange = _exchange(index_name)
+            alert["Symbol"] = symbol
 
-        print(atm)
-        # Exit order handling
-        user_data = OrderBook.objects.filter(
-            user_id=user_email, strategy=strategy, exit_price=None
-        )
-        print("ABC")
-        if user_data.exists():
-            order_info = user_data.values().first()
-            script_name = order_info[SCRIPT_NAME]
-
-            if (order_type == BUY and PE in script_name.upper()) or (
-                order_type == SELL and CE in script_name.upper()
-            ):
-                order_info[EXIT_TIME] = getCurrentTimestamp()
-                entry_price = order_info[ENTRY_PRICE]
-
-                if broker.is_demo_enabled:
-                    option_details = broker.getCurrentPremiumDetails(NFO, script_name)
-                    ltp = broker.getLtpForPremium(option_details)
-                    order_info.update(
-                        {
-                            TOTAL: str(
-                                (float(ltp) - float(entry_price)) * int(user_qty)
-                            ),
-                            EXIT_PRICE: ltp,
-                            STATUS: ORDER_EXITED,
-                        }
-                    )
-                    user_data.update(**order_info)
-                else:
-                    addLogDetails(INFO, f"{user_email} ::Sell order")
-                    exit_data = {INDEX_NAME: index_name, STRATEGY: strategy}
-
-                    exitOrderWebhook(strategy, exit_data, user_email)
+            ltp = broker.getLtpForPremium(broker.getCurrentPremiumDetails(exchange, symbol))
+            if broker.is_demo_enabled:
+                entry_price = ltp
             else:
-                addLogDetails(
-                    INFO,
-                    f" {user_email}  :: {order_type.capitalize()} order already exists",
+                trigger = None
+                if user_index_data.get(ON_CANDLE_CLOSE):
+                    trigger = entryTrigger(broker, symbol, ltp, exchange, user_index_data.get(TIMEFRAME))
+                order = buildOrder(
+                    broker, symbol, BUY, qty, user_index_data.get(PRODUCT_TYPE), exchange, trigger
                 )
-                return JsonResponse(
-                    {STATUS: SUCCESS, MESSAGE: "Message Exists", TASK_STATUS: True}
+                addLogDetails(INFO, f"{user_email} :: Placing {order_type.lower()} order for {symbol}")
+                order_id, unique_order_id = placeAndVerify(broker, order, user_email)
+                placed = True
+                entry_price = trigger or fillPrice(broker, unique_order_id, ltp)
+                addWebhookOrderDetails(
+                    user_email,
+                    index_name,
+                    strategy,
+                    {"current_premium": symbol, "order_id": order_id, "unique_order_id": unique_order_id},
                 )
 
-        # Determine option type and strike logic
-        option_type = CE if order_type.upper() == BUY else PE
-        print(option_type)
+            addOrderBookDetails(
+                {
+                    USER_ID: user_email,
+                    SCRIPT_NAME: symbol,
+                    QTY: qty,
+                    ENTRY_PRICE: entry_price,
+                    STATUS: ORDER_PLACED,
+                    STRATEGY: strategy,
+                    INDEX_NAME: index_name,
+                },
+                True,
+            )
+            addLogDetails(INFO, f"{user_email} :: {order_type.capitalize()} order placed successfully")
+            return _response(True, "Message Exits")
 
-        try:
-            strike_price = atm - strike if order_type.upper() == BUY else atm + strike
-        except Exception as e:
-            raise Exception(
-                f"[strike_calculation] atm={atm}, strike={strike}, order_type={order_type}: {str(e)}"
-            ) from e
-
-        print(strike_price)
-        print(getTradingSymbol(index_name))
-        trading_symbol = f"{getTradingSymbol(index_name)}{strike_price}{option_type}"
-        print(trading_symbol)
-
-        try:
-            if index_name == "sensex":
-                option_details = broker.getCurrentPremiumDetails(BFO, trading_symbol)
-            else:
-                option_details = broker.getCurrentPremiumDetails(NFO, trading_symbol)
-            ltp = broker.getLtpForPremium(option_details)
-        except Exception as e:
-            raise Exception(
-                f"[premium_details] trading_symbol={trading_symbol}: {str(e)}"
-            ) from e
-
-        addLogDetails(INFO, f"{user_email} :: {str(option_details)}")
-        if broker.is_demo_enabled:
-            option_buy_price = ltp
+    except Exception as e:
+        addLogDetails(ERROR, f"{user_email} :: triggerOrder error: {e}")
+        symbol = alert.get("Symbol")
+        if placed:
+            title = "ENTRY PLACED BUT NOT SAVED - AUTO EXIT WILL NOT WORK"
+            action = f"Position {symbol} is OPEN in AngelOne but not tracked. Exit it manually when the exit signal comes."
         else:
-            if on_candle_close:
-                TIMEFRAME_TO_MINUTES = {
-                    "ONE_MINUTE": 1,
-                    "THREE_MINUTE": 3,
-                    "FIVE_MINUTE": 5,
-                    "TEN_MINUTE": 10,
-                    "FIFTEEN_MINUTE": 15,
-                    "THIRTY_MINUTE": 30,
-                    "ONE_HOUR": 60,
-                    "ONE_DAY": 1440,
-                }
-                minutes = TIMEFRAME_TO_MINUTES.get(timeframe, 6)
-                from_time = str(
-                    get_previous_n_minute_start(
-                        get_current_minute_start(), False, minutes + 1
-                    )
-                )
-                to_time = str(
-                    get_next_minute_start_ms(get_current_minute_start(), False)
-                )
-                addLogDetails(INFO, f"{user_email} :: Get Candle Details")
-                addLogDetails(INFO, f"{user_email} :: from_time: {from_time}")
-                addLogDetails(INFO, f"{user_email} :: to_time: {to_time}")
-                try:
-                    candle_data_df = broker.getCandleData(
-                        NFO, option_details[SYMBOL_TOKEN], from_time, to_time, timeframe
-                    )
-                    if not candle_data_df.empty and HIGH in candle_data_df.columns:
-                        high_price = float(candle_data_df.loc[0, HIGH])
-                        addLogDetails(INFO, f"{user_email} :: High Price: {high_price}")
+            title = "ENTRY SKIPPED - NO POSITION TAKEN"
+            action = f"No order was sent. Take the {option_side} entry manually if you want this trade."
+        sendTradeAlert(title, user_email, str(e), alert, action)
+        return _response(False, "Unexpected error Check logs")
 
-                        if float(ltp) < high_price:
-                            trigger = round(high_price * 1.001, 1)
-                            order_details = {
-                                VARIETY: STOPLOSS,
-                                EXCHANGE: NFO,
-                                TRADING_SYMBOL: trading_symbol,
-                                SYMBOL_TOKEN: broker.getTokenForSymbol(trading_symbol),
-                                TRANSACTION_TYPE: BUY,
-                                ORDER_TYPE: ORDER_TYPE_SL,
-                                PRODUCT_TYPE: product_type,
-                                DURATION: DAY,
-                                QUANTITY: user_qty,
-                                TRIGGER_PRICE: trigger,
-                                PRICE: trigger,
-                            }
-                        else:
-                            order_details = {
-                                VARIETY: NORMAL,
-                                EXCHANGE: NFO,
-                                TRADING_SYMBOL: trading_symbol,
-                                SYMBOL_TOKEN: broker.getTokenForSymbol(trading_symbol),
-                                TRANSACTION_TYPE: BUY,
-                                ORDER_TYPE: MARKET,
-                                PRODUCT_TYPE: product_type,
-                                DURATION: DAY,
-                                QUANTITY: user_qty,
-                            }
-                    else:
-                        addLogDetails(
-                            ERROR,
-                            f"{user_email} :: Candle data missing or HIGH column not found. Using market order.",
-                        )
-                        order_details = {
-                            VARIETY: NORMAL,
-                            EXCHANGE: NFO,
-                            TRADING_SYMBOL: trading_symbol,
-                            SYMBOL_TOKEN: broker.getTokenForSymbol(trading_symbol),
-                            TRANSACTION_TYPE: BUY,
-                            ORDER_TYPE: MARKET,
-                            PRODUCT_TYPE: product_type,
-                            DURATION: DAY,
-                            QUANTITY: user_qty,
-                        }
 
-                except Exception as e:
-                    addLogDetails(
-                        ERROR,
-                        f"{user_email} :: Error fetching candle data: {str(e)}. Using market order.",
-                    )
-                    order_details = {
-                        VARIETY: NORMAL,
-                        EXCHANGE: NFO,
-                        TRADING_SYMBOL: trading_symbol,
-                        SYMBOL_TOKEN: broker.getTokenForSymbol(trading_symbol),
-                        TRANSACTION_TYPE: BUY,
-                        ORDER_TYPE: MARKET,
-                        PRODUCT_TYPE: product_type,
-                        DURATION: DAY,
-                        QUANTITY: user_qty,
+def exitOrderWebhook(strategy, data, user_email):
+    index_name = (data or {}).get(INDEX_NAME)
+    alert = {"Strategy": strategy, "Index": index_name}
+    exit_placed = False
+    try:
+        with _strategy_locks[(user_email, strategy)]:
+            position = _openPosition(user_email, strategy)
+            info = position.values().first()
+            if not info:
+                addLogDetails(INFO, f"{user_email} :: No Pending orders for strategy {strategy}")
+                return _response(False, "No pending Messages")
+
+            symbol, qty, entry_price = info[SCRIPT_NAME], info[QTY], info[ENTRY_PRICE]
+            exchange = _exchange(info.get(INDEX_NAME) or index_name)
+            alert.update({"Symbol": symbol, "Qty": qty, "Entry price": entry_price})
+            broker = Broker(user_email, INDIAN_INDEX).BrokerObject
+
+            def close(exit_price):
+                position.update(
+                    **{
+                        EXIT_TIME: getCurrentTimestamp(),
+                        EXIT_PRICE: exit_price,
+                        TOTAL: _pnl(exit_price, entry_price, qty),
+                        STATUS: ORDER_EXITED,
                     }
-
-            else:
-                order_details = {
-                    VARIETY: NORMAL,
-                    EXCHANGE: NFO,
-                    TRADING_SYMBOL: trading_symbol,
-                    SYMBOL_TOKEN: broker.getTokenForSymbol(trading_symbol),
-                    TRANSACTION_TYPE: BUY,
-                    ORDER_TYPE: MARKET,
-                    PRODUCT_TYPE: product_type,
-                    DURATION: DAY,
-                    QUANTITY: user_qty,
-                }
-
-            addLogDetails(
-                INFO,
-                f"{user_email} :: Placing {order_type.lower()} order for {trading_symbol}",
-            )
-
-            try:
-                order_response = broker.placeOrder(order_details)
-            except Exception as e:
-                raise Exception(
-                    f"[placeOrder] trading_symbol={trading_symbol}: {str(e)}"
-                ) from e
-
-            addLogDetails(
-                INFO,
-                f"{user_email} :: {order_type.capitalize()} order response: {order_response}",
-            )
-            unique_order_id = order_response.get("data", {}).get("uniqueorderid")
-            order_response_details = broker.getOrderDetails(unique_order_id)
-            if order_response_details is None:
-                raise Exception(
-                    f"[getOrderDetails] trading_symbol={trading_symbol}: response is None"
                 )
-            if str(order_details.get(ORDER_TYPE)).__eq__(MARKET):
-                option_buy_price = order_response_details.get("price", ltp)
+
+            if broker.is_demo_enabled:
+                close(broker.getLtpForPremium(broker.getCurrentPremiumDetails(exchange, symbol)))
+                return _response(True, "Message Done")
+
+            webhook = _webhookDetails(user_email, index_name, strategy)
+            if not webhook:
+                raise Exception(f"No webhook data found for {strategy}")
+
+            # Raises if the broker can't be reached: keep the entry, alert instead.
+            status = broker.getOrderStatus(webhook.get(UNIQUE_ORDER_ID))
+            alert["Entry order status"] = status
+
+            if status == "complete":
+                order = buildOrder(
+                    broker, webhook.get(CURRENT_PREMIUM), SELL, qty,
+                    _productType(user_email, index_name), exchange,
+                )
+                _, unique_order_id = placeAndVerify(broker, order, user_email)
+                exit_placed = True
+                ltp = broker.getLtpForPremium(broker.getCurrentPremiumDetails(exchange, symbol))
+                close(fillPrice(broker, unique_order_id, ltp, entry_price))
+            elif status in PENDING_STATUSES:
+                _cancelPending(broker, webhook, status)
+                addLogDetails(INFO, f"{user_email} :: Existing order cancelled.")
+                position.delete()
             else:
-                option_buy_price = order_response_details.get("triggerprice", ltp)
+                addLogDetails(INFO, f"{user_email} :: Entry order status '{status}', deleting entry.")
+                position.delete()
+
+        addLogDetails(INFO, f"{user_email} :: Order exited successfully.")
+        return _response(True, "Message Done")
+
+    except Exception as e:
+        addLogDetails(ERROR, f"{user_email} :: exitOrderWebhook error: {e}")
+        symbol = alert.get("Symbol")
+        if exit_placed:
+            title = "EXIT ORDER PLACED BUT NOT SAVED"
+            action = f"Exit SELL for {symbol} was sent. Confirm in AngelOne that it is closed; the trade record was not updated."
+        else:
+            title = "EXIT FAILED - POSITION MAY STILL BE OPEN"
+            action = f"Open AngelOne and exit {symbol} ({alert.get('Qty')} qty) manually NOW."
+        sendTradeAlert(title, user_email, str(e), alert, action)
+        return _response(False, "Unexpected error. Check logs.")
+
+
+def modifyToMarketOrder(user_email, user_index_data, strategy, order_type):
+    index_name = user_index_data.get(INDEX_NAME)
+    alert = {"Strategy": strategy, "Index": index_name}
+    placed = False
+    try:
+        with _strategy_locks[(user_email, strategy)]:
+            broker = Broker(user_email, INDIAN_INDEX).BrokerObject
+            if broker.is_demo_enabled:
+                return JsonResponse({STATUS: SUCCESS, MESSAGE: "Demo Enabled", TASK_STATUS: True})
+
+            position = _openPosition(user_email, strategy)
+            info = position.values().first()
+            if not info:
+                addLogDetails(INFO, f"{user_email} :: No Pending orders for strategy {strategy}")
+                return _response(False, "No pending Messages")
+
+            webhook = _webhookDetails(user_email, index_name, strategy)
+            if not webhook:
+                raise Exception(f"Webhook details not found for {user_email}, strategy: {strategy}")
+
+            symbol, qty = webhook.get(CURRENT_PREMIUM), int(info[QTY])
+            alert.update({"Symbol": symbol, "Qty": qty})
+
+            # Raises on API failure so we never fire a duplicate market BUY.
+            status = broker.getOrderStatus(webhook.get(UNIQUE_ORDER_ID))
+            alert["Entry order status"] = status
+            if status == "complete":
+                msg = f"Order already placed for ID {webhook.get(UNIQUE_ORDER_ID)}"
+                addLogDetails(INFO, f"{user_email} :: {msg}")
+                return JsonResponse({STATUS: SUCCESS, MESSAGE: msg, TASK_STATUS: True})
+            if status in PENDING_STATUSES:
+                _cancelPending(broker, webhook, status)
+
+            order = buildOrder(
+                broker, symbol, BUY, qty, _productType(user_email, index_name), _exchange(index_name)
+            )
+            order_id, unique_order_id = placeAndVerify(broker, order, user_email)
+            placed = True
+            position.update(
+                **{ENTRY_PRICE: fillPrice(broker, unique_order_id, info[ENTRY_PRICE]), STATUS: ORDER_PLACED}
+            )
             addWebhookOrderDetails(
                 user_email,
                 index_name,
                 strategy,
-                {
-                    "current_premium": trading_symbol,
-                    "order_id": order_response.get("data", {}).get("orderid"),
-                    "unique_order_id": unique_order_id,
-                },
+                {"current_premium": symbol, "order_id": order_id, "unique_order_id": unique_order_id},
             )
-
-        data = {
-            USER_ID: user_email,
-            SCRIPT_NAME: trading_symbol,
-            QTY: user_qty,
-            ENTRY_PRICE: option_buy_price,
-            STATUS: ORDER_PLACED,
-            STRATEGY: strategy,
-            INDEX_NAME: index_name,
-        }
-
-        addOrderBookDetails(data, True)
-        addLogDetails(
-            INFO, f"{user_email} :: {order_type.capitalize()} order placed successfully"
-        )
-        return JsonResponse(
-            {STATUS: SUCCESS, MESSAGE: "Message Exits", TASK_STATUS: True}
-        )
+            return _response(True, "Order placed successfully")
 
     except Exception as e:
-        error_msg = str(e)
-        addLogDetails(ERROR, f"{user_email} :: triggerOrder error: {error_msg}")
-        sendMessageInTelegram(
-            f"[triggerOrder] {user_email}: {error_msg}", user_email=user_email
-        )
-        return JsonResponse(
-            {STATUS: FAILED, MESSAGE: "Unexpected error Check logs", TASK_STATUS: False}
-        )
-
-
-def exitOrderWebhook(strategy, data, user_email):
-    try:
-        exit_data = {}
-        exit_data[EXIT_TIME] = getCurrentTimestamp()
-        broker = Broker(user_email, INDIAN_INDEX).BrokerObject
-
-        user_data = OrderBook.objects.filter(
-            user_id=user_email, strategy=strategy, exit_price=None
-        )
-        if not user_data.exists():
-            addLogDetails(
-                INFO, f"{user_email} :: No Pending orders for strategy {strategy}"
-            )
-            return JsonResponse(
-                {STATUS: FAILED, MESSAGE: "No pending Messages", TASK_STATUS: False}
-            )
-
-        index_name = data.get(INDEX_NAME)
-        user_manual_details = ManualOrders.objects.filter(
-            user_id=user_email, index_name=index_name
-        )
-        product_type = user_manual_details.values().first()[PRODUCT_TYPE]
-        order_info = user_data.values().first()
-        entry_price = order_info.get(ENTRY_PRICE)
-        qty = order_info.get(QTY)
-        script_name = order_info.get(SCRIPT_NAME)
-
-        try:
-            option_details = broker.getCurrentPremiumDetails(NFO, script_name)
-            ltp = broker.getLtpForPremium(option_details)
-        except Exception as e:
-            raise Exception(f"[premium_details] script={script_name}: {str(e)}") from e
-
-        if broker.is_demo_enabled:
-            exit_data.update(
-                {
-                    TOTAL: str((float(ltp) - float(entry_price)) * int(qty)),
-                    EXIT_PRICE: ltp,
-                    STATUS: ORDER_EXITED,
-                }
-            )
-            user_data.update(**exit_data)
+        addLogDetails(ERROR, f"{user_email} :: modifyToMarketOrder error: {e}")
+        symbol = alert.get("Symbol")
+        if placed:
+            title = "MARKET ENTRY PLACED BUT NOT SAVED - AUTO EXIT WILL NOT WORK"
+            action = f"Position {symbol} is OPEN in AngelOne but not tracked. Exit it manually when the exit signal comes."
         else:
-            user_webhook_data = WebhookDetails.objects.filter(
-                user_id=user_email, index_name=data[INDEX_NAME], strategy=strategy
-            )
-
-            if not user_webhook_data.exists():
-                addLogDetails(
-                    INFO, f"{user_email} :: No webhook data found for {strategy}"
-                )
-                return JsonResponse(
-                    {
-                        STATUS: FAILED,
-                        MESSAGE: "No webhook data found",
-                        TASK_STATUS: False,
-                    }
-                )
-
-            user_webhook_data = user_webhook_data.values().first()
-            trading_symbol = user_webhook_data.get(CURRENT_PREMIUM)
-            unique_order_id = user_webhook_data.get(UNIQUE_ORDER_ID)
-
-            try:
-                order_placed = broker.checkIfOrderPlaced(unique_order_id)
-            except Exception as e:
-                raise Exception(
-                    f"[checkIfOrderPlaced] unique_order_id={unique_order_id}: {str(e)}"
-                ) from e
-
-            if order_placed:
-                order_details = {
-                    VARIETY: NORMAL,
-                    EXCHANGE: NFO,
-                    TRADING_SYMBOL: trading_symbol,
-                    SYMBOL_TOKEN: broker.getTokenForSymbol(trading_symbol),
-                    TRANSACTION_TYPE: SELL,
-                    ORDER_TYPE: MARKET,
-                    PRODUCT_TYPE: product_type,
-                    DURATION: DAY,
-                    QUANTITY: qty,
-                }
-
-                try:
-                    order_response_details = broker.placeOrder(order_details)
-                except Exception as e:
-                    raise Exception(
-                        f"[placeOrder] trading_symbol={trading_symbol}: {str(e)}"
-                    ) from e
-
-                addLogDetails(
-                    INFO, f"{user_email} :: Order placed: {order_response_details}"
-                )
-
-                option_exit_price = order_response_details.get("price") or ltp
-                exit_data.update(
-                    {
-                        TOTAL: str(
-                            (float(option_exit_price) - float(entry_price)) * int(qty)
-                        ),
-                        EXIT_PRICE: option_exit_price,
-                        STATUS: ORDER_EXITED,
-                    }
-                )
-                user_data.update(**exit_data)
-            else:
-                try:
-                    order_exists = broker.checkIfOrderExists(unique_order_id)
-                except Exception as e:
-                    raise Exception(
-                        f"[checkIfOrderExists] unique_order_id={unique_order_id}: {str(e)}"
-                    ) from e
-
-                if order_exists:
-                    broker.cancelOrder(user_webhook_data.get(ORDER_ID), NORMAL)
-                    addLogDetails(INFO, f"{user_email} :: Existing order cancelled.")
-                    user_data.delete()
-                else:
-                    addLogDetails(
-                        INFO,
-                        f"{user_email} :: Order status not found so deleting entry.",
-                    )
-                    user_data.delete()
-        addLogDetails(INFO, f"{user_email} :: Order exited successfully.")
-        return JsonResponse(
-            {STATUS: SUCCESS, MESSAGE: "Message Done", TASK_STATUS: True}
-        )
-
-    except Exception as e:
-        error_msg = str(e)
-        addLogDetails(ERROR, f"{user_email} :: exitOrderWebhook error: {error_msg}")
-        sendMessageInTelegram(
-            f"[exitOrderWebhook] {user_email}: {error_msg}", user_email=user_email
-        )
-        return JsonResponse(
-            {
-                STATUS: FAILED,
-                MESSAGE: "Unexpected error. Check logs.",
-                TASK_STATUS: False,
-            }
-        )
-
-
-def modifyToMarketOrder(user_email, user_index_data, strategy, order_type):
-    try:
-        broker = Broker(user_email, INDIAN_INDEX).BrokerObject
-        index_name = user_index_data.get(INDEX_NAME)
-        user_manual_details = ManualOrders.objects.filter(
-            user_id=user_email, index_name=index_name
-        )
-        product_type = user_manual_details.values().first()[PRODUCT_TYPE]
-
-        if not broker.is_demo_enabled:
-            user_data = OrderBook.objects.filter(
-                user_id=user_email, strategy=strategy, exit_price=None
-            )
-            if not user_data.exists():
-                addLogDetails(
-                    INFO, f"{user_email} :: No Pending orders for strategy {strategy}"
-                )
-                return JsonResponse(
-                    {STATUS: FAILED, MESSAGE: "No pending Messages", TASK_STATUS: False}
-                )
-
-            order_info = user_data.values().first()
-            qty = order_info.get(QTY)
-
-            user_webhook_data = (
-                WebhookDetails.objects.filter(
-                    user_id=user_email, index_name=index_name, strategy=strategy
-                )
-                .values()
-                .first()
-            )
-
-            if not user_webhook_data:
-                error_msg = (
-                    f"Webhook details not found for {user_email}, strategy: {strategy}"
-                )
-                addLogDetails(ERROR, f"{user_email} :: {str(error_msg)}")
-                sendMessageInTelegram(
-                    f"[modifyToMarketOrder] {user_email}: {error_msg}",
-                    user_email=user_email,
-                )
-                return JsonResponse(
-                    {STATUS: FAILED, MESSAGE: error_msg, TASK_STATUS: False}
-                )
-
-            index_data = IndexDetails.objects.filter(index_name=index_name).values()
-            if not index_data:
-                error_msg = f"Index data not found for {index_name}"
-                addLogDetails(ERROR, f"{user_email} :: {str(error_msg)}")
-                sendMessageInTelegram(
-                    f"[modifyToMarketOrder] {user_email}: {error_msg}",
-                    user_email=user_email,
-                )
-                return JsonResponse(
-                    {STATUS: FAILED, MESSAGE: error_msg, TASK_STATUS: False}
-                )
-
-            index_qty = int(index_data[0].get(QTY, 0))
-            user_qty = qty * index_qty
-
-            trading_symbol = user_webhook_data.get(CURRENT_PREMIUM)
-            unique_order_id = user_webhook_data.get(UNIQUE_ORDER_ID)
-
-            try:
-                order_placed = broker.checkIfOrderPlaced(unique_order_id)
-            except Exception as e:
-                raise Exception(
-                    f"[checkIfOrderPlaced] unique_order_id={unique_order_id}: {str(e)}"
-                ) from e
-
-            if order_placed:
-                msg = f"Order already placed for ID {unique_order_id}"
-                addLogDetails(INFO, f"{user_email} :: {msg}")
-                return JsonResponse({STATUS: SUCCESS, MESSAGE: msg, TASK_STATUS: True})
-
-            order_details = {
-                VARIETY: NORMAL,
-                EXCHANGE: NFO,
-                TRADING_SYMBOL: trading_symbol,
-                SYMBOL_TOKEN: broker.getTokenForSymbol(trading_symbol),
-                TRANSACTION_TYPE: BUY,
-                ORDER_TYPE: MARKET,
-                PRODUCT_TYPE: product_type,
-                DURATION: DAY,
-                QUANTITY: user_qty,
-            }
-
-            try:
-                order_response_details = broker.placeOrder(order_details)
-            except Exception as e:
-                raise Exception(
-                    f"[placeOrder] trading_symbol={trading_symbol}: {str(e)}"
-                ) from e
-
-            addLogDetails(
-                INFO, f"{user_email} :: Order placed: {order_response_details}"
-            )
-
-            option_buy_price = order_response_details.get("averageprice")
-            data = {
-                USER_ID: user_email,
-                SCRIPT_NAME: trading_symbol,
-                QTY: user_qty,
-                ENTRY_PRICE: option_buy_price,
-                STATUS: ORDER_PLACED,
-                STRATEGY: strategy,
-                INDEX_NAME: index_name,
-            }
-
-            addOrderBookDetails(data, True)
-
-            return JsonResponse(
-                {
-                    STATUS: SUCCESS,
-                    MESSAGE: "Order placed successfully",
-                    TASK_STATUS: True,
-                }
-            )
-        else:
-            return JsonResponse(
-                {STATUS: SUCCESS, MESSAGE: "Demo Enabled", TASK_STATUS: True}
-            )
-
-    except Exception as e:
-        error_msg = str(e)
-        addLogDetails(ERROR, f"{user_email} :: modifyToMarketOrder error: {error_msg}")
-        sendMessageInTelegram(
-            f"[modifyToMarketOrder] {user_email}: {error_msg}", user_email=user_email
-        )
-        return JsonResponse(
-            {
-                STATUS: FAILED,
-                MESSAGE: "Unexpected error. Check logs.",
-                TASK_STATUS: False,
-            }
-        )
+            title = "MARKET CONVERSION FAILED"
+            action = f"Pending entry for {symbol} was not converted to market. Check AngelOne and enter/cancel manually."
+        sendTradeAlert(title, user_email, str(e), alert, action)
+        return _response(False, "Unexpected error. Check logs.")

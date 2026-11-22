@@ -31,7 +31,6 @@ PUT = "PUT"
 
 ### URLS ###
 DEFAULT_PAGE_URL = "NEED TO ADD DEFAULT PAGE"
-HOME_PAGE_URL = "home.html"
 HOME_URL = "home"
 LOGIN_URL = "login"
 LOGIN_PAGE_URL = "login.html"

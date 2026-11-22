@@ -1,6 +1,6 @@
 import { ShieldCheckIcon, PlayCircleIcon, StopCircleIcon, ArrowPathIcon, PlusIcon, EyeIcon, CogIcon } from './icons.js';
-import { makeApiCall } from '../utils/api.js';
-import Toast from './Toast.js';
+import { makeApiCall, runAction } from '../utils/api.js';
+import { toast } from '../utils/notify.js';
 
 
 let state = {
@@ -8,20 +8,11 @@ let state = {
     celeryStatus: null,
     socketStatus: null,
     indexData: [],
-    toast: null,
     botConfig: null,
     savingBotConfig: false,
 };
 
-function showToast(message, type) {
-    state.toast = { message, type };
-    render();
-    setTimeout(() => {
-        state.toast = null;
-        const el = document.querySelector('.admin-toast');
-        if (el) el.remove();
-    }, 4000);
-}
+const showToast = (message, type) => toast(message, type);
 
 async function fetchAdminData() {
     state.loading = true;
@@ -46,16 +37,9 @@ async function fetchAdminData() {
 }
 
 async function handleAction(endpoint, successMsg, body = {}) {
-    try {
-        const resp = await makeApiCall(endpoint, { method: 'POST', body });
-        if (resp?.status === 'success' || resp?.task_status) {
-            showToast(successMsg, 'success');
-        } else {
-            showToast(resp?.message || 'Action failed', 'error');
-        }
-    } catch (e) {
-        showToast('Request failed: ' + e.message, 'error');
-    }
+    // Celery endpoints answer {success: bool}; the rest {status: "success"|"failed"}.
+    const res = await runAction(endpoint, { method: 'POST', body });
+    showToast(res.ok ? `${successMsg}: ${res.message}` : res.message, res.ok ? 'success' : 'error');
     fetchAdminData();
 }
 
@@ -86,7 +70,7 @@ async function handleAddUser() {
         return;
     }
     try {
-        const resp = await makeApiCall('/add_user', { method: 'POST', body: { user_id: email, user_name: name, password } });
+        const resp = await makeApiCall('/add_user', { method: 'POST', body: { email, name, password } });
         if (resp?.status === 'success') {
             showToast('User added successfully', 'success');
             document.getElementById('new-user-email').value = '';
@@ -161,11 +145,9 @@ function render() {
     const container = document.getElementById('admin-console-container');
     if (!container) return;
 
-    const toastHtml = state.toast ? `<div class="admin-toast fixed top-20 right-5 z-50">${Toast(state.toast)}</div>` : '';
 
     if (state.loading) {
         container.innerHTML = `
-            ${toastHtml}
             <div class="flex items-center justify-center min-h-[200px]">
                 <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-400"></div>
                 <p class="ml-3 text-sm text-surface-400">Loading admin panel...</p>
@@ -174,7 +156,6 @@ function render() {
     }
 
     container.innerHTML = `
-        ${toastHtml}
         <div class="page-enter space-y-6">
             <div class="flex items-center gap-3 mb-6">
                 ${ShieldCheckIcon({ className: 'h-6 w-6 text-primary-400' })}

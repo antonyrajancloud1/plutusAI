@@ -14,7 +14,6 @@ let state = {
     searchText: '',
     startDate: todayStr(),
     endDate: todayStr(),
-    toast: null,
 };
 
 function render() {

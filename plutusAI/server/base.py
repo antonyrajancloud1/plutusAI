@@ -11,7 +11,6 @@ from django.utils import timezone
 import pandas as pd
 import requests
 from plutusAI.models import *
-from plutusAI.server import AngelOneApp
 from plutusAI.server.constants import *
 import pytz
 from celery import shared_task
@@ -324,27 +323,23 @@ def getIndexConfiguration(user_email, index):
         return user_profiles_list[0]
 
 
-def updateIndexConfiguration(user_email, index, data):
+def _update_user_index_rows(model, user_email, index, data):
     try:
-        user_data = Configuration.objects.filter(user_id=user_email, index_name=index)
-        user_data.update(**data)
+        model.objects.filter(user_id=user_email, index_name=index).update(**data)
     except Exception as e:
         addLogDetails(ERROR, str(e))
+
+
+def updateIndexConfiguration(user_email, index, data):
+    _update_user_index_rows(Configuration, user_email, index, data)
 
 
 def updateScalperDetails(user_email, index, data):
-    try:
-        user_data = ScalperDetails.objects.filter(user_id=user_email, index_name=index)
-        user_data.update(**data)
-    except Exception as e:
-        addLogDetails(ERROR, str(e))
+    _update_user_index_rows(ScalperDetails, user_email, index, data)
+
 
 def updateFlashConfiguration(user_email, index, data):
-    try:
-        user_data = FlashDetails.objects.filter(user_id=user_email, index_name=index)
-        user_data.update(**data)
-    except Exception as e:
-        addLogDetails(ERROR, str(e))
+    _update_user_index_rows(FlashDetails, user_email, index, data)
 
 def updateIndexDetails(token, data):
     try:
@@ -857,6 +852,8 @@ def terminate_task(user_email, index, strategy):
         job_details = list(user_data.values())
         if strategy == STRATEGY_HUNTER:
             updateIndexConfiguration(user_email, index, data=STAGE_STOPPED)
+        elif strategy == STRATEGY_FLASH:
+            updateFlashConfiguration(user_email, index, data=STAGE_STOPPED)
         else:
             updateScalperDetails(user_email, index, data=STAGE_STOPPED)
         if len(job_details) > 0:
@@ -886,6 +883,9 @@ def checkSocketStatus():
 
 
 def start_ws_job(ws_type):
+    # Imported here: AngelOneApp imports base, so a top-level import is circular.
+    from plutusAI.server import AngelOneApp
+
     try:
         updateExpiryDetails.delay()
         if ws_type is None or ws_type.__eq__("1"):

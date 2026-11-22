@@ -1,7 +1,6 @@
 from django.urls import path
 from plutusAI.server.constants import *
-from plutusAI.server.tester import testerCheck
-from . import views, tests
+from . import views
 from django.urls import re_path as url
 from django.conf import settings
 
@@ -40,7 +39,6 @@ urlpatterns = [
     path(CHECK_TASK_STATUS, views.check_task_status, name=CHECK_TASK_STATUS),
     path(REGENERATE_TOKEN, views.reGenerateAccessToken, name=REGENERATE_TOKEN),
     path(CHECK_BROKER_STATUS, views.checkBrokerTokenStatus, name=CHECK_BROKER_STATUS),
-    path(BUY_MANUAL, views.buy_manual_order, name=BUY_MANUAL),
     path(MANUAL_DETAILS, views.getAllManualOrderDetails, name=MANUAL_DETAILS),
     path(PLACE_ORDER_BUY, views.placeBuyOrderManual, name=PLACE_ORDER_BUY),
     path(PLACE_ORDER_SELL, views.placeSellOrderManual, name=PLACE_ORDER_SELL),
@@ -72,7 +70,6 @@ urlpatterns = [
     path(UPDATE_FLASH, views.update_flash_values, name=UPDATE_FLASH),
     path(GET_FLASH_DETAILS, views.get_flash_values, name=GET_FLASH_DETAILS),
     path(START_FLASH, views.start_flash, name=START_FLASH),
-    path(STOP_INDEX, views.stop_index, name=STOP_INDEX),
     path(GET_CELERY_STATUS, views.check_celery_status, name=GET_CELERY_STATUS),
     path(STOP_CELERY, views.stop_celery, name=STOP_CELERY),
     path(RESTART_CELERY, views.restart_celery, name=RESTART_CELERY),
@@ -106,5 +103,4 @@ urlpatterns = [
     path("forex_buy_order", views.placeForexBuy, name="forex_buy_order"),
     path("forex_sell_order", views.placeForexSell, name="forex_sell_order"),
     path("forex_close_order", views.closeForexSell, name="forex_close_order"),
-    path("test", tests.tester, name="test"),
 ]

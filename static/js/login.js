@@ -117,7 +117,7 @@ MadaraLoginConstructor.prototype.loginUser = function() {
     let additionalAjaxOptions = {
         success :   function(successResp) {
             if (successResp.status === 'success'){
-                window.location.href = '/home';
+                window.location.href = '/dashboard';
             }
             else if (successResp.status === 'failed'){
                 alert("Login Error");

@@ -43,5 +43,8 @@ start_process() {
 # Main script
 check_and_start_service mysql
 check_and_start_service redis-server
-start_process "sudo xvfb-run -a python3 manage.py runserver 0.0.0.0:80" "django.log"
+# Project virtualenv when present: under sudo, root can't see user-installed packages.
+PYTHON=python3
+[ -x .venv/bin/python3 ] && PYTHON=.venv/bin/python3
+start_process "sudo xvfb-run -a $PYTHON manage.py runserver 0.0.0.0:80" "django.log"
 #start_process "celery -A plutus.celery worker -l info  --autoscale=100,1"

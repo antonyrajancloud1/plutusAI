@@ -1,24 +1,15 @@
 import { CogIcon } from './icons.js';
 import { makeApiCall } from '../utils/api.js';
-import Toast from './Toast.js';
+import { toast } from '../utils/notify.js';
 
 let state = {
     chatId: '',
     notifyOnError: false,
     loading: true,
     saving: false,
-    toast: null,
 };
 
-function showToast(message, type) {
-    state.toast = { message, type };
-    render();
-    setTimeout(() => {
-        state.toast = null;
-        const el = document.querySelector('.settings-toast');
-        if (el) el.remove();
-    }, 5000);
-}
+const showToast = (message, type) => toast(message, type);
 
 async function loadSettings() {
     state.loading = true;
@@ -81,10 +72,8 @@ function render() {
         return;
     }
 
-    const toastHtml = state.toast ? `<div class="settings-toast fixed top-20 right-5 z-50">${Toast(state.toast)}</div>` : '';
 
     container.innerHTML = `
-        ${toastHtml}
         <div class="space-y-6">
             <div class="flex items-center gap-3 mb-2">
                 <h2 class="text-xl lg:text-2xl font-bold text-surface-50 flex items-center gap-3">

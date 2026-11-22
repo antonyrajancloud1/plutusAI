@@ -92,8 +92,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'madara_db',
         'HOST': 'localhost',
-        'PASSWORD': '',
-        'USER': 'root',
+        # root uses MySQL auth_socket (OS root only); set DB_USER=madara to run without sudo.
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+        'USER': os.environ.get('DB_USER', 'root'),
         'PORT': '3306',
     }
 }

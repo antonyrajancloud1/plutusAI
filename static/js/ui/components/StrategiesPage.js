@@ -1,5 +1,6 @@
 import { makeApiCall } from '../utils/api.js';
 import { PlusIcon } from './icons.js';
+import { toast, copyText } from '../utils/notify.js';
 
 const indices = [
     { key: 'nifty', name: 'Nifty' },
@@ -29,43 +30,7 @@ function formatName(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-function showNotification(message, type = 'success') {
-    const container = document.getElementById('toast-container');
-    if (!container) return;
-    const id = `notif-${Date.now()}`;
-    const bg = type === 'success' ? 'bg-emerald-500' : 'bg-red-500';
-    const html = `
-        <div id="${id}" class="fixed top-4 right-4 z-[100] ${bg} text-white py-2 px-5 rounded-lg shadow-lg text-sm font-semibold animate-fade-in-down">
-            ${message}
-        </div>`;
-    const el = document.createElement('div');
-    el.innerHTML = html;
-    container.appendChild(el.firstElementChild);
-    setTimeout(() => {
-        const e = document.getElementById(id);
-        if (e) { e.style.opacity = '0'; e.style.transition = 'opacity 0.3s'; setTimeout(() => e.remove(), 300); }
-    }, 3000);
-}
-
-function copyText(text) {
-    if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(text).then(() => showNotification('URL Copied!', 'success'))
-            .catch(() => fallbackCopy(text));
-    } else {
-        fallbackCopy(text);
-    }
-}
-
-function fallbackCopy(text) {
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.opacity = '0';
-    document.body.appendChild(ta);
-    ta.select();
-    try { document.execCommand('copy'); showNotification('URL Copied!', 'success'); } catch { showNotification('Failed to copy', 'error'); }
-    document.body.removeChild(ta);
-}
+const showNotification = (message, type = 'success') => toast(message, type);
 
 function createToggleHTML(id, enabled) {
     const bg = enabled ? 'bg-emerald-500' : 'bg-surface-600';
@@ -94,9 +59,9 @@ function createDetailsHTML(strategy) {
         return `
             <tr class="border-b border-surface-700 last:border-b-0">
                 <td class="p-3 align-top font-medium text-surface-50">${index.name}</td>
-                <td class="p-3 align-top font-mono text-xs break-all text-surface-400 webhook-url cursor-pointer hover:text-surface-50" title="Copy URL">/trigger_buy?token=${TOKEN}</td>
-                <td class="p-3 align-top font-mono text-xs break-all text-surface-400 webhook-url cursor-pointer hover:text-surface-50" title="Copy URL">/trigger_sell?token=${TOKEN}</td>
-                <td class="p-3 align-top font-mono text-xs break-all text-surface-400 webhook-url cursor-pointer hover:text-surface-50" title="Copy URL">/trigger_exit?token=${TOKEN}</td>
+                <td class="p-3 align-top font-mono text-xs break-all text-surface-400 webhook-url cursor-pointer hover:text-surface-50" title="Copy URL">${window.location.origin}/trigger_buy?token=${TOKEN}</td>
+                <td class="p-3 align-top font-mono text-xs break-all text-surface-400 webhook-url cursor-pointer hover:text-surface-50" title="Copy URL">${window.location.origin}/trigger_sell?token=${TOKEN}</td>
+                <td class="p-3 align-top font-mono text-xs break-all text-surface-400 webhook-url cursor-pointer hover:text-surface-50" title="Copy URL">${window.location.origin}/trigger_exit?token=${TOKEN}</td>
                 <td class="p-3 align-top max-w-[200px]">
                     <pre class="bg-surface-900 p-2 rounded whitespace-pre-wrap break-all text-surface-400 font-mono text-xs">${inputData}</pre>
                 </td>
@@ -104,8 +69,8 @@ function createDetailsHTML(strategy) {
     }).join('');
 
     return `
-        <div class="bg-surface-800/50 p-4 animate-fade-in-down">
-            <table class="w-full text-sm">
+        <div class="bg-surface-800/50 p-4 animate-fade-in-down overflow-x-auto">
+            <table class="w-full text-sm min-w-[640px]">
                 <thead>
                     <tr class="border-b border-surface-700">
                         <th class="p-3 w-[10%] text-left font-semibold text-surface-400 text-xs uppercase tracking-wider">Index</th>
@@ -154,7 +119,7 @@ function createTableHTML() {
     }).join('');
 
     return `
-        <div class="card overflow-hidden">
+        <div class="card overflow-x-auto">
             <table class="min-w-full divide-y divide-surface-700">
                 <thead class="bg-surface-800">
                     <tr>
@@ -443,7 +408,7 @@ export function initStrategiesPage() {
 
         const urlEl = e.target.closest('.webhook-url');
         if (urlEl) {
-            copyText(urlEl.textContent.trim());
+            copyText(urlEl.textContent.trim(), 'URL copied');
         }
     });
 }
